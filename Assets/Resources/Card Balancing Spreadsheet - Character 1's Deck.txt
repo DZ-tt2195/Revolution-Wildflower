@@ -1,0 +1,10 @@
+ 	card explanation displayed on the card itself	atk, draw, dist, eng, mvmt, misc		max possible in the game	EP cost....	v/nv tagging	HP change	MP change	EP change	Draw #	Stun #	Range	Area of Effect	Delay #	HP Walls	Burn #	intensity	any extra condition needed to select a tile	the function to call when card is played	the function to call at start of next round
+name	desc	cat1	cat2	maxInv	epCost	vTag	chHP	chMP	chEP	draw	stun	range	aoe	delay	wHP	burn	intn	selectable	act	nextAct
+Stun	Stun 2 on a guard that's up to 2 tiles away.	atk		2	0	v					2	2						isGuard	StunAdjacentGuard	
+Demolitions	Destroy an adjacent wall.	atk		2	1	nv						1			12			isWall	none	none
+Brass Knuckles	Stun 5 on an adjacent guard.	atk		2	2	v					5	1						isGuard	StunAdjacentGuard	none
+Dash	"+2 Movement."	mvmt		2	2	nv		2											ChangeMP	
+Desperation	"+2 Energy, -2 HP."	eng		2	0	nv	-2		2										ChangeEP/ChangeHP	
+Bandage	"+1 HP."	misc		2	1	nv	1												ChangeHP	
+All Draw	Each character gets +1 Card.	draw		1	1	nv													AllDrawCards	
+Overexert	+3 Cards, +3 Energy. At the beginning of next round, 0 MP and 0 EP for this character.	draw	eng	2	2	nv			3	3									DrawCards/GainEnergy	ZeroEnergy/ZeroMovement

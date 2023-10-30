@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 6a1db5eab69f44604aa7a76057c52963
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - currentTile: {instanceID: 0}
+  - spriteRenderer: {instanceID: 0}
+  - lineRenderer: {instanceID: 0}
+  - leftWall: {fileID: 21300000, guid: 31de4f3ceebc60647ac34430bd996134, type: 3}
+  - rightWall: {fileID: 21300000, guid: 8a2a4ea5a65d3df4ebe73c8368635986, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
