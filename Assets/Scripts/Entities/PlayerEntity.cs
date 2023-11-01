@@ -110,6 +110,7 @@ public class PlayerEntity : MovingEntity
             myHand.Add(drawMe);
             drawMe.transform.SetParent(handTransform);
             drawMe.transform.localScale = new Vector3(1, 1, 1);
+            drawMe.transform.localPosition = new Vector3(0, 0, 0);
             SoundManager.instance.PlaySound(drawMe.cardMove);
         }
     }
