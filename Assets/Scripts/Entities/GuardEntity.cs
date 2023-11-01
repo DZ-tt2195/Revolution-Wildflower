@@ -19,7 +19,8 @@ public class GuardEntity : MovingEntity
         [Tooltip("Current Target to attack & persue")] PlayerEntity CurrentTarget;
         [Tooltip("State of a guard's alert")] Alert alertStatus = 0;
         [Tooltip("Guard Range")] int AttackRange = 1;
-        [Tooltip("list of patrol positions")] List<Vector2Int> PatrolPoints = new List<Vector2Int>();
+        [Tooltip("list of patrol positions")] public List<Vector2Int> PatrolPoints = new List<Vector2Int>();
+        [Tooltip("current patrol target")] private int PatrolTarget = 0;
         [Tooltip("Line renderer for showing the guard is attacking")] LineRenderer AttackLine = new LineRenderer();
         [SerializeField] AudioClip footsteps;
         [SerializeField] AudioClip alertedSound;
@@ -36,6 +37,7 @@ public class GuardEntity : MovingEntity
         string answer = "";
         if (stunned > 0)
             answer += $"Stunned for {stunned} turns\n";
+        answer += $"current position {currentTile.gridPosition}\n";
         return answer;
     }
 
@@ -184,7 +186,21 @@ public class GuardEntity : MovingEntity
     IEnumerator Patrol()
     {
         TileData nextTile;
-        nextTile = NewManager.instance.FindTile(currentTile.gridPosition + direction); //find tile in the current direction
+        if (currentTile.gridPosition == PatrolPoints[PatrolTarget])
+        {
+            print("This guard has reached " + PatrolPoints[PatrolTarget]);
+            PatrolTarget++;
+            if (PatrolTarget >= PatrolPoints.Count)
+            {
+                PatrolTarget = 0;
+            }
+        }
+        print("++++++++++++++++++++++");
+        NewManager.instance.CalculatePathfinding(currentTile, NewManager.instance.listOfTiles[PatrolPoints[PatrolTarget].x, PatrolPoints[PatrolTarget].y], movementLeft, true);
+        nextTile = NewManager.instance.CurrentAvailableMoveTarget;  //moves towards the next patrol point
+        print("current tile " + currentTile.gridPosition);
+        print("Next tile " + nextTile.gridPosition);
+        /*nextTile = NewManager.instance.FindTile(currentTile.gridPosition + direction); //find tile in the current direction
         while (nextTile == null || nextTile.myEntity != null) //if it can't
         {
             List<TileData> possibleTiles = new List<TileData>();
@@ -196,11 +212,19 @@ public class GuardEntity : MovingEntity
             nextTile = possibleTiles[Random.Range(0, possibleTiles.Count)]; //pick a random tile that's available
             direction = nextTile.gridPosition - currentTile.gridPosition; //change direction
         }
-        this.MoveTile(nextTile);//move to the tile
+        */
+        MoveTile(nextTile);//move to the tile
         SoundManager.instance.PlaySound(footsteps);
         yield return NewManager.Wait(movePauseTime);
+        movementLeft--;
 
         CheckForPlayer();
+        float timer = 0;
+        while (timer < movePauseTime)
+        {
+            timer += Time.deltaTime;
+            yield return null;
+        }
         if (alertStatus == Alert.Attack)
         {
             if (NewManager.instance.GetDistance(currentTile, CurrentTarget.currentTile) > AttackRange && movementLeft > 0)

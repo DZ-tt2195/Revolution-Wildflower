@@ -202,6 +202,22 @@ public class NewManager : MonoBehaviour
                             theGuard.movementLeft = theGuard.movesPerTurn;
                             theGuard.direction = StringToDirection(numberPlusAddition[1]);
                             listOfGuards.Add(theGuard);
+                            theGuard.PatrolPoints.Add(new Vector2Int(i, j));
+                            string[] patrolList = numberPlusAddition[2].Split('|');
+                            foreach (string patrol in patrolList)
+                            {
+                                string[] points = patrol.Split(",");
+                                int curX = 0;
+                                int curY = 0;
+                                int.TryParse(points[0], out curX);
+                                int.TryParse(points[1], out curY);
+                                theGuard.PatrolPoints.Add(new Vector2Int(curX, curY));
+                            }
+                            print("This guard will patrol!");
+                            foreach (Vector2Int cord in theGuard.PatrolPoints)
+                            {
+                                print("Next point: " + cord);
+                            }
                             break;
                     }
                     try
@@ -611,26 +627,22 @@ public class NewManager : MonoBehaviour
     }
 
     //find fastest way to get from one point to another
-    public void CalculatePathfinding(TileData startLocation, TileData targetLocation, int actionPoint, bool singleMovement)
+
+    public void CalculatePathfinding(TileData startLocation, TileData targetLocation, int movementPoints, bool singleMovement)
     {
-        print("Starting from" + startLocation.gridPosition);
-        // Create the open list containing the start node and closed set
+        //open list is all the current neighbors to the analyzed path, the tiles are avalible to be scanned and haven't been checked yet
         List<AStarNode> openList = new List<AStarNode>();
-        HashSet<TileData> closedSet = new HashSet<TileData>();
+        //these tiles have all been scanned, tiles in the closed list can't be added to the open list
+        HashSet<TileData> closedList = new HashSet<TileData>();
+        //dictionary which uses neighbors to either call or create new AStarNodes to add to the open list
         Dictionary<TileData, AStarNode> nodeLookup = new Dictionary<TileData, AStarNode>();
 
         AStarNode startNode = new AStarNode { ATileData = startLocation };
         openList.Add(startNode);
-        nodeLookup[startLocation] = startNode;
 
-        int iteration = 0;
-        // Main loop, continues until there are no more nodes to explore
-        while (openList.Count > 0 && iteration < 100)
+        while (openList.Count > 0)
         {
-            iteration++;
-            // Find the node with the lowest F cost
             AStarNode currentNode = openList[0];
-
             for (int i = 1; i < openList.Count; i++)
             {
                 if (openList[i].FCost < currentNode.FCost || openList[i].FCost == currentNode.FCost && openList[i].HCost < currentNode.HCost)
@@ -638,55 +650,31 @@ public class NewManager : MonoBehaviour
                     currentNode = openList[i];
                 }
             }
-            // Remove the current node from the open list and add it to the closed set
             openList.Remove(currentNode);
-            //print("before Count " + closedSet.Count);
-            closedSet.Add(currentNode.ATileData);
-
+            closedList.Add(currentNode.ATileData);
             if (currentNode.ATileData.gridPosition == targetLocation.gridPosition)
             {
-                RetracePath(startNode, currentNode, actionPoint, singleMovement);
+                RetracePath(startNode, currentNode, movementPoints, singleMovement);
                 return;
             }
-            // Explore neighbors of the current node
             foreach (TileData neighbor in currentNode.ATileData.adjacentTiles)
             {
-                print("for neightbor: " + neighbor.gridPosition);
-                // Ignore blocked nodes or nodes already in the closed set
-                if (neighbor.myEntity != null)
+                int movementCostToNeighbor = 0;
+                if (closedList.Contains(neighbor))
                 {
-                    if (neighbor.gridPosition == targetLocation.gridPosition)
-                    {
-
-                    }
-                    else if (neighbor.myEntity.MoveCost >= 999)
-                    {
-                        print("can't pass");
-                        continue;
-                    }
-                    else if (closedSet.Contains(neighbor))
-                    {
-                        print("Tile already viewed");
-                        continue;
-                    }
+                    continue;
                 }
-
-                // Calculate the new G cost
-                int newGCost = 0;
                 if (neighbor.myEntity != null)
                 {
-                    if (neighbor.gridPosition == targetLocation.gridPosition || neighbor.gridPosition == startLocation.gridPosition)
+                    if (neighbor.gridPosition != targetLocation.gridPosition && neighbor.myEntity.MoveCost > 100)
                     {
-                        newGCost = currentNode.GCost + GetDistance(currentNode.ATileData, neighbor) * 1;
-                    } else
-                    {
-                        newGCost = currentNode.GCost + GetDistance(currentNode.ATileData, neighbor) * neighbor.myEntity.MoveCost;
+                        continue;
                     }
-
+                    movementCostToNeighbor = currentNode.GCost + GetDistance(currentNode.ATileData, neighbor) * neighbor.myEntity.MoveCost;
                 }
                 else
                 {
-                    newGCost = currentNode.GCost + GetDistance(currentNode.ATileData, neighbor) * 1;
+                    movementCostToNeighbor = currentNode.GCost + GetDistance(currentNode.ATileData, neighbor);
                 }
                 AStarNode neighborNode;
                 if (!nodeLookup.ContainsKey(neighbor))
@@ -698,59 +686,43 @@ public class NewManager : MonoBehaviour
                 {
                     neighborNode = nodeLookup[neighbor];
                 }
-                // Update neighbor's G, H, and Parent if the new G cost is lower, or if the neighbor is not in the open list
-                if (newGCost < neighborNode.GCost || !openList.Contains(neighborNode))
+                if (movementCostToNeighbor < neighborNode.GCost || !openList.Contains(neighborNode))
                 {
-                    neighborNode.GCost = newGCost;
+                    neighborNode.GCost = movementCostToNeighbor;
                     neighborNode.HCost = GetDistance(neighbor, targetLocation);
                     neighborNode.Parent = currentNode;
+                    print(neighborNode.ATileData.gridPosition + "'s parent is " + currentNode.ATileData.gridPosition);
                     // Add neighbor to the open list if it's not already there
                     if (!openList.Contains(neighborNode))
                     {
                         openList.Add(neighborNode);
                     }
                 }
-
             }
         }
     }
 
-    //confirm that the current path is valid
-    void RetracePath(AStarNode startNode, AStarNode endNode, int actionPoint, bool singleMovement)
+    public void RetracePath(AStarNode startNode, AStarNode endNode, int actionPoint, bool singleMovement)
     {
-        // Create an empty list to store the path
-        List<TileData> path = new List<TileData>();
+        List<AStarNode> path = new List<AStarNode>();
         AStarNode currentNode = endNode;
-        // Follow parent pointers from the end node to the start node, adding each node to the path
-        int iteration = 0;
-        while (currentNode != startNode && iteration < 3)
+        while (currentNode != startNode)
         {
-            iteration++;
-            print("Retrace iteration: " + iteration);
-            path.Add(currentNode.ATileData);
+            print("Current stage on path is" + currentNode.ATileData.gridPosition);
+            path.Add(currentNode);
             currentNode = currentNode.Parent;
-            foreach (TileData data in path)
-            {
-                print("path contains " + data.gridPosition);
-            }
-            print("");
+
         }
-        if (iteration == 5)
-        {
-            return;
-        }
-        // Reverse the path so it starts from the starting location
         path.Reverse();
 
-        // Display the path and calculate its cost
         int pathCost = 0;
         if (!singleMovement)
         {
-            foreach (TileData CurrentTile in path)
+            foreach (AStarNode CurrentTile in path)
             {
-                if (CurrentTile.myEntity != null)
+                if (CurrentTile.ATileData.myEntity != null)
                 {
-                    pathCost += CurrentTile.myEntity.MoveCost;
+                    pathCost += CurrentTile.ATileData.myEntity.MoveCost;
                 }
                 else
                 {
@@ -760,17 +732,20 @@ public class NewManager : MonoBehaviour
                 // If the path cost exceeds the action points available, stop displaying the path
                 if (pathCost > actionPoint)
                 {
-                    break;
+                    CurrentAvailableMoveTarget = CurrentTile.ATileData;
+                    continue;
                 }
                 // Update the current available move target and display the pathfinding visualization with the path cost
-                CurrentAvailableMoveTarget = CurrentTile;
+                CurrentAvailableMoveTarget = CurrentTile.ATileData;
             }
         }
         else
         {
-            CurrentAvailableMoveTarget = path[0];
+            CurrentAvailableMoveTarget = path[0].ATileData;
         }
     }
 
-#endregion
+    //find fastest way to get from one point to another
+
+    #endregion
 }
