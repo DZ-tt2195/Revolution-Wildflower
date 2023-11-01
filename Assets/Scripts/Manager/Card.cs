@@ -50,8 +50,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
     [ReadOnly] int burnDuration;
     [ReadOnly] int distractionIntensity;
 
-    public enum CanPlayCondition { None, Guard, Wall, Occupied };
-    [ReadOnly] CanPlayCondition selectCondition;
+    [ReadOnly] string selectCondition;
     [ReadOnly] string effectsInOrder;
     [ReadOnly] string nextRoundEffectsInOrder;
 
@@ -115,7 +114,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         burnDuration = data.burn;
         distractionIntensity = data.intn;
 
-        selectCondition = ConvertToCondition(data.select);
+        selectCondition = data.select;
         effectsInOrder = data.action;
         nextRoundEffectsInOrder = data.nextAct;
     }
@@ -134,17 +133,6 @@ public class Card : MonoBehaviour, IPointerClickHandler
         };
     }
 
-    CanPlayCondition ConvertToCondition(string condition)
-    {
-        return condition switch
-        {
-            "isGuard" => CanPlayCondition.Guard,
-            "isWall" => CanPlayCondition.Wall,
-            "isOccupied" => CanPlayCondition.Occupied,
-            _ => CanPlayCondition.None,
-        };
-    }
-
     #endregion
 
 #region Play Condition
@@ -153,8 +141,22 @@ public class Card : MonoBehaviour, IPointerClickHandler
     {
         currentPlayer = player;
         image.color = Color.white;
-        if (Check(player))
+
+        if (player.myEnergy >= energyCost)
         {
+            string divide = selectCondition.Replace(" ", "");
+            divide = divide.ToUpper();
+            string[] methodsInStrings = divide.Split('/');
+
+            foreach (string nextMethod in methodsInStrings)
+            {
+                if (!CheckIfCanPlay(nextMethod))
+                {
+                    image.color = Color.gray;
+                    return false;
+                }
+            }
+
             image.color = Color.white;
             return true;
         }
@@ -165,22 +167,17 @@ public class Card : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    bool Check(PlayerEntity player)
+    bool CheckIfCanPlay(string nextMethod)
     {
-        if (player.myEnergy >= energyCost)
+        return nextMethod switch
         {
-            return selectCondition switch
-            {
-                CanPlayCondition.Guard => SearchAdjacentGuard(player.currentTile).Count > 0,
-                CanPlayCondition.Wall => SearchAdjacentWall(player.currentTile).Count > 0,
-                CanPlayCondition.Occupied => (OccupiedAdjacent(player.currentTile).Count > 0),
-                _ => true,
-            };
-        }
-         
-        {
-            return false;
-        }
+            "ISGUARD" => SearchAdjacentGuard(currentPlayer.currentTile).Count > 0,
+            "ISWALL" => SearchAdjacentWall(currentPlayer.currentTile).Count > 0,
+            "ISOCCUPIED" => OccupiedAdjacent(currentPlayer.currentTile).Count > 0,
+            "EMPTYHAND" => currentPlayer.myHand.Count > 0,
+            "NOENERGY" => currentPlayer.myEnergy > 0,
+            _ => false,
+        };
     }
 
     List<TileData> OccupiedAdjacent(TileData playerTile)
