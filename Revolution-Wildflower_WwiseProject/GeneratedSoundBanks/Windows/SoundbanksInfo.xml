@@ -22,10 +22,128 @@
 				<Bus Id="3803692087" Name="Master Audio Bus"/>
 			</Busses>
 		</SoundBank>
-		<SoundBank Id="1605876511" Type="User" Language="SFX" Hash="{CD661FD4-F451-DC61-4A0B-00E1BF6F480C}">
+		<SoundBank Id="1605876511" Type="User" Language="SFX" Hash="{F3BED321-30BE-B232-5BAD-2F631C86572E}">
 			<ShortName>SFX_Bank</ShortName>
 			<Path>SFX_Bank.bnk</Path>
+			<Media>
+				<File Id="61394215" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>card-play.wav</ShortName>
+					<CachePath>SFX/card-play_10C4C929.wem</CachePath>
+				</File>
+				<File Id="67583277" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>guard-ko-placeholder.wav</ShortName>
+					<CachePath>SFX/guard-ko-placeholder_10C4C929.wem</CachePath>
+				</File>
+				<File Id="114177002" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>bottle-placeholder.wav</ShortName>
+					<CachePath>SFX/bottle-placeholder_10C4C929.wem</CachePath>
+				</File>
+				<File Id="246890147" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>card-move.wav</ShortName>
+					<CachePath>SFX/card-move_10C4C929.wem</CachePath>
+				</File>
+				<File Id="272861178" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>ui-button-hover.wav</ShortName>
+					<CachePath>SFX/ui-button-hover_10C4C929.wem</CachePath>
+				</File>
+				<File Id="297005450" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>gunshot-placeholder.wav</ShortName>
+					<CachePath>SFX/gunshot-placeholder_10C4C929.wem</CachePath>
+				</File>
+				<File Id="412827956" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>movement-select-placeholder.wav</ShortName>
+					<CachePath>SFX/movement-select-placeholder_10C4C929.wem</CachePath>
+				</File>
+				<File Id="540079207" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>guard-notice-placeholder.wav</ShortName>
+					<CachePath>SFX/guard-notice-placeholder_10C4C929.wem</CachePath>
+				</File>
+				<File Id="651602383" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>burn-it-down-sketch-2.wav</ShortName>
+					<CachePath>SFX/burn-it-down-sketch-2_D79FB2B7.wem</CachePath>
+				</File>
+				<File Id="745579580" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>footsteps.wav</ShortName>
+					<CachePath>SFX/footsteps_10C4C929.wem</CachePath>
+				</File>
+				<File Id="940959831" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>end-turn-placeholder.wav</ShortName>
+					<CachePath>SFX/end-turn-placeholder_10C4C929.wem</CachePath>
+				</File>
+				<File Id="1041520263" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>button-base-placeholder.wav</ShortName>
+					<CachePath>SFX/button-base-placeholder_10C4C929.wem</CachePath>
+				</File>
+			</Media>
+			<Events>
+				<Event Id="3382157760" Name="Play_bottle_placeholder" DurationType="OneShot" DurationMin="1.0074375" DurationMax="1.0074375">
+					<MediaRefs>
+						<MediaRef Id="114177002"/>
+					</MediaRefs>
+				</Event>
+				<Event Id="4193244264" Name="Play_button_base_placeholder" DurationType="OneShot" DurationMin="0.38322917" DurationMax="0.38322917">
+					<MediaRefs>
+						<MediaRef Id="1041520263"/>
+					</MediaRefs>
+				</Event>
+				<Event Id="3668726462" Name="Play_button_base_placeholder_01" DurationType="OneShot" DurationMin="0.38322917" DurationMax="0.38322917">
+					<MediaRefs>
+						<MediaRef Id="1041520263"/>
+					</MediaRefs>
+				</Event>
+				<Event Id="2342783904" Name="Play_card_move" DurationType="OneShot" DurationMin="0.13460726" DurationMax="0.13460726">
+					<MediaRefs>
+						<MediaRef Id="246890147"/>
+					</MediaRefs>
+				</Event>
+				<Event Id="3452973965" Name="Play_card_play" DurationType="OneShot" DurationMin="1.0518959" DurationMax="1.0518959">
+					<MediaRefs>
+						<MediaRef Id="61394215"/>
+					</MediaRefs>
+				</Event>
+				<Event Id="2603299628" Name="Play_CharacterFootsteps" DurationType="OneShot" DurationMin="1.4013542" DurationMax="1.4013542">
+					<MediaRefs>
+						<MediaRef Id="745579580"/>
+					</MediaRefs>
+				</Event>
+				<Event Id="2000740979" Name="Play_end_turn_placeholder" DurationType="OneShot" DurationMin="1.6828125" DurationMax="1.6828125">
+					<MediaRefs>
+						<MediaRef Id="940959831"/>
+					</MediaRefs>
+				</Event>
+				<Event Id="2157469724" Name="Play_guard_ko_placeholder" DurationType="OneShot" DurationMin="0.5805" DurationMax="0.5805">
+					<MediaRefs>
+						<MediaRef Id="67583277"/>
+					</MediaRefs>
+				</Event>
+				<Event Id="3136084898" Name="Play_guard_notice_placeholder" DurationType="OneShot" DurationMin="1.7910658" DurationMax="1.7910658">
+					<MediaRefs>
+						<MediaRef Id="540079207"/>
+					</MediaRefs>
+				</Event>
+				<Event Id="1795322234" Name="Play_gunshot_placeholder" DurationType="OneShot" DurationMin="0.37560415" DurationMax="0.37560415">
+					<MediaRefs>
+						<MediaRef Id="297005450"/>
+					</MediaRefs>
+				</Event>
+				<Event Id="3274460198" Name="Play_movement_select_placeholder" DurationType="OneShot" DurationMin="0.5390625" DurationMax="0.5390625">
+					<MediaRefs>
+						<MediaRef Id="412827956"/>
+					</MediaRefs>
+				</Event>
+				<Event Id="4097918453" Name="Play_StaticMusic" DurationType="OneShot" DurationMin="0" DurationMax="0">
+					<MediaRefs>
+						<MediaRef Id="651602383"/>
+					</MediaRefs>
+				</Event>
+				<Event Id="310530060" Name="Play_ui_button_hover" DurationType="OneShot" DurationMin="1" DurationMax="1">
+					<MediaRefs>
+						<MediaRef Id="272861178"/>
+					</MediaRefs>
+				</Event>
+				<Event Id="3265032750" Name="Stop_OfficeAmbientNoise" MaxAttenuation="0" DurationType="OneShot" DurationMin="0" DurationMax="0"/>
+			</Events>
 		</SoundBank>
 	</SoundBanks>
-	<FileHash>{1E202D1E-1386-3A74-2CDF-B1B65087A12A}</FileHash>
+	<FileHash>{2FCFBF2E-6771-4813-9F86-367334443B69}</FileHash>
 </SoundBanksInfo>
