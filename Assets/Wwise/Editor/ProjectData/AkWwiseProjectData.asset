@@ -66,8 +66,22 @@ MonoBehaviour:
     ParentPath: SoundBanks\Default Work Unit
     guid: 45c008903f9bc0458acdfbd56132c8c3
     GuidInternal: 
-    m_lastTime: -8585027520201879518
-    List: []
+    m_lastTime: -8585027502862287087
+    List:
+    - name: SFX_Bank
+      guid: 5d5c45d3c5ae5942be5f72be6b5d9f73
+      id: 1605876511
+      PathAndIcons:
+      - ElementName: SoundBanks
+        ObjectType: 5
+        guid: 00000000000000000000000000000000
+      - ElementName: Default Work Unit
+        ObjectType: 12
+        guid: 45c008903f9bc0458acdfbd56132c8c3
+      - ElementName: SFX_Bank
+        ObjectType: 7
+        guid: 5d5c45d3c5ae5942be5f72be6b5d9f73
+      Path: SoundBanks\Default Work Unit\SFX_Bank
   EventWwu:
   - PhysicalPath: Events\Default Work Unit.wwu
     PathAndIcons:
