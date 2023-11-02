@@ -41,6 +41,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
     [ReadOnly] int changeInMP;
     [ReadOnly] int changeInEP;
     [ReadOnly] int changeInDraw;
+    [ReadOnly] int chooseHand;
 
     [ReadOnly] int stunDuration;
     [ReadOnly] int range;
@@ -104,6 +105,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         changeInMP = data.chMP;
         changeInEP = data.chEP;
         changeInDraw = data.draw;
+        chooseHand = data.chooseHand;
 
         stunDuration = data.stun;
         range = data.range;
@@ -176,7 +178,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
             "ISOCCUPIED" => OccupiedAdjacent(currentPlayer.currentTile).Count > 0,
             "EMPTYHAND" => currentPlayer.myHand.Count > 0,
             "NOENERGY" => currentPlayer.myEnergy > 0,
-            _ => false,
+            _ => true,
         };
     }
 
@@ -267,7 +269,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     internal IEnumerator DrawCards()
     {
-        currentPlayer.DrawCards(changeInDraw);
+        currentPlayer.PlusCards(changeInDraw);
         yield return null;
     }
 
@@ -275,9 +277,9 @@ public class Card : MonoBehaviour, IPointerClickHandler
     {
         foreach(PlayerEntity player in NewManager.instance.listOfPlayers)
         {
-            currentPlayer = player;
-            yield return DrawCards();
+            player.PlusCards(changeInDraw);
         }
+        yield return null;
     }
 
     internal Card FindCardType(CardType type)

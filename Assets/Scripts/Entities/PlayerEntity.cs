@@ -66,7 +66,7 @@ public class PlayerEntity : MovingEntity
 
     #region Card Stuff
 
-    public void DrawCards(int num)
+    public void PlusCards(int num)
     {
         for (int i = 0; i < num; i++)
         {

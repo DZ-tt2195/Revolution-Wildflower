@@ -123,7 +123,7 @@ public class NewManager : MonoBehaviour
             }
 
             player.myDrawPile.Shuffle(); //shuffle your deck
-            player.DrawCards(5);
+            player.PlusCards(5);
         }
     }
 
@@ -513,7 +513,7 @@ public class NewManager : MonoBehaviour
         {
             SetEnergy(player, 3);
             SetMovement(player, player.movesPerTurn);
-            player.DrawCards(5 - player.myHand.Count);
+            player.PlusCards(5 - player.myHand.Count);
             player.cardsPlayed.Clear();
             UpdateStats(null);
         }

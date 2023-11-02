@@ -18,6 +18,7 @@ public class CardData
     public int chMP;       //MP change
     public int chEP;       //EP change
     public int draw;       //number of cards to draw
+    public int chooseHand;       //number of cards to draw
 
     public int stun;       //number of turns the action stuns
     public int range;      //range of action
@@ -56,16 +57,17 @@ public class CardDataLoader
             newCard.chMP = StringToInt(line[8]);
             newCard.chEP = StringToInt(line[9]);
             newCard.draw = StringToInt(line[10]);
-            newCard.stun = StringToInt(line[11]);
-            newCard.range = StringToInt(line[12]);
-            newCard.aoe = StringToInt(line[13]);
-            newCard.delay = StringToInt(line[14]);
-            newCard.wHP = StringToInt(line[15]);
-            newCard.burn = StringToInt(line[16]);
-            newCard.intn = StringToInt(line[17]);
-            newCard.select = line[18];
-            newCard.action = line[19];
-            newCard.nextAct = line[20];
+            newCard.chooseHand = StringToInt(line[11]);
+            newCard.stun = StringToInt(line[12]);
+            newCard.range = StringToInt(line[13]);
+            newCard.aoe = StringToInt(line[14]);
+            newCard.delay = StringToInt(line[15]);
+            newCard.wHP = StringToInt(line[16]);
+            newCard.burn = StringToInt(line[17]);
+            newCard.intn = StringToInt(line[18]);
+            newCard.select = line[19];
+            newCard.action = line[20];
+            newCard.nextAct = line[21];
         }
         return cardData;
     }
