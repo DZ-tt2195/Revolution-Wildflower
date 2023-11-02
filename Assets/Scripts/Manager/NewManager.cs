@@ -202,7 +202,6 @@ public class NewManager : MonoBehaviour
                             theGuard.movementLeft = theGuard.movesPerTurn;
                             theGuard.direction = StringToDirection(numberPlusAddition[1]);
                             listOfGuards.Add(theGuard);
-                            theGuard.PatrolPoints.Add(new Vector2Int(i, j));
                             string[] patrolList = numberPlusAddition[2].Split('|');
                             foreach (string patrol in patrolList)
                             {
@@ -691,7 +690,7 @@ public class NewManager : MonoBehaviour
                     neighborNode.GCost = movementCostToNeighbor;
                     neighborNode.HCost = GetDistance(neighbor, targetLocation);
                     neighborNode.Parent = currentNode;
-                    print(neighborNode.ATileData.gridPosition + "'s parent is " + currentNode.ATileData.gridPosition);
+                    //print(neighborNode.ATileData.gridPosition + "'s parent is " + currentNode.ATileData.gridPosition);
                     // Add neighbor to the open list if it's not already there
                     if (!openList.Contains(neighborNode))
                     {
@@ -708,7 +707,7 @@ public class NewManager : MonoBehaviour
         AStarNode currentNode = endNode;
         while (currentNode != startNode)
         {
-            print("Current stage on path is" + currentNode.ATileData.gridPosition);
+            //print("Current stage on path is" + currentNode.ATileData.gridPosition);
             path.Add(currentNode);
             currentNode = currentNode.Parent;
 
