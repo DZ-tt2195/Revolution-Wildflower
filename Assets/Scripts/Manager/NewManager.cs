@@ -375,7 +375,7 @@ public class NewManager : MonoBehaviour
 
     void UpdateStats(PlayerEntity player)
     {
-        try
+        if (player != null)
         {
             stats.text = $"{player.name} | <color=#ffc73b>{player.health} Health <color=#ffffff>" +
                 $"| <color=#ecff59>{player.movementLeft} Movement <color=#ffffff>" +
@@ -384,7 +384,7 @@ public class NewManager : MonoBehaviour
                 $"\n\n<color=#70f5ff>{player.myDrawPile.Count} <color=#ffffff>/ <color=#ff9670>{player.myDiscardPile.Count}";
             handContainer.transform.localPosition = new Vector3(player.myPosition * -2000, -75, 0);
         }
-        catch
+        else
         {
             stats.text = "";
             deckTracker.text = "";
@@ -512,9 +512,10 @@ public class NewManager : MonoBehaviour
         foreach (PlayerEntity player in listOfPlayers)
         {
             SetEnergy(player, 3);
-            player.movementLeft = player.movesPerTurn;
+            SetMovement(player, player.movesPerTurn);
             player.DrawCards(5 - player.myHand.Count);
             player.cardsPlayed.Clear();
+            UpdateStats(null);
         }
         StartCoroutine(EnvironmentalPhase());
     }
