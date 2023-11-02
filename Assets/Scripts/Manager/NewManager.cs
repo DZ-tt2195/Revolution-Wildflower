@@ -562,9 +562,23 @@ public class NewManager : MonoBehaviour
         }
     }
 
-#endregion
+    #endregion
 
 #region Pathfinding
+
+    public HashSet<Vector2Int> line(TileData p1, TileData p2)
+    {
+        HashSet<Vector2Int> points = new HashSet<Vector2Int>();
+        float distance = GetDistance(p1, p2);
+        for (float step = 0; step <= distance; step++)
+        {;
+            float t = step/distance;
+            Vector2 midPointRaw = Vector2.Lerp(p1.gridPosition, p2.gridPosition, t);
+            Vector2Int midPoint = new Vector2Int(Mathf.RoundToInt(midPointRaw.x), Mathf.RoundToInt(midPointRaw.y));
+            points.Add(midPoint);
+        }
+        return points;
+    }
 
     //gets the distance (in gridspaces) between two gridspaces
     public int GetDistance(TileData a, TileData b)

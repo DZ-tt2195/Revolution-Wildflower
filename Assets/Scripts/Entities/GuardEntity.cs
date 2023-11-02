@@ -7,7 +7,7 @@ using Unity.VisualScripting;
 
 public class GuardEntity : MovingEntity
 {
-    enum Alert { Patrol, Attack};
+    enum Alert { Patrol, Attack, Persue};
 
     [Foldout("Guard Entity", true)]
         [Tooltip("Tiles this is searching")] List<TileData> inDetection = new List<TileData>();
@@ -21,6 +21,7 @@ public class GuardEntity : MovingEntity
         [Tooltip("Guard Range")] int AttackRange = 1;
         [Tooltip("list of patrol positions")] public List<Vector2Int> PatrolPoints = new List<Vector2Int>();
         [Tooltip("current patrol target")] private int PatrolTarget = 0;
+        [Tooltip("List of distraction positions")] public List<Vector2Int> DistractionPoints = new List<Vector2Int>();
         [Tooltip("Line renderer for showing the guard is attacking")] LineRenderer AttackLine = new LineRenderer();
         [SerializeField] AudioClip footsteps;
         [SerializeField] AudioClip alertedSound;
@@ -105,11 +106,15 @@ public class GuardEntity : MovingEntity
         {
             movementLeft = movesPerTurn;
             attacksLeft = attacksPerTurn;
+            if (DistractionPoints.Count > 0)
+                alertStatus = Alert.Persue;
             CheckForPlayer();
-            if(alertStatus == Alert.Patrol)
+            if (alertStatus == Alert.Patrol)
                 yield return Patrol();
-            else
+            else if (alertStatus == Alert.Attack)
                 yield return Attack(CurrentTarget);
+            else if (alertStatus == Alert.Persue)
+                yield return persue();
         }
     }
 
@@ -121,8 +126,171 @@ public class GuardEntity : MovingEntity
         print("New target, player at " + target.currentTile.gridPosition);
     }
 
+    IEnumerator persue()
+    {
+        if (PatrolPoints.Count > 1)
+        {
+            if (currentTile.gridPosition == DistractionPoints[DistractionPoints.Count - 1])
+            {
+                DistractionPoints.RemoveAt(DistractionPoints.Count - 1);
+                if (DistractionPoints.Count == 0)
+                {
+                    alertStatus = Alert.Patrol;
+                    CheckForPlayer();
+                    if (alertStatus == Alert.Attack)
+                    {
+                        if (attacksLeft > 0 || movementLeft > 0)
+                        {
+                            yield return Attack(CurrentTarget);
+                        }
+                        else
+                            yield break;
+                    }
+                    else if (alertStatus == Alert.Patrol)
+                    {
+                        if (movementLeft > 0)
+                        {
+                            yield return Patrol();
+                        }
+                        else
+                            yield break;
+                    }
+                }
+            }
+            if (movementLeft > 0)
+            {
+                TileData nextTile;
+                NewManager.instance.CalculatePathfinding(currentTile, NewManager.instance.FindTile(DistractionPoints[DistractionPoints.Count - 1]), movementLeft, true);
+                nextTile = NewManager.instance.CurrentAvailableMoveTarget;  //moves towards the next patrol point
+                direction = nextTile.gridPosition - currentTile.gridPosition;
+                print("moving too " + nextTile.gridPosition);
+                MoveTile(nextTile);//move to the tile
+                SoundManager.instance.PlaySound(footsteps);
+                movementLeft--;
+
+                alertStatus = Alert.Patrol;
+                if(DistractionPoints.Count > 0)
+                {
+                    alertStatus = Alert.Persue;
+                }
+                CheckForPlayer();
+                if (alertStatus == Alert.Attack)
+                {
+                    if (movementLeft > 0 || attacksLeft > 0)
+                    {
+                        yield return Attack(CurrentTarget);
+                    }
+                }
+                else if (alertStatus == Alert.Persue)
+                {
+                    if (movementLeft > 0)
+                    {
+                        yield return persue();
+                    }
+                }
+                else if (alertStatus == Alert.Patrol)
+                {
+                    if (movementLeft > 0)
+                    {
+                        yield return Patrol();
+                    }
+                }
+            }
+            else
+                yield break;
+        }
+        else
+        {
+            DistractionPoints.Clear();
+            yield break;
+        }
+    }
+
     IEnumerator Attack(PlayerEntity detectedPlayer)
     {
+        HashSet<Vector2Int> lineToPlayer = NewManager.instance.line(currentTile, detectedPlayer.currentTile);
+        bool inSight = true;
+        int distance = NewManager.instance.GetDistance(currentTile, detectedPlayer.currentTile);
+        foreach (Vector2Int entry in lineToPlayer)
+        {
+            TileData TileToCheck = NewManager.instance.FindTile(entry);
+            if (TileToCheck != null)
+            {
+                if (TileToCheck.myEntity != false)
+                {
+                    if (TileToCheck.myEntity != this && TileToCheck.myEntity != detectedPlayer)
+                    {
+                        if (TileToCheck.myEntity.Occlusion == true)
+                        {
+                            inSight = false;
+                            continue;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                inSight = false;
+                continue;
+            }
+        }
+        if (inSight == true)
+        {
+            if (distance <= AttackRange)
+            {
+                attacksLeft--;
+                detectedPlayer.health--;
+                SoundManager.instance.PlaySound(gunshot);
+                yield break;
+
+            }
+            if (distance > AttackRange)
+            {
+                if (PatrolPoints.Count > 1)
+                {
+                    TileData nextTile;
+                    NewManager.instance.CalculatePathfinding(currentTile, detectedPlayer.currentTile, movementLeft, true);
+                    nextTile = NewManager.instance.CurrentAvailableMoveTarget;  //moves towards the next patrol point
+                    direction = nextTile.gridPosition - currentTile.gridPosition;
+                    print("moving too " + nextTile.gridPosition);
+                    MoveTile(nextTile);//move to the tile
+                    SoundManager.instance.PlaySound(footsteps);
+                    movementLeft--;
+                    distance = NewManager.instance.GetDistance(currentTile, detectedPlayer.currentTile);
+                    if (distance < AttackRange)
+                    {
+                        if (attacksLeft > 0)
+                        {
+                            yield return Attack(detectedPlayer);
+                        }
+                        else
+                        {
+                            yield break;
+                        }
+                    }
+                    else if (movementLeft > 0)
+                    {
+                        yield return Attack(detectedPlayer);
+                    }
+                    else
+                    {
+                        yield break;
+                    }
+                }
+                else
+                {
+                    yield break;
+                }
+            }
+             
+        }
+        else
+        {
+
+        }
+
+        yield break;
+        /*
         RaycastHit hit;
         Vector3 shotDirection = detectedPlayer.transform.position - transform.position;
         if (Physics.Raycast(transform.position, shotDirection, out hit, Mathf.Infinity, 1 << 2))
@@ -151,35 +319,9 @@ public class GuardEntity : MovingEntity
         {
             alertStatus = Alert.Patrol;
         }
+        */
 
-        //checking whether to end round or 
-        float timer = 0;
-        while (timer < movePauseTime)
-        {
-            timer += Time.deltaTime;
-            yield return null;
-        }
-        if (alertStatus == Alert.Attack)
-        {
-            if (NewManager.instance.GetDistance(currentTile, CurrentTarget.currentTile) > AttackRange && movementLeft > 0)
-            {
-                Attack(CurrentTarget);
-                yield break;
-            }
-            else if (NewManager.instance.GetDistance(currentTile, CurrentTarget.currentTile) <= AttackRange && attacksLeft > 0)
-            {
-                Attack(CurrentTarget);
-                yield break;
-            }
-        }
-        else if (alertStatus == Alert.Patrol)
-        {
-            if (movementLeft > 0)
-            {
-                Patrol();
-                yield break;
-            }
-        }
+        //checking whether to end round, patrol, attack, or check distraction
 
     }
 
@@ -196,7 +338,10 @@ public class GuardEntity : MovingEntity
             {
                 print("stationary at " + currentTile.gridPosition + " is finished, moving to attack");
                 Attack(CurrentTarget);
+
             }
+            direction.x *= -1;
+            direction.y *= -1;
             print("stationary guard finished, end script");
             yield break;
         }
@@ -217,19 +362,7 @@ public class GuardEntity : MovingEntity
             print("Target tile " + PatrolPoints[PatrolTarget].x + "," + PatrolPoints[PatrolTarget].y);
             NewManager.instance.CalculatePathfinding(currentTile, NewManager.instance.listOfTiles[PatrolPoints[PatrolTarget].x, PatrolPoints[PatrolTarget].y], movementLeft, true);
             nextTile = NewManager.instance.CurrentAvailableMoveTarget;  //moves towards the next patrol point
-            /*nextTile = NewManager.instance.FindTile(currentTile.gridPosition + direction); //find tile in the current direction
-            while (nextTile == null || nextTile.myEntity != null) //if it can't
-            {
-                List<TileData> possibleTiles = new List<TileData>();
-                for (int i = 0; i<currentTile.adjacentTiles.Count; i++)
-                {
-                    if (currentTile.adjacentTiles[i].myEntity == null) //find all adjacent tiles that this can move to
-                        possibleTiles.Add(currentTile.adjacentTiles[i]);
-                }
-                nextTile = possibleTiles[Random.Range(0, possibleTiles.Count)]; //pick a random tile that's available
-                direction = nextTile.gridPosition - currentTile.gridPosition; //change direction
-            }
-            */
+            direction = nextTile.gridPosition - currentTile.gridPosition;
             print("moving too " + nextTile.gridPosition);
             MoveTile(nextTile);//move to the tile
             SoundManager.instance.PlaySound(footsteps);
@@ -244,28 +377,18 @@ public class GuardEntity : MovingEntity
                 timer += Time.deltaTime;
                 yield return null;
             }
-            if (alertStatus == Alert.Attack)
+            if (movementLeft > 0)
             {
-                if (NewManager.instance.GetDistance(currentTile, CurrentTarget.currentTile) > AttackRange && movementLeft > 0)
+                if (alertStatus == Alert.Attack)
                 {
-                    Attack(CurrentTarget);
                     print(currentTile.gridPosition + " is Finished, moving on to attack");
-                    yield break;
+                    yield return Attack(CurrentTarget);
                 }
-                else if (NewManager.instance.GetDistance(currentTile, CurrentTarget.currentTile) <= AttackRange && attacksLeft > 0)
+                if (alertStatus == Alert.Patrol)
                 {
-                    Attack(CurrentTarget);
-                    print(currentTile.gridPosition + " is Finished, moving on to attack");
-                    yield break;
-                }
-            }
-            else if (alertStatus == Alert.Patrol)
-            {
-                if (movementLeft > 0)
-                {
-                    Patrol();
                     print(currentTile.gridPosition + " is Finished, moving on to patrol");
-                    yield break;
+                    yield return Patrol();
+
                 }
             }
             print(currentTile.gridPosition + " is Finished, ending turn");
