@@ -70,12 +70,14 @@ public class CardDataLoader
         return cardData;
     }
 
+    //Convert the string to an integer (returning 0 if the line is empty)
     static int StringToInt(string line)
     {
         return (line == "") ? 0 : int.Parse(line);
     }
 }
 
+//A slightly redundant level loader using the TSVReader class
 public class LevelLoader
 {
     public static string[,] LoadLevelGrid(string levelToLoad)

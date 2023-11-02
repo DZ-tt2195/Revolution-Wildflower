@@ -31,7 +31,7 @@ public class NewManager : MonoBehaviour
         [Tooltip("Reference to walls")][ReadOnly] public List<WallEntity> listOfWalls = new List<WallEntity>();
         [Tooltip("Reference to guards")][ReadOnly] public List<GuardEntity> listOfGuards = new List<GuardEntity>();
         [Tooltip("Reference to active environmental objects")][ReadOnly] public List<EnvironmentalEntity> listOfEnvironmentals = new List<EnvironmentalEntity>();
-        [Tooltip("Reference to objectives")][ReadOnly] public List<ObjectiveEntity> listOfObjectives = new List<ObjectiveEntity>();
+        [Tooltip("Reference to objectives")] [ReadOnly] public List<ObjectiveEntity> listOfObjectives = new List<ObjectiveEntity>();
 
     [Foldout("Movement", true)]
         [Tooltip("Current Selected Tile")][ReadOnly] public TileData selectedTile;
@@ -315,6 +315,8 @@ public class NewManager : MonoBehaviour
     private void Update()
     {
         endTurnButton.gameObject.SetActive(currentTurn == TurnSystem.You);
+        if (Input.GetKeyDown(KeyCode.Space))
+            GameOver("You quit.");
     }
 
     public void FocusOnPlayer()
@@ -400,12 +402,14 @@ public class NewManager : MonoBehaviour
 
 #endregion
 
-#region Turn System
+#region Turn System 
 
     public void GameOver(string cause)
     {
         gameOverText.text = cause;
         gameOverText.transform.parent.gameObject.SetActive(true);
+        StopAllCoroutines();
+        CollectTime.EndTime();
     }
 
     IEnumerator StartPlayerTurn()

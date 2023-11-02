@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{1BC092A5-567E-4219-B9A1-7F41A7E3F1D8}" SchemaVersion="110">
+	<AudioObjects>
+		<WorkUnit Name="Default Work Unit" ID="{1BC092A5-567E-4219-B9A1-7F41A7E3F1D8}" PersistMode="Standalone">
+			<ChildrenList>
+				<Folder Name="Character" ID="{57466B1D-0F39-4FBA-A3CC-003AE6464CF0}" ShortID="510461351">
+					<ChildrenList>
+						<Sound Name="CharacterFootsteps" ID="{F7628D68-5F73-4940-A463-DFEC2BA5C7D0}" ShortID="21334506">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{100BE001-2367-43C2-97F3-A212E8B5F1FD}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{7426D2B4-AE1E-46BF-A735-554A72E4A279}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="footsteps" ID="{FB8CDFED-7974-4C27-A902-833AB578347B}">
+									<Language>SFX</Language>
+									<AudioFile>footsteps.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="745579580"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="footsteps" ID="{FB8CDFED-7974-4C27-A902-833AB578347B}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+					</ChildrenList>
+				</Folder>
+				<Folder Name="Ambience" ID="{84BE19F0-363F-4FBA-A9C5-EDFF6D8E26E7}" ShortID="160542887">
+					<ChildrenList>
+						<Sound Name="OfficeAmbientNoise" ID="{51BAC8FA-AE21-4987-B8D7-41070B1249AA}" ShortID="321753913">
+							<PropertyList>
+								<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{100BE001-2367-43C2-97F3-A212E8B5F1FD}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{7426D2B4-AE1E-46BF-A735-554A72E4A279}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="noise-with-hum" ID="{33262F02-68C4-4204-BE2A-9C12A099B7D4}">
+									<Language>SFX</Language>
+									<AudioFile>noise-with-hum.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="574353506"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="noise-with-hum" ID="{33262F02-68C4-4204-BE2A-9C12A099B7D4}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+					</ChildrenList>
+				</Folder>
+				<Folder Name="UI-Interactions" ID="{23319770-C97E-4C75-930B-772349C97489}" ShortID="136802048">
+					<ChildrenList>
+						<Sound Name="ui-button-hover" ID="{46242FD4-EF21-4453-8FAC-F59FD4CE20C1}" ShortID="786685270">
+							<PropertyList>
+								<Property Name="Volume" Type="Real64">
+									<ValueList>
+										<Value>-15</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{100BE001-2367-43C2-97F3-A212E8B5F1FD}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{7426D2B4-AE1E-46BF-A735-554A72E4A279}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="ui-button-hover" ID="{64629731-0E1A-4C96-AA71-2F167B5FC98E}">
+									<Language>SFX</Language>
+									<AudioFile>ui-button-hover.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="272861178"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="ui-button-hover" ID="{64629731-0E1A-4C96-AA71-2F167B5FC98E}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="button-base-placeholder" ID="{47834163-E476-49BB-AAA8-6CE35F5D661E}" ShortID="279256962">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{100BE001-2367-43C2-97F3-A212E8B5F1FD}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{7426D2B4-AE1E-46BF-A735-554A72E4A279}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="button-base-placeholder" ID="{A911BFD7-75C1-436C-99B2-A202ACCF964F}">
+									<Language>SFX</Language>
+									<AudioFile>button-base-placeholder.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="1041520263"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="button-base-placeholder" ID="{A911BFD7-75C1-436C-99B2-A202ACCF964F}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="end-turn-placeholder" ID="{5436BD9D-FAFC-4407-A55E-5815AEB904A7}" ShortID="696413120">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{100BE001-2367-43C2-97F3-A212E8B5F1FD}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{7426D2B4-AE1E-46BF-A735-554A72E4A279}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="end-turn-placeholder" ID="{7B676DE9-701A-4480-927E-60D87F59F123}">
+									<Language>SFX</Language>
+									<AudioFile>end-turn-placeholder.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="940959831"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="end-turn-placeholder" ID="{7B676DE9-701A-4480-927E-60D87F59F123}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="movement-select-placeholder" ID="{492D523A-FE02-4DBC-B3EF-7562E5AA7B8E}" ShortID="58603512">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{100BE001-2367-43C2-97F3-A212E8B5F1FD}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{7426D2B4-AE1E-46BF-A735-554A72E4A279}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="movement-select-placeholder" ID="{AF870AA6-C7D3-4488-950B-2BC498903904}">
+									<Language>SFX</Language>
+									<AudioFile>movement-select-placeholder.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="412827956"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="movement-select-placeholder" ID="{AF870AA6-C7D3-4488-950B-2BC498903904}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+					</ChildrenList>
+				</Folder>
+				<Folder Name="Cards-Actions" ID="{45D2AAB0-62F5-4859-B55D-B4609564F949}" ShortID="102879944">
+					<ChildrenList>
+						<Sound Name="card-move" ID="{9D44B91F-5756-4D36-B08A-940093C54336}" ShortID="29621696">
+							<PropertyList>
+								<Property Name="Pitch" Type="int32">
+									<ValueList>
+										<Value>60</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{100BE001-2367-43C2-97F3-A212E8B5F1FD}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{7426D2B4-AE1E-46BF-A735-554A72E4A279}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="card-move" ID="{A384C855-90B9-4A69-8393-5A57EDAA730C}">
+									<Language>SFX</Language>
+									<AudioFile>card-move.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="246890147"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="card-move" ID="{A384C855-90B9-4A69-8393-5A57EDAA730C}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="card-play" ID="{F30F8E5F-268D-4946-9267-F8641BDDB016}" ShortID="887973321">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{100BE001-2367-43C2-97F3-A212E8B5F1FD}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{7426D2B4-AE1E-46BF-A735-554A72E4A279}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="card-play" ID="{6AF4C852-383B-480B-9947-659DD42887DC}">
+									<Language>SFX</Language>
+									<AudioFile>card-play.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="61394215"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="card-play" ID="{6AF4C852-383B-480B-9947-659DD42887DC}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="bottle-placeholder" ID="{26CDFD2A-F5BD-49CF-B016-6A9B9BEB6C2D}" ShortID="200461921">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{100BE001-2367-43C2-97F3-A212E8B5F1FD}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{7426D2B4-AE1E-46BF-A735-554A72E4A279}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="bottle-placeholder" ID="{50D50F13-BA89-4C9A-8C3C-98EBEF4B9C43}">
+									<Language>SFX</Language>
+									<AudioFile>bottle-placeholder.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="114177002"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="bottle-placeholder" ID="{50D50F13-BA89-4C9A-8C3C-98EBEF4B9C43}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+					</ChildrenList>
+				</Folder>
+				<Folder Name="Guards-Security" ID="{34EB58EA-35BB-4D69-A1C3-DA5B5B7BF34E}" ShortID="98906450">
+					<ChildrenList>
+						<Sound Name="guard-ko-placeholder" ID="{BF40F05E-6AE1-469A-8CA4-A6F627CA418B}" ShortID="768888691">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{100BE001-2367-43C2-97F3-A212E8B5F1FD}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{7426D2B4-AE1E-46BF-A735-554A72E4A279}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="guard-ko-placeholder" ID="{FC415778-5B82-40B0-BF9F-0B5634F590DF}">
+									<Language>SFX</Language>
+									<AudioFile>guard-ko-placeholder.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="67583277"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="guard-ko-placeholder" ID="{FC415778-5B82-40B0-BF9F-0B5634F590DF}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="guard-notice-placeholder" ID="{B78902A2-4ADB-4880-B352-D86C9F315FD5}" ShortID="840234432">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{100BE001-2367-43C2-97F3-A212E8B5F1FD}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{7426D2B4-AE1E-46BF-A735-554A72E4A279}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="guard-notice-placeholder" ID="{4CAF63A0-0EE0-4558-9360-9015F6D947C1}">
+									<Language>SFX</Language>
+									<AudioFile>guard-notice-placeholder.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="540079207"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="guard-notice-placeholder" ID="{4CAF63A0-0EE0-4558-9360-9015F6D947C1}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="gunshot-placeholder" ID="{CBE455D6-E104-4F98-A893-4ACCA8871365}" ShortID="898146779">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{100BE001-2367-43C2-97F3-A212E8B5F1FD}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{7426D2B4-AE1E-46BF-A735-554A72E4A279}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="gunshot-placeholder" ID="{B166724D-D9E8-4789-9C14-627D625FA5DE}">
+									<Language>SFX</Language>
+									<AudioFile>gunshot-placeholder.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="297005450"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="gunshot-placeholder" ID="{B166724D-D9E8-4789-9C14-627D625FA5DE}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+					</ChildrenList>
+				</Folder>
+			</ChildrenList>
+		</WorkUnit>
+	</AudioObjects>
+</WwiseDocument>

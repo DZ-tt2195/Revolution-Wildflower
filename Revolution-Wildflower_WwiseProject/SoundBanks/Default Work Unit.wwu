@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{9008C045-9B3F-45C0-8ACD-FBD56132C8C3}" SchemaVersion="110">
+	<SoundBanks>
+		<WorkUnit Name="Default Work Unit" ID="{9008C045-9B3F-45C0-8ACD-FBD56132C8C3}" PersistMode="Standalone">
+			<ChildrenList>
+				<SoundBank Name="SFX_Bank" ID="{D3455C5D-AEC5-4259-BE5F-72BE6B5D9F73}">
+					<ObjectInclusionList>
+						<ObjectRef Name="Play_guard_ko_placeholder" ID="{876B5843-80A3-4094-BA07-A9AE9150D8CF}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Play_CharacterFootsteps" ID="{93C9C64A-F1E8-40BC-A3D6-A05848F84CA7}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Play_card_move" ID="{8830F802-91A4-43E2-BD77-DB583AB8663B}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Play_gunshot_placeholder" ID="{C1F8F92B-A27E-4532-A697-1756B54EF79C}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Play_ui_button_hover" ID="{0E31DAE5-2865-455B-823C-E19EAB5983C6}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Play_bottle_placeholder" ID="{379E62DA-7CE3-47AC-918A-6BD2CB6F6AE7}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Play_StaticMusic" ID="{EF4DD539-1ED6-47E7-9DB5-9908147D1BC1}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Play_button_base_placeholder_01" ID="{513CAE26-7F3C-4851-9ED0-7BDBDC8BEC1A}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Play_guard_notice_placeholder" ID="{D29D02B2-F63F-48FA-A65E-7312E9B1F4A8}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Play_card_play" ID="{6B602F4D-35CA-4ACF-8420-D1D47321483C}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Play_end_turn_placeholder" ID="{425A1166-3B8A-4C7E-8AAF-B3D5AE0AC4E0}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Play_button_base_placeholder" ID="{CE0DD96D-3402-4E54-8DB9-12B3B4C88F9B}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Stop_OfficeAmbientNoise" ID="{6677A665-3BDE-4E6A-BAAB-69211BCDA66B}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Play_movement_select_placeholder" ID="{31BCE2DE-D081-4F25-B390-FE3F0745BC1D}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
+					</ObjectInclusionList>
+					<ObjectExclusionList/>
+					<GameSyncExclusionList/>
+				</SoundBank>
+			</ChildrenList>
+		</WorkUnit>
+	</SoundBanks>
+</WwiseDocument>
