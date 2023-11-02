@@ -16,10 +16,12 @@ public class MoveCamera : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKey(KeyCode.Space))
+        /*
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             NewManager.instance.FocusOnPlayer();
         }
+        */
         if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
         {
             this.transform.position = new Vector3(this.transform.position.x - movementSpeed * Time.deltaTime, this.transform.position.y, this.transform.position.z - movementSpeed * Time.deltaTime);

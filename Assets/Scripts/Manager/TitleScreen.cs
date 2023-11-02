@@ -9,6 +9,7 @@ using System.IO;
 using TMPro;
 using MyBox;
 using UnityEngine.SceneManagement;
+using System.Diagnostics;
 
 public class TitleScreen : MonoBehaviour
 {
@@ -45,8 +46,11 @@ public class TitleScreen : MonoBehaviour
         string[] currentFileNames = ES3.GetFiles(Application.persistentDataPath);
         foreach(string name in currentFileNames)
         {
-            fileChoose.options.Add(new TMP_Dropdown.OptionData(name[..^4]));
-            fileChoose.RefreshShownValue();
+            if (name != ".DS_Store")
+            {
+                fileChoose.options.Add(new TMP_Dropdown.OptionData(name[..^4]));
+                fileChoose.RefreshShownValue();
+            }
         }
     }
 

@@ -13,4 +13,10 @@ public class ExitEntity : ObjectiveEntity
     {
         return "Exit here when you've completed all other objectives";
     }
+
+    public override IEnumerator ObjectiveComplete()
+    {
+        yield return base.ObjectiveComplete();
+        NewManager.instance.GameOver("You won!");
+  }
 }
