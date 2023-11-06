@@ -409,7 +409,6 @@ public class NewManager : MonoBehaviour
         gameOverText.text = cause;
         gameOverText.transform.parent.gameObject.SetActive(true);
         StopAllCoroutines();
-        CollectTime.EndTime();
     }
 
     IEnumerator StartPlayerTurn()
