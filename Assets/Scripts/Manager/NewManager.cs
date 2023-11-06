@@ -67,6 +67,7 @@ public class NewManager : MonoBehaviour
 
     public enum TurnSystem { You, Resolving, Environmentals, Enemy };
     [Foldout("Turn System", true)]
+        [Tooltip("last selected player")] PlayerEntity lastSelectedPlayer;
         [Tooltip("What's happening in the game")][ReadOnly] public TurnSystem currentTurn;
         [Tooltip("Effects to do on future turns")][ReadOnly] public List<Card> futureEffects = new List<Card>();
 
@@ -416,7 +417,6 @@ public class NewManager : MonoBehaviour
         foreach(Card card in futureEffects)
             yield return card.NextRoundEffect();
         futureEffects.Clear();
-        UpdateStats(null);
         BackToStart();
     }
 
@@ -428,6 +428,8 @@ public class NewManager : MonoBehaviour
 
         ChoiceManager.instance.DisableAllTiles();
         ChoiceManager.instance.DisableAllCards();
+        UpdateStats(lastSelectedPlayer);
+        StartCoroutine(ChooseCardPlay(lastSelectedPlayer));
 
         foreach (PlayerEntity player in listOfPlayers)
             player.currentTile.moveable = true;
@@ -436,8 +438,10 @@ public class NewManager : MonoBehaviour
     public IEnumerator ChooseMovePlayer(TileData currentTile)
     {
         PlayerEntity currentPlayer = currentTile.myEntity.GetComponent<PlayerEntity>();
+        lastSelectedPlayer = currentPlayer;
         List<TileData> possibleTiles = CalculateReachableGrids(currentTile, currentPlayer.movementLeft, true);
         ChoiceManager.instance.ChooseTile(possibleTiles);
+
         UpdateStats(currentPlayer);
         StartCoroutine(ChooseCardPlay(currentPlayer));
 
@@ -469,26 +473,29 @@ public class NewManager : MonoBehaviour
 
     IEnumerator ChooseCardPlay(PlayerEntity player) //choose a card to play
     {
-        List<Card> canBePlayed = new List<Card>();
-        foreach (Card card in player.myHand)
+        if (player != null)
         {
-            if (card.CanPlay(player))
-                canBePlayed.Add(card);
-        }
-        ChoiceManager.instance.ChooseCard(canBePlayed);
+            List<Card> canBePlayed = new List<Card>();
+            foreach (Card card in player.myHand)
+            {
+                if (card.CanPlay(player))
+                    canBePlayed.Add(card);
+            }
+            ChoiceManager.instance.ChooseCard(canBePlayed);
 
-        while (ChoiceManager.instance.chosenCard == null)
-        {
-            if (currentTurn != TurnSystem.You)
+            while (ChoiceManager.instance.chosenCard == null)
             {
-                yield break;
+                if (currentTurn != TurnSystem.You)
+                {
+                    yield break;
+                }
+                else
+                {
+                    yield return null;
+                }
             }
-            else
-            {
-                yield return null;
-            }
+            yield return PlayCard(player, ChoiceManager.instance.chosenCard);
         }
-        yield return PlayCard(player, ChoiceManager.instance.chosenCard);
     }
 
     IEnumerator PlayCard(PlayerEntity player, Card playMe) //resolve that card
@@ -510,6 +517,7 @@ public class NewManager : MonoBehaviour
         StopAllCoroutines();
         foreach (PlayerEntity player in listOfPlayers)
         {
+            lastSelectedPlayer = null;
             SetEnergy(player, 3);
             SetMovement(player, player.movesPerTurn);
             player.PlusCards(5 - player.myHand.Count);

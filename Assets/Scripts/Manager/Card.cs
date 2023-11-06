@@ -14,11 +14,15 @@ public class StringAndMethod
     public StringAndMethod(Card card)
     {
         dictionary["DRAWCARDS"] = card.DrawCards();
+        dictionary["CHOOSEDISCARD"] = card.ChooseDiscard();
+        dictionary["ALLDRAWCARDS"] = card.AllDrawCards();
         dictionary["CHANGEHP"] = card.ChangeHealth();
         dictionary["CHANGEEP"] = card.ChangeEnergy();
         dictionary["CHANGEMP"] = card.ChangeMovement();
         dictionary["FINDONE"] = card.FindOne();
         dictionary["DISCARDHAND"] = card.DiscardHand();
+        dictionary["CHANGESCOST"] = card.ChangeCost();
+        dictionary["CHANGECOSTTWOPLUS"] = card.ChangeCostTwoPlus();
         dictionary["STUNADJACENTGUARD"] = card.StunAdjacentGuard();
         dictionary["AFFECTADJACENTWALL"] = card.AffectAdjacentWall();
     }
@@ -26,6 +30,7 @@ public class StringAndMethod
 
 public class Card : MonoBehaviour, IPointerClickHandler
 {
+
 #region Card Stats
 
     [ReadOnly] public Image image;
@@ -54,10 +59,11 @@ public class Card : MonoBehaviour, IPointerClickHandler
     [ReadOnly] string selectCondition;
     [ReadOnly] string effectsInOrder;
     [ReadOnly] string nextRoundEffectsInOrder;
+    [ReadOnly] string costChangeCondition;
 
-    [ReadOnly] public TMP_Text TextName { get; private set; } 
-    [ReadOnly] public TMP_Text TextCost { get; private set; }
-    [ReadOnly] public TMP_Text TextDescr { get; private set; }
+    [ReadOnly] public TMP_Text textName { get; private set; } 
+    [ReadOnly] public TMP_Text textCost { get; private set; }
+    [ReadOnly] public TMP_Text textDescr { get; private set; }
 
     [ReadOnly] PlayerEntity currentPlayer;
     [ReadOnly] List<TileData> adjacentTilesWithGuards = new List<TileData>();
@@ -75,9 +81,9 @@ public class Card : MonoBehaviour, IPointerClickHandler
         image = GetComponent<Image>();
         choiceScript = GetComponent<SendChoice>();
 
-        TextName = this.transform.GetChild(1).GetComponent<TMP_Text>();
-        TextCost = this.transform.GetChild(2).GetComponent<TMP_Text>();
-        TextDescr = this.transform.GetChild(3).GetComponent<TMP_Text>();
+        textName = this.transform.GetChild(1).GetComponent<TMP_Text>();
+        textCost = this.transform.GetChild(2).GetComponent<TMP_Text>();
+        textDescr = this.transform.GetChild(3).GetComponent<TMP_Text>();
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -91,14 +97,14 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     public void CardSetup(CardData data)
     {
-        TextName.text = data.name;
-        TextDescr.text = data.desc;
+        textName.text = data.name;
+        textDescr.text = data.desc;
 
         typeOne = ConvertToType(data.cat1);
         typeTwo = ConvertToType(data.cat2);
 
         energyCost = data.epCost;
-        TextCost.text = $"{data.epCost}";
+        textCost.text = $"{data.epCost}";
         violent = data.isViolent;
 
         changeInHP = data.chHP;
@@ -135,16 +141,29 @@ public class Card : MonoBehaviour, IPointerClickHandler
         };
     }
 
-    #endregion
+#endregion
 
 #region Play Condition
+
+    int ApplyCostChange()
+    {
+        int changedEnergyCost = energyCost;
+
+        foreach (Card nextEffect in currentPlayer.costChange)
+        {
+            changedEnergyCost += nextEffect.CostChanger(energyCost);
+        }
+
+        textCost.text = $"{changedEnergyCost}";
+        return changedEnergyCost < 0 ? 0 : changedEnergyCost;
+    }
 
     public bool CanPlay(PlayerEntity player)
     {
         currentPlayer = player;
         image.color = Color.white;
 
-        if (player.myEnergy >= energyCost)
+        if (player.myEnergy >= ApplyCostChange())
         {
             string divide = selectCondition.Replace(" ", "");
             divide = divide.ToUpper();
@@ -229,6 +248,17 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
 #region Play Effect
 
+    public int CostChanger(int defaultCost)
+    {
+        switch (costChangeCondition)
+        {
+            case "COSTS 2+":
+                return (defaultCost >= 2) ? changeInEP : 0;
+            default:
+                return changeInEP;
+        }
+    }
+
     IEnumerator ResolveList(string divide)
     {
         StringAndMethod dic = new StringAndMethod(this);
@@ -267,6 +297,10 @@ public class Card : MonoBehaviour, IPointerClickHandler
         yield return ResolveList(nextRoundEffectsInOrder);
     }
 
+#endregion
+
+#region Interacts With Cards
+
     internal IEnumerator DrawCards()
     {
         currentPlayer.PlusCards(changeInDraw);
@@ -280,6 +314,25 @@ public class Card : MonoBehaviour, IPointerClickHandler
             player.PlusCards(changeInDraw);
         }
         yield return null;
+    }
+
+    internal IEnumerator ChooseDiscard()
+    {
+        for (int i = 0; i<chooseHand; i++)
+        {
+            NewManager.instance.UpdateInstructions($"Discard a card from your hand ({chooseHand-i} more).");
+            if (currentPlayer.myHand.Count >= 2)
+            {
+                ChoiceManager.instance.ChooseCard(currentPlayer.myHand);
+                while (ChoiceManager.instance.chosenCard == null)
+                    yield return null;
+                currentPlayer.DiscardFromHand(ChoiceManager.instance.chosenCard);
+            }
+            else if (currentPlayer.myHand.Count == 1)
+            {
+                currentPlayer.DiscardFromHand(currentPlayer.myHand[0]);
+            }
+        }
     }
 
     internal Card FindCardType(CardType type)
@@ -354,6 +407,22 @@ public class Card : MonoBehaviour, IPointerClickHandler
         }
     }
 
+#endregion
+
+#region Interacts With Stats
+
+    internal IEnumerator ChangeCost()
+    {
+        currentPlayer.costChange.Add(this);
+        yield return null;
+    }
+
+    internal IEnumerator ChangeCostTwoPlus()
+    {
+        costChangeCondition = "COSTS 2+";
+        yield return ChangeCost();
+    }
+
     internal IEnumerator ChangeHealth()
     {
         NewManager.instance.ChangeHealth(currentPlayer, changeInHP);
@@ -383,6 +452,10 @@ public class Card : MonoBehaviour, IPointerClickHandler
         NewManager.instance.SetMovement(currentPlayer, 0);
         yield return null;
     }
+
+    #endregion
+
+#region Interacts With Entities
 
     internal IEnumerator AffectAdjacentWall()
     {
@@ -423,6 +496,5 @@ public class Card : MonoBehaviour, IPointerClickHandler
         SoundManager.instance.PlaySound(targetGuard.stunSound);
         targetGuard.stunned += stunDuration;
     }
-
 #endregion
 }

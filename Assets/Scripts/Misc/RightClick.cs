@@ -36,8 +36,8 @@ public class RightClick : MonoBehaviour
         this.transform.GetChild(0).gameObject.SetActive(true);
         bigImage = newCard.image;
 
-        this.cardName.text = newCard.TextName.text;
-        this.cardCost.text = newCard.TextCost.text;
-        this.cardDescr.text = newCard.TextDescr.text;
+        this.cardName.text = newCard.textName.text;
+        this.cardCost.text = newCard.textCost.text;
+        this.cardDescr.text = newCard.textDescr.text;
     }
 }

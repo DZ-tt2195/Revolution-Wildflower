@@ -21,8 +21,9 @@ public class PlayerEntity : MovingEntity
         [Tooltip("list of cards in draw pile")][ReadOnly] public List<Card> myDrawPile;
         [Tooltip("list of cards in discard pile")][ReadOnly] public List<Card> myDiscardPile;
         [Tooltip("list of cards played this turn")][ReadOnly] public List<Card> cardsPlayed;
+        [Tooltip("list of cost reduction effects")][ReadOnly] public List<Card> costChange;
 
-    #region Entity stuff
+#region Entity stuff
 
     public override string HoverBoxText()
     {
@@ -57,14 +58,14 @@ public class PlayerEntity : MovingEntity
     public override IEnumerator EndOfTurn()
     {
         yield return null;
-        if (hidden > 0)
-            hidden--;
+        costChange.Clear();
+        hidden = hidden > 0 ? hidden - 1 : 0;
 
         //meshRenderer.material = (hidden > 0) ? HiddenPlayerMaterial : DefaultPlayerMaterial;
     }
     #endregion
 
-    #region Card Stuff
+#region Card Stuff
 
     public void PlusCards(int num)
     {
@@ -100,7 +101,9 @@ public class PlayerEntity : MovingEntity
             return card;
         }
         else
+        {
             return null;
+        }
     }
 
     public void PutIntoHand(Card drawMe)
@@ -132,5 +135,5 @@ public class PlayerEntity : MovingEntity
         }
     }
 
-    #endregion
+#endregion
 }
