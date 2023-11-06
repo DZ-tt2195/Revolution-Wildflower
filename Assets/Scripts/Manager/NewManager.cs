@@ -72,9 +72,9 @@ public class NewManager : MonoBehaviour
         [Tooltip("Effects to do on future turns")][ReadOnly] public List<Card> futureEffects = new List<Card>();
 
     [Foldout("Sound Effects", true)]
-        [SerializeField] AudioClip button;
-        [SerializeField] AudioClip endTurnSound;
-        [SerializeField] AudioClip footsteps;
+        [SerializeField] AK.Wwise.Event button;
+        [SerializeField] AK.Wwise.Event endTurnSound;
+        [SerializeField] AK.Wwise.Event footsteps;
 
     #endregion
 
@@ -466,7 +466,7 @@ public class NewManager : MonoBehaviour
         currentTurn = TurnSystem.Resolving;
         int distanceTraveled = GetDistance(currentPlayer.currentTile, ChoiceManager.instance.chosenTile);
         ChangeMovement(currentPlayer, -distanceTraveled);
-        SoundManager.instance.PlaySound(footsteps);
+        footsteps.Post(currentPlayer.gameObject);
         currentPlayer.MoveTile(ChoiceManager.instance.chosenTile);
         BackToStart();
     }
@@ -501,7 +501,8 @@ public class NewManager : MonoBehaviour
     IEnumerator PlayCard(PlayerEntity player, Card playMe) //resolve that card
     {
         currentTurn = TurnSystem.Resolving;
-        SoundManager.instance.PlaySound(playMe.cardPlay);
+        Debug.Log(playMe.cardPlay);
+        playMe.cardPlay.Post(playMe.gameObject);
 
         player.DiscardFromHand(playMe);
         ChangeEnergy(player, -playMe.energyCost);
@@ -545,7 +546,7 @@ public class NewManager : MonoBehaviour
 
     IEnumerator EndTurn() //Starts Guard Phase
     {
-        SoundManager.instance.PlaySound(endTurnSound);
+        endTurnSound.Post(gameObject);
         foreach (PlayerEntity player in listOfPlayers)
             yield return player.EndOfTurn();
 

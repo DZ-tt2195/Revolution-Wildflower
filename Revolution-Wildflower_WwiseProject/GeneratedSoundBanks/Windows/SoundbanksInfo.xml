@@ -22,7 +22,7 @@
 				<Bus Id="3803692087" Name="Master Audio Bus"/>
 			</Busses>
 		</SoundBank>
-		<SoundBank Id="1605876511" Type="User" Language="SFX" Hash="{F3BED321-30BE-B232-5BAD-2F631C86572E}">
+		<SoundBank Id="1605876511" Type="User" Language="SFX" Hash="{21888A93-C56B-68AA-7545-52D3CD0C9635}">
 			<ShortName>SFX_Bank</ShortName>
 			<Path>SFX_Bank.bnk</Path>
 			<Media>
@@ -58,6 +58,10 @@
 					<ShortName>guard-notice-placeholder.wav</ShortName>
 					<CachePath>SFX/guard-notice-placeholder_10C4C929.wem</CachePath>
 				</File>
+				<File Id="574353506" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>noise-with-hum.wav</ShortName>
+					<CachePath>SFX/noise-with-hum_D79FB2B7.wem</CachePath>
+				</File>
 				<File Id="651602383" Language="SFX" Streaming="false" Location="Memory">
 					<ShortName>burn-it-down-sketch-2.wav</ShortName>
 					<CachePath>SFX/burn-it-down-sketch-2_D79FB2B7.wem</CachePath>
@@ -82,11 +86,6 @@
 					</MediaRefs>
 				</Event>
 				<Event Id="4193244264" Name="Play_button_base_placeholder" DurationType="OneShot" DurationMin="0.38322917" DurationMax="0.38322917">
-					<MediaRefs>
-						<MediaRef Id="1041520263"/>
-					</MediaRefs>
-				</Event>
-				<Event Id="3668726462" Name="Play_button_base_placeholder_01" DurationType="OneShot" DurationMin="0.38322917" DurationMax="0.38322917">
 					<MediaRefs>
 						<MediaRef Id="1041520263"/>
 					</MediaRefs>
@@ -131,7 +130,12 @@
 						<MediaRef Id="412827956"/>
 					</MediaRefs>
 				</Event>
-				<Event Id="4097918453" Name="Play_StaticMusic" DurationType="OneShot" DurationMin="0" DurationMax="0">
+				<Event Id="4098207900" Name="Play_OfficeAmbientNoise" DurationType="Infinite">
+					<MediaRefs>
+						<MediaRef Id="574353506"/>
+					</MediaRefs>
+				</Event>
+				<Event Id="4097918453" Name="Play_StaticMusic" DurationType="Infinite">
 					<MediaRefs>
 						<MediaRef Id="651602383"/>
 					</MediaRefs>
@@ -145,5 +149,5 @@
 			</Events>
 		</SoundBank>
 	</SoundBanks>
-	<FileHash>{2FCFBF2E-6771-4813-9F86-367334443B69}</FileHash>
+	<FileHash>{72340E1B-9255-ECCA-7B93-41EBF3677AAA}</FileHash>
 </SoundBanksInfo>

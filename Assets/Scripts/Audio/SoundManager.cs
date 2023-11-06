@@ -2,19 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(AudioSource))]
 public class SoundManager : MonoBehaviour
 {
     public static SoundManager instance;
-    AudioSource source;
 
-    public AudioClip playing { get; private set; }
+    public AK.Wwise.Event playing { get; private set; }
     void Awake()
     {
         if (instance == null)
         {
             instance = this;
-            source = GetComponent<AudioSource>();
             DontDestroyOnLoad(this.gameObject);
         }
         else
@@ -28,30 +25,12 @@ public class SoundManager : MonoBehaviour
         playing = null;
     }
 
-    public void PlaySound(AudioClip sound)
+    public void PlaySound(AK.Wwise.Event sound, GameObject target)
     {
-        if (!playing || playing != sound)
+        if (playing == null || playing != sound)
         {
-            source.PlayOneShot(sound);
+            sound.Post(target);
             playing = sound;
         }
-    }
-
-    public void PlaySound(AudioClip sound, Vector3 position)
-    {
-        transform.position = position;
-        print("playing" + sound.name);
-        source.PlayOneShot(sound);
-    }
-
-    public void PlaySoundDelayed(AudioClip sound, float delay)
-    {
-        StartCoroutine(SoundDelayCoroutine(sound, delay));
-    }
-
-    IEnumerator SoundDelayCoroutine(AudioClip sound, float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        source.PlayOneShot(sound);
     }
 }
