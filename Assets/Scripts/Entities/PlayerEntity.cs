@@ -111,7 +111,7 @@ public class PlayerEntity : MovingEntity
             drawMe.transform.SetParent(handTransform);
             drawMe.transform.localScale = new Vector3(1, 1, 1);
             drawMe.transform.localPosition = new Vector3(0, 0, 0);
-            SoundManager.instance.PlaySound(drawMe.cardMove);
+            drawMe.cardMove.Post(drawMe.gameObject);
         }
     }
 
@@ -128,7 +128,7 @@ public class PlayerEntity : MovingEntity
             myDiscardPile.Add(discardMe);
             discardMe.transform.SetParent(null);
             discardMe.transform.localPosition = new Vector3(10000, 10000, 0); //send the card far away where you can't see it anymore
-            SoundManager.instance.PlaySound(discardMe.cardMove);
+            discardMe.cardMove.Post(discardMe.gameObject);
         }
     }
 

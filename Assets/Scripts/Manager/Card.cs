@@ -63,8 +63,8 @@ public class Card : MonoBehaviour, IPointerClickHandler
     [ReadOnly] List<TileData> adjacentTilesWithGuards = new List<TileData>();
     [ReadOnly] List<TileData> adjacentTilesWithWalls = new List<TileData>();
 
-    public AudioClip cardMove;
-    public AudioClip cardPlay;
+    public AK.Wwise.Event cardMove;
+    public AK.Wwise.Event cardPlay;
     
 #endregion
 
@@ -85,7 +85,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         if (eventData.button == PointerEventData.InputButton.Right)
         {
             RightClick.instance.ChangeCard(this);
-            SoundManager.instance.PlaySound(cardMove);
+            cardMove.Post(gameObject);
         }
     }
 
@@ -420,7 +420,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
             targetGuard = ChoiceManager.instance.chosenTile.myEntity.GetComponent<GuardEntity>();
         }
 
-        SoundManager.instance.PlaySound(targetGuard.stunSound);
+        targetGuard.stunSound.Post(targetGuard.gameObject);
         targetGuard.stunned += stunDuration;
     }
 

@@ -23,10 +23,10 @@ public class GuardEntity : MovingEntity
         [Tooltip("current patrol target")] private int PatrolTarget = 0;
         [Tooltip("List of distraction positions")] public List<Vector2Int> DistractionPoints = new List<Vector2Int>();
         [Tooltip("Line renderer for showing the guard is attacking")] LineRenderer AttackLine = new LineRenderer();
-        [SerializeField] AudioClip footsteps;
-        [SerializeField] AudioClip alertedSound;
-        [SerializeField] AudioClip gunshot;
-        public AudioClip stunSound;
+        [SerializeField] AK.Wwise.Event footsteps;
+        [SerializeField] AK.Wwise.Event alertedSound;
+        [SerializeField] AK.Wwise.Event gunshot;
+        public AK.Wwise.Event stunSound;
 
     private void Awake()
     {
@@ -122,7 +122,7 @@ public class GuardEntity : MovingEntity
     {
         alertStatus = Alert.Attack;
         CurrentTarget = target;
-        SoundManager.instance.PlaySound(alertedSound);
+        alertedSound.Post(gameObject);
         print("New target, player at " + target.currentTile.gridPosition);
     }
 
@@ -165,7 +165,7 @@ public class GuardEntity : MovingEntity
                 direction = nextTile.gridPosition - currentTile.gridPosition;
                 print("moving too " + nextTile.gridPosition);
                 MoveTile(nextTile);//move to the tile
-                SoundManager.instance.PlaySound(footsteps);
+                footsteps.Post(gameObject);
                 movementLeft--;
 
                 alertStatus = Alert.Patrol;
@@ -240,7 +240,7 @@ public class GuardEntity : MovingEntity
             {
                 attacksLeft--;
                 detectedPlayer.health--;
-                SoundManager.instance.PlaySound(gunshot);
+                gunshot.Post(gameObject);
                 yield break;
 
             }
@@ -254,7 +254,7 @@ public class GuardEntity : MovingEntity
                     direction = nextTile.gridPosition - currentTile.gridPosition;
                     print("moving too " + nextTile.gridPosition);
                     MoveTile(nextTile);//move to the tile
-                    SoundManager.instance.PlaySound(footsteps);
+                    footsteps.Post(gameObject);
                     movementLeft--;
                     distance = NewManager.instance.GetDistance(currentTile, detectedPlayer.currentTile);
                     if (distance < AttackRange)
@@ -365,7 +365,7 @@ public class GuardEntity : MovingEntity
             direction = nextTile.gridPosition - currentTile.gridPosition;
             print("moving too " + nextTile.gridPosition);
             MoveTile(nextTile);//move to the tile
-            SoundManager.instance.PlaySound(footsteps);
+            footsteps.Post(gameObject);
             yield return NewManager.Wait(movePauseTime);
             movementLeft--;
 

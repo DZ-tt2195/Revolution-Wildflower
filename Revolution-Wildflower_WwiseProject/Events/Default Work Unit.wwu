@@ -102,17 +102,6 @@
 						</Action>
 					</ChildrenList>
 				</Event>
-				<Event Name="Play_button_base_placeholder_01" ID="{513CAE26-7F3C-4851-9ED0-7BDBDC8BEC1A}">
-					<ChildrenList>
-						<Action Name="" ID="{FB749DF3-2FD0-42BA-9185-3938FB23FD68}" ShortID="283673491">
-							<ReferenceList>
-								<Reference Name="Target">
-									<ObjectRef Name="button-base-placeholder" ID="{47834163-E476-49BB-AAA8-6CE35F5D661E}" WorkUnitID="{1BC092A5-567E-4219-B9A1-7F41A7E3F1D8}"/>
-								</Reference>
-							</ReferenceList>
-						</Action>
-					</ChildrenList>
-				</Event>
 				<Event Name="Play_end_turn_placeholder" ID="{425A1166-3B8A-4C7E-8AAF-B3D5AE0AC4E0}">
 					<ChildrenList>
 						<Action Name="" ID="{9FEC5029-E55E-42E1-AAF1-76BCA7347EA1}" ShortID="1051513721">
@@ -152,6 +141,17 @@
 							<PropertyList>
 								<Property Name="ActionType" Type="int16" Value="2"/>
 							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="OfficeAmbientNoise" ID="{51BAC8FA-AE21-4987-B8D7-41070B1249AA}" WorkUnitID="{1BC092A5-567E-4219-B9A1-7F41A7E3F1D8}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Play_OfficeAmbientNoise" ID="{139C58A2-9C3B-43F6-88D7-6B1CC85E4D78}">
+					<ChildrenList>
+						<Action Name="" ID="{B6473D9A-B45D-4F49-94A8-8379E17AB333}" ShortID="362269227">
 							<ReferenceList>
 								<Reference Name="Target">
 									<ObjectRef Name="OfficeAmbientNoise" ID="{51BAC8FA-AE21-4987-B8D7-41070B1249AA}" WorkUnitID="{1BC092A5-567E-4219-B9A1-7F41A7E3F1D8}"/>

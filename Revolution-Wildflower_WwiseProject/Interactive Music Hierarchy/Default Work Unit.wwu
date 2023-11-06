@@ -116,6 +116,14 @@
 							<PropertyList>
 								<Property Name="LoopCount" Type="int16" Value="0"/>
 							</PropertyList>
+							<ChildrenList>
+								<MusicPlaylistItem Name="" ID="{3F09F9DE-17D5-4B0C-82A5-497120068000}" ShortID="721136212">
+									<PropertyList>
+										<Property Name="PlaylistItemType" Type="int16" Value="1"/>
+									</PropertyList>
+									<SegmentRef Name="StaticTrack" ID="{958B1D7A-3BCE-424E-8AD5-AC5622A34F94}"/>
+								</MusicPlaylistItem>
+							</ChildrenList>
 						</MusicPlaylistItem>
 					</Playlist>
 				</MusicPlaylistContainer>

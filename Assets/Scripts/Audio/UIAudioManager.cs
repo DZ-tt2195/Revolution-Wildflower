@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class UIAudioManager : MonoBehaviour
 {
-    public void PassUIEventToSoundManager(AudioClip sound)
+    public void PlayUISound(AudioClip sound)
     {
-        SoundManager.instance.PlaySound(sound);
+        //sound.Post(gameObject);
     }
 }

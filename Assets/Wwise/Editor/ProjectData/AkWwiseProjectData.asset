@@ -66,7 +66,7 @@ MonoBehaviour:
     ParentPath: SoundBanks\Default Work Unit
     guid: 45c008903f9bc0458acdfbd56132c8c3
     GuidInternal: 
-    m_lastTime: -8585027133952500105
+    m_lastTime: -8585023124323019887
     List:
     - name: SFX_Bank
       guid: 5d5c45d3c5ae5942be5f72be6b5d9f73
@@ -94,7 +94,7 @@ MonoBehaviour:
     ParentPath: Events\Default Work Unit
     guid: aa9cb76dd7a7b94db368aaabd6160f55
     GuidInternal: 
-    m_lastTime: -8585027133961921856
+    m_lastTime: -8585023124322879843
     List:
     - name: Play_bottle_placeholder
       guid: da629e37e37cac47918a6bd2cb6f6ae7
@@ -127,23 +127,6 @@ MonoBehaviour:
         ObjectType: 3
         guid: 6dd90dce0234544e8db912b3b4c88f9b
       Path: Events\Default Work Unit\Play_button_base_placeholder
-      maxAttenuation: 0
-      maxDuration: 0.38322917
-      minDuration: 0.38322917
-    - name: Play_button_base_placeholder_01
-      guid: 26ae3c513c7f51489ed07bdbdc8bec1a
-      id: 3668726462
-      PathAndIcons:
-      - ElementName: Events
-        ObjectType: 5
-        guid: 00000000000000000000000000000000
-      - ElementName: Default Work Unit
-        ObjectType: 12
-        guid: aa9cb76dd7a7b94db368aaabd6160f55
-      - ElementName: Play_button_base_placeholder_01
-        ObjectType: 3
-        guid: 26ae3c513c7f51489ed07bdbdc8bec1a
-      Path: Events\Default Work Unit\Play_button_base_placeholder_01
       maxAttenuation: 0
       maxDuration: 0.38322917
       minDuration: 0.38322917
@@ -283,6 +266,23 @@ MonoBehaviour:
       maxAttenuation: 0
       maxDuration: 0.5390625
       minDuration: 0.5390625
+    - name: Play_OfficeAmbientNoise
+      guid: a2589c133b9cf64388d76b1cc85e4d78
+      id: 4098207900
+      PathAndIcons:
+      - ElementName: Events
+        ObjectType: 5
+        guid: 00000000000000000000000000000000
+      - ElementName: Default Work Unit
+        ObjectType: 12
+        guid: aa9cb76dd7a7b94db368aaabd6160f55
+      - ElementName: Play_OfficeAmbientNoise
+        ObjectType: 3
+        guid: a2589c133b9cf64388d76b1cc85e4d78
+      Path: Events\Default Work Unit\Play_OfficeAmbientNoise
+      maxAttenuation: 0
+      maxDuration: -1
+      minDuration: -1
     - name: Play_StaticMusic
       guid: 39d54defd61ee7479db59908147d1bc1
       id: 4097918453
@@ -391,7 +391,7 @@ MonoBehaviour:
     m_lastTime: -8585027133952427928
     List: []
   ExpandedFileSystemItemIds: 
-  ExpandedWaapiItemIds: 
+  ExpandedWaapiItemIds: 0500000006000000
   AutoSyncSelection: 0
   autoPopulateEnabled: 1
   currentDataSource: 0

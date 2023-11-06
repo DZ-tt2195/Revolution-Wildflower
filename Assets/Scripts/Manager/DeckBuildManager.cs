@@ -22,7 +22,7 @@ public class DeckBuildManager : MonoBehaviour
     Button playGameButton;
 
     [SerializeField] int deckSize;
-    [SerializeField] AudioClip cardMove;
+    [SerializeField] AK.Wwise.Event cardMove;
 
     private void Awake()
     {
@@ -141,7 +141,7 @@ public class DeckBuildManager : MonoBehaviour
             newCard.transform.SetParent(deckTransforms[characterDropdown.value]);
             ApplySorting(newCard);
 
-            SoundManager.instance.PlaySound(cardMove);
+            SoundManager.instance.PlaySound(cardMove, newCard.gameObject);
 
             if (save)
                 SaveManager.instance.SaveHand(cardsInDeck, SaveManager.instance.saveFileName);
@@ -155,7 +155,7 @@ public class DeckBuildManager : MonoBehaviour
         cardsInCollection[characterDropdown.value].Add(newCard);
         newCard.transform.SetParent(collectionTransforms[characterDropdown.value]);
 
-        SoundManager.instance.PlaySound(cardMove);
+        SoundManager.instance.PlaySound(cardMove, newCard.gameObject);
         if (save)
             SaveManager.instance.SaveHand(cardsInDeck, SaveManager.instance.saveFileName);
     }
