@@ -174,19 +174,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentTile: {fileID: 0}
+  tileOffset: {x: 0, y: 0, z: 0}
   spriteRenderer: {fileID: 0}
   lineRenderer: {fileID: 0}
   MoveCost: 999
+  Occlusion: 1
   direction: {x: 0, y: 0}
   movementLeft: 0
-  movesPerTurn: 3
-  DetectionRangePatrol: 4
+  movesPerTurn: 5
+  DetectionRangePatrol: 5
+  DetectionAngle: 30
   stunned: 0
   attacksPerTurn: 1
-  footsteps: {fileID: 8300000, guid: df16e281a4eddad4c9cc80bad6607a52, type: 3}
-  alertedSound: {fileID: 8300000, guid: b2840b113c3034640a55435cafc6daa5, type: 3}
-  gunshot: {fileID: 8300000, guid: 112982c1461b4694985aae1218fd8de7, type: 3}
-  stunSound: {fileID: 8300000, guid: 6aad2662086ac904489eb02b25348f6d, type: 3}
+  PatrolPoints: []
+  DistractionPoints: []
+  footsteps:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 0}
+  alertedSound:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 0}
+  gunshot:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 0}
+  stunSound:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 0}
 --- !u!114 &5545540189652443486
 MonoBehaviour:
   m_ObjectHideFlags: 0

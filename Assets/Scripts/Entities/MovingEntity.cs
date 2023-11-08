@@ -8,7 +8,7 @@ public class MovingEntity : Entity
 {
     [Foldout("Moving Entity", true)]
         [Tooltip("Remaining moves")] [ReadOnly]public int movementLeft;
-        [Tooltip("How many tiles this moves per turn")][ReadOnly] public int movesPerTurn = 3;
+        [Tooltip("How many tiles this moves per turn")][SerializeField] public int movesPerTurn = 3;
 
 public virtual IEnumerator EndOfTurn()
     {

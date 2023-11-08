@@ -13,6 +13,7 @@ public class GuardEntity : MovingEntity
         [Tooltip("Tiles this is searching")] List<TileData> inDetection = new List<TileData>();
         [Tooltip("Pauses between movement")] float movePauseTime = 0.25f;
         [Tooltip("How far this can see")][SerializeField] int DetectionRangePatrol = 3;
+    [Tooltip("half their field of view for detection")] [SerializeField] float DetectionAngle = 30;
         [Tooltip("Turns which this does nothing")] [ReadOnly] public int stunned = 0;
         [Tooltip("Times this attacks")] [ReadOnly] public int attacksPerTurn = 1;
         [Tooltip("Current number of attacks")][ReadOnly] int attacksLeft = 0;
@@ -61,6 +62,27 @@ public class GuardEntity : MovingEntity
             inDetection[i].SurveillanceState(false);
         inDetection.Clear();
 
+        float angle = Mathf.Atan2(direction.y, direction.x);
+        float PosAngle = angle + (DetectionAngle * Mathf.Deg2Rad);
+        float NegAngle = angle - (DetectionAngle * Mathf.Deg2Rad);
+        Vector2 PosMaxVector = new Vector2(Mathf.Cos(PosAngle), Mathf.Sin(PosAngle));
+        Vector2 PosMinVector = new Vector2(Mathf.Cos(NegAngle), Mathf.Sin(NegAngle));
+        HashSet<Vector2Int> MaxLine = NewManager.instance.line(currentTile, NewManager.instance.FindTile(Vector2Int.RoundToInt(PosMaxVector * DetectionRangePatrol)));
+        HashSet<Vector2Int> MinLine = NewManager.instance.line(currentTile, NewManager.instance.FindTile(Vector2Int.RoundToInt(PosMinVector * DetectionRangePatrol)));
+        HashSet<Vector2Int> CenterLine = NewManager.instance.line(currentTile, NewManager.instance.FindTile(direction * DetectionRangePatrol));
+        foreach (Vector2Int point in MaxLine)
+        {
+            inDetection.Add(NewManager.instance.FindTile(point));
+        }
+        foreach (Vector2Int point in MinLine)
+        {
+            inDetection.Add(NewManager.instance.FindTile(point));
+        }
+        foreach (Vector2Int point in CenterLine)
+        {
+            inDetection.Add(NewManager.instance.FindTile(point));
+        }
+        /*
         Vector2Int side = Vector2Int.RoundToInt(Vector3.Cross((Vector2)direction, Vector3.forward));
         for (int i = 0; i < DetectionRangePatrol; i++)
         {
@@ -71,7 +93,7 @@ public class GuardEntity : MovingEntity
                 inDetection.Add(NewManager.instance.FindTile(currentTile.gridPosition - side + new Vector2Int(direction.x * i, direction.y * i)));
             }
         }
-
+        */
         inDetection.RemoveAll(item => item == null); //delete all tiles that are null
         for (int i = 0; i < inDetection.Count; i++)
             inDetection[i].SurveillanceState(true);
