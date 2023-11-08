@@ -7,27 +7,6 @@ using TMPro;
 using MyBox;
 using UnityEngine.EventSystems;
 
-public class StringAndMethod
-{
-    [ReadOnly] public Dictionary<string, IEnumerator> dictionary = new Dictionary<string, IEnumerator>();
-
-    public StringAndMethod(Card card)
-    {
-        dictionary["DRAWCARDS"] = card.DrawCards();
-        dictionary["CHOOSEDISCARD"] = card.ChooseDiscard();
-        dictionary["ALLDRAWCARDS"] = card.AllDrawCards();
-        dictionary["CHANGEHP"] = card.ChangeHealth();
-        dictionary["CHANGEEP"] = card.ChangeEnergy();
-        dictionary["CHANGEMP"] = card.ChangeMovement();
-        dictionary["FINDONE"] = card.FindOne();
-        dictionary["DISCARDHAND"] = card.DiscardHand();
-        dictionary["CHANGESCOST"] = card.ChangeCost();
-        dictionary["CHANGECOSTTWOPLUS"] = card.ChangeCostTwoPlus();
-        dictionary["STUNADJACENTGUARD"] = card.StunAdjacentGuard();
-        dictionary["AFFECTADJACENTWALL"] = card.AffectAdjacentWall();
-    }
-}
-
 public class Card : MonoBehaviour, IPointerClickHandler
 {
 
@@ -197,8 +176,20 @@ public class Card : MonoBehaviour, IPointerClickHandler
             "ISOCCUPIED" => OccupiedAdjacent(currentPlayer.currentTile).Count > 0,
             "EMPTYHAND" => currentPlayer.myHand.Count > 0,
             "NOENERGY" => currentPlayer.myEnergy > 0,
+            "TARGETTED" => IsTargetted(),
             _ => true,
         };
+    }
+
+    bool IsTargetted()
+    {
+        foreach (GuardEntity guard in NewManager.instance.listOfGuards)
+        {
+            if (guard.CurrentTarget == currentPlayer)
+                return true;
+        }
+
+        return false;
     }
 
     List<TileData> OccupiedAdjacent(TileData playerTile)
@@ -261,7 +252,6 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     IEnumerator ResolveList(string divide)
     {
-        StringAndMethod dic = new StringAndMethod(this);
         divide = divide.Replace(" ", "");
         divide = divide.ToUpper();
         string[] methodsInStrings = divide.Split('/');
@@ -272,14 +262,56 @@ public class Card : MonoBehaviour, IPointerClickHandler
             {
                 continue;
             }
-            else if (dic.dictionary.TryGetValue(nextMethod, out IEnumerator method))
-            {
-                yield return method;
-            }
             else
             {
-                Debug.LogError($"\"{nextMethod}\" for {this.name} isn't in the dictionary");
+                yield return ResolveMethod(nextMethod);
             }
+        }
+    }
+
+    IEnumerator ResolveMethod(string methodName)
+    {
+        switch (methodName)
+        {
+            case "DRAWCARDS":
+                yield return DrawCards();
+                break;
+            case "CHOOSEDISCARD":
+                yield return ChooseDiscard();
+                break;
+            case "ALLDRAWCARDS":
+                yield return AllDrawCards();
+                break;
+            case "CHANGEHP":
+                yield return ChangeHealth();
+                break;
+            case "CHANGEEP":
+                yield return ChangeEnergy();
+                break;
+            case "CHANGEMP":
+                yield return ChangeMovement();
+                break;
+            case "FINDONE":
+                yield return FindOne();
+                break;
+            case "DISCARDHAND":
+                yield return DiscardHand();
+                break;
+            case "CHANGECOST":
+                yield return ChangeCost();
+                break;
+            case "CHANGECOSTTWOPLUS":
+                yield return ChangeCostTwoPlus();
+                break;
+            case "STUNADJACENTGUARD":
+                yield return StunAdjacentGuard();
+                break;
+            case "AFFECTADJACENTWALL":
+                yield return AffectAdjacentWall();
+                break;
+            default:
+                yield return null;
+                break;
         }
     }
 
@@ -497,4 +529,5 @@ public class Card : MonoBehaviour, IPointerClickHandler
         targetGuard.stunned += stunDuration;
     }
 #endregion
+
 }

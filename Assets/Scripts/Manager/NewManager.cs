@@ -19,6 +19,7 @@ public class AStarNode
     public int FCost => GCost + HCost;
 }
 
+
 public class NewManager : MonoBehaviour
 {
 
@@ -114,13 +115,13 @@ public class NewManager : MonoBehaviour
             player.handTransform = handContainer.GetChild(player.myPosition).GetChild(0);
             SetEnergy(player, 3);
 
-            foreach (string cardName in SaveManager.instance.currentSaveData.savedDecks[i])
+            List<Card> addToDeck = SaveManager.instance.GenerateCards(SaveManager.instance.currentSaveData.chosenDecks[i]);
+            foreach (Card card in addToDeck)
             {
-                Card nextCard = emptyObject.transform.Find(cardName).GetComponent<Card>();
-                nextCard.transform.SetParent(player.transform);
-                player.myDrawPile.Add(nextCard);
-                nextCard.transform.localPosition = new Vector3(10000, 10000, 0); //send the card far away where you can't see it anymore
-                nextCard.choiceScript.DisableButton();
+                card.transform.SetParent(player.transform);
+                player.myDrawPile.Add(card);
+                card.transform.localPosition = new Vector3(10000, 10000, 0); //send the card far away where you can't see it anymore
+                card.choiceScript.DisableButton();
             }
 
             player.myDrawPile.Shuffle(); //shuffle your deck
@@ -774,4 +775,5 @@ public class NewManager : MonoBehaviour
     //find fastest way to get from one point to another
 
     #endregion
+
 }

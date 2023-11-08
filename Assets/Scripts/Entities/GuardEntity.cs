@@ -17,7 +17,7 @@ public class GuardEntity : MovingEntity
         [Tooltip("Turns which this does nothing")] [ReadOnly] public int stunned = 0;
         [Tooltip("Times this attacks")] [ReadOnly] public int attacksPerTurn = 1;
         [Tooltip("Current number of attacks")][ReadOnly] int attacksLeft = 0;
-        [Tooltip("Current Target to attack & persue")] PlayerEntity CurrentTarget;
+        [Tooltip("Current Target to attack & persue")] [ReadOnly] public PlayerEntity CurrentTarget;
         [Tooltip("State of a guard's alert")] Alert alertStatus = 0;
         [Tooltip("Guard Range")] int AttackRange = 1;
         [Tooltip("list of patrol positions")] public List<Vector2Int> PatrolPoints = new List<Vector2Int>();

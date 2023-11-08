@@ -14,12 +14,11 @@ using MyBox;
 [Serializable]
 public class SaveData
 {
-    public List<List<string>> savedDecks = new List<List<string>>();
+    public bool freshFile;
+    public List<string> chosenDecks = new List<string>();
 
     public SaveData()
     {
-        for (int i = 0; i < 3; i++)
-            savedDecks.Add(new List<string>());
     }
 }
 
@@ -32,7 +31,7 @@ public class SaveManager : MonoBehaviour
     [Tooltip("Card prefab")][SerializeField] Card cardPrefab;
 
     [Tooltip("Put names of the TSVs in here")] public List<string> playerDecks;
-    public List<List<Card>> characterCards;
+    public List<List<Card>> characterCards = new List<List<Card>>();
 
     private void Awake()
     {
@@ -51,6 +50,7 @@ public class SaveManager : MonoBehaviour
     {
         string path = $"{Application.persistentDataPath}/{fileName}.es3";
         currentSaveData = ES3.Load<SaveData>("saveData", path);
+        currentSaveData.freshFile = false;
         saveFileName = fileName;
         Debug.Log($"file loaded: {fileName}.es3");
     }
@@ -59,22 +59,21 @@ public class SaveManager : MonoBehaviour
     {
         currentSaveData = new SaveData();
         ES3.Save("saveData", currentSaveData, $"{Application.persistentDataPath}/{fileName}.es3");
+        currentSaveData.freshFile = true;
         saveFileName = fileName;
         Debug.Log($"file loaded: {fileName}.es3");
     }
 
-    public void SaveHand(List<List<Card>> deckToSave, string fileName)
+    public void SaveHand(List<string> decksToSave)
     {
-        List<List<string>> newCards = new List<List<string>>();
-        for (int i = 0; i<deckToSave.Count; i++)
-        {
-            newCards.Add(new List<string>());
-            foreach (Card card in deckToSave[i])
-                newCards[i].Add(card.name);
-        }
+        SaveHand(decksToSave, saveFileName);
+    }
 
-        currentSaveData.savedDecks = newCards;
+    public void SaveHand(List<string> decksToSave, string fileName)
+    {
+        currentSaveData.chosenDecks = decksToSave;
         ES3.Save("saveData", currentSaveData, $"{Application.persistentDataPath}/{fileName}.es3");
+        currentSaveData.freshFile = false;
         saveFileName = fileName;
     }
 
@@ -93,6 +92,26 @@ public class SaveManager : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
+    public List<Card> GenerateCards(string deck)
+    {
+        List<Card> characterCards = new List<Card>();
+        List<CardData> data = CardDataLoader.ReadCardData(deck);
+
+        for (int i = 0; i < data.Count; i++)
+        {
+            for (int j = 0; j < data[i].maxInv; j++)
+            {
+                Card nextCopy = Instantiate(cardPrefab, canvas);
+                nextCopy.name = $"{data[i].name}";
+                nextCopy.transform.localPosition = new Vector3(10000, 10000);
+                nextCopy.CardSetup(data[i]);
+                characterCards.Add(nextCopy);
+            }
+        }
+
+        return characterCards;
+    }
+
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         canvas = GameObject.Find("Canvas").transform;
@@ -101,25 +120,6 @@ public class SaveManager : MonoBehaviour
 
         FPS.instance.transform.SetParent(canvas);
         FPS.instance.transform.localPosition = new Vector3(-850, -500);
-
-        characterCards = new List<List<Card>>();
-        for (int k = 0; k<playerDecks.Count; k++)
-        {
-            List<CardData> data = CardDataLoader.ReadCardData(playerDecks[k]);
-            characterCards.Add(new List<Card>());
-
-            for (int i = 0; i < data.Count; i++)
-            {
-                for (int j = 0; j < data[i].maxInv; j++)
-                {
-                    Card nextCopy = Instantiate(cardPrefab, canvas);
-                    nextCopy.name = $"{data[i].name} (P{k})";
-                    nextCopy.transform.localPosition = new Vector3(10000, 10000);
-                    nextCopy.CardSetup(data[i]);
-                    characterCards[k].Add(nextCopy);
-                }
-            }
-        }
     }
 
     public void UnloadObjects()
