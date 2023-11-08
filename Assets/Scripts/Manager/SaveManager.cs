@@ -31,7 +31,7 @@ public class SaveManager : MonoBehaviour
     [Tooltip("Card prefab")][SerializeField] Card cardPrefab;
 
     [Tooltip("Put names of the TSVs in here")] public List<string> playerDecks;
-    public List<List<Card>> characterCards = new List<List<Card>>();
+    public List<Card> allCards = new List<Card>();
 
     private void Awake()
     {
@@ -106,6 +106,7 @@ public class SaveManager : MonoBehaviour
                 nextCopy.transform.localPosition = new Vector3(10000, 10000);
                 nextCopy.CardSetup(data[i]);
                 characterCards.Add(nextCopy);
+                allCards.Add(nextCopy);
             }
         }
 
@@ -126,7 +127,7 @@ public class SaveManager : MonoBehaviour
     {
         Preserve(RightClick.instance.gameObject);
         Preserve(FPS.instance.gameObject);
-        characterCards.Clear();
+        allCards.Clear();
     }
 
     void Preserve(GameObject next)

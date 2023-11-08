@@ -96,10 +96,9 @@ public class ChoiceManager : MonoBehaviour
         chosenCard = null;
         chosenTile = null;
 
-        foreach (List<Card> cardList in SaveManager.instance.characterCards)
+        foreach (Card card in SaveManager.instance.allCards)
         {
-            foreach (Card card in cardList)
-                card.choiceScript.DisableButton();
+            card.choiceScript.DisableButton();
         }
     }
 }

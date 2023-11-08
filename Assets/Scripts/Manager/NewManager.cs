@@ -103,11 +103,6 @@ public class NewManager : MonoBehaviour
     {
         Transform emptyObject = new GameObject("Card Container").transform;
         handContainer.transform.localPosition = new Vector3(10000, 10000, 0);
-        foreach (List<Card> cardList in SaveManager.instance.characterCards)
-        {
-            foreach(Card card in cardList)
-                card.transform.SetParent(emptyObject);
-        }
 
         for (int i = 0; i < listOfPlayers.Count; i++)
         {
