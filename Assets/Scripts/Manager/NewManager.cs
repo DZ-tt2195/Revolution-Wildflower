@@ -209,11 +209,6 @@ public class NewManager : MonoBehaviour
                                 int.TryParse(points[1], out curY);
                                 theGuard.PatrolPoints.Add(new Vector2Int(curX, curY));
                             }
-                            print("This guard will patrol!");
-                            foreach (Vector2Int cord in theGuard.PatrolPoints)
-                            {
-                                print("Next point: " + cord);
-                            }
                             break;
                     }
                     try
@@ -460,7 +455,7 @@ public class NewManager : MonoBehaviour
     void MovePlayer(PlayerEntity currentPlayer)
     { 
         currentTurn = TurnSystem.Resolving;
-        int distanceTraveled = GetDistance(currentPlayer.currentTile, ChoiceManager.instance.chosenTile);
+        int distanceTraveled = GetDistance(currentPlayer.currentTile.gridPosition, ChoiceManager.instance.chosenTile.gridPosition);
         ChangeMovement(currentPlayer, -distanceTraveled);
         footsteps.Post(currentPlayer.gameObject);
         currentPlayer.MoveTile(ChoiceManager.instance.chosenTile);
@@ -570,14 +565,14 @@ public class NewManager : MonoBehaviour
 
 #region Pathfinding
 
-    public HashSet<Vector2Int> line(TileData p1, TileData p2)
+    public HashSet<Vector2Int> line(Vector2Int p1, Vector2Int p2)
     {
         HashSet<Vector2Int> points = new HashSet<Vector2Int>();
         float distance = GetDistance(p1, p2);
         for (float step = 0; step <= distance; step++)
         {;
             float t = step/distance;
-            Vector2 midPointRaw = Vector2.Lerp(p1.gridPosition, p2.gridPosition, t);
+            Vector2 midPointRaw = Vector2.Lerp(p1, p2, t);
             Vector2Int midPoint = new Vector2Int(Mathf.RoundToInt(midPointRaw.x), Mathf.RoundToInt(midPointRaw.y));
             points.Add(midPoint);
         }
@@ -585,10 +580,10 @@ public class NewManager : MonoBehaviour
     }
 
     //gets the distance (in gridspaces) between two gridspaces
-    public int GetDistance(TileData a, TileData b)
+    public int GetDistance(Vector2Int a, Vector2Int b)
     {
-        int distX = Mathf.Abs(a.gridPosition.x - b.gridPosition.x);
-        int distY = Mathf.Abs(a.gridPosition.y - b.gridPosition.y);
+        int distX = Mathf.Abs(a.x - b.x);
+        int distY = Mathf.Abs(a.y - b.y);
         return distY + distX;
     }
 
@@ -692,11 +687,11 @@ public class NewManager : MonoBehaviour
                     {
                         continue;
                     }
-                    movementCostToNeighbor = currentNode.GCost + GetDistance(currentNode.ATileData, neighbor) * neighbor.myEntity.MoveCost;
+                    movementCostToNeighbor = currentNode.GCost + GetDistance(currentNode.ATileData.gridPosition, neighbor.gridPosition) * neighbor.myEntity.MoveCost;
                 }
                 else
                 {
-                    movementCostToNeighbor = currentNode.GCost + GetDistance(currentNode.ATileData, neighbor);
+                    movementCostToNeighbor = currentNode.GCost + GetDistance(currentNode.ATileData.gridPosition, neighbor.gridPosition);
                 }
                 AStarNode neighborNode;
                 if (!nodeLookup.ContainsKey(neighbor))
@@ -711,7 +706,7 @@ public class NewManager : MonoBehaviour
                 if (movementCostToNeighbor < neighborNode.GCost || !openList.Contains(neighborNode))
                 {
                     neighborNode.GCost = movementCostToNeighbor;
-                    neighborNode.HCost = GetDistance(neighbor, targetLocation);
+                    neighborNode.HCost = GetDistance(neighbor.gridPosition, targetLocation.gridPosition);
                     neighborNode.Parent = currentNode;
                     //print(neighborNode.ATileData.gridPosition + "'s parent is " + currentNode.ATileData.gridPosition);
                     // Add neighbor to the open list if it's not already there
