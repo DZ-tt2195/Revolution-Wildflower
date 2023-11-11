@@ -1,6 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using UnityEngine.UI;
+using TMPro;
+using MyBox;
+using UnityEngine.SceneManagement;
 
 //the data that a single card holds; this has the same fields and descriptions as in the spreadsheet
 public class CardData
@@ -40,9 +45,16 @@ public class CardDataLoader
     public static List<CardData> ReadCardData(string fileToLoad)
     {
         List<CardData> cardData = new List<CardData>();
-        var data = TSVReader.ReadCards(fileToLoad, 2);
-        foreach (string[] line in data)
+        var data = TSVReader.ReadCards(fileToLoad);
+        for (int i = 3; i<data.Length; i++)
         {
+            string[] line = data[i];
+            for (int j = 0; j < line.Length; j++)
+            {
+                line[j] = line[j].Trim().Replace("\"", "").Replace("\\", "");
+                //Debug.Log(line[j]);
+            }
+
             CardData newCard = new CardData();
             cardData.Add(newCard);
 
@@ -67,7 +79,14 @@ public class CardDataLoader
             newCard.intn = StringToInt(line[18]);
             newCard.select = line[19];
             newCard.action = line[20];
-            newCard.nextAct = line[21];
+            try
+            {
+                newCard.nextAct = line[21];
+            }
+            catch (IndexOutOfRangeException)
+            {
+                newCard.nextAct = "";
+            }
         }
         return cardData;
     }
@@ -75,7 +94,15 @@ public class CardDataLoader
     //Convert the string to an integer (returning 0 if the line is empty)
     static int StringToInt(string line)
     {
-        return (line == "") ? 0 : int.Parse(line);
+        try
+        {
+            return (line == "") ? 0 : int.Parse(line);
+        }
+        catch (FormatException)
+        {
+            Debug.LogError($"{line} wasn't read correctly");
+            return -1;
+        }
     }
 }
 

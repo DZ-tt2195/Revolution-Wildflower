@@ -46,6 +46,16 @@ public class SaveManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+    #if UNITY_EDITOR
+        foreach (string deck in playerDecks)
+        {
+            StartCoroutine(DownloadSheet.instance.DownloadGoogleSheet(deck));
+        }
+    #endif
+    }
+
     public void LoadFile(string fileName)
     {
         string path = $"{Application.persistentDataPath}/{fileName}.es3";
