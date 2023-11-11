@@ -17,7 +17,10 @@ public class ObjectiveEntity : Entity
         NewManager.instance.listOfObjectives.Remove(this);
         NewManager.instance.objectiveButton.gameObject.SetActive(false);
         Destroy(this.gameObject);
-        DialogueManager.GetInstance().EnterDialogueMode(inkJSON);
+        if (!DialogueManager.GetInstance().dialogueIsPlaying)
+        {
+             DialogueManager.GetInstance().EnterDialogueMode(inkJSON);
+        }
         yield return null;
     }
 }
