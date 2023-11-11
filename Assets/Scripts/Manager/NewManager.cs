@@ -563,14 +563,14 @@ public class NewManager : MonoBehaviour
 
     #endregion
 
-#region Pathfinding
+ #region Pathfinding
 
     public HashSet<Vector2Int> line(Vector2Int p1, Vector2Int p2)
     {
         HashSet<Vector2Int> points = new HashSet<Vector2Int>();
         float distance = GetDistance(p1, p2);
         for (float step = 0; step <= distance; step++)
-        {;
+        {
             float t = step/distance;
             Vector2 midPointRaw = Vector2.Lerp(p1, p2, t);
             Vector2Int midPoint = new Vector2Int(Mathf.RoundToInt(midPointRaw.x), Mathf.RoundToInt(midPointRaw.y));

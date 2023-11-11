@@ -62,74 +62,154 @@ public class GuardEntity : MovingEntity
             inDetection[i].SurveillanceState(false);
         inDetection.Clear();
 
+        //creating vectors
         float angle = Mathf.Atan2(direction.y, direction.x);
         float PosAngle = angle + (DetectionAngle * Mathf.Deg2Rad);
         float NegAngle = angle - (DetectionAngle * Mathf.Deg2Rad);
         Vector2 PosMaxVector = new Vector2(Mathf.Cos(PosAngle), Mathf.Sin(PosAngle));
         Vector2 PosMinVector = new Vector2(Mathf.Cos(NegAngle), Mathf.Sin(NegAngle));
-        HashSet<Vector2Int> MaxLine = NewManager.instance.line(currentTile.gridPosition, Vector2Int.RoundToInt(PosMaxVector * DetectionRangePatrol));
-        HashSet<Vector2Int> MinLine = NewManager.instance.line(currentTile.gridPosition, Vector2Int.RoundToInt(PosMinVector * DetectionRangePatrol));
-        HashSet<Vector2Int> CenterLine = NewManager.instance.line(currentTile.gridPosition, direction * DetectionRangePatrol);
+
+        //drawing each line
+        HashSet<Vector2Int> MaxLine = NewManager.instance.line(currentTile.gridPosition, currentTile.gridPosition + Vector2Int.RoundToInt(PosMaxVector.normalized * DetectionRangePatrol));
+        HashSet<Vector2Int> MinLine = NewManager.instance.line(currentTile.gridPosition, currentTile.gridPosition +  Vector2Int.RoundToInt(PosMinVector.normalized * DetectionRangePatrol));
+        HashSet<Vector2Int> CenterLine = NewManager.instance.line(currentTile.gridPosition, currentTile.gridPosition + (direction * DetectionRangePatrol));
         HashSet<Vector2Int> SpacesToCheck = new HashSet<Vector2Int>();
+
+        Vector2Int lastVisMax = currentTile.gridPosition;
+        Vector2Int lastVisMin = currentTile.gridPosition;
+        Vector2Int lastVisMid = currentTile.gridPosition;
+
+
+        //validating each line and drawing their ends
         foreach (Vector2Int point in MaxLine)
-        { 
-            print("Max line point for " + currentTile.gridPosition + " is " + point);
-            if (point.x > NewManager.instance.listOfTiles.GetLength(0) || point.x < 0 || point.y > NewManager.instance.listOfTiles.GetLength(1) || point.y < 0)
+        {
+
+            TileData TileToAdd = NewManager.instance.FindTile(point);
+            if (TileToAdd == null)
             {
                 break;
-            } else
+            }
+            if (TileToAdd.myEntity != null)
             {
-                TileData TileToAdd = NewManager.instance.FindTile(point);
-                if (TileToAdd.myEntity != null)
+                if (TileToAdd.myEntity.Occlusion && point != currentTile.gridPosition)
                 {
-                    if (TileToAdd.myEntity.Occlusion)
-                    {
-                        break;
-                    }
+                    break;
                 }
             }
+            lastVisMax = point;
             SpacesToCheck.Add(point);
         }
         foreach (Vector2Int point in MinLine)
         {
-            print("Min line point for " + currentTile.gridPosition + " is " + point);
-            if (point.x > NewManager.instance.listOfTiles.GetLength(0) || point.x < 0 || point.y > NewManager.instance.listOfTiles.GetLength(1) || point.y < 0)
+
+            TileData TileToAdd = NewManager.instance.FindTile(point);
+            if (TileToAdd == null)
             {
                 break;
             }
-            else
+            if (TileToAdd.myEntity != null)
             {
-                TileData TileToAdd = NewManager.instance.FindTile(point);
-                if (TileToAdd.myEntity != null)
+                if (TileToAdd.myEntity.Occlusion && point != currentTile.gridPosition)
                 {
-                    if (TileToAdd.myEntity.Occlusion)
-                    {
-                        break;
-                    }
+                    break;
                 }
             }
+            lastVisMin = point;
             SpacesToCheck.Add(point);
         }
         foreach (Vector2Int point in CenterLine)
         {
-            print("Center line point for " + currentTile.gridPosition + " is " + point);
-            if (point.x > NewManager.instance.listOfTiles.GetLength(0) || point.x < 0 || point.y > NewManager.instance.listOfTiles.GetLength(1) || point.y < 0)
+             
+            TileData TileToAdd = NewManager.instance.FindTile(point);
+            if (TileToAdd == null)
             {
                 break;
             }
-            else
+            if (TileToAdd.myEntity != null)
             {
-                TileData TileToAdd = NewManager.instance.FindTile(point);
-                if (TileToAdd.myEntity != null)
+                if (TileToAdd.myEntity.Occlusion && point != currentTile.gridPosition)
                 {
-                    if (TileToAdd.myEntity.Occlusion)
-                    {
-                        break;
-                    }
+                    break;
+                }
+            }
+            lastVisMid = point;
+            SpacesToCheck.Add(point);
+        }
+
+        //filling the cone (+ validating fill, wildly inefficient but it works for now)
+        HashSet<Vector2Int> MinMidConnection = NewManager.instance.line(lastVisMin, currentTile.gridPosition + (direction * DetectionRangePatrol));
+        HashSet<Vector2Int> MaxMidConnection = NewManager.instance.line(lastVisMax, currentTile.gridPosition + (direction * DetectionRangePatrol));
+        HashSet<Vector2Int> MidMinConnection = NewManager.instance.line(lastVisMid, currentTile.gridPosition + Vector2Int.RoundToInt(PosMinVector.normalized * DetectionRangePatrol));
+        HashSet<Vector2Int> MidMaxConnection = NewManager.instance.line(lastVisMid, currentTile.gridPosition + Vector2Int.RoundToInt(PosMaxVector.normalized * DetectionRangePatrol));
+        foreach (Vector2Int point in MinMidConnection)
+        {
+
+            TileData TileToAdd = NewManager.instance.FindTile(point);
+            if (TileToAdd == null)
+            {
+                break;
+            }
+            if (TileToAdd.myEntity != null)
+            {
+                if (TileToAdd.myEntity.Occlusion && point != currentTile.gridPosition)
+                {
+                    break;
                 }
             }
             SpacesToCheck.Add(point);
         }
+        foreach (Vector2Int point in MidMinConnection)
+        {
+
+            TileData TileToAdd = NewManager.instance.FindTile(point);
+            if (TileToAdd == null)
+            {
+                break;
+            }
+            if (TileToAdd.myEntity != null)
+            {
+                if (TileToAdd.myEntity.Occlusion && point != currentTile.gridPosition)
+                {
+                    break;
+                }
+            }
+            SpacesToCheck.Add(point);
+        }
+        foreach (Vector2Int point in MaxMidConnection)
+        {
+
+            TileData TileToAdd = NewManager.instance.FindTile(point);
+            if (TileToAdd == null)
+            {
+                break;
+            }
+            if (TileToAdd.myEntity != null)
+            {
+                if (TileToAdd.myEntity.Occlusion && point != currentTile.gridPosition)
+                {
+                    break;
+                }
+            }
+            SpacesToCheck.Add(point);
+        }
+        foreach (Vector2Int point in MidMaxConnection)
+        {
+
+            TileData TileToAdd = NewManager.instance.FindTile(point);
+            if (TileToAdd == null)
+            {
+                break;
+            }
+            if (TileToAdd.myEntity != null)
+            {
+                if (TileToAdd.myEntity.Occlusion && point != currentTile.gridPosition)
+                {
+                    break;
+                }
+            }
+            SpacesToCheck.Add(point);
+        }
+
         foreach (Vector2Int point in SpacesToCheck)
         {
             inDetection.Add(NewManager.instance.FindTile(point));
@@ -190,65 +270,22 @@ public class GuardEntity : MovingEntity
 
     IEnumerator persue()
     {
-        if (PatrolPoints.Count > 1)
+        print(currentTile.gridPosition + "checking distraction");
+        if (currentTile.gridPosition == DistractionPoints[DistractionPoints.Count - 1])
         {
-            if (currentTile.gridPosition == DistractionPoints[DistractionPoints.Count - 1])
+            DistractionPoints.RemoveAt(DistractionPoints.Count - 1);
+            if (DistractionPoints.Count == 0)
             {
-                DistractionPoints.RemoveAt(DistractionPoints.Count - 1);
-                if (DistractionPoints.Count == 0)
-                {
-                    alertStatus = Alert.Patrol;
-                    CheckForPlayer();
-                    if (alertStatus == Alert.Attack)
-                    {
-                        if (attacksLeft > 0 || movementLeft > 0)
-                        {
-                            yield return Attack(CurrentTarget);
-                        }
-                        else
-                            yield break;
-                    }
-                    else if (alertStatus == Alert.Patrol)
-                    {
-                        if (movementLeft > 0)
-                        {
-                            yield return Patrol();
-                        }
-                        else
-                            yield break;
-                    }
-                }
-            }
-            if (movementLeft > 0)
-            {
-                TileData nextTile;
-                NewManager.instance.CalculatePathfinding(currentTile, NewManager.instance.FindTile(DistractionPoints[DistractionPoints.Count - 1]), movementLeft, true);
-                nextTile = NewManager.instance.CurrentAvailableMoveTarget;  //moves towards the next patrol point
-                direction = nextTile.gridPosition - currentTile.gridPosition;
-                print("moving too " + nextTile.gridPosition);
-                MoveTile(nextTile);//move to the tile
-                footsteps.Post(gameObject);
-                movementLeft--;
-
                 alertStatus = Alert.Patrol;
-                if(DistractionPoints.Count > 0)
-                {
-                    alertStatus = Alert.Persue;
-                }
                 CheckForPlayer();
                 if (alertStatus == Alert.Attack)
                 {
-                    if (movementLeft > 0 || attacksLeft > 0)
+                    if (attacksLeft > 0 || movementLeft > 0)
                     {
                         yield return Attack(CurrentTarget);
                     }
-                }
-                else if (alertStatus == Alert.Persue)
-                {
-                    if (movementLeft > 0)
-                    {
-                        yield return persue();
-                    }
+                    else
+                        yield break;
                 }
                 else if (alertStatus == Alert.Patrol)
                 {
@@ -256,23 +293,63 @@ public class GuardEntity : MovingEntity
                     {
                         yield return Patrol();
                     }
+                    else
+                       yield break;
                 }
             }
-            else
-                yield break;
+        }
+        if (movementLeft > 0)
+        {
+            TileData nextTile;
+            NewManager.instance.CalculatePathfinding(currentTile, NewManager.instance.FindTile(DistractionPoints[DistractionPoints.Count - 1]), movementLeft, true);
+            nextTile = NewManager.instance.CurrentAvailableMoveTarget;  //moves towards the next patrol point
+            direction = nextTile.gridPosition - currentTile.gridPosition;
+            print("moving too " + nextTile.gridPosition);
+            MoveTile(nextTile);//move to the tile
+            footsteps.Post(gameObject);
+            movementLeft--;
+
+            alertStatus = Alert.Patrol;
+            if(DistractionPoints.Count > 0)
+            {
+                alertStatus = Alert.Persue;
+            }
+            CheckForPlayer();
+            if (alertStatus == Alert.Attack)
+            {
+                if (movementLeft > 0 || attacksLeft > 0)
+                {
+                    yield return Attack(CurrentTarget);
+                }
+            }
+            else if (alertStatus == Alert.Persue)
+            {
+                if (movementLeft > 0)
+                {
+                    yield return persue();
+                }
+            }
+            else if (alertStatus == Alert.Patrol)
+            {
+                if (movementLeft > 0)
+                {
+                    yield return Patrol();
+                }
+            }
         }
         else
-        {
-            DistractionPoints.Clear();
             yield break;
-        }
+        
     }
 
     IEnumerator Attack(PlayerEntity detectedPlayer)
     {
+
+        print(currentTile.gridPosition + " attacking player at " + detectedPlayer.currentTile.gridPosition);
         HashSet<Vector2Int> lineToPlayer = NewManager.instance.line(currentTile.gridPosition, detectedPlayer.currentTile.gridPosition);
         bool inSight = true;
         int distance = NewManager.instance.GetDistance(currentTile.gridPosition, detectedPlayer.currentTile.gridPosition);
+        print("Distance to player " + distance);
         foreach (Vector2Int entry in lineToPlayer)
         {
             TileData TileToCheck = NewManager.instance.FindTile(entry);
@@ -285,7 +362,7 @@ public class GuardEntity : MovingEntity
                         if (TileToCheck.myEntity.Occlusion == true)
                         {
                             inSight = false;
-                            continue;
+                            break;
                         }
                     }
                 }
@@ -293,22 +370,24 @@ public class GuardEntity : MovingEntity
             else
             {
                 inSight = false;
-                continue;
+                break;
             }
         }
-        if (inSight == true)
+        if (inSight)
         {
             if (distance <= AttackRange)
             {
+                print("within range, attacking");
                 attacksLeft--;
                 detectedPlayer.health--;
                 gunshot.Post(gameObject);
                 yield break;
 
             }
-            if (distance > AttackRange)
+            else
             {
-                if (PatrolPoints.Count > 1)
+                print("Out of range, persuing");
+                if (movementLeft > 0)
                 {
                     TileData nextTile;
                     NewManager.instance.CalculatePathfinding(currentTile, detectedPlayer.currentTile, movementLeft, true);
@@ -318,19 +397,24 @@ public class GuardEntity : MovingEntity
                     MoveTile(nextTile);//move to the tile
                     footsteps.Post(gameObject);
                     movementLeft--;
-                    distance = NewManager.instance.GetDistance(currentTile.gridPosition, detectedPlayer.currentTile.gridPosition);
-                    if (distance < AttackRange)
-                    {
-                        if (attacksLeft > 0)
-                        {
-                            yield return Attack(detectedPlayer);
-                        }
-                        else
-                        {
-                            yield break;
-                        }
-                    }
-                    else if (movementLeft > 0)
+                }
+                else
+                {
+                    print("out of movement, ending turn");
+                    yield break;
+                }
+
+
+                float timer = 0;
+                while (timer < movePauseTime)
+                {
+                    timer += Time.deltaTime;
+                    yield return null;
+                }
+                distance = NewManager.instance.GetDistance(currentTile.gridPosition, detectedPlayer.currentTile.gridPosition);
+                if (distance < AttackRange)
+                {
+                    if (attacksLeft > 0)
                     {
                         yield return Attack(detectedPlayer);
                     }
@@ -339,121 +423,58 @@ public class GuardEntity : MovingEntity
                         yield break;
                     }
                 }
+                else if (movementLeft > 0)
+                {
+                    yield return Attack(detectedPlayer);
+                }
                 else
                 {
                     yield break;
                 }
             }
-             
         }
-        else
-        {
-
-        }
-
-        yield break;
-        /*
-        RaycastHit hit;
-        Vector3 shotDirection = detectedPlayer.transform.position - transform.position;
-        if (Physics.Raycast(transform.position, shotDirection, out hit, Mathf.Infinity, 1 << 2))
-        {
-            if (hit.collider.gameObject.tag == "Player")
-            {
-                if (NewManager.instance.GetDistance(currentTile, detectedPlayer.currentTile) > AttackRange && movementLeft > 0)
-                {
-                    NewManager.instance.CalculatePathfinding(currentTile, detectedPlayer.currentTile, movementLeft, true);
-                    MoveTile(NewManager.instance.CurrentAvailableMoveTarget);
-                    movementLeft--;
-                }
-                if (NewManager.instance.GetDistance(currentTile, detectedPlayer.currentTile) <= AttackRange && attacksLeft > 0)
-                {
-                    NewManager.instance.ChangeHealth(detectedPlayer, -1);
-                    SoundManager.instance.PlaySound(gunshot);
-                    attacksLeft--;
-                }
-            }
-            else
-            {
-                alertStatus = Alert.Patrol;
-            }
-        }
-        else
-        {
-            alertStatus = Alert.Patrol;
-        }
-        */
-
-        //checking whether to end round, patrol, attack, or check distraction
-
     }
 
     IEnumerator Patrol()
     {
-        //print(currentTile.gridPosition + " has " + PatrolPoints.Count + " Patrol Points");
-        if (PatrolPoints.Count < 2)
+        print(currentTile.gridPosition + "Patrolling");
+        TileData nextTile;
+        if (currentTile == NewManager.instance.listOfTiles[PatrolPoints[PatrolTarget].x, PatrolPoints[PatrolTarget].y])
         {
-            print("++++++++++++++++++++++");
-            //print(currentTile.gridPosition + "is a stationary guard");
-            movementLeft = 0;
-            CheckForPlayer();
+            PatrolTarget++;
+            if (PatrolTarget >= PatrolPoints.Count)
+            {
+                PatrolTarget = 0;
+            }
+        }
+        NewManager.instance.CalculatePathfinding(currentTile, NewManager.instance.listOfTiles[PatrolPoints[PatrolTarget].x, PatrolPoints[PatrolTarget].y], movementLeft, true);
+        nextTile = NewManager.instance.CurrentAvailableMoveTarget;  //moves towards the next patrol point
+        direction = nextTile.gridPosition - currentTile.gridPosition;
+        print("moving too " + nextTile.gridPosition);
+        MoveTile(nextTile);//move to the tile
+        footsteps.Post(gameObject);
+        yield return NewManager.Wait(movePauseTime);
+        movementLeft--;
+
+
+        CheckForPlayer();
+        float timer = 0;
+        while (timer < movePauseTime)
+        {
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        if (movementLeft > 0)
+            {
             if (alertStatus == Alert.Attack)
             {
-                print("stationary at " + currentTile.gridPosition + " is finished, moving to attack");
-                Attack(CurrentTarget);
-
+                yield return Attack(CurrentTarget);
             }
-            direction.x *= -1;
-            direction.y *= -1;
-            print("stationary guard finished, end script");
-            yield break;
-        }
-        else
-        {
-            //print(currentTile.gridPosition + "is a moving guard");
-            TileData nextTile;
-            if (currentTile == NewManager.instance.listOfTiles[PatrolPoints[PatrolTarget].x, PatrolPoints[PatrolTarget].y])
+            if (alertStatus == Alert.Patrol)
             {
-                PatrolTarget++;
-                if (PatrolTarget >= PatrolPoints.Count)
-                {
-                    PatrolTarget = 0;
-                }
-            }
-            print("++++++++++++++++++++++");
-            //print("current tile " + currentTile.gridPosition);
-            //print("Target tile " + PatrolPoints[PatrolTarget].x + "," + PatrolPoints[PatrolTarget].y);
-            NewManager.instance.CalculatePathfinding(currentTile, NewManager.instance.listOfTiles[PatrolPoints[PatrolTarget].x, PatrolPoints[PatrolTarget].y], movementLeft, true);
-            nextTile = NewManager.instance.CurrentAvailableMoveTarget;  //moves towards the next patrol point
-            direction = nextTile.gridPosition - currentTile.gridPosition;
-            print("moving too " + nextTile.gridPosition);
-            MoveTile(nextTile);//move to the tile
-            footsteps.Post(gameObject);
-            yield return NewManager.Wait(movePauseTime);
-            movementLeft--;
+                yield return Patrol();
 
-
-            CheckForPlayer();
-            float timer = 0;
-            while (timer < movePauseTime)
-            {
-                timer += Time.deltaTime;
-                yield return null;
             }
-            if (movementLeft > 0)
-            {
-                if (alertStatus == Alert.Attack)
-                {
-                    print(currentTile.gridPosition + " is Finished, moving on to attack");
-                    yield return Attack(CurrentTarget);
-                }
-                if (alertStatus == Alert.Patrol)
-                {
-                    print(currentTile.gridPosition + " is Finished, moving on to patrol");
-                    yield return Patrol();
-
-                }
-            }
-            print(currentTile.gridPosition + " is Finished, ending turn");
         }
     }
 }

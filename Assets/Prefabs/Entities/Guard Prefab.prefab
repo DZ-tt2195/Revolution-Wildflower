@@ -178,14 +178,15 @@ MonoBehaviour:
   spriteRenderer: {fileID: 0}
   lineRenderer: {fileID: 0}
   MoveCost: 999
-  Occlusion: 1
+  Occlusion: 0
   direction: {x: 0, y: 0}
   movementLeft: 0
   movesPerTurn: 5
-  DetectionRangePatrol: 5
+  DetectionRangePatrol: 4
   DetectionAngle: 30
   stunned: 0
   attacksPerTurn: 1
+  CurrentTarget: {fileID: 0}
   PatrolPoints: []
   DistractionPoints: []
   footsteps:

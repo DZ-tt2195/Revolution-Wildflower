@@ -15,7 +15,7 @@ public class Entity : MonoBehaviour
         [ReadOnly] public SpriteRenderer spriteRenderer;
         [ReadOnly] public LineRenderer lineRenderer;
         [Tooltip("Cost of moving through item, default 999 (intraversable)")] [ReadOnly] public int MoveCost = 999;
-    [Tooltip("whether a guard can see through this object")] [ReadOnly] public bool Occlusion = true;
+        [Tooltip("whether a guard can see through this object")] [SerializeField] public bool Occlusion = true;
         [Tooltip("Where this moves and looks")] [ReadOnly] public Vector2Int direction;
 
     void Awake()

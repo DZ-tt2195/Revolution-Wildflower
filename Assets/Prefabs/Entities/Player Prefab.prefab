@@ -69,15 +69,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentTile: {fileID: 0}
+  tileOffset: {x: 0, y: 0, z: 0}
   spriteRenderer: {fileID: 0}
   lineRenderer: {fileID: 0}
   MoveCost: 999
+  Occlusion: 0
   direction: {x: 0, y: 0}
   movementLeft: 0
   movesPerTurn: 3
+  myPosition: 0
   health: 3
   hidden: 0
   adjacentObjective: {fileID: 0}
+  myEnergy: 0
+  handTransform: {fileID: 0}
+  myHand: []
+  myDrawPile: []
+  myDiscardPile: []
+  cardsPlayed: []
+  costChange: []
 --- !u!212 &9131289745054389547
 SpriteRenderer:
   m_ObjectHideFlags: 0
