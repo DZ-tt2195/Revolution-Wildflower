@@ -6,16 +6,32 @@ using Ink.Runtime;
 
 public class DialogueManager : MonoBehaviour
 {
+    [Header("Params")]
+    [SerializeField] private float typingSpeed = 0.04f;
+
     [Header("Dialouge UI")]
 
     [SerializeField] private GameObject dialoguePanel;
+    [SerializeField] private GameObject continueIcon;
     [SerializeField] private TextMeshProUGUI dialogueText;
+
+    [SerializeField] private TextMeshProUGUI displayNameText;
+    [SerializeField] private Animator portraitAnimator;
+    private Animator layoutAnimator;
 
     private Story currentStory;
 
-    private bool dialogueIsPlaying;
+    public bool dialogueIsPlaying { get; private set; }
+
+    private bool canContinueToNextLine = false;
+
+    private Coroutine displayLineCoroutine;
 
     private static DialogueManager instance;
+
+    private const string SPEAKER_TAG = "speaker";
+    private const string PORTRAIT_TAG = "portrait";
+    private const string LAYOUT_TAG  = "layout";
 
     private void Awake()
     {
@@ -35,6 +51,8 @@ public class DialogueManager : MonoBehaviour
     {
         dialogueIsPlaying = false;
         dialoguePanel.SetActive(false);
+
+        layoutAnimator.GetComponent<Animator>();
     }
 
     private void Updated()
@@ -46,7 +64,9 @@ public class DialogueManager : MonoBehaviour
         }
 
         // handle continuine to the next line in dialogue when submite is pressed
-       if (Input.GetKey(KeyCode.E))
+       if (canContinueToNextLine 
+            &&  currentStory.currentChoices.Count == 0
+            && Input.GetKey(KeyCode.E))
        {
            ContinueStory();
        }
@@ -59,6 +79,11 @@ public class DialogueManager : MonoBehaviour
         dialogueIsPlaying = true;
         dialoguePanel.SetActive(true);
 
+        // reset portrait, layout, and speaker
+        displayNameText.text = "???";
+        portraitAnimator.Play("default");
+        layoutAnimator.Play("right");
+
        ContinueStory();
     }
 
@@ -69,15 +94,102 @@ public class DialogueManager : MonoBehaviour
             dialogueText.text = "";
         }
 
+    private IEnumerator DisplayLine(string line)
+    {
+        // empty the dialogue text
+        dialogueText.text = "";
+
+        // hide items while text is typingSpeed
+        continueIcon.SetActive(false);
+
+        canContinueToNextLine = false;
+
+        bool isAddingRichTextTag = false;
+
+        foreach (char letter in line.ToCharArray())
+        {
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                dialogueText.text = line;
+                break;
+            }
+
+            // check for rich text tag, if found, add it without warning
+            if (letter == '<' || isAddingRichTextTag)
+            {
+                isAddingRichTextTag = true;
+                dialogueText.text += letter;
+                if(letter == '>')
+                {
+                    isAddingRichTextTag = false;
+                }
+            }
+            // if not rich text, add the next letter and wait a small time
+            else
+            {
+                dialogueText.text += letter;
+                yield return new WaitForSeconds(typingSpeed);
+            }
+        }
+
+        // actions to take after the line has finished displaying
+        continueIcon.SetActive(true);
+
+        canContinueToNextLine = true;
+    }
+
     private void ContinueStory()
     {
         if (currentStory.canContinue)
         {
-            dialogueText.text = currentStory.Continue();
+            // set text for the current dialogue line
+            if (displayLineCoroutine != null)
+            {
+                StopCoroutine(displayLineCoroutine);
+            }
+           
+            displayLineCoroutine = StartCoroutine(DisplayLine(currentStory.Continue()));
+
+            // handle tags
+            HandleTags(currentStory.currentTags);
         }
         else
         {
             ExitDialogueMode();
+        }
+    }
+
+    private void HandleTags(List<string> currentTags)
+    {
+        // Loop through each tag and handle them accordingly
+        foreach (string tag in currentTags)
+        {
+            // parse the tag
+            string[] splitTag = tag.Split(':');
+            if (splitTag.Length !=2)
+            {
+                Debug.LogError("Tag could not be approriately parsed: " + tag);
+            }
+            string tagKey = splitTag[0].Trim();
+            string tagValue = splitTag[1].Trim();
+
+            // handle the tag
+            switch (tagKey)
+            {
+                case SPEAKER_TAG:
+                    displayNameText.text = tagValue;
+                    break;
+                case PORTRAIT_TAG:
+                    portraitAnimator.Play(tagValue);
+                    break;
+                case LAYOUT_TAG:
+                    layoutAnimator.Play(tagValue);
+                    break;
+                default:
+                    Debug.LogWarning("Tag came in but is not being handled: " + tag);
+                    break;
+
+            }
         }
     }
 
