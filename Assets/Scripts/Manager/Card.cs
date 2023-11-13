@@ -10,7 +10,7 @@ using UnityEngine.EventSystems;
 public class Card : MonoBehaviour, IPointerClickHandler
 {
 
-#region Card Stats
+    #region Card Stats
 
     [ReadOnly] public Image image;
     [ReadOnly] public SendChoice choiceScript;
@@ -40,7 +40,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
     [ReadOnly] string nextRoundEffectsInOrder;
     [ReadOnly] string costChangeCondition;
 
-    [ReadOnly] public TMP_Text textName { get; private set; } 
+    [ReadOnly] public TMP_Text textName { get; private set; }
     [ReadOnly] public TMP_Text textCost { get; private set; }
     [ReadOnly] public TMP_Text textDescr { get; private set; }
 
@@ -50,10 +50,10 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     public AK.Wwise.Event cardMove;
     public AK.Wwise.Event cardPlay;
-    
-#endregion
 
-#region Setup
+    #endregion
+
+    #region Setup
 
     private void Awake()
     {
@@ -120,9 +120,9 @@ public class Card : MonoBehaviour, IPointerClickHandler
         };
     }
 
-#endregion
+    #endregion
 
-#region Play Condition
+    #region Play Condition
 
     int ApplyCostChange()
     {
@@ -210,7 +210,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         List<TileData> tilesInRange = NewManager.instance.CalculateReachableGrids(playerTile, range, false);
         List<TileData> guardsInRange = new List<TileData>();
 
-        foreach(TileData tile in tilesInRange)
+        foreach (TileData tile in tilesInRange)
         {
             if (tile.myEntity != null && tile.myEntity.CompareTag("Enemy"))
                 guardsInRange.Add(tile);
@@ -235,9 +235,9 @@ public class Card : MonoBehaviour, IPointerClickHandler
         return wallsInRange;
     }
 
-#endregion
+    #endregion
 
-#region Play Effect
+    #region Play Effect
 
     public int CostChanger(int defaultCost)
     {
@@ -256,7 +256,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         divide = divide.ToUpper();
         string[] methodsInStrings = divide.Split('/');
 
-        foreach(string nextMethod in methodsInStrings)
+        foreach (string nextMethod in methodsInStrings)
         {
             if (nextMethod == "" || nextMethod == "NONE")
             {
@@ -315,6 +315,22 @@ public class Card : MonoBehaviour, IPointerClickHandler
         }
     }
 
+    public void CalculateDistraction(TileData source)
+    {
+        List<TileData> affectedTiles = NewManager.instance.CalculateIntensity(source, distractionIntensity, false);
+        for (int i = 0; i < affectedTiles.Count; i++)
+        {
+            if (affectedTiles[i].myEntity != null)
+            {
+                if (affectedTiles[i].myEntity.CompareTag("Enemy"))
+                {
+                    GuardEntity noticer = affectedTiles[i].myEntity.GetComponent<GuardEntity>();
+                    noticer.DistractionPoints.Add(source.gridPosition);
+                }
+            }
+        }
+    }
+
     public IEnumerator OnPlayEffect()
     {
         ChoiceManager.instance.DisableAllCards();
@@ -329,19 +345,21 @@ public class Card : MonoBehaviour, IPointerClickHandler
         yield return ResolveList(nextRoundEffectsInOrder);
     }
 
-#endregion
+    #endregion
 
-#region Interacts With Cards
+    #region Interacts With Cards
 
     internal IEnumerator DrawCards()
     {
         currentPlayer.PlusCards(changeInDraw);
+        CalculateDistraction(currentPlayer.currentTile);
         yield return null;
     }
 
     internal IEnumerator AllDrawCards()
     {
-        foreach(PlayerEntity player in NewManager.instance.listOfPlayers)
+        CalculateDistraction(currentPlayer.currentTile);
+        foreach (PlayerEntity player in NewManager.instance.listOfPlayers)
         {
             player.PlusCards(changeInDraw);
         }
@@ -350,9 +368,10 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     internal IEnumerator ChooseDiscard()
     {
-        for (int i = 0; i<chooseHand; i++)
+        CalculateDistraction(currentPlayer.currentTile);
+        for (int i = 0; i < chooseHand; i++)
         {
-            NewManager.instance.UpdateInstructions($"Discard a card from your hand ({chooseHand-i} more).");
+            NewManager.instance.UpdateInstructions($"Discard a card from your hand ({chooseHand - i} more).");
             if (currentPlayer.myHand.Count >= 2)
             {
                 ChoiceManager.instance.ChooseCard(currentPlayer.myHand);
@@ -369,6 +388,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     internal Card FindCardType(CardType type)
     {
+        CalculateDistraction(currentPlayer.currentTile);
         List<Card> invalidCards = new List<Card>();
         Card foundCard = null;
         while (foundCard == null)
@@ -396,6 +416,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     internal Card FindCardCost(int cost)
     {
+        CalculateDistraction(currentPlayer.currentTile);
         List<Card> invalidCards = new List<Card>();
         Card foundCard = null;
         while (foundCard == null)
@@ -423,7 +444,8 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     internal IEnumerator DiscardHand()
     {
-        while (currentPlayer.myHand.Count>0)
+        CalculateDistraction(currentPlayer.currentTile);
+        while (currentPlayer.myHand.Count > 0)
         {
             yield return NewManager.Wait(0.05f);
             currentPlayer.DiscardFromHand(currentPlayer.myHand[0]);
@@ -432,6 +454,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     internal IEnumerator FindOne()
     {
+        CalculateDistraction(currentPlayer.currentTile);
         for (int i = 0; i < 2; i++)
         {
             yield return NewManager.Wait(0.05f);
@@ -439,55 +462,62 @@ public class Card : MonoBehaviour, IPointerClickHandler
         }
     }
 
-#endregion
+    #endregion
 
-#region Interacts With Stats
+    #region Interacts With Stats
 
     internal IEnumerator ChangeCost()
     {
+        CalculateDistraction(currentPlayer.currentTile);
         currentPlayer.costChange.Add(this);
         yield return null;
     }
 
     internal IEnumerator ChangeCostTwoPlus()
     {
+        CalculateDistraction(currentPlayer.currentTile);
         costChangeCondition = "COSTS 2+";
         yield return ChangeCost();
     }
 
     internal IEnumerator ChangeHealth()
     {
+        CalculateDistraction(currentPlayer.currentTile);
         NewManager.instance.ChangeHealth(currentPlayer, changeInHP);
         yield return null;
     }
 
     internal IEnumerator ChangeEnergy()
     {
+        CalculateDistraction(currentPlayer.currentTile);
         NewManager.instance.ChangeEnergy(currentPlayer, changeInEP);
         yield return null;
     }
 
     internal IEnumerator ZeroEnergy()
     {
+        CalculateDistraction(currentPlayer.currentTile);
         NewManager.instance.SetEnergy(currentPlayer, 0);
         yield return null;
     }
 
     internal IEnumerator ChangeMovement()
     {
+        CalculateDistraction(currentPlayer.currentTile);
         NewManager.instance.ChangeMovement(currentPlayer, changeInMP);
         yield return null;
     }
 
     internal IEnumerator ZeroMovement()
     {
+        CalculateDistraction(currentPlayer.currentTile);
         NewManager.instance.SetMovement(currentPlayer, 0);
         yield return null;
     }
 
     #endregion
 
-#region Interacts With Entities
+    #region Interacts With Entities
 
     internal IEnumerator AffectAdjacentWall()
     {
@@ -506,6 +536,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
             targetWall = ChoiceManager.instance.chosenTile.myEntity.GetComponent<WallEntity>();
         }
         targetWall.AffectWall(changeInWall);
+        CalculateDistraction(targetWall.currentTile);
     }
 
     internal IEnumerator StunAdjacentGuard()
@@ -527,6 +558,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
         targetGuard.stunSound.Post(targetGuard.gameObject);
         targetGuard.stunned += stunDuration;
+        CalculateDistraction(targetGuard.currentTile);
     }
 #endregion
 

@@ -24,6 +24,8 @@ public class GuardEntity : MovingEntity
         [Tooltip("current patrol target")] private int PatrolTarget = 0;
         [Tooltip("List of distraction positions")] public List<Vector2Int> DistractionPoints = new List<Vector2Int>();
         [Tooltip("Line renderer for showing the guard is attacking")] LineRenderer AttackLine = new LineRenderer();
+        [Tooltip("Object used for the distraction alert for the guard")][SerializeField] GameObject distractionNotif;
+        [Tooltip("offset used to spawn distraction notifications")] [SerializeField] float NotifOffset = 1;
         [SerializeField] AK.Wwise.Event footsteps;
         [SerializeField] AK.Wwise.Event alertedSound;
         [SerializeField] AK.Wwise.Event gunshot;
@@ -217,6 +219,14 @@ public class GuardEntity : MovingEntity
         inDetection.RemoveAll(item => item == null); //delete all tiles that are null
         for (int i = 0; i < inDetection.Count; i++)
             inDetection[i].SurveillanceState(true);
+    }
+
+    public void addDistraction(Vector2Int position)
+    {
+        print("distraction added");
+        DistractionPoints.Add(position);
+        GameObject notification = Instantiate(distractionNotif, transform);
+        notification.transform.position = new Vector3(transform.position.x, transform.position.y + NotifOffset, transform.position.z);
     }
 
     public void CheckForPlayer()

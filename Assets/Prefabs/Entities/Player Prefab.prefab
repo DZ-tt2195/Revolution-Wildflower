@@ -73,6 +73,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 0}
   lineRenderer: {fileID: 0}
   MoveCost: 999
+  SoundCost: 1
   Occlusion: 0
   direction: {x: 0, y: 0}
   movementLeft: 0

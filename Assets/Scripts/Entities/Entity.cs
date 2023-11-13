@@ -14,7 +14,8 @@ public class Entity : MonoBehaviour
         [Tooltip("The visual offset for this entity relative to its tile")] public Vector3 tileOffset;
         [ReadOnly] public SpriteRenderer spriteRenderer;
         [ReadOnly] public LineRenderer lineRenderer;
-        [Tooltip("Cost of moving through item, default 999 (intraversable)")] [ReadOnly] public int MoveCost = 999;
+        [Tooltip("Cost of moving through item, default 999 (intraversable)")] [SerializeField] public int MoveCost = 999;
+        [Tooltip("Cost of sound moving through item, default to 1")] [SerializeField] public int SoundCost = 1;
         [Tooltip("whether a guard can see through this object")] [SerializeField] public bool Occlusion = true;
         [Tooltip("Where this moves and looks")] [ReadOnly] public Vector2Int direction;
 

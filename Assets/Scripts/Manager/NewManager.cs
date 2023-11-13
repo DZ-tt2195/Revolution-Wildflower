@@ -643,6 +643,62 @@ public class NewManager : MonoBehaviour
         return reachableGrids;
     }
 
+    //used for determining how sound moves, uses different move cost limits than regular directions
+    public List<TileData> CalculateIntensity(TileData startLocation, int movementSpeed, bool considerEntities)
+    {
+        List<TileData> reachableGrids = new List<TileData>();
+
+        //First in first out
+        Queue<(TileData, int)> queue = new Queue<(TileData, int)>();
+
+        //HashSet is a simple collection without orders
+        HashSet<TileData> visited = new HashSet<TileData>();
+
+        queue.Enqueue((startLocation, 0));
+        visited.Add(startLocation);
+
+        while (queue.Count > 0)
+        {
+            var current = queue.Dequeue();
+            TileData SelectTile = current.Item1;
+            int cost = current.Item2;
+
+            if (cost <= movementSpeed)
+            {
+                reachableGrids.Add(SelectTile); ;
+                //FindAdjacent(SelectTile);
+                foreach (TileData neighbor in SelectTile.adjacentTiles)
+                {
+                    int newCost;
+                    if (neighbor.myEntity != null && considerEntities)
+                    {
+                        newCost = cost + neighbor.myEntity.SoundCost;
+                    }
+                    else
+                    {
+                        newCost = cost + 1;
+                    }
+
+                    if (!visited.Contains(neighbor) && newCost <= movementSpeed)
+                    {
+                        if (neighbor.myEntity == null || considerEntities)
+                        {
+                            queue.Enqueue((neighbor, newCost));
+                            visited.Add(neighbor);
+                        }
+                        else if (neighbor.myEntity.SoundCost! >= 999)
+                        {
+                            queue.Enqueue((neighbor, newCost));
+                            visited.Add(neighbor);
+                        }
+
+                    }
+                }
+            }
+        }
+        return reachableGrids;
+    }
+
     //find fastest way to get from one point to another
 
     public void CalculatePathfinding(TileData startLocation, TileData targetLocation, int movementPoints, bool singleMovement)
