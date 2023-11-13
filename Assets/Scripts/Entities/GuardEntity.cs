@@ -232,10 +232,12 @@ public class GuardEntity : MovingEntity
                     {
                         print("found player");
                         Alerted(inDetection[i].myEntity.GetComponent<PlayerEntity>());
+                        break;
                     }
                 }
             }
         }
+
     }
 
     public override IEnumerator EndOfTurn()
@@ -248,9 +250,10 @@ public class GuardEntity : MovingEntity
         {
             movementLeft = movesPerTurn;
             attacksLeft = attacksPerTurn;
+            CheckForPlayer();
+            print(DistractionPoints.Count);
             if (DistractionPoints.Count > 0)
                 alertStatus = Alert.Persue;
-            CheckForPlayer();
             if (alertStatus == Alert.Patrol)
                 yield return Patrol();
             else if (alertStatus == Alert.Attack)
@@ -300,6 +303,7 @@ public class GuardEntity : MovingEntity
         }
         if (movementLeft > 0)
         {
+            print(movementLeft);
             TileData nextTile;
             NewManager.instance.CalculatePathfinding(currentTile, NewManager.instance.FindTile(DistractionPoints[DistractionPoints.Count - 1]), movementLeft, true);
             nextTile = NewManager.instance.CurrentAvailableMoveTarget;  //moves towards the next patrol point
@@ -309,6 +313,7 @@ public class GuardEntity : MovingEntity
             footsteps.Post(gameObject);
             movementLeft--;
 
+            yield return NewManager.Wait(movePauseTime);
             alertStatus = Alert.Patrol;
             if(DistractionPoints.Count > 0)
             {
@@ -349,9 +354,9 @@ public class GuardEntity : MovingEntity
         HashSet<Vector2Int> lineToPlayer = NewManager.instance.line(currentTile.gridPosition, detectedPlayer.currentTile.gridPosition);
         bool inSight = true;
         int distance = NewManager.instance.GetDistance(currentTile.gridPosition, detectedPlayer.currentTile.gridPosition);
-        print("Distance to player " + distance);
         foreach (Vector2Int entry in lineToPlayer)
         {
+            print("line of sight " + entry + " To target");
             TileData TileToCheck = NewManager.instance.FindTile(entry);
             if (TileToCheck != null)
             {
@@ -361,6 +366,7 @@ public class GuardEntity : MovingEntity
                     {
                         if (TileToCheck.myEntity.Occlusion == true)
                         {
+                            print("broken line of sight, occlusion");
                             inSight = false;
                             break;
                         }
@@ -369,6 +375,7 @@ public class GuardEntity : MovingEntity
             }
             else
             {
+                print("broken line of sight, gap");
                 inSight = false;
                 break;
             }
@@ -399,18 +406,10 @@ public class GuardEntity : MovingEntity
                     movementLeft--;
                 }
                 else
-                {
-                    print("out of movement, ending turn");
                     yield break;
-                }
 
 
-                float timer = 0;
-                while (timer < movePauseTime)
-                {
-                    timer += Time.deltaTime;
-                    yield return null;
-                }
+                yield return NewManager.Wait(movePauseTime);
                 distance = NewManager.instance.GetDistance(currentTile.gridPosition, detectedPlayer.currentTile.gridPosition);
                 if (distance < AttackRange)
                 {
@@ -418,26 +417,28 @@ public class GuardEntity : MovingEntity
                     {
                         yield return Attack(detectedPlayer);
                     }
-                    else
-                    {
-                        yield break;
-                    }
                 }
                 else if (movementLeft > 0)
                 {
                     yield return Attack(detectedPlayer);
                 }
-                else
-                {
-                    yield break;
-                }
+            }
+        }
+        else
+        {
+            print("moving to distraction persuit");
+            DistractionPoints.Add(detectedPlayer.currentTile.gridPosition);
+            alertStatus = Alert.Persue;
+            if (movementLeft > 0)
+            {
+                yield return persue();
             }
         }
     }
 
     IEnumerator Patrol()
     {
-        print(currentTile.gridPosition + "Patrolling");
+        //print(currentTile.gridPosition + "Patrolling");
         TileData nextTile;
         if (currentTile == NewManager.instance.listOfTiles[PatrolPoints[PatrolTarget].x, PatrolPoints[PatrolTarget].y])
         {
@@ -450,22 +451,16 @@ public class GuardEntity : MovingEntity
         NewManager.instance.CalculatePathfinding(currentTile, NewManager.instance.listOfTiles[PatrolPoints[PatrolTarget].x, PatrolPoints[PatrolTarget].y], movementLeft, true);
         nextTile = NewManager.instance.CurrentAvailableMoveTarget;  //moves towards the next patrol point
         direction = nextTile.gridPosition - currentTile.gridPosition;
-        print("moving too " + nextTile.gridPosition);
+        //print("moving too " + nextTile.gridPosition);
         MoveTile(nextTile);//move to the tile
         footsteps.Post(gameObject);
-        yield return NewManager.Wait(movePauseTime);
         movementLeft--;
 
 
         CheckForPlayer();
-        float timer = 0;
-        while (timer < movePauseTime)
-        {
-            timer += Time.deltaTime;
-            yield return null;
-        }
+        yield return NewManager.Wait(movePauseTime);
         if (movementLeft > 0)
-            {
+        {
             if (alertStatus == Alert.Attack)
             {
                 yield return Attack(CurrentTarget);

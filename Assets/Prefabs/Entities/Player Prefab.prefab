@@ -76,7 +76,7 @@ MonoBehaviour:
   Occlusion: 0
   direction: {x: 0, y: 0}
   movementLeft: 0
-  movesPerTurn: 3
+  movesPerTurn: 5
   myPosition: 0
   health: 3
   hidden: 0

@@ -181,7 +181,7 @@ MonoBehaviour:
   Occlusion: 0
   direction: {x: 0, y: 0}
   movementLeft: 0
-  movesPerTurn: 5
+  movesPerTurn: 4
   DetectionRangePatrol: 4
   DetectionAngle: 30
   stunned: 0
