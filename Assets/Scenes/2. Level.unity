@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2652,8 +2652,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -726.3611, y: 476.24768}
-  m_SizeDelta: {x: 467.2709, y: 127.5121}
+  m_AnchoredPosition: {x: -793.46, y: 476.24768}
+  m_SizeDelta: {x: 333.06, y: 127.5121}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1357957977
 MonoBehaviour:
@@ -3592,7 +3592,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1946367678
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3827,8 +3827,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.0010185, y: -0.0008812}
-  m_SizeDelta: {x: 530.25, y: 191.19}
+  m_AnchoredPosition: {x: -0.00390625, y: -0.0005187988}
+  m_SizeDelta: {x: 333.0639, y: 127.51}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2003720402
 MonoBehaviour:
@@ -3854,6 +3854,8 @@ MonoBehaviour:
 
     Scroll Up / Down: Zoom in and
     out
+
+    Right Click: Read a card
 
     Space: Quit the game'
   m_isRightToLeft: 0
@@ -3882,8 +3884,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 25
-  m_fontSizeBase: 25
+  m_fontSize: 22
+  m_fontSizeBase: 22
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -3918,7 +3920,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 50.526016, y: 30.456055, z: 27.597656, w: 34.585907}
+  m_margin: {x: 1.5116425, y: 1.2810059, z: 0.7564697, w: -0.4242859}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0

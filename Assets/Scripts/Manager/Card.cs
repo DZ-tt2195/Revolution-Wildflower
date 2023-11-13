@@ -10,10 +10,11 @@ using UnityEngine.EventSystems;
 public class Card : MonoBehaviour, IPointerClickHandler
 {
 
-    #region Card Stats
+#region Card Stats
 
     [ReadOnly] public Image image;
     [ReadOnly] public SendChoice choiceScript;
+    [SerializeField] Collector collector;
 
     [ReadOnly] public int energyCost;
     public enum CardType { Attack, Draw, Distraction, Energy, Movement, Misc, None };
@@ -53,7 +54,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     #endregion
 
-    #region Setup
+#region Setup
 
     private void Awake()
     {
@@ -122,7 +123,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     #endregion
 
-    #region Play Condition
+#region Play Condition
 
     int ApplyCostChange()
     {
@@ -237,7 +238,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     #endregion
 
-    #region Play Effect
+#region Play Effect
 
     public int CostChanger(int defaultCost)
     {
@@ -250,14 +251,17 @@ public class Card : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    IEnumerator ResolveList(string divide)
+    IEnumerator ResolveList(string effects)
     {
-        divide = divide.Replace(" ", "");
+        string divide = effects.Replace(" ", "");
         divide = divide.ToUpper();
         string[] methodsInStrings = divide.Split('/');
 
         foreach (string nextMethod in methodsInStrings)
         {
+            ChoiceManager.instance.DisableAllCards();
+            ChoiceManager.instance.DisableAllCards();
+
             if (nextMethod == "" || nextMethod == "NONE")
             {
                 continue;
@@ -271,48 +275,87 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     IEnumerator ResolveMethod(string methodName)
     {
-        switch (methodName)
+        if (methodName.Contains("CHOOSE("))
         {
-            case "DRAWCARDS":
-                yield return DrawCards();
-                break;
-            case "CHOOSEDISCARD":
-                yield return ChooseDiscard();
-                break;
-            case "ALLDRAWCARDS":
-                yield return AllDrawCards();
-                break;
-            case "CHANGEHP":
-                yield return ChangeHealth();
-                break;
-            case "CHANGEEP":
-                yield return ChangeEnergy();
-                break;
-            case "CHANGEMP":
-                yield return ChangeMovement();
-                break;
-            case "FINDONE":
-                yield return FindOne();
-                break;
-            case "DISCARDHAND":
-                yield return DiscardHand();
-                break;
-            case "CHANGECOST":
-                yield return ChangeCost();
-                break;
-            case "CHANGECOSTTWOPLUS":
-                yield return ChangeCostTwoPlus();
-                break;
-            case "STUNADJACENTGUARD":
-                yield return StunAdjacentGuard();
-                break;
-            case "AFFECTADJACENTWALL":
-                yield return AffectAdjacentWall();
-                break;
-            default:
-                yield return null;
-                break;
+            string[] choices = methodName.Replace("CHOOSE(", "").Replace(")", "").Split('|');
+            yield return ChooseOptions(choices);
         }
+        else
+        {
+            switch (methodName)
+            {
+                case "DRAWCARDS":
+                    yield return DrawCards();
+                    break;
+                case "CHOOSEDISCARD":
+                    yield return ChooseDiscard();
+                    break;
+                case "ALLDRAWCARDS":
+                    yield return AllDrawCards();
+                    break;
+                case "CHANGEHP":
+                    yield return ChangeHealth();
+                    break;
+                case "CHANGEEP":
+                    yield return ChangeEnergy();
+                    break;
+                case "CHANGEMP":
+                    yield return ChangeMovement();
+                    break;
+                case "FINDONE":
+                    yield return FindOne();
+                    break;
+                case "DISCARDHAND":
+                    yield return DiscardHand();
+                    break;
+                case "CHANGECOST":
+                    yield return ChangeCost();
+                    break;
+                case "CHANGECOSTTWOPLUS":
+                    yield return ChangeCostTwoPlus();
+                    break;
+                case "STUNADJACENTGUARD":
+                    yield return StunAdjacentGuard();
+                    break;
+                case "AFFECTADJACENTWALL":
+                    yield return AffectAdjacentWall();
+                    break;
+                default:
+                    yield return null;
+                    break;
+            }
+        }
+    }
+
+    IEnumerator ChooseOptions(string[] choices)
+    {
+        Collector newCollector = Instantiate(collector);
+        newCollector.StatsSetup("Make a choice.", 0);
+
+        foreach (string choice in choices)
+        {
+            switch (choice)
+            {
+                case "DRAWCARDS":
+                    newCollector.AddTextButton($"Draw {changeInDraw}");
+                    break;
+                case "CHANGEMP":
+                    newCollector.AddTextButton($"+{changeInMP} Movement");
+                    break;
+                case "CHANGEEP":
+                    newCollector.AddTextButton($"+{changeInEP} Energy");
+                    break;
+                case "CHANGEHP":
+                    newCollector.AddTextButton($"+{changeInHP} Health");
+                    break;
+            }
+        }
+
+        while (newCollector.chosenButton == -1)
+            yield return null;
+
+        yield return ResolveMethod(choices[newCollector.chosenButton]);
+        Destroy(newCollector.gameObject);
     }
 
     public void CalculateDistraction(TileData source)
@@ -345,9 +388,9 @@ public class Card : MonoBehaviour, IPointerClickHandler
         yield return ResolveList(nextRoundEffectsInOrder);
     }
 
-    #endregion
+#endregion
 
-    #region Interacts With Cards
+#region Interacts With Cards
 
     internal IEnumerator DrawCards()
     {
@@ -464,7 +507,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     #endregion
 
-    #region Interacts With Stats
+#region Interacts With Stats
 
     internal IEnumerator ChangeCost()
     {
@@ -517,7 +560,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     #endregion
 
-    #region Interacts With Entities
+#region Interacts With Entities
 
     internal IEnumerator AffectAdjacentWall()
     {

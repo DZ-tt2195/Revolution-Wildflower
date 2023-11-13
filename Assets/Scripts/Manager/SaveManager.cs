@@ -51,7 +51,7 @@ public class SaveManager : MonoBehaviour
     #if UNITY_EDITOR
         foreach (string deck in playerDecks)
         {
-            StartCoroutine(DownloadSheet.instance.DownloadGoogleSheet(deck));
+            StartCoroutine(DownloadSheet.instance.DownloadCardSheet(deck));
         }
     #endif
     }

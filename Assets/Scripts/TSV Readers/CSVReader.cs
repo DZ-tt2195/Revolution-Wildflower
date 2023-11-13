@@ -22,21 +22,6 @@ public class TSVReader
 	{
 		TextAsset data = Resources.Load(file) as TextAsset;
 
-		/*
-		var lines = Regex.Split(data.text, LINE_SPLIT_RE);
-		if (lines.Length - headerLines <= 0)
-			return new string[0][];
-
-		var list = new string[lines.Length - headerLines][];
-
-		for (var i = headerLines; i < lines.Length; i++) {
-
-			var values = Regex.Split(lines[i], SPLIT_RE);
-			list[i - headerLines] = values;
-		}
-		return list;
-		*/
-
 		string editData = data.text;
 		editData = editData.Replace("],", "").Replace("]", "").Replace("{", "").Replace("}", "");
 

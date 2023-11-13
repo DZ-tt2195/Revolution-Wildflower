@@ -507,6 +507,8 @@ public class NewManager : MonoBehaviour
     public void Regain()
     {
         StopAllCoroutines();
+        UpdateInstructions("");
+
         foreach (PlayerEntity player in listOfPlayers)
         {
             lastSelectedPlayer = null;
@@ -516,6 +518,7 @@ public class NewManager : MonoBehaviour
             player.cardsPlayed.Clear();
             UpdateStats(null);
         }
+
         StartCoroutine(EnvironmentalPhase());
     }
 
@@ -563,7 +566,7 @@ public class NewManager : MonoBehaviour
 
     #endregion
 
- #region Pathfinding
+#region Pathfinding
 
     public HashSet<Vector2Int> line(Vector2Int p1, Vector2Int p2)
     {

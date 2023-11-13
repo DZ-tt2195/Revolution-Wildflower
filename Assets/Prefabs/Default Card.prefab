@@ -364,6 +364,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   image: {fileID: 0}
   choiceScript: {fileID: 0}
+  collector: {fileID: 7928303491963949573, guid: 0ce383b7ea8ca488c810cadf3b089e7e, type: 3}
   energyCost: 0
   typeOne: 0
   typeTwo: 0
