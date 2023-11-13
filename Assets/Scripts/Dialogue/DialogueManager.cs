@@ -20,7 +20,7 @@ public class DialogueManager : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI displayNameText;
     [SerializeField] private Animator portraitAnimator;
-    private Animator layoutAnimator;
+    [SerializeField ]private Animator layoutAnimator;
 
     private Story currentStory;
 
@@ -62,7 +62,7 @@ public class DialogueManager : MonoBehaviour
         layoutAnimator.GetComponent<Animator>();
     }
 
-    private void Updated()
+    private void Update()
     {
         // return right away if dialogue isn't playing
         if (!dialogueIsPlaying)
@@ -96,9 +96,9 @@ public class DialogueManager : MonoBehaviour
        ContinueStory();
     }
 
-    private IEnumerator ExitDialogueMode()
+    private void ExitDialogueMode()
         {
-            yield return new WaitForSeconds(0.2f);
+            //yield return new WaitForSeconds(0.2f);
 
             dialogueVariables.StopListening(currentStory);
 
