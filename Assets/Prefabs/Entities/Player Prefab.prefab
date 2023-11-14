@@ -78,10 +78,14 @@ MonoBehaviour:
   direction: {x: 0, y: 0}
   movementLeft: 0
   movesPerTurn: 5
+  myBar: {fileID: 0}
   myPosition: 0
   health: 3
   hidden: 0
   adjacentObjective: {fileID: 0}
+  gailSprite: {fileID: 21300000, guid: 373e1b54d32d04bc8b44134464ddd666, type: 3}
+  frankieSprite: {fileID: 21300000, guid: 373e1b54d32d04bc8b44134464ddd666, type: 3}
+  wkSprite: {fileID: 21300000, guid: 373e1b54d32d04bc8b44134464ddd666, type: 3}
   myEnergy: 0
   handTransform: {fileID: 0}
   myHand: []

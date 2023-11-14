@@ -121,7 +121,6 @@ public class NewManager : MonoBehaviour
         {
             PlayerEntity player = listOfPlayers[i];
             player.handTransform = handContainer.GetChild(player.myPosition).GetChild(0);
-            SetEnergy(player, 3);
 
             List<Card> addToDeck = SaveManager.instance.GenerateCards(SaveManager.instance.currentSaveData.chosenDecks[i]);
             foreach (Card card in addToDeck)
@@ -173,15 +172,11 @@ public class NewManager : MonoBehaviour
                         case 1: //create player
                             thisTileEntity = Instantiate(playerPrefab, nextTile.transform);
                             PlayerEntity player = thisTileEntity.GetComponent<PlayerEntity>();
-                            player.movementLeft = player.movesPerTurn;
                             player.myPosition = listOfPlayers.Count;
                             player.myBar = playerBars.GetChild(listOfPlayers.Count).GetComponent<PlayerBar>();
-
+                            SetEnergy(player, 3);
                             listOfPlayers.Add(player);
-                            thisTileEntity.name = numberPlusAddition[1];
-                            player.myBar.playerName.text = numberPlusAddition[1];
-                            PlayerEntity me = player;
-                            player.myBar.button.onClick.AddListener(() => FocusOnPlayer(me));
+                            player.PlayerSetup(numberPlusAddition[1]);
                             break;
 
                         case 2: //create exit

@@ -15,6 +15,11 @@ public class PlayerEntity : MovingEntity
         //[Tooltip("appearance when hidden")] [SerializeField] Material HiddenPlayerMaterial;
         [Tooltip("adjacent objective")][ReadOnly] public ObjectiveEntity adjacentObjective;
 
+    [Foldout("Sprites", true)]
+        [Tooltip("Gail's sprite")][SerializeField] Sprite gailSprite;
+        [Tooltip("Frankie's sprite")][SerializeField] Sprite frankieSprite;
+        [Tooltip("WK's sprite")][SerializeField] Sprite wkSprite;
+
     [Foldout("Player's Cards", true)]
         [Tooltip("energy count")][ReadOnly] public int myEnergy;
         [Tooltip("keep cards in hand here")][ReadOnly] public Transform handTransform;
@@ -25,6 +30,30 @@ public class PlayerEntity : MovingEntity
         [Tooltip("list of cost reduction effects")][ReadOnly] public List<Card> costChange;
 
 #region Entity stuff
+
+    public void PlayerSetup(string name)
+    {
+        Debug.Log(name);
+        movementLeft = movesPerTurn;
+        this.name = name;
+        myBar.playerName.text = name;
+
+        switch (name)
+        {
+            case "Gail":
+                spriteRenderer.sprite = gailSprite;
+                break;
+            case "Frankie":
+                spriteRenderer.sprite = frankieSprite;
+                break;
+            case "WK":
+                spriteRenderer.sprite = wkSprite;
+                break;
+        }
+
+        PlayerEntity me = this;
+        myBar.button.onClick.AddListener(() => NewManager.instance.FocusOnPlayer(me));
+    }
 
     public override string HoverBoxText()
     {

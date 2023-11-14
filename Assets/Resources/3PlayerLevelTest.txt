@@ -1,10 +1,10 @@
 {
     [
-      "1/Dude",
-      "1/Other Dude",
-      "1/Dude Perfect",
+      "1/Gail",
+      "1/Frankie",
       "0",
       "0",
+      "1/WK",
       "",
       "",
       "0",
