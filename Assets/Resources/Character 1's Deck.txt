@@ -326,7 +326,7 @@
     ],
     [
       "Flexibility",
-      "Choose one: +1 Energy; or +1 Move.",
+      "Choose one: +1 Energy; or +1 Movement.",
       "mvmt",
       "eng",
       "1",
