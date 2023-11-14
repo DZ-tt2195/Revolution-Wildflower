@@ -190,6 +190,8 @@ MonoBehaviour:
   CurrentTarget: {fileID: 0}
   PatrolPoints: []
   DistractionPoints: []
+  distractionNotif: {fileID: 4833084862800118945, guid: 56619bf925a60454c899f16a561b26a3, type: 3}
+  NotifOffset: 1
   footsteps:
     idInternal: 0
     valueGuidInternal: 

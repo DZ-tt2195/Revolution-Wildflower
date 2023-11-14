@@ -646,6 +646,7 @@ public class NewManager : MonoBehaviour
     //used for determining how sound moves, uses different move cost limits than regular directions
     public List<TileData> CalculateIntensity(TileData startLocation, int movementSpeed, bool considerEntities)
     {
+        print("calculating intensity");
         List<TileData> reachableGrids = new List<TileData>();
 
         //First in first out
@@ -662,7 +663,8 @@ public class NewManager : MonoBehaviour
             var current = queue.Dequeue();
             TileData SelectTile = current.Item1;
             int cost = current.Item2;
-
+            print("cost: " + cost);
+            print("current: " + current.Item1.gridPosition);
             if (cost <= movementSpeed)
             {
                 reachableGrids.Add(SelectTile); ;
@@ -672,6 +674,7 @@ public class NewManager : MonoBehaviour
                     int newCost;
                     if (neighbor.myEntity != null && considerEntities)
                     {
+                        print("moving over " + neighbor.myEntity.tag);
                         newCost = cost + neighbor.myEntity.SoundCost;
                     }
                     else
@@ -696,6 +699,7 @@ public class NewManager : MonoBehaviour
                 }
             }
         }
+        print("finished calculating intensity");
         return reachableGrids;
     }
 
