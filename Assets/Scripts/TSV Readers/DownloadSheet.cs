@@ -12,22 +12,26 @@ using System.Linq;
 
 public class DownloadSheet : MonoBehaviour
 {
-    private const string sheetId = "1WOtiA9BUTAuzReClZ7Aw55ATTn3Oh0VWeV39qNKO938";
     private const string apiKey = "AIzaSyCl_GqHd1-WROqf7i2YddE3zH6vSv3sNTA";
-
     private const string baseUrl = "https://sheets.googleapis.com/v4/spreadsheets/";
-
     public static DownloadSheet instance;
 
     private void Awake()
     {
-        instance = this;
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
     }
 
-    public IEnumerator DownloadGoogleSheet(string range)
+    IEnumerator DL(string ID, string range)
     {
-        string url = $"{baseUrl}{sheetId}/values/{range}?key={apiKey}";
-
+        string url = $"{baseUrl}{ID}/values/{range}?key={apiKey}";
         using UnityWebRequest www = UnityWebRequest.Get(url);
         yield return www.SendWebRequest();
 
@@ -39,12 +43,24 @@ public class DownloadSheet : MonoBehaviour
         {
             string filePath = $"Assets/Resources/{range}.txt";
             File.WriteAllText($"{filePath}", www.downloadHandler.text);
+            Debug.Log($"downloaded {range} from the internet");
 
             string[] allLines = File.ReadAllLines($"{filePath}");
             List<string> modifiedLines = allLines.ToList();
             modifiedLines.RemoveRange(1, 3);
             File.WriteAllLines($"{filePath}", modifiedLines.ToArray());
-
         }
+    }
+
+    public IEnumerator DownloadCardSheet(string range)
+    {
+        string sheetId = "1WOtiA9BUTAuzReClZ7Aw55ATTn3Oh0VWeV39qNKO938";
+        yield return DL(sheetId, range);
+    }
+
+    public IEnumerator DownloadLevelSheet(string range)
+    {
+        string sheetId = "1tBB7LeXet8Y7saEnDK61u8DFO_jGxHhCBdm_57cYOGY";
+        yield return DL(sheetId, range);
     }
 }

@@ -30,8 +30,9 @@ public class SaveManager : MonoBehaviour
     [ReadOnly] public string saveFileName;
     [Tooltip("Card prefab")][SerializeField] Card cardPrefab;
 
-    [Tooltip("Put names of the TSVs in here")] public List<string> playerDecks;
-    public List<Card> allCards = new List<Card>();
+    [Tooltip("Put names of the card TSVs in here")] public List<string> playerDecks;
+    [Tooltip("Put names of the level TSVs (in order)")] public List<string> levelSheets;
+    [ReadOnly] public List<Card> allCards = new List<Card>();
 
     private void Awake()
     {
@@ -51,7 +52,12 @@ public class SaveManager : MonoBehaviour
     #if UNITY_EDITOR
         foreach (string deck in playerDecks)
         {
-            StartCoroutine(DownloadSheet.instance.DownloadGoogleSheet(deck));
+            StartCoroutine(DownloadSheet.instance.DownloadCardSheet(deck));
+        }
+
+        foreach (string level in levelSheets)
+        {
+            StartCoroutine(DownloadSheet.instance.DownloadLevelSheet(level));
         }
     #endif
     }
