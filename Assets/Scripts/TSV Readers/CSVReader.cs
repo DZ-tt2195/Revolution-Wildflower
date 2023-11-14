@@ -1,5 +1,5 @@
 //modified from code by Teemu Ikonen
-
+using System.Linq;
 using UnityEngine;
 using System;
 using System.Collections;
@@ -8,10 +8,6 @@ using System.Text.RegularExpressions;
 
 public class TSVReader
 {
-	static string SPLIT_RE = @"\t(?=(?:[^""]*""[^""]*"")*(?![^""]*""))"; //Regular expressions to split TSVs
-	static string LINE_SPLIT_RE = @"\r\n|\n\r|\n|\r";
-	static char[] TRIM_CHARS = { '\"' };
-
 	/// <summary>
 	/// Reads a TSV from a file in the Resources folder for use in card data generation
 	/// </summary>
@@ -23,7 +19,7 @@ public class TSVReader
 		TextAsset data = Resources.Load(file) as TextAsset;
 
 		string editData = data.text;
-		editData = editData.Replace("],", "").Replace("]", "").Replace("{", "").Replace("}", "");
+		editData = editData.Replace("],", "").Replace("{", "").Replace("}", "");
 
         string[] numCards = editData.Split("[");
         string[][] list = new string[numCards.Length][];
@@ -43,21 +39,37 @@ public class TSVReader
 	public static string[,] ReadLevel(string file)
     {
         TextAsset data = Resources.Load(file) as TextAsset;
-        var rows = Regex.Split(data.text, LINE_SPLIT_RE);
-        int gridHeight = rows.Length;
-        if (gridHeight < 1) return new string[0, 0];
-        var gridWidth = Regex.Split(rows[0], SPLIT_RE).Length;
-        var grid = new string[gridWidth, gridHeight];
 
-        for (int y = 0; y < gridHeight; y++)
-        {
-            var cells = Regex.Split(rows[y], SPLIT_RE);
-            for (int x = 0; x < gridWidth; x++)
-            {
-                grid[x, y] = cells[x];
-            }
-        }
+		string editData = data.text;
+		editData = editData.Replace("],", "").Replace("{", "").Replace("}", "");
 
-        return grid;
+        string[] numRows = editData.Split("[");
+        string[][] list = new string[numRows.Length][];
+		int maxCol = 0;
+
+		for (int i = 0; i < numRows.Length; i++)
+		{
+			list[i] = numRows[i].Split("\",");
+			if (list[i].Length > maxCol)
+				maxCol = list[i].Length;
+		}
+
+		string[,] grid = new string[numRows.Length, maxCol];
+		for (int x = 0; x<numRows.Length; x++)
+		{
+			for (int y = 0; y < maxCol; y++)
+			{
+				try
+				{
+					grid[x, y] = list[x][y];
+				}
+				catch (IndexOutOfRangeException)
+				{
+					continue;
+				}
+			}
+		}
+
+		return grid;
     }
 }

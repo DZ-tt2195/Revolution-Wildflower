@@ -64,7 +64,7 @@ public class NewManager : MonoBehaviour
 
     [Foldout("Setup", true)]
         [Tooltip("Amount of turns before a game over")] public int turnCount;
-        [Tooltip("Name of the level tsv")] [SerializeField] string levelToLoad;
+        [Tooltip("The level number (starts at 0")] [SerializeField] int levelToLoad;
 
     public enum TurnSystem { You, Resolving, Environmentals, Enemy };
     [Foldout("Turn System", true)]
@@ -99,9 +99,22 @@ public class NewManager : MonoBehaviour
         gridContainer = GameObject.Find("Grid Container").transform;
     }
 
+    void Start()
+    {
+        if (turnCount <= 0)
+            throw new Exception("Didn't set turn count in NewManager (has to be > 0");
+
+        gameOverText = GameObject.Find("Game Over").transform.GetChild(0).GetComponent<TMP_Text>();
+        gameOverText.transform.parent.gameObject.SetActive(false);
+
+        GetTiles();
+        GetCards();
+
+        StartCoroutine(StartPlayerTurn());
+    }
+
     void GetCards()
     {
-        Transform emptyObject = new GameObject("Card Container").transform;
         handContainer.transform.localPosition = new Vector3(10000, 10000, 0);
 
         for (int i = 0; i < listOfPlayers.Count; i++)
@@ -126,16 +139,23 @@ public class NewManager : MonoBehaviour
 
     void GetTiles()
     {
-        //generate grids and entities from csv
-        string[,] newGrid = LevelLoader.LoadLevelGrid(levelToLoad);
+        string[,] newGrid = LevelLoader.LoadLevelGrid(SaveManager.instance.levelSheets[levelToLoad]);
         listOfTiles = new TileData[newGrid.GetLength(0), newGrid.GetLength(1)];
 
         for (int i = 0; i < listOfTiles.GetLength(0); i++)
         {
             for (int j = 0; j < listOfTiles.GetLength(1); j++)
             {
-                string[] numberPlusAddition = newGrid[i, j].Split("/");
-                if (numberPlusAddition[0] != "")
+                try
+                {
+                    newGrid[i, j] = newGrid[i, j].Trim().Replace("\"", "").Replace("]","");
+                }
+                catch (NullReferenceException)
+                {
+                    continue;
+                }
+
+                if (newGrid[i,j] != "")
                 {
                     TileData nextTile = Instantiate(floorTilePrefab);
                     nextTile.transform.SetParent(gridContainer);
@@ -145,72 +165,68 @@ public class NewManager : MonoBehaviour
                     nextTile.gridPosition = new Vector2Int(i, j);
 
                     Entity thisTileEntity = null;
-                    switch (numberPlusAddition[0])
+                    string[] numberPlusAddition = newGrid[i, j].Split("/");
+
+                    switch (int.Parse(numberPlusAddition[0]))
                     {
-                        case "1": //create player
+                        case 1: //create player
                             thisTileEntity = Instantiate(playerPrefab, nextTile.transform);
                             PlayerEntity player = thisTileEntity.GetComponent<PlayerEntity>();
                             player.movementLeft = player.movesPerTurn;
                             player.myPosition = listOfPlayers.Count;
                             listOfPlayers.Add(player);
-                            thisTileEntity.name = $"Player {listOfPlayers.Count}";
+                            thisTileEntity.name = numberPlusAddition[1];
                             FocusOnPlayer();
                             break;
-                        case "2": //create exit
+
+                        case 2: //create exit
                             thisTileEntity = Instantiate(exitPrefab, nextTile.transform);
                             thisTileEntity.name = "Exit";
                             ObjectiveEntity exitObjective = thisTileEntity.GetComponent<ExitEntity>();
                             listOfObjectives.Add(exitObjective);
                             break;
-                        case "3": //create objective
+
+                        case 3: //create objective
                             thisTileEntity = Instantiate(objectivePrefab, nextTile.transform);
                             thisTileEntity.name = numberPlusAddition[1];
                             ObjectiveEntity defaultObjective = thisTileEntity.GetComponent<ObjectiveEntity>();
                             listOfObjectives.Add(defaultObjective);
                             break;
-                        case "10": //create weak wall
+
+                        case 10: //create wall
                             thisTileEntity = Instantiate(wallPrefab, nextTile.transform);
                             thisTileEntity.name = "Wall";
-                            WallEntity weakWall = thisTileEntity.GetComponent<WallEntity>();
-                            //weakWall.WallDirection(numberPlusAddition[1]);
-                            listOfWalls.Add(weakWall);
-                            weakWall.health = 2;
+                            WallEntity wall = thisTileEntity.GetComponent<WallEntity>();
+                            listOfWalls.Add(wall);
+                            wall.health = int.Parse(numberPlusAddition[1]);
+                            wall.WallDirection(numberPlusAddition[2]);
                             break;
-                        case "11": //create med wall
-                            thisTileEntity = Instantiate(wallPrefab, nextTile.transform);
-                            thisTileEntity.name = "Wall";
-                            WallEntity medWall = thisTileEntity.GetComponent<WallEntity>();
-                            //medWall.WallDirection(numberPlusAddition[1]);
-                            listOfWalls.Add(medWall);
-                            medWall.health = 4;
-                            break;
-                        case "12": //create strong wall
-                            thisTileEntity = Instantiate(wallPrefab, nextTile.transform);
-                            thisTileEntity.name = "Wall";
-                            WallEntity strongWall = thisTileEntity.GetComponent<WallEntity>();
-                            //strongWall.WallDirection(numberPlusAddition[1]);
-                            listOfWalls.Add(strongWall);
-                            strongWall.health = 6;
-                            break;
-                        case "20": //create guard
+
+                        case 20: //create guard
                             thisTileEntity = Instantiate(guardPrefab, nextTile.transform);
                             thisTileEntity.name = "Guard";
                             GuardEntity theGuard = thisTileEntity.GetComponent<GuardEntity>();
                             theGuard.movementLeft = theGuard.movesPerTurn;
                             theGuard.direction = StringToDirection(numberPlusAddition[1]);
                             listOfGuards.Add(theGuard);
-                            string[] patrolList = numberPlusAddition[2].Split('|');
-                            foreach (string patrol in patrolList)
+
+                            try
                             {
-                                string[] points = patrol.Split(",");
-                                int curX = 0;
-                                int curY = 0;
-                                int.TryParse(points[0], out curX);
-                                int.TryParse(points[1], out curY);
-                                theGuard.PatrolPoints.Add(new Vector2Int(curX, curY));
+                                string[] patrolList = numberPlusAddition[2].Split('|');
+                                foreach (string patrol in patrolList)
+                                {
+                                    string[] points = patrol.Split(",");
+                                    int.TryParse(points[0], out int curX);
+                                    int.TryParse(points[1], out int curY);
+                                    theGuard.PatrolPoints.Add(new Vector2Int(curX, curY));
+                                }
+                            }
+                            catch (IndexOutOfRangeException)
+                            {
                             }
                             break;
                     }
+
                     try
                     {
                         thisTileEntity.MoveTile(nextTile);
@@ -237,20 +253,6 @@ public class NewManager : MonoBehaviour
                 }
             }
         }
-    }
-
-    void Start()
-    {
-        if (turnCount <= 0)
-            throw new Exception("Didn't set turn count in NewManager (has to be > 0");
-
-        gameOverText = GameObject.Find("Game Over").transform.GetChild(0).GetComponent<TMP_Text>();
-        gameOverText.transform.parent.gameObject.SetActive(false);
-
-        GetTiles();
-        GetCards();
-
-        StartCoroutine(StartPlayerTurn());
     }
 
     Vector2Int StringToDirection(string direction)
@@ -313,7 +315,7 @@ public class NewManager : MonoBehaviour
 
     public void FocusOnPlayer()
     {
-        Camera.main.transform.position = new Vector3(listOfPlayers[0].transform.position.x-13, Camera.main.transform.position.y, listOfPlayers[0].transform.position.z+12);
+        Camera.main.transform.position = new Vector3(listOfPlayers[0].transform.position.x, Camera.main.transform.position.y, listOfPlayers[0].transform.position.z);
         Debug.Log("FocusOnPlayer() hasn't been rewritten yet");
     }
 
