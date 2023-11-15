@@ -33,7 +33,6 @@ public class PlayerEntity : MovingEntity
 
     public void PlayerSetup(string name)
     {
-        Debug.Log(name);
         movementLeft = movesPerTurn;
         this.name = name;
         myBar.playerName.text = name;
