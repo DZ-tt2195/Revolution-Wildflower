@@ -277,7 +277,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
     {
         if (methodName.Contains("CHOOSE("))
         {
-            string[] choices = methodName.Replace("CHOOSE(", "").Replace(")", "").Split('|');
+            string[] choices = methodName.Replace("CHOOSE(", "").Replace(")", "").Replace("]","").Trim().Split('|');
             yield return ChooseOptions(choices);
         }
         else
