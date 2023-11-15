@@ -83,9 +83,9 @@ MonoBehaviour:
   health: 3
   hidden: 0
   adjacentObjective: {fileID: 0}
-  gailSprite: {fileID: 21300000, guid: 373e1b54d32d04bc8b44134464ddd666, type: 3}
-  frankieSprite: {fileID: 21300000, guid: 373e1b54d32d04bc8b44134464ddd666, type: 3}
-  wkSprite: {fileID: 21300000, guid: 373e1b54d32d04bc8b44134464ddd666, type: 3}
+  gailSprite: {fileID: 21300000, guid: 8ae31b471dc67bd4f82d6d2f95ceeb99, type: 3}
+  frankieSprite: {fileID: 21300000, guid: f395a6df1d2e6e844a1b67706a78c2f2, type: 3}
+  wkSprite: {fileID: 21300000, guid: ff6b8d24e2c3773449e6e3473de48bc1, type: 3}
   myEnergy: 0
   handTransform: {fileID: 0}
   myHand: []
