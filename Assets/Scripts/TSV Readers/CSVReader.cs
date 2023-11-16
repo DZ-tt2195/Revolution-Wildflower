@@ -61,7 +61,7 @@ public class TSVReader
 			{
 				try
 				{
-					grid[x, y] = list[x][y];
+					grid[x-1, y] = list[x][y];
 				}
 				catch (IndexOutOfRangeException)
 				{

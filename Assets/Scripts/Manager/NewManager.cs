@@ -45,9 +45,9 @@ public class NewManager : MonoBehaviour
         [Tooltip("Instructions for what the player is allowed to do right now")] TMP_Text instructions;
         [Tooltip("End the turn")] Button endTurnButton;
         [Tooltip("Complete an objective you're next to")] [ReadOnly] public Button objectiveButton;
-        [Tooltip("info on entities")] [ReadOnly] public EntityToolTip toolTip;
-        [Tooltip("the text that gets displayed when you game over")] TMP_Text gameOverText;
-        [Tooltip("tracks number of cards in deck and discard pile")] TMP_Text deckTracker;
+        [Tooltip("Info on entities")] [ReadOnly] public EntityToolTip toolTip;
+        [Tooltip("Text that gets displayed when you game over")] TMP_Text gameOverText;
+        [Tooltip("Tracks number of cards in deck and discard pile")] TMP_Text deckTracker;
 
     [Foldout("Grid", true)]
         [Tooltip("Tiles in the inspector")] Transform gridContainer;
@@ -108,41 +108,17 @@ public class NewManager : MonoBehaviour
         gameOverText.transform.parent.gameObject.SetActive(false);
 
         GetTiles();
-        GetCards();
-
         StartCoroutine(StartPlayerTurn());
-    }
-
-    void GetCards()
-    {
-        handContainer.transform.localPosition = new Vector3(10000, 10000, 0);
-
-        for (int i = 0; i < listOfPlayers.Count; i++)
-        {
-            PlayerEntity player = listOfPlayers[i];
-            player.handTransform = handContainer.GetChild(player.myPosition).GetChild(0);
-            SetEnergy(player, 3);
-
-            List<Card> addToDeck = SaveManager.instance.GenerateCards(SaveManager.instance.currentSaveData.chosenDecks[i]);
-            foreach (Card card in addToDeck)
-            {
-                card.transform.SetParent(player.transform);
-                player.myDrawPile.Add(card);
-                card.transform.localPosition = new Vector3(10000, 10000, 0); //send the card far away where you can't see it anymore
-                card.choiceScript.DisableButton();
-            }
-
-            player.myDrawPile.Shuffle(); //shuffle your deck
-            player.PlusCards(5);
-        }
     }
 
     void GetTiles()
     {
+        handContainer.transform.localPosition = new Vector3(10000, 10000, 0);
         string[,] newGrid = LevelLoader.LoadLevelGrid(SaveManager.instance.levelSheets[levelToLoad]);
         listOfTiles = new TileData[newGrid.GetLength(0), newGrid.GetLength(1)];
+        Transform playerBars = GameObject.Find("Player Bars").transform;
 
-        for (int i = 0; i < listOfTiles.GetLength(0); i++)
+        for (int i = 0; i < listOfTiles.GetLength(0); i++) //generate all tiles
         {
             for (int j = 0; j < listOfTiles.GetLength(1); j++)
             {
@@ -172,11 +148,11 @@ public class NewManager : MonoBehaviour
                         case 1: //create player
                             thisTileEntity = Instantiate(playerPrefab, nextTile.transform);
                             PlayerEntity player = thisTileEntity.GetComponent<PlayerEntity>();
-                            player.movementLeft = player.movesPerTurn;
                             player.myPosition = listOfPlayers.Count;
+                            player.myBar = playerBars.GetChild(listOfPlayers.Count).GetComponent<PlayerBar>();
+                            SetEnergy(player, 3);
                             listOfPlayers.Add(player);
-                            thisTileEntity.name = numberPlusAddition[1];
-                            FocusOnPlayer();
+                            player.PlayerSetup(numberPlusAddition[1], handContainer.GetChild(player.myPosition).GetChild(0));
                             break;
 
                         case 2: //create exit
@@ -239,7 +215,7 @@ public class NewManager : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < listOfTiles.GetLength(0); i++) //then find adjacent tiles
+        for (int i = 0; i < listOfTiles.GetLength(0); i++) //then each tile finds adjacent tiles
         {
             for (int j = 0; j < listOfTiles.GetLength(1); j++)
             {
@@ -313,10 +289,9 @@ public class NewManager : MonoBehaviour
             GameOver("You quit.");
     }
 
-    public void FocusOnPlayer()
+    public void FocusOnPlayer(PlayerEntity player)
     {
-        Camera.main.transform.position = new Vector3(listOfPlayers[0].transform.position.x, Camera.main.transform.position.y, listOfPlayers[0].transform.position.z);
-        Debug.Log("FocusOnPlayer() hasn't been rewritten yet");
+        Camera.main.transform.position = new Vector3(player.transform.position.x, Camera.main.transform.position.y, player.transform.position.z);
     }
 
 #endregion
@@ -387,6 +362,11 @@ public class NewManager : MonoBehaviour
 
         stats.text += $"\n<color=#75ff59>{listOfObjectives.Count} Objectives Left" +
             $"| {turnCount} Turns Left";
+
+        foreach (PlayerEntity nextPlayer in listOfPlayers)
+        {
+            nextPlayer.myBar.ChangeText($"{nextPlayer.myHand.Count} Cards; {nextPlayer.movementLeft} Moves; \n{nextPlayer.myEnergy} Energy");
+        }
     }
 
     public void UpdateInstructions(string instructions)

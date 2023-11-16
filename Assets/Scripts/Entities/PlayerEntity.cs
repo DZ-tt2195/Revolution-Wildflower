@@ -7,6 +7,7 @@ using System;
 public class PlayerEntity : MovingEntity
 {
     [Foldout("Player Entity", true)]
+        [Tooltip("The bar on screen")][ReadOnly] public PlayerBar myBar;
         [Tooltip("Where this player's located in the list")][ReadOnly] public int myPosition;
         [Tooltip("turns where you can't be caught")][ReadOnly] public int health = 3;
         [Tooltip("turns where you can't be caught")] [ReadOnly] public int hidden = 0;
@@ -14,9 +15,14 @@ public class PlayerEntity : MovingEntity
         //[Tooltip("appearance when hidden")] [SerializeField] Material HiddenPlayerMaterial;
         [Tooltip("adjacent objective")][ReadOnly] public ObjectiveEntity adjacentObjective;
 
+    [Foldout("Sprites", true)]
+        [Tooltip("Gail's sprite")][SerializeField] Sprite gailSprite;
+        [Tooltip("Frankie's sprite")][SerializeField] Sprite frankieSprite;
+        [Tooltip("WK's sprite")][SerializeField] Sprite wkSprite;
+
     [Foldout("Player's Cards", true)]
         [Tooltip("energy count")][ReadOnly] public int myEnergy;
-        [Tooltip("keep cards in hand here")][ReadOnly] public Transform handTransform;
+        [Tooltip("keep cards in hand here")] Transform handTransform;
         [Tooltip("list of cards in hand")][ReadOnly] public List<Card> myHand;
         [Tooltip("list of cards in draw pile")][ReadOnly] public List<Card> myDrawPile;
         [Tooltip("list of cards in discard pile")][ReadOnly] public List<Card> myDiscardPile;
@@ -24,6 +30,48 @@ public class PlayerEntity : MovingEntity
         [Tooltip("list of cost reduction effects")][ReadOnly] public List<Card> costChange;
 
 #region Entity stuff
+
+    public void PlayerSetup(string name, Transform hand)
+    {
+        handTransform = hand;
+        movementLeft = movesPerTurn;
+        this.name = name;
+        myBar.playerName.text = name;
+
+        switch (name)
+        {
+            case "Gail":
+                spriteRenderer.sprite = gailSprite;
+                GetCards(0);
+                break;
+            case "Frankie":
+                spriteRenderer.sprite = frankieSprite;
+                GetCards(1);
+                break;
+            case "WK":
+                spriteRenderer.sprite = wkSprite;
+                GetCards(2);
+                break;
+        }
+
+        PlayerEntity me = this;
+        myBar.button.onClick.AddListener(() => NewManager.instance.FocusOnPlayer(me));
+    }
+
+    void GetCards(int n)
+    {
+        List<Card> addToDeck = SaveManager.instance.GenerateCards(SaveManager.instance.currentSaveData.chosenDecks[n]);
+        foreach (Card card in addToDeck)
+        {
+            card.transform.SetParent(this.transform);
+            this.myDrawPile.Add(card);
+            card.transform.localPosition = new Vector3(10000, 10000, 0); //send the card far away where you can't see it anymore
+            card.choiceScript.DisableButton();
+        }
+
+        this.myDrawPile.Shuffle(); //shuffle your deck
+        this.PlusCards(5);
+    }
 
     public override string HoverBoxText()
     {

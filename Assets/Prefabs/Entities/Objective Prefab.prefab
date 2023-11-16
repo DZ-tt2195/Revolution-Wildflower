@@ -76,6 +76,7 @@ MonoBehaviour:
   SoundCost: 100
   Occlusion: 1
   direction: {x: 0, y: 0}
+  inkJSON: {fileID: 4900000, guid: 375a5b4b4a5b87b4ba1366b8c92d935b, type: 3}
 --- !u!212 &3483894866841137460
 SpriteRenderer:
   m_ObjectHideFlags: 0

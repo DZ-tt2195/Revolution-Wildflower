@@ -37,6 +37,7 @@ public class DownloadSheet : MonoBehaviour
 
         if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
         {
+            Debug.Log(range);
             Debug.LogError($"Error: {www.error}");
         }
         else
