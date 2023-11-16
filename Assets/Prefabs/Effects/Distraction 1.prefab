@@ -118,3 +118,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfba8cf53589c6042bc3bb6c8e3052f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  offset: 4
+  lerpRatio: 0.2
