@@ -108,41 +108,17 @@ public class NewManager : MonoBehaviour
         gameOverText.transform.parent.gameObject.SetActive(false);
 
         GetTiles();
-        GetCards();
-
         StartCoroutine(StartPlayerTurn());
-    }
-
-    void GetCards()
-    {
-        handContainer.transform.localPosition = new Vector3(10000, 10000, 0);
-
-        for (int i = 0; i < listOfPlayers.Count; i++)
-        {
-            PlayerEntity player = listOfPlayers[i];
-            player.handTransform = handContainer.GetChild(player.myPosition).GetChild(0);
-
-            List<Card> addToDeck = SaveManager.instance.GenerateCards(SaveManager.instance.currentSaveData.chosenDecks[i]);
-            foreach (Card card in addToDeck)
-            {
-                card.transform.SetParent(player.transform);
-                player.myDrawPile.Add(card);
-                card.transform.localPosition = new Vector3(10000, 10000, 0); //send the card far away where you can't see it anymore
-                card.choiceScript.DisableButton();
-            }
-
-            player.myDrawPile.Shuffle(); //shuffle your deck
-            player.PlusCards(5);
-        }
     }
 
     void GetTiles()
     {
+        handContainer.transform.localPosition = new Vector3(10000, 10000, 0);
         string[,] newGrid = LevelLoader.LoadLevelGrid(SaveManager.instance.levelSheets[levelToLoad]);
         listOfTiles = new TileData[newGrid.GetLength(0), newGrid.GetLength(1)];
         Transform playerBars = GameObject.Find("Player Bars").transform;
 
-        for (int i = 0; i < listOfTiles.GetLength(0); i++)
+        for (int i = 0; i < listOfTiles.GetLength(0); i++) //generate all tiles
         {
             for (int j = 0; j < listOfTiles.GetLength(1); j++)
             {
@@ -176,7 +152,7 @@ public class NewManager : MonoBehaviour
                             player.myBar = playerBars.GetChild(listOfPlayers.Count).GetComponent<PlayerBar>();
                             SetEnergy(player, 3);
                             listOfPlayers.Add(player);
-                            player.PlayerSetup(numberPlusAddition[1]);
+                            player.PlayerSetup(numberPlusAddition[1], handContainer.GetChild(player.myPosition).GetChild(0));
                             break;
 
                         case 2: //create exit
@@ -239,7 +215,7 @@ public class NewManager : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < listOfTiles.GetLength(0); i++) //then find adjacent tiles
+        for (int i = 0; i < listOfTiles.GetLength(0); i++) //then each tile finds adjacent tiles
         {
             for (int j = 0; j < listOfTiles.GetLength(1); j++)
             {

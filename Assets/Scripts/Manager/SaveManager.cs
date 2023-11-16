@@ -15,7 +15,7 @@ using MyBox;
 public class SaveData
 {
     public bool freshFile;
-    public List<string> chosenDecks = new List<string>();
+    public List<string> chosenDecks = new List<string>(); //0 = Gail, 1 = Frankie, 2 = W.K.
 
     public SaveData()
     {

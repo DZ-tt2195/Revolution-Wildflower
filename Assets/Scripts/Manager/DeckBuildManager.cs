@@ -13,7 +13,7 @@ public class DeckBuildManager : MonoBehaviour
     [SerializeField] Transform deckPrefab;
 
     List<Transform> deckTransforms = new List<Transform>();
-    List<TMP_Dropdown> characterDropdowns = new List<TMP_Dropdown>();
+    List<TMP_Dropdown> listOfDropdowns = new List<TMP_Dropdown>();
 
     Transform keepDecks;
     Button playGameButton;
@@ -28,18 +28,29 @@ public class DeckBuildManager : MonoBehaviour
         keepDecks = GameObject.Find("Keep Decks").transform;
         keepDecks.transform.localPosition = new Vector3(10000, 10000, 0);
 
+        //setup dropdowns
         for (int i = 0; i < 3; i++)
         {
             TMP_Dropdown newDropdown = Instantiate(dropdownPrefab, canvas);
-            newDropdown.transform.localPosition = new Vector3(-500 + 500 * i, 0, 0);
-            characterDropdowns.Add(newDropdown);
-            newDropdown.onValueChanged.AddListener(delegate { SaveInformation(); });
+            newDropdown.transform.localPosition = new Vector3(-500 + 500 * i, 200, 0);
+            listOfDropdowns.Add(newDropdown);
 
-            Button button = newDropdown.transform.Find("View Deck").GetComponent<Button>();
-            int j = i;
-            button.onClick.AddListener(() => ViewDeck(j));
+            TMP_Text nameText = newDropdown.transform.Find("Name").GetComponent<TMP_Text>();
+            switch (i)
+            {
+                case 0:
+                    nameText.text = "Gail";
+                    break;
+                case 1:
+                    nameText.text = "Frankie";
+                    break;
+                case 2:
+                    nameText.text = "W.K.";
+                    break;
+            }
         }
 
+        //add decks to the dropdowns and viewers
         for (int i = 0; i < SaveManager.instance.playerDecks.Count; i++)
         {
             string deckName = SaveManager.instance.playerDecks[i];
@@ -47,7 +58,7 @@ public class DeckBuildManager : MonoBehaviour
             newDeck.transform.localPosition = new Vector3(-2000 * i, -200, 0);
             deckTransforms.Add(newDeck);
 
-            foreach (TMP_Dropdown dropdown in characterDropdowns)
+            foreach (TMP_Dropdown dropdown in listOfDropdowns)
                 dropdown.options.Add(new TMP_Dropdown.OptionData(deckName));
 
             List<Card> addToDeck = SaveManager.instance.GenerateCards(deckName);
@@ -55,39 +66,47 @@ public class DeckBuildManager : MonoBehaviour
                 card.transform.SetParent(newDeck.GetChild(0).GetChild(0));
         }
 
-        if (SaveManager.instance.currentSaveData.freshFile)
+        for (int i = 0; i < 3; i++)
         {
-            SaveInformation();
-        }
-        else
-        {
-            for (int i = 0; i < 3; i++)
+            if (SaveManager.instance.currentSaveData.freshFile)
             {
-                string findName = SaveManager.instance.currentSaveData.chosenDecks[i];
+                listOfDropdowns[i].value = i;
+            }
+
+            else
+            {
                 for (int j = 0; j < SaveManager.instance.playerDecks.Count; j++)
                 {
-                    string deckName = SaveManager.instance.playerDecks[j];
-                    if (deckName == findName)
+                    if (SaveManager.instance.playerDecks[j] == SaveManager.instance.currentSaveData.chosenDecks[i])
                     {
-                        characterDropdowns[i].value = j;
-                        continue;
+                        listOfDropdowns[i].value = j;
                     }
                 }
             }
+
+            Button button = listOfDropdowns[i].transform.Find("View Deck").GetComponent<Button>();
+            int k = i;
+            button.onClick.AddListener(() => ViewDeck(k));
         }
+
+        for (int i = 0; i < 3; i++)
+        {
+            listOfDropdowns[i].onValueChanged.AddListener(delegate { SaveInformation(); });
+        }
+        SaveInformation();
     }
 
     public void SaveInformation()
     {
         List<string> decksToSave = new List<string>();
-        foreach(TMP_Dropdown dropdown in characterDropdowns)
+        foreach(TMP_Dropdown dropdown in listOfDropdowns)
             decksToSave.Add(dropdown.options[dropdown.value].text);
         SaveManager.instance.SaveHand(decksToSave);
     }
 
     public void ViewDeck(int character)
     {
-        int deckNumber = characterDropdowns[character].value;
-        keepDecks.transform.localPosition = new Vector3(deckNumber * -2000, 0, 0);
+        int deckNumber = listOfDropdowns[character].value;
+        keepDecks.transform.localPosition = new Vector3(deckNumber * 2000, 0, 0);
     }
 }

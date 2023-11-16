@@ -22,7 +22,7 @@ public class PlayerEntity : MovingEntity
 
     [Foldout("Player's Cards", true)]
         [Tooltip("energy count")][ReadOnly] public int myEnergy;
-        [Tooltip("keep cards in hand here")][ReadOnly] public Transform handTransform;
+        [Tooltip("keep cards in hand here")] Transform handTransform;
         [Tooltip("list of cards in hand")][ReadOnly] public List<Card> myHand;
         [Tooltip("list of cards in draw pile")][ReadOnly] public List<Card> myDrawPile;
         [Tooltip("list of cards in discard pile")][ReadOnly] public List<Card> myDiscardPile;
@@ -31,8 +31,9 @@ public class PlayerEntity : MovingEntity
 
 #region Entity stuff
 
-    public void PlayerSetup(string name)
+    public void PlayerSetup(string name, Transform hand)
     {
+        handTransform = hand;
         movementLeft = movesPerTurn;
         this.name = name;
         myBar.playerName.text = name;
@@ -41,17 +42,35 @@ public class PlayerEntity : MovingEntity
         {
             case "Gail":
                 spriteRenderer.sprite = gailSprite;
+                GetCards(0);
                 break;
             case "Frankie":
                 spriteRenderer.sprite = frankieSprite;
+                GetCards(1);
                 break;
             case "WK":
                 spriteRenderer.sprite = wkSprite;
+                GetCards(2);
                 break;
         }
 
         PlayerEntity me = this;
         myBar.button.onClick.AddListener(() => NewManager.instance.FocusOnPlayer(me));
+    }
+
+    void GetCards(int n)
+    {
+        List<Card> addToDeck = SaveManager.instance.GenerateCards(SaveManager.instance.currentSaveData.chosenDecks[n]);
+        foreach (Card card in addToDeck)
+        {
+            card.transform.SetParent(this.transform);
+            this.myDrawPile.Add(card);
+            card.transform.localPosition = new Vector3(10000, 10000, 0); //send the card far away where you can't see it anymore
+            card.choiceScript.DisableButton();
+        }
+
+        this.myDrawPile.Shuffle(); //shuffle your deck
+        this.PlusCards(5);
     }
 
     public override string HoverBoxText()
