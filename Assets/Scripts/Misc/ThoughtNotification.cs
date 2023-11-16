@@ -8,7 +8,7 @@ public class ThoughtNotification : MonoBehaviour
     [SerializeField] float offset = 0.5f;
     [SerializeField] float lerpRatio = 0.2f;
     float nextPosition = 0;
-    float margin = 0.01f;
+    [SerializeField] float margin = 0.01f;
 
     void Start()
     {

@@ -360,14 +360,15 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     public void CalculateDistraction(TileData source)
     {
-        print("calculating distraction");
+        print("distractiong for " + textDescr.text);
+        print("Intensity:" + distractionIntensity);
         List<TileData> affectedTiles = NewManager.instance.CalculateIntensity(source, distractionIntensity, true);
         print(affectedTiles.Count);
         for (int i = 0; i < affectedTiles.Count; i++)
         {
             if (affectedTiles[i].myEntity != null)
             {
-                print("Tile has entity");
+                print("Tile has entity " + affectedTiles[i].myEntity.tag);
                 if (affectedTiles[i].myEntity.CompareTag("Enemy"))
                 {
                     print("guard is notified");
