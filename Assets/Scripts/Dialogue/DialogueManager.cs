@@ -71,7 +71,7 @@ public class DialogueManager : MonoBehaviour
         }
 
         // handle continuine to the next line in dialogue when submite is pressed
-       if (canContinueToNextLine 
+       if (canContinueToNextLine  
             &&  currentStory.currentChoices.Count == 0
             && Input.GetKey(KeyCode.E))
        {
@@ -96,9 +96,9 @@ public class DialogueManager : MonoBehaviour
        ContinueStory();
     }
 
-    private void ExitDialogueMode()
+    private IEnumerator ExitDialogueMode()
         {
-            //yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(0.2f);
 
             dialogueVariables.StopListening(currentStory);
 
@@ -112,8 +112,9 @@ public class DialogueManager : MonoBehaviour
         // set the text to the full line, but set the visible characters to 0
         dialogueText.text = line;
         dialogueText.maxVisibleCharacters = 0;
+       // dialogueText.text = "";
 
-        // hide items while text is typingSpeed
+        // hide items while text is typing
         continueIcon.SetActive(false);
 
         canContinueToNextLine = false;
@@ -125,6 +126,7 @@ public class DialogueManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.E))
             {
                 dialogueText.maxVisibleCharacters = line.Length;
+                //dialogueText.text = line;
                 break;
             }
 
@@ -141,6 +143,7 @@ public class DialogueManager : MonoBehaviour
             else
             {
                 dialogueText.maxVisibleCharacters++;
+                //dialogueText.text += letter;
                 yield return new WaitForSeconds(typingSpeed);
             }
         }
@@ -168,7 +171,7 @@ public class DialogueManager : MonoBehaviour
         }
         else
         {
-            ExitDialogueMode();
+            StartCoroutine(ExitDialogueMode());
         }
     }
 
