@@ -9,7 +9,7 @@
 	</RootPaths>
 	<DialogueEvents/>
 	<SoundBanks>
-		<SoundBank Id="1355168291" Type="User" Language="SFX" Hash="{F56A610C-C7C4-F874-B68B-7ADDF94EBB7A}">
+		<SoundBank Id="1355168291" Type="User" Language="SFX" Hash="{D34B54F3-CF9A-E914-CA3E-DF1B869A428B}">
 			<ShortName>Init</ShortName>
 			<Path>Init.bnk</Path>
 			<Plugins>
@@ -21,11 +21,25 @@
 			<Busses>
 				<Bus Id="3803692087" Name="Master Audio Bus"/>
 			</Busses>
+			<StateGroups>
+				<StateGroup Id="436743010" Name="Character">
+					<States>
+						<State Id="635371786" Name="Gail"/>
+						<State Id="748895195" Name="None"/>
+						<State Id="1517750995" Name="WK"/>
+						<State Id="2106242461" Name="Frankie"/>
+					</States>
+				</StateGroup>
+			</StateGroups>
 		</SoundBank>
-		<SoundBank Id="1605876511" Type="User" Language="SFX" Hash="{21888A93-C56B-68AA-7545-52D3CD0C9635}">
+		<SoundBank Id="1605876511" Type="User" Language="SFX" Hash="{D747017F-19EE-5396-2D9C-D2CAE9ADB433}">
 			<ShortName>SFX_Bank</ShortName>
 			<Path>SFX_Bank.bnk</Path>
 			<Media>
+				<File Id="49193332" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>wildflower-gail-1-intro.wav</ShortName>
+					<CachePath>SFX/wildflower-gail-1-intro_D79FB2B7.wem</CachePath>
+				</File>
 				<File Id="61394215" Language="SFX" Streaming="false" Location="Memory">
 					<ShortName>card-play.wav</ShortName>
 					<CachePath>SFX/card-play_10C4C929.wem</CachePath>
@@ -50,6 +64,14 @@
 					<ShortName>gunshot-placeholder.wav</ShortName>
 					<CachePath>SFX/gunshot-placeholder_10C4C929.wem</CachePath>
 				</File>
+				<File Id="393097027" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>wildflower-wk-1-intro.wav</ShortName>
+					<CachePath>SFX/wildflower-wk-1-intro_D79FB2B7.wem</CachePath>
+				</File>
+				<File Id="410281469" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>wildflower-frankie-1-intro.wav</ShortName>
+					<CachePath>SFX/wildflower-frankie-1-intro_D79FB2B7.wem</CachePath>
+				</File>
 				<File Id="412827956" Language="SFX" Streaming="false" Location="Memory">
 					<ShortName>movement-select-placeholder.wav</ShortName>
 					<CachePath>SFX/movement-select-placeholder_10C4C929.wem</CachePath>
@@ -62,13 +84,21 @@
 					<ShortName>noise-with-hum.wav</ShortName>
 					<CachePath>SFX/noise-with-hum_D79FB2B7.wem</CachePath>
 				</File>
-				<File Id="651602383" Language="SFX" Streaming="false" Location="Memory">
-					<ShortName>burn-it-down-sketch-2.wav</ShortName>
-					<CachePath>SFX/burn-it-down-sketch-2_D79FB2B7.wem</CachePath>
-				</File>
 				<File Id="745579580" Language="SFX" Streaming="false" Location="Memory">
 					<ShortName>footsteps.wav</ShortName>
 					<CachePath>SFX/footsteps_10C4C929.wem</CachePath>
+				</File>
+				<File Id="789745676" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>wildflower-gail-1.wav</ShortName>
+					<CachePath>SFX/wildflower-gail-1_D79FB2B7.wem</CachePath>
+				</File>
+				<File Id="823904576" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>wildflower-frankie-1.wav</ShortName>
+					<CachePath>SFX/wildflower-frankie-1_D79FB2B7.wem</CachePath>
+				</File>
+				<File Id="850579775" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>wildflower-wk-1.wav</ShortName>
+					<CachePath>SFX/wildflower-wk-1_D79FB2B7.wem</CachePath>
 				</File>
 				<File Id="940959831" Language="SFX" Streaming="false" Location="Memory">
 					<ShortName>end-turn-placeholder.wav</ShortName>
@@ -125,6 +155,38 @@
 						<MediaRef Id="297005450"/>
 					</MediaRefs>
 				</Event>
+				<Event Id="2671044069" Name="Play_LevelMusic" DurationType="Infinite">
+					<SwitchContainers>
+						<SwitchContainer>
+							<SwitchValue GroupType="State" GroupId="436743010" Id="2106242461"/>
+							<MediaRefs>
+								<MediaRef Id="410281469"/>
+								<MediaRef Id="823904576"/>
+							</MediaRefs>
+						</SwitchContainer>
+						<SwitchContainer>
+							<SwitchValue GroupType="State" GroupId="436743010" Id="635371786"/>
+							<MediaRefs>
+								<MediaRef Id="49193332"/>
+								<MediaRef Id="789745676"/>
+							</MediaRefs>
+						</SwitchContainer>
+						<SwitchContainer>
+							<SwitchValue GroupType="State" GroupId="436743010" Id="748895195"/>
+							<MediaRefs>
+								<MediaRef Id="49193332"/>
+								<MediaRef Id="789745676"/>
+							</MediaRefs>
+						</SwitchContainer>
+						<SwitchContainer>
+							<SwitchValue GroupType="State" GroupId="436743010" Id="1517750995"/>
+							<MediaRefs>
+								<MediaRef Id="393097027"/>
+								<MediaRef Id="850579775"/>
+							</MediaRefs>
+						</SwitchContainer>
+					</SwitchContainers>
+				</Event>
 				<Event Id="3274460198" Name="Play_movement_select_placeholder" DurationType="OneShot" DurationMin="0.5390625" DurationMax="0.5390625">
 					<MediaRefs>
 						<MediaRef Id="412827956"/>
@@ -135,11 +197,6 @@
 						<MediaRef Id="574353506"/>
 					</MediaRefs>
 				</Event>
-				<Event Id="4097918453" Name="Play_StaticMusic" DurationType="Infinite">
-					<MediaRefs>
-						<MediaRef Id="651602383"/>
-					</MediaRefs>
-				</Event>
 				<Event Id="310530060" Name="Play_ui_button_hover" DurationType="OneShot" DurationMin="1" DurationMax="1">
 					<MediaRefs>
 						<MediaRef Id="272861178"/>
@@ -147,7 +204,17 @@
 				</Event>
 				<Event Id="3265032750" Name="Stop_OfficeAmbientNoise" MaxAttenuation="0" DurationType="OneShot" DurationMin="0" DurationMax="0"/>
 			</Events>
+			<StateGroups>
+				<StateGroup Id="436743010" Name="Character">
+					<States>
+						<State Id="635371786" Name="Gail"/>
+						<State Id="748895195" Name="None"/>
+						<State Id="1517750995" Name="WK"/>
+						<State Id="2106242461" Name="Frankie"/>
+					</States>
+				</StateGroup>
+			</StateGroups>
 		</SoundBank>
 	</SoundBanks>
-	<FileHash>{E0B982DA-56C9-CC80-1AC1-F6D90CE9E5A8}</FileHash>
+	<FileHash>{A5DF3769-8D18-EFA6-02F2-820FF83D7FB5}</FileHash>
 </SoundBanksInfo>

@@ -22,12 +22,29 @@ namespace AK
         static const AkUniqueID PLAY_GUARD_KO_PLACEHOLDER = 2157469724U;
         static const AkUniqueID PLAY_GUARD_NOTICE_PLACEHOLDER = 3136084898U;
         static const AkUniqueID PLAY_GUNSHOT_PLACEHOLDER = 1795322234U;
+        static const AkUniqueID PLAY_LEVELMUSIC = 2671044069U;
         static const AkUniqueID PLAY_MOVEMENT_SELECT_PLACEHOLDER = 3274460198U;
         static const AkUniqueID PLAY_OFFICEAMBIENTNOISE = 4098207900U;
-        static const AkUniqueID PLAY_STATICMUSIC = 4097918453U;
         static const AkUniqueID PLAY_UI_BUTTON_HOVER = 310530060U;
         static const AkUniqueID STOP_OFFICEAMBIENTNOISE = 3265032750U;
     } // namespace EVENTS
+
+    namespace STATES
+    {
+        namespace CHARACTER
+        {
+            static const AkUniqueID GROUP = 436743010U;
+
+            namespace STATE
+            {
+                static const AkUniqueID FRANKIE = 2106242461U;
+                static const AkUniqueID GAIL = 635371786U;
+                static const AkUniqueID NONE = 748895195U;
+                static const AkUniqueID WK = 1517750995U;
+            } // namespace STATE
+        } // namespace CHARACTER
+
+    } // namespace STATES
 
     namespace BANKS
     {

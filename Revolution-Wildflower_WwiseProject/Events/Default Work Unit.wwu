@@ -160,6 +160,31 @@
 						</Action>
 					</ChildrenList>
 				</Event>
+				<Event Name="Play_LevelMusic" ID="{56A51A5B-0B33-46B8-BE58-8050F2D5627B}">
+					<ChildrenList>
+						<Action Name="" ID="{671885E0-BC38-4875-B0B3-4E18FB52B88E}" ShortID="963522884">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="LevelMusic" ID="{916F4B94-8303-4B43-8E9F-D44133931B93}" WorkUnitID="{B70DB31A-DF89-4969-A5CB-8CCA4A381115}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Stop_LevelMusic" ID="{DC389521-EE4B-41CB-89C5-DA90186B6CB3}">
+					<ChildrenList>
+						<Action Name="" ID="{6914469A-EB38-4753-B31A-2F99B6C71CE0}" ShortID="891817668">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="2"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="LevelMusic" ID="{916F4B94-8303-4B43-8E9F-D44133931B93}" WorkUnitID="{B70DB31A-DF89-4969-A5CB-8CCA4A381115}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
 			</ChildrenList>
 		</WorkUnit>
 	</Events>

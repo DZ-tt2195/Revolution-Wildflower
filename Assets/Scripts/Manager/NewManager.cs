@@ -412,6 +412,7 @@ public class NewManager : MonoBehaviour
     {
         PlayerEntity currentPlayer = currentTile.myEntity.GetComponent<PlayerEntity>();
         lastSelectedPlayer = currentPlayer;
+        AkSoundEngine.SetState("Character", currentPlayer.name);
         List<TileData> possibleTiles = CalculateReachableGrids(currentTile, currentPlayer.movementLeft, true);
         ChoiceManager.instance.ChooseTile(possibleTiles);
 

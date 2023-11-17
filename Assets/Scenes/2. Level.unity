@@ -590,7 +590,7 @@ MonoBehaviour:
   data:
     idInternal: 0
     valueGuidInternal: 
-    WwiseObjectReference: {fileID: 11400000, guid: db336f469a7c014449f86c19bcf05d0e, type: 2}
+    WwiseObjectReference: {fileID: 11400000, guid: 5bc6bef26d3a8ea4888b6fb390fb8813, type: 2}
   useCallbacks: 0
   Callbacks: []
   playingId: 0
@@ -5048,7 +5048,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 383833180}
   m_HandleRect: {fileID: 383833179}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:

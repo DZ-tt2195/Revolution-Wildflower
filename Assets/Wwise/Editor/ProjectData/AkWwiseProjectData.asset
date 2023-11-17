@@ -24,7 +24,7 @@ MonoBehaviour:
     ParentPath: Virtual Acoustics\Default Work Unit
     guid: 9ffce69c9c29384fbb3b75840552c08f
     GuidInternal: 
-    m_lastTime: -8585027133952401122
+    m_lastTime: -8585027520201267940
     List: []
   AuxBusWwu:
   - PhysicalPath: Master-Mixer Hierarchy\Default Work Unit.wwu
@@ -38,7 +38,7 @@ MonoBehaviour:
     ParentPath: Master-Mixer Hierarchy\Default Work Unit
     guid: b4d226741eaebf46a735554a72e4a279
     GuidInternal: 
-    m_lastTime: -8585027133956108395
+    m_lastTime: -8585027520202262900
     List:
     - name: Master Audio Bus
       guid: d8a41415a61d2a41a17e75ca0c2149f3
@@ -66,7 +66,7 @@ MonoBehaviour:
     ParentPath: SoundBanks\Default Work Unit
     guid: 45c008903f9bc0458acdfbd56132c8c3
     GuidInternal: 
-    m_lastTime: -8585021462981694961
+    m_lastTime: -8585014043743114794
     List:
     - name: SFX_Bank
       guid: 5d5c45d3c5ae5942be5f72be6b5d9f73
@@ -94,7 +94,7 @@ MonoBehaviour:
     ParentPath: Events\Default Work Unit
     guid: aa9cb76dd7a7b94db368aaabd6160f55
     GuidInternal: 
-    m_lastTime: -8585021462991950076
+    m_lastTime: -8585014043742972391
     List:
     - name: Play_bottle_placeholder
       guid: da629e37e37cac47918a6bd2cb6f6ae7
@@ -249,6 +249,23 @@ MonoBehaviour:
       maxAttenuation: 0
       maxDuration: 0.37560415
       minDuration: 0.37560415
+    - name: Play_LevelMusic
+      guid: 5b1aa556330bb846be588050f2d5627b
+      id: 2671044069
+      PathAndIcons:
+      - ElementName: Events
+        ObjectType: 5
+        guid: 00000000000000000000000000000000
+      - ElementName: Default Work Unit
+        ObjectType: 12
+        guid: aa9cb76dd7a7b94db368aaabd6160f55
+      - ElementName: Play_LevelMusic
+        ObjectType: 3
+        guid: 5b1aa556330bb846be588050f2d5627b
+      Path: Events\Default Work Unit\Play_LevelMusic
+      maxAttenuation: 0
+      maxDuration: -1
+      minDuration: -1
     - name: Play_movement_select_placeholder
       guid: dee2bc3181d0254fb390fe3f0745bc1d
       id: 3274460198
@@ -317,6 +334,23 @@ MonoBehaviour:
       maxAttenuation: 0
       maxDuration: 1
       minDuration: 1
+    - name: Stop_LevelMusic
+      guid: 219538dc4beecb4189c5da90186b6cb3
+      id: 2518039975
+      PathAndIcons:
+      - ElementName: Events
+        ObjectType: 5
+        guid: 00000000000000000000000000000000
+      - ElementName: Default Work Unit
+        ObjectType: 12
+        guid: aa9cb76dd7a7b94db368aaabd6160f55
+      - ElementName: Stop_LevelMusic
+        ObjectType: 3
+        guid: 219538dc4beecb4189c5da90186b6cb3
+      Path: Events\Default Work Unit\Stop_LevelMusic
+      maxAttenuation: 0
+      maxDuration: -1
+      minDuration: -1
     - name: Stop_OfficeAmbientNoise
       guid: 65a67766de3b6a4ebaab69211bcda66b
       id: 3265032750
@@ -346,7 +380,7 @@ MonoBehaviour:
     ParentPath: Game Parameters\Default Work Unit
     guid: a533ac0adf04964cbb838bf5ab88f335
     GuidInternal: 
-    m_lastTime: -8585027133961921856
+    m_lastTime: -8585027520201798437
     List: []
   StateWwu:
   - PhysicalPath: States\Default Work Unit.wwu
@@ -360,8 +394,90 @@ MonoBehaviour:
     ParentPath: States\Default Work Unit
     guid: 4b4aaa4be5fff34391eb2ff28b2035f4
     GuidInternal: 
-    m_lastTime: -8585027133952470091
-    List: []
+    m_lastTime: -8585014073081398125
+    List:
+    - name: Character
+      guid: 4f38e7036cfbb846b71ed6a60a3dccc5
+      id: 436743010
+      PathAndIcons:
+      - ElementName: States
+        ObjectType: 5
+        guid: 00000000000000000000000000000000
+      - ElementName: Default Work Unit
+        ObjectType: 12
+        guid: 4b4aaa4be5fff34391eb2ff28b2035f4
+      - ElementName: Character
+        ObjectType: 9
+        guid: 4f38e7036cfbb846b71ed6a60a3dccc5
+      Path: States\Default Work Unit\Character
+      values:
+      - name: Frankie
+        guid: 665c61ecb1d8e0418d1300f012ddb597
+        id: 2106242461
+        PathAndIcons:
+        - ElementName: States
+          ObjectType: 5
+          guid: 00000000000000000000000000000000
+        - ElementName: Default Work Unit
+          ObjectType: 12
+          guid: 4b4aaa4be5fff34391eb2ff28b2035f4
+        - ElementName: Character
+          ObjectType: 9
+          guid: 4f38e7036cfbb846b71ed6a60a3dccc5
+        - ElementName: Frankie
+          ObjectType: 8
+          guid: 665c61ecb1d8e0418d1300f012ddb597
+      - name: Gail
+        guid: 9cade6e2e5e6c041ad10c56430bde36a
+        id: 635371786
+        PathAndIcons:
+        - ElementName: States
+          ObjectType: 5
+          guid: 00000000000000000000000000000000
+        - ElementName: Default Work Unit
+          ObjectType: 12
+          guid: 4b4aaa4be5fff34391eb2ff28b2035f4
+        - ElementName: Character
+          ObjectType: 9
+          guid: 4f38e7036cfbb846b71ed6a60a3dccc5
+        - ElementName: Gail
+          ObjectType: 8
+          guid: 9cade6e2e5e6c041ad10c56430bde36a
+      - name: None
+        guid: a4ff7a7763a17a41b250922cc1a8e5f6
+        id: 748895195
+        PathAndIcons:
+        - ElementName: States
+          ObjectType: 5
+          guid: 00000000000000000000000000000000
+        - ElementName: Default Work Unit
+          ObjectType: 12
+          guid: 4b4aaa4be5fff34391eb2ff28b2035f4
+        - ElementName: Character
+          ObjectType: 9
+          guid: 4f38e7036cfbb846b71ed6a60a3dccc5
+        - ElementName: None
+          ObjectType: 8
+          guid: a4ff7a7763a17a41b250922cc1a8e5f6
+      - name: WK
+        guid: e8d27915f94cf74c8f7f6c8876ee89fa
+        id: 1517750995
+        PathAndIcons:
+        - ElementName: States
+          ObjectType: 5
+          guid: 00000000000000000000000000000000
+        - ElementName: Default Work Unit
+          ObjectType: 12
+          guid: 4b4aaa4be5fff34391eb2ff28b2035f4
+        - ElementName: Character
+          ObjectType: 9
+          guid: 4f38e7036cfbb846b71ed6a60a3dccc5
+        - ElementName: WK
+          ObjectType: 8
+          guid: e8d27915f94cf74c8f7f6c8876ee89fa
+      ValueGuids: []
+      ValueIcons: []
+      valuesInternal: []
   SwitchWwu:
   - PhysicalPath: Switches\Default Work Unit.wwu
     PathAndIcons:
@@ -374,7 +490,7 @@ MonoBehaviour:
     ParentPath: Switches\Default Work Unit
     guid: c0341d41406fcb418d71030f70d8450c
     GuidInternal: 
-    m_lastTime: -8585027133952427928
+    m_lastTime: -8585027520202023327
     List: []
   TriggerWwu:
   - PhysicalPath: Triggers\Default Work Unit.wwu
@@ -388,7 +504,7 @@ MonoBehaviour:
     ParentPath: Triggers\Default Work Unit
     guid: a46b04abdf4bf64a9a01c1da15a88d97
     GuidInternal: 
-    m_lastTime: -8585027133952427928
+    m_lastTime: -8585027520200951012
     List: []
   ExpandedFileSystemItemIds: 
   ExpandedWaapiItemIds: 
