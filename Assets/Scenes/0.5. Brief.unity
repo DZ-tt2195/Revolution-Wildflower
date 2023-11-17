@@ -192,12 +192,11 @@ MonoBehaviour:
   openPrefabs: 0
   prefabs: []
   idRef:
-    _Keys: 4504c2ad7a5624799afa7af14a3649566f97e30515fdba5b71ffd7aa11ab681542bd61aee8ed1b5ee40812f10bff495482a4bad811ff2d474b671e7a2dce8b109165320797f73e7f847b15e2f05499724a7cd44a9abfd94162f3841d6e695027901a6480cfa1314cad8f2aee732f540384474c00baf9560ee8abec106217442c70ab58130194960d8cddeba4833ad35f6352ae3f58bd7442bbfc9ab25fc91a004583ca1c680a4762cca38a615e180729a97e5ffda8e8b751287353ef96fb2b2c209acffe2f486d3dc2ebd8e0b071004ab67b1729e38e145b4c13252de3f6683832487e0617f9a6600a0a09d027da5715ae69fd302ab7cb56eedd3f6b3e68fd66772b1d0dfaaf91608b62c6e51cfeb66eefb9768594d7c2138673b31b223f5a47541011f9ef0762432b48e73e327f654c128cb845bc4d552fef8a38e9f365030607fcb1a38f6f6c11f7f39249cf4b5670efeeb467ab8fb973856f0503d0cf372ce323702580abc7291492bded610f3c0ecb38909d94f8282acb2258b6f6a17e2a2e0af06fecb40728e3465b68776b554a9c589c13a83c4a1b5292679d53b69d5abd5ae04b1ca0be03dae5b258da524a76d98563c7863f962b4baaea1716a19e3c2393b9c26f3d1675d74fcc16d9f264202e77b024796d23249eee304e08322c2f1138d6c747eddb20f87b48ed72950f22e617504354cc7d5fa471f7b8146d764468d8f60c4316db3114de91ac33486d459025809dbd02776bc405da059ccee04687c41268a56be14420e8c6d91ec5bc7967f6973db87db21d2b1d95a6ff748774dc20881474494624a807e5079e1a317d2825a9274f1824550ee324e50a5d6760cef718870c13701267b8b58f6f024658f8bcbb6b22adb648dd76d9c679bbd64995ae25554e40c26f61c1ca0117b8af4db71594403dd6ef76517760433c07060b9e693b7388d64e4fa360533341353421df58eedb25dad0242dbbfb1899e19e262e1a77a105c6a07e330b79e54a8d5c352b44a8a34f7f39491574558ac469ce48d8873ee79be61e06de30975f57761c1cded2efa833583c5254c18b907115ba63dac1bdd1cc44d011c2116aa12856940e80311955752e0a3c
+    _Keys: 4504c2ad7a5624799afa7af14a3649566f97e30515fdba5b42bd61aee8ed1b5ee40812f10bff495482a4bad811ff2d474b671e7a2dce8b109165320797f73e7f847b15e2f05499724a7cd44a9abfd94162f3841d6e695027901a6480cfa1314cad8f2aee732f540384474c00baf9560ee8abec106217442c70ab58130194960d8cddeba4833ad35f6352ae3f58bd7442bbfc9ab25fc91a004583ca1c680a4762cca38a615e180729a97e5ffda8e8b751287353ef96fb2b2c209acffe2f486d3dc2ebd8e0b071004ab67b1729e38e145b4c13252de3f6683832487e0617f9a6600a0a09d027da5715ae69fd302ab7cb56eedd3f6b3e68fd66772b1d0dfaaf91608b62c6e51cfeb66eefb9768594d7c2138673b31b223f5a47541011f9ef0762432b48e73e327f654c128cb845bc4d552fef8a38e9f365030607fcb1a38f6f6c11f7f39249cf4b5670efeeb467ab8fb973856f0503d0cf372ce323702580abc7291492bded610f3c0ecb38909d94f8282acb2258b6f6a17e2a2e0af06fecb40728e3465b68776b554a9c589c13a83c4a1b5292679d53b69d5abd5ae04b1ca0be03dae5b258da524a76d98563c7863f962b4baaea1716a19e3c2393b9c26f3d1675d74fcc16d9f264202e77b024796d23249eee304e08322c2f1138d6c747eddb20f87b48ed72950f22a471f7b8146d764468d8f60c4316db3114de91ac33486d459025809dbd02776bc405da059ccee04687c41268a56be14420e8c6d91ec5bc7967f6973db87db21d2b1d95a6ff748774dc20881474494624a807e5079e1a317d2825a9274f1824550ee324e50a5d6760cef718870c13701267b8b58f6f024658f8bcbb6b22adb648dd76d9c679bbd64995ae25554e40c26f61c1ca0117b8af4db71594403dd6ef76517760433c07060b9e693b7388d64e4fa360533341353421df58eedb25dad0242dbbfb1899e19e262e1a77a105c6a07e330b79e54a8d5c352b44a8a34f7f39491574558ac469ce48d8873ee79be61e06de30975f57761c1c54c18b907115ba63dac1bdd1cc44d011c2116aa12856940e80311955752e0a3c533db0d28ccf7431bf33e16d4e25964816a1191d7675c96db1dfac25b1725520ce8b44efa7b87641a8b986022c81164584b572439ec68b061abb81e53eab5c7cb40650956855e3018ad8bbb536ba4923aa27dd0977e5b50a94e1a8e6ffed6a2596313561d931d217d5fabaa8dad0ab5fe9d5d46d883a8e78fd62d985565052276dcb1ae72f2a5a24050b9200b314416afec68e582eddf07b
     _Values:
     - {fileID: 616838416}
     - {fileID: 616838419}
     - {fileID: 616838418}
-    - {fileID: 0}
     - {fileID: 1933829598}
     - {fileID: 1933829600}
     - {fileID: 1933829599}
@@ -256,7 +255,6 @@ MonoBehaviour:
     - {fileID: 11500000, guid: 3b7bca08cff38b447b15fea934b94383, type: 3}
     - {fileID: 2800000, guid: 006bf8f94970b8e48aa3f6d39e7e73cd, type: 3}
     - {fileID: 21300000, guid: 006bf8f94970b8e48aa3f6d39e7e73cd, type: 3}
-    - {fileID: 0}
     - {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
     - {fileID: 8300000, guid: c965cf831ecd976498c4af7745bc7c8b, type: 3}
     - {fileID: 8300000, guid: 92f366a9c0af9ce44a006af7289e9172, type: 3}
@@ -288,11 +286,29 @@ MonoBehaviour:
     - {fileID: 736288883}
     - {fileID: 736288885}
     - {fileID: 736288884}
-    - {fileID: 0}
     - {fileID: 2800000, guid: 8e8a3ec53e728ec4bab29748c6aa4c14, type: 3}
     - {fileID: 21300000, guid: 8e8a3ec53e728ec4bab29748c6aa4c14, type: 3}
     - {fileID: 1904329785}
     - {fileID: 668186522}
+    - {fileID: 616838421}
+    - {fileID: 11500000, guid: c5e46fd51ad7ad944bac40d38baf420a, type: 3}
+    - {fileID: 616838420}
+    - {fileID: 11500000, guid: 0a31c083df4df1d439b24dff4bc27e68, type: 3}
+    - {fileID: 0}
+    - {fileID: 475770175}
+    - {fileID: 2026990095}
+    - {fileID: 365344088}
+    - {fileID: 365344090}
+    - {fileID: 365344089}
+    - {fileID: 11500000, guid: d27d00aedc7ecd34f8d9472311974631, type: 3}
+    - {fileID: 11400000, guid: c45570d0f6a012547a700ed391e0acba, type: 2}
+    - {fileID: 11500000, guid: 27583346267697d43a29ed0ccd4ad635, type: 3}
+    - {fileID: 567595609}
+    - {fileID: 567595611}
+    - {fileID: 567595610}
+    - {fileID: 11500000, guid: 793c2829edbce2342a58389f751668df, type: 3}
+    - {fileID: 11400000, guid: 378241e767d5f1a428185f1b701bbd3d, type: 2}
+    - {fileID: 11500000, guid: 479f1cf3937d56e418ba66b49e748b18, type: 3}
 --- !u!4 &40922747
 Transform:
   m_ObjectHideFlags: 0
@@ -715,6 +731,115 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: -2958065954316038963, guid: 67e304d4f7c98ec49a1a8c7bc70cdbeb, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OutlineTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _Ambient: 0.5
+    - _Bevel: 0.5
+    - _BevelClamp: 0
+    - _BevelOffset: 0
+    - _BevelRoundness: 0
+    - _BevelWidth: 0
+    - _BumpFace: 0
+    - _BumpOutline: 0
+    - _ColorMask: 15
+    - _CullMode: 0
+    - _Diffuse: 0.5
+    - _FaceDilate: 0
+    - _FaceUVSpeedX: 0
+    - _FaceUVSpeedY: 0
+    - _GlowInner: 0.05
+    - _GlowOffset: 0
+    - _GlowOuter: 0.05
+    - _GlowPower: 0.75
+    - _GradientScale: 10
+    - _LightAngle: 3.1416
+    - _MaskSoftnessX: 0
+    - _MaskSoftnessY: 0
+    - _OutlineSoftness: 0
+    - _OutlineUVSpeedX: 0
+    - _OutlineUVSpeedY: 0
+    - _OutlineWidth: 0
+    - _PerspectiveFilter: 0.875
+    - _Reflectivity: 10
+    - _ScaleRatioA: 0.9
+    - _ScaleRatioB: 0.73125
+    - _ScaleRatioC: 0.73125
+    - _ScaleX: 1
+    - _ScaleY: 1
+    - _ShaderFlags: 0
+    - _Sharpness: 0
+    - _SpecularPower: 2
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _TextureHeight: 1024
+    - _TextureWidth: 1024
+    - _UnderlayDilate: 0
+    - _UnderlayOffsetX: 0
+    - _UnderlayOffsetY: 0
+    - _UnderlaySoftness: 0
+    - _VertexOffsetX: 0
+    - _VertexOffsetY: 0
+    - _WeightBold: 0.75
+    - _WeightNormal: 0
+    m_Colors:
+    - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
+    - _EnvMatrixRotation: {r: 0, g: 0, b: 0, a: 0}
+    - _FaceColor: {r: 1, g: 1, b: 1, a: 1}
+    - _GlowColor: {r: 0, g: 1, b: 0, a: 0.5}
+    - _MaskCoord: {r: 0, g: 0, b: 32767, a: 32767}
+    - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _ReflectFaceColor: {r: 0, g: 0, b: 0, a: 1}
+    - _ReflectOutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
+    - _UnderlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_BuildTextureStacks: []
+--- !u!21 &475770175
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: OverusedGrotesk-Book Atlas Material + OverusedGrotesk-BookItalic Atlas
+    (Instance)
+  m_Shader: {fileID: 4800000, guid: 68e6db2ebdc24f95958faec2be5558d6, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BumpMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Cube:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FaceTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: -8470434959884784418, guid: 1f14a357fb4207e4b91a15e87ed3f428, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OutlineTex:
@@ -2102,8 +2227,8 @@ MonoBehaviour:
     at an <b>Icarus Industries'</b> office center. At least one of the employee stations
     should have plans for their \u201CReorganization Effort.\u201D \n\nI\u2019ll
     give you the schematics of the floor and mark which <b>computers</b> would most
-    likely have it on them. Be sure to leave the same way you came in. We can't risk
-    raising any more suspicion than we need to. Good luck.\""
+    likely have it on them. After you get everything, be sure to leave through the
+    back entrance. We disabled the cameras in that area. Good luck.\""
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9a6fd5b88ef8bd54a91b914d7d679dfa, type: 2}
   m_sharedMaterial: {fileID: -4583499342524548959, guid: 9a6fd5b88ef8bd54a91b914d7d679dfa, type: 2}
@@ -2199,6 +2324,114 @@ RectTransform:
   m_AnchoredPosition: {x: -223, y: 201}
   m_SizeDelta: {x: 1274.0977, y: 483.81}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!21 &2026990095
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: OverusedGrotesk-Book Atlas Material + OverusedGrotesk-Bold Atlas (Instance)
+  m_Shader: {fileID: 4800000, guid: 68e6db2ebdc24f95958faec2be5558d6, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BumpMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Cube:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FaceTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: -2958065954316038963, guid: 67e304d4f7c98ec49a1a8c7bc70cdbeb, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OutlineTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _Ambient: 0.5
+    - _Bevel: 0.5
+    - _BevelClamp: 0
+    - _BevelOffset: 0
+    - _BevelRoundness: 0
+    - _BevelWidth: 0
+    - _BumpFace: 0
+    - _BumpOutline: 0
+    - _ColorMask: 15
+    - _CullMode: 0
+    - _Diffuse: 0.5
+    - _FaceDilate: 0
+    - _FaceUVSpeedX: 0
+    - _FaceUVSpeedY: 0
+    - _GlowInner: 0.05
+    - _GlowOffset: 0
+    - _GlowOuter: 0.05
+    - _GlowPower: 0.75
+    - _GradientScale: 10
+    - _LightAngle: 3.1416
+    - _MaskSoftnessX: 0
+    - _MaskSoftnessY: 0
+    - _OutlineSoftness: 0
+    - _OutlineUVSpeedX: 0
+    - _OutlineUVSpeedY: 0
+    - _OutlineWidth: 0
+    - _PerspectiveFilter: 0.875
+    - _Reflectivity: 10
+    - _ScaleRatioA: 0.9
+    - _ScaleRatioB: 0.73125
+    - _ScaleRatioC: 0.73125
+    - _ScaleX: 1
+    - _ScaleY: 1
+    - _ShaderFlags: 0
+    - _Sharpness: 0
+    - _SpecularPower: 2
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _TextureHeight: 1024
+    - _TextureWidth: 1024
+    - _UnderlayDilate: 0
+    - _UnderlayOffsetX: 0
+    - _UnderlayOffsetY: 0
+    - _UnderlaySoftness: 0
+    - _VertexOffsetX: 0
+    - _VertexOffsetY: 0
+    - _WeightBold: 0.75
+    - _WeightNormal: 0
+    m_Colors:
+    - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
+    - _EnvMatrixRotation: {r: 0, g: 0, b: 0, a: 0}
+    - _FaceColor: {r: 1, g: 1, b: 1, a: 1}
+    - _GlowColor: {r: 0, g: 1, b: 0, a: 0.5}
+    - _MaskCoord: {r: 0, g: 0, b: 32767, a: 32767}
+    - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _ReflectFaceColor: {r: 0, g: 0, b: 0, a: 1}
+    - _ReflectOutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
+    - _UnderlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_BuildTextureStacks: []
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
