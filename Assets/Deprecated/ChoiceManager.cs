@@ -7,6 +7,7 @@ using System;
 
 public class ChoiceManager : MonoBehaviour
 {
+    /*
     public static ChoiceManager instance;
     [ReadOnly] public Card chosenCard;
     [ReadOnly] public TileData chosenTile;
@@ -101,4 +102,5 @@ public class ChoiceManager : MonoBehaviour
             card.choiceScript.DisableButton();
         }
     }
+    */
 }

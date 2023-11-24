@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using TMPro;
 using MyBox;
 using UnityEngine.SceneManagement;
+using static UnityEditor.Experimental.GraphView.Port;
 
 public class AStarNode
 {
@@ -34,7 +35,9 @@ public class NewManager : MonoBehaviour
         [Tooltip("Reference to active environmental objects")][ReadOnly] public List<EnvironmentalEntity> listOfEnvironmentals = new List<EnvironmentalEntity>();
         [Tooltip("Reference to objectives")] [ReadOnly] public List<ObjectiveEntity> listOfObjectives = new List<ObjectiveEntity>();
 
-    [Foldout("Movement", true)]
+    [Foldout("Player decisions", true)]
+        [Tooltip("A tile that the player chose")][ReadOnly] public TileData chosenTile;
+        [Tooltip("A acard that the player chose")][ReadOnly] public Card chosenCard;
         [Tooltip("Current Selected Tile")][ReadOnly] public TileData selectedTile;
         [Tooltip("Quick reference to current movable tile")][ReadOnly] public TileData CurrentAvailableMoveTarget;
 
@@ -65,6 +68,10 @@ public class NewManager : MonoBehaviour
     [Foldout("Setup", true)]
         [Tooltip("Amount of turns before a game over")] public int turnCount;
         [Tooltip("The level number (starts at 0")] [SerializeField] int levelToLoad;
+
+    [Foldout("Flashing", true)]
+        [Tooltip("the transparancy of card/tile borders")][ReadOnly] public float opacity = 1;
+        [Tooltip("whether the borders are turning white or black")][ReadOnly] public bool decrease = true;
 
     public enum TurnSystem { You, Resolving, Environmentals, Enemy };
     [Foldout("Turn System", true)]
@@ -255,45 +262,6 @@ public class NewManager : MonoBehaviour
         }
     }
 
-    public TileData FindTile(Vector2 vector) //find a tile based off Vector2
-    {
-        try
-        {
-            return listOfTiles[(int)vector.x, (int)vector.y];
-        }
-        catch (IndexOutOfRangeException)
-        {
-            return null;
-        }
-    }
-
-    public TileData FindTile(Vector2Int vector) //find a tile based off Vector2Int
-    {
-        return FindTile(new Vector2(vector.x, vector.y));
-    }
-
-    public static IEnumerator Wait(float timer)
-    {
-        float wait = timer;
-        while (wait > 0)
-        {
-            wait -= Time.deltaTime;
-            yield return null;
-        }
-    }
-
-    private void Update()
-    {
-        endTurnButton.gameObject.SetActive(currentTurn == TurnSystem.You);
-        if (Input.GetKeyDown(KeyCode.Space))
-            GameOver("You quit.");
-    }
-
-    public void FocusOnPlayer(PlayerEntity player)
-    {
-        Camera.main.transform.position = new Vector3(player.transform.position.x, Camera.main.transform.position.y, player.transform.position.z);
-    }
-
 #endregion
 
 #region Changing Stats
@@ -302,15 +270,18 @@ public class NewManager : MonoBehaviour
     {
         ChangeEnergy(player, n - (int)player.myEnergy);
     }
+
     public void ChangeEnergy(PlayerEntity player, int n) //if you want to subtract 3 energy, type ChangeEnergy(-3);
     {
         player.myEnergy += n;
         UpdateStats(player);
     }
+
     public void SetHealth(PlayerEntity player, int n) //if you want to set health to 2, type SetHealth(2);
     {
         ChangeHealth(player, n - (int)player.health);
     }
+
     public void ChangeHealth(PlayerEntity player, int n) //if you want to subtract 3 health, type ChangeHealth(-3);
     {
         player.health += n;
@@ -318,15 +289,18 @@ public class NewManager : MonoBehaviour
         if (player.health <= 0)
             GameOver($"{player.name} lost all their HP.");
     }
+
     public void SetMovement(PlayerEntity player, int n) //if you want to set movement to 2, type SetMovement(2);
     {
         ChangeMovement(player, n - (int)player.movementLeft);
     }
+
     public void ChangeMovement(PlayerEntity player, int n) //if you want to subtract 3 movement, type ChangeMovement(-3);
     {
         player.movementLeft += n;
         UpdateStats(player);
     }
+
     public void ResolveObjective()
     {
         foreach (PlayerEntity player in listOfPlayers)
@@ -342,7 +316,7 @@ public class NewManager : MonoBehaviour
         }
     }
 
-    void UpdateStats(PlayerEntity player)
+    public void UpdateStats(PlayerEntity player)
     {
         if (player != null)
         {
@@ -374,9 +348,53 @@ public class NewManager : MonoBehaviour
         this.instructions.text = instructions;
     }
 
-#endregion
+    #endregion
 
-#region Turn System 
+#region Misc
+
+    private void Update()
+    {
+        endTurnButton.gameObject.SetActive(currentTurn == TurnSystem.You);
+        if (Input.GetKeyDown(KeyCode.Space))
+            GameOver("You quit.");
+    }
+
+    private void FixedUpdate()
+    {
+        if (decrease)
+            opacity -= 0.05f;
+        else
+            opacity += 0.05f;
+        if (opacity < 0 || opacity > 1)
+            decrease = !decrease;
+    }
+
+    public void DisableAllTiles()
+    {
+        for (int i = 0; i < NewManager.instance.listOfTiles.GetLength(0); i++)
+        {
+            for (int j = 0; j < NewManager.instance.listOfTiles.GetLength(1); j++)
+            {
+                try
+                {
+                    NewManager.instance.listOfTiles[i, j].clickable = false;
+                    NewManager.instance.listOfTiles[i, j].moveable = false;
+                }
+                catch (NullReferenceException)
+                {
+                    continue;
+                }
+            }
+        }
+    }
+
+    public void DisableAllCards()
+    {
+        foreach (Card card in SaveManager.instance.allCards)
+        {
+            card.DisableCard();
+        }
+    }
 
     public void GameOver(string cause)
     {
@@ -385,27 +403,111 @@ public class NewManager : MonoBehaviour
         StopAllCoroutines();
     }
 
+    public TileData FindTile(Vector2 vector) //find a tile based off Vector2
+    {
+        try
+        {
+            return listOfTiles[(int)vector.x, (int)vector.y];
+        }
+        catch (IndexOutOfRangeException)
+        {
+            return null;
+        }
+    }
+
+    public TileData FindTile(Vector2Int vector) //find a tile based off Vector2Int
+    {
+        return FindTile(new Vector2(vector.x, vector.y));
+    }
+
+    public static IEnumerator Wait(float timer)
+    {
+        float wait = timer;
+        while (wait > 0)
+        {
+            wait -= Time.deltaTime;
+            yield return null;
+        }
+    }
+
+    public void FocusOnPlayer(PlayerEntity player)
+    {
+        Camera.main.transform.position = new Vector3(player.transform.position.x, Camera.main.transform.position.y, player.transform.position.z);
+    }
+
+    public void ReceiveChoice(Card card)
+    {
+        chosenCard = card;
+    }
+
+    public void ReceiveChoice(TileData tile)
+    {
+        chosenTile = tile;
+    }
+
+    public void WaitForDecision(List<Card> canBeChosen)
+    {
+        chosenTile = null;
+        chosenCard = null;
+        DisableAllCards();
+
+        foreach (Card card in canBeChosen)
+        {
+            card.EnableCard();
+        }
+    }
+
+    public void WaitForDecision(List<TileData> canBeChosen)
+    {
+        chosenTile = null;
+        chosenCard = null;
+        DisableAllTiles();
+
+        foreach(TileData tile in canBeChosen)
+        {
+            tile.moveable = true;
+            tile.clickable = true;
+        }
+    }
+
+    #endregion
+
+#region Turn System
+
     IEnumerator StartPlayerTurn()
     {
         foreach(Card card in futureEffects)
             yield return card.NextRoundEffect();
         futureEffects.Clear();
+        selectedTile = null;
         BackToStart();
+    }
+
+    public void EnablePlayers()
+    {
+        foreach (PlayerEntity player in listOfPlayers)
+        {
+            player.currentTile.clickable = true;
+            player.currentTile.moveable = true;
+        }
     }
 
     void BackToStart()
     {
         currentTurn = TurnSystem.You;
         UpdateInstructions("Choose a character to move / play a card.");
-        selectedTile = null;
 
-        ChoiceManager.instance.DisableAllTiles();
-        ChoiceManager.instance.DisableAllCards();
+        DisableAllTiles();
+        DisableAllCards();
         UpdateStats(lastSelectedPlayer);
-        StartCoroutine(ChooseCardPlay(lastSelectedPlayer));
-
-        foreach (PlayerEntity player in listOfPlayers)
-            player.currentTile.moveable = true;
+        EnablePlayers();
+        StopAllCoroutines();
+        
+        if (lastSelectedPlayer != null)
+        {
+            selectedTile = lastSelectedPlayer.currentTile;
+            StartCoroutine(ChooseMovePlayer(selectedTile));
+        }
     }
 
     public IEnumerator ChooseMovePlayer(TileData currentTile)
@@ -413,17 +515,19 @@ public class NewManager : MonoBehaviour
         PlayerEntity currentPlayer = currentTile.myEntity.GetComponent<PlayerEntity>();
         lastSelectedPlayer = currentPlayer;
         AkSoundEngine.SetState("Character", currentPlayer.name);
+
         List<TileData> possibleTiles = CalculateReachableGrids(currentTile, currentPlayer.movementLeft, true);
-        ChoiceManager.instance.ChooseTile(possibleTiles);
+        NewManager.instance.WaitForDecision(possibleTiles);
 
         UpdateStats(currentPlayer);
         StartCoroutine(ChooseCardPlay(currentPlayer));
+        EnablePlayers();
 
-        while (ChoiceManager.instance.chosenTile == null)
+        while (NewManager.instance.chosenTile == null)
         {
             if (selectedTile != currentTile)
             {
-                ChoiceManager.instance.DisableAllTiles();
+                Debug.Log("switched off");
                 yield break;
             }
             else
@@ -438,10 +542,11 @@ public class NewManager : MonoBehaviour
     void MovePlayer(PlayerEntity currentPlayer)
     { 
         currentTurn = TurnSystem.Resolving;
-        int distanceTraveled = GetDistance(currentPlayer.currentTile.gridPosition, ChoiceManager.instance.chosenTile.gridPosition);
+        int distanceTraveled = GetDistance(currentPlayer.currentTile.gridPosition, NewManager.instance.chosenTile.gridPosition);
         ChangeMovement(currentPlayer, -distanceTraveled);
         footsteps.Post(currentPlayer.gameObject);
-        currentPlayer.MoveTile(ChoiceManager.instance.chosenTile);
+        currentPlayer.MoveTile(NewManager.instance.chosenTile);
+        StopAllCoroutines();
         BackToStart();
     }
 
@@ -455,9 +560,9 @@ public class NewManager : MonoBehaviour
                 if (card.CanPlay(player))
                     canBePlayed.Add(card);
             }
-            ChoiceManager.instance.ChooseCard(canBePlayed);
+            NewManager.instance.WaitForDecision(canBePlayed);
 
-            while (ChoiceManager.instance.chosenCard == null)
+            while (NewManager.instance.chosenCard == null)
             {
                 if (currentTurn != TurnSystem.You)
                 {
@@ -468,7 +573,7 @@ public class NewManager : MonoBehaviour
                     yield return null;
                 }
             }
-            yield return PlayCard(player, ChoiceManager.instance.chosenCard);
+            yield return PlayCard(player, NewManager.instance.chosenCard);
         }
     }
 
@@ -484,6 +589,7 @@ public class NewManager : MonoBehaviour
 
         futureEffects.Add(playMe);
         player.cardsPlayed.Add(playMe);
+        StopAllCoroutines();
         BackToStart();
     }
 
@@ -494,7 +600,6 @@ public class NewManager : MonoBehaviour
 
         foreach (PlayerEntity player in listOfPlayers)
         {
-            lastSelectedPlayer = null;
             SetEnergy(player, 3);
             SetMovement(player, player.movesPerTurn);
             player.PlusCards(5 - player.myHand.Count);
@@ -509,8 +614,8 @@ public class NewManager : MonoBehaviour
     {
         selectedTile = null;
         currentTurn = TurnSystem.Environmentals;
-        ChoiceManager.instance.DisableAllTiles();
-        ChoiceManager.instance.DisableAllCards();
+        NewManager.instance.DisableAllTiles();
+        NewManager.instance.DisableAllCards();
 
         currentTurn = TurnSystem.Environmentals;
         foreach (EnvironmentalEntity environment in  listOfEnvironmentals)

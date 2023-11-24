@@ -10,47 +10,52 @@ using UnityEngine.EventSystems;
 public class Card : MonoBehaviour, IPointerClickHandler
 {
 
-#region Card Stats
+    #region Variables
 
-    [ReadOnly] public Image image;
-    [ReadOnly] public SendChoice choiceScript;
-    [SerializeField] Collector collector;
+    [Foldout("Choices", true)]
+        [ReadOnly] public Image image;
+        bool enableBorder;
+        [ReadOnly] public Image border;
+        [ReadOnly] public Button button;
+        [SerializeField] Collector collector;
 
-    [ReadOnly] public int energyCost;
-    public enum CardType { Attack, Draw, Distraction, Energy, Movement, Misc, None };
-    [ReadOnly] public CardType typeOne;
-    [ReadOnly] public CardType typeTwo;
-    [ReadOnly] public bool violent;
+    [Foldout("Card stats", true)]
+        [ReadOnly] public int energyCost;
+        public enum CardType { Attack, Draw, Distraction, Energy, Movement, Misc, None };
+        [ReadOnly] public CardType typeOne;
+        [ReadOnly] public CardType typeTwo;
+        [ReadOnly] public bool violent;
 
-    [ReadOnly] int changeInHP;
-    [ReadOnly] int changeInMP;
-    [ReadOnly] int changeInEP;
-    [ReadOnly] int changeInDraw;
-    [ReadOnly] int chooseHand;
+        [ReadOnly] int changeInHP;
+        [ReadOnly] int changeInMP;
+        [ReadOnly] int changeInEP;
+        [ReadOnly] int changeInDraw;
+        [ReadOnly] int chooseHand;
 
-    [ReadOnly] int stunDuration;
-    [ReadOnly] int range;
-    [ReadOnly] int areaOfEffect;
-    [ReadOnly] int delay;
-    [ReadOnly] int changeInWall;
-    [ReadOnly] int burnDuration;
-    [ReadOnly] int distractionIntensity;
+        [ReadOnly] int stunDuration;
+        [ReadOnly] int range;
+        [ReadOnly] int areaOfEffect;
+        [ReadOnly] int delay;
+        [ReadOnly] int changeInWall;
+        [ReadOnly] int burnDuration;
+        [ReadOnly] int distractionIntensity;
 
-    [ReadOnly] string selectCondition;
-    [ReadOnly] string effectsInOrder;
-    [ReadOnly] string nextRoundEffectsInOrder;
-    [ReadOnly] string costChangeCondition;
+        [ReadOnly] string selectCondition;
+        [ReadOnly] string effectsInOrder;
+        [ReadOnly] string nextRoundEffectsInOrder;
+        [ReadOnly] string costChangeCondition;
+        
+        [ReadOnly] public TMP_Text textName { get; private set; }
+        [ReadOnly] public TMP_Text textCost { get; private set; }
+        [ReadOnly] public TMP_Text textDescr { get; private set; }
 
-    [ReadOnly] public TMP_Text textName { get; private set; }
-    [ReadOnly] public TMP_Text textCost { get; private set; }
-    [ReadOnly] public TMP_Text textDescr { get; private set; }
+        [ReadOnly] PlayerEntity currentPlayer;
+        [ReadOnly] List<TileData> adjacentTilesWithGuards = new List<TileData>();
+        [ReadOnly] List<TileData> adjacentTilesWithWalls = new List<TileData>();
 
-    [ReadOnly] PlayerEntity currentPlayer;
-    [ReadOnly] List<TileData> adjacentTilesWithGuards = new List<TileData>();
-    [ReadOnly] List<TileData> adjacentTilesWithWalls = new List<TileData>();
-
-    public AK.Wwise.Event cardMove;
-    public AK.Wwise.Event cardPlay;
+    [Foldout("Audio files", true)]
+        public AK.Wwise.Event cardMove;
+        public AK.Wwise.Event cardPlay;
 
     #endregion
 
@@ -59,11 +64,18 @@ public class Card : MonoBehaviour, IPointerClickHandler
     private void Awake()
     {
         image = GetComponent<Image>();
-        choiceScript = GetComponent<SendChoice>();
+        border = this.transform.GetChild(0).GetComponent<Image>();
+        button = this.GetComponent<Button>();
+        button.onClick.AddListener(SendMe);
 
         textName = this.transform.GetChild(1).GetComponent<TMP_Text>();
         textCost = this.transform.GetChild(2).GetComponent<TMP_Text>();
         textDescr = this.transform.GetChild(3).GetComponent<TMP_Text>();
+    }
+
+    void SendMe()
+    {
+        NewManager.instance.ReceiveChoice(this);
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -124,6 +136,30 @@ public class Card : MonoBehaviour, IPointerClickHandler
     #endregion
 
 #region Play Condition
+
+    public void EnableCard()
+    {
+        enableBorder = true;
+        button.interactable = true;
+    }
+
+    public void DisableCard()
+    {
+        enableBorder = false;
+        button.interactable = false;
+    }
+
+    private void FixedUpdate()
+    {
+        if (border != null && enableBorder)
+        {
+            border.color = new Color(1, 1, 1, NewManager.instance.opacity);
+        }
+        else if (border != null && !enableBorder)
+        {
+            border.color = new Color(1, 1, 1, 0);
+        }
+    }
 
     int ApplyCostChange()
     {
@@ -259,8 +295,8 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
         foreach (string nextMethod in methodsInStrings)
         {
-            ChoiceManager.instance.DisableAllCards();
-            ChoiceManager.instance.DisableAllCards();
+            NewManager.instance.DisableAllTiles();
+            NewManager.instance.DisableAllCards();
 
             if (nextMethod == "" || nextMethod == "NONE")
             {
@@ -269,6 +305,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
             else
             {
                 yield return ResolveMethod(nextMethod);
+                NewManager.instance.UpdateStats(currentPlayer);
             }
         }
     }
@@ -381,15 +418,15 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     public IEnumerator OnPlayEffect()
     {
-        ChoiceManager.instance.DisableAllCards();
-        ChoiceManager.instance.DisableAllTiles();
+        NewManager.instance.DisableAllCards();
+        NewManager.instance.DisableAllTiles();
         yield return ResolveList(effectsInOrder);
     }
 
     public IEnumerator NextRoundEffect()
     {
-        ChoiceManager.instance.DisableAllCards();
-        ChoiceManager.instance.DisableAllTiles();
+        NewManager.instance.DisableAllCards();
+        NewManager.instance.DisableAllTiles();
         yield return ResolveList(nextRoundEffectsInOrder);
     }
 
@@ -422,10 +459,10 @@ public class Card : MonoBehaviour, IPointerClickHandler
             NewManager.instance.UpdateInstructions($"Discard a card from your hand ({chooseHand - i} more).");
             if (currentPlayer.myHand.Count >= 2)
             {
-                ChoiceManager.instance.ChooseCard(currentPlayer.myHand);
-                while (ChoiceManager.instance.chosenCard == null)
+                NewManager.instance.WaitForDecision(currentPlayer.myHand);
+                while (NewManager.instance.chosenCard == null)
                     yield return null;
-                currentPlayer.DiscardFromHand(ChoiceManager.instance.chosenCard);
+                currentPlayer.DiscardFromHand(NewManager.instance.chosenCard);
             }
             else if (currentPlayer.myHand.Count == 1)
             {
@@ -578,10 +615,10 @@ public class Card : MonoBehaviour, IPointerClickHandler
         else
         {
             NewManager.instance.UpdateInstructions("Choose a wall in range.");
-            ChoiceManager.instance.ChooseTile(adjacentTilesWithWalls);
-            while (ChoiceManager.instance.chosenTile == null)
+            NewManager.instance.WaitForDecision(adjacentTilesWithWalls);
+            while (NewManager.instance.chosenTile == null)
                 yield return null;
-            targetWall = ChoiceManager.instance.chosenTile.myEntity.GetComponent<WallEntity>();
+            targetWall = NewManager.instance.chosenTile.myEntity.GetComponent<WallEntity>();
         }
         targetWall.AffectWall(changeInWall);
         CalculateDistraction(targetWall.currentTile);
@@ -598,10 +635,10 @@ public class Card : MonoBehaviour, IPointerClickHandler
         else
         {
             NewManager.instance.UpdateInstructions("Choose a guard in range.");
-            ChoiceManager.instance.ChooseTile(adjacentTilesWithGuards);
-            while (ChoiceManager.instance.chosenTile == null)
+            NewManager.instance.WaitForDecision(adjacentTilesWithGuards);
+            while (NewManager.instance.chosenTile == null)
                 yield return null;
-            targetGuard = ChoiceManager.instance.chosenTile.myEntity.GetComponent<GuardEntity>();
+            targetGuard = NewManager.instance.chosenTile.myEntity.GetComponent<GuardEntity>();
         }
 
         targetGuard.stunSound.Post(targetGuard.gameObject);

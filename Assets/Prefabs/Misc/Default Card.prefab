@@ -280,7 +280,6 @@ GameObject:
   - component: {fileID: 8172796780313133950}
   - component: {fileID: 1569491245602149742}
   - component: {fileID: 4697064048662673205}
-  - component: {fileID: 1241176585895277611}
   - component: {fileID: 6508822373905849686}
   m_Layer: 5
   m_Name: Default Card
@@ -363,7 +362,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   image: {fileID: 0}
-  choiceScript: {fileID: 0}
+  border: {fileID: 0}
+  button: {fileID: 0}
   collector: {fileID: 7928303491963949573, guid: 0ce383b7ea8ca488c810cadf3b089e7e, type: 3}
   energyCost: 0
   typeOne: 0
@@ -377,22 +377,6 @@ MonoBehaviour:
     idInternal: 0
     valueGuidInternal: 
     WwiseObjectReference: {fileID: 11400000, guid: 51998c64abf638747996da929bd885b8, type: 2}
---- !u!114 &1241176585895277611
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5933497273186232708}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce351a93c2e2242758cdc26f5adea67a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  button: {fileID: 0}
-  image: {fileID: 0}
-  border: {fileID: 0}
-  myCard: {fileID: 0}
 --- !u!114 &6508822373905849686
 MonoBehaviour:
   m_ObjectHideFlags: 0

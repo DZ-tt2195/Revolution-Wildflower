@@ -66,7 +66,7 @@ public class PlayerEntity : MovingEntity
             card.transform.SetParent(this.transform);
             this.myDrawPile.Add(card);
             card.transform.localPosition = new Vector3(10000, 10000, 0); //send the card far away where you can't see it anymore
-            card.choiceScript.DisableButton();
+            card.DisableCard();
         }
 
         this.myDrawPile.Shuffle(); //shuffle your deck

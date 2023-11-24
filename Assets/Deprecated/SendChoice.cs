@@ -7,6 +7,7 @@ using MyBox;
 
 public class SendChoice : MonoBehaviour
 {
+    /*
     [ReadOnly] public Button button;
     [ReadOnly] public Image image;
     [ReadOnly] public Image border;
@@ -29,7 +30,7 @@ public class SendChoice : MonoBehaviour
         //if this button is able to be pressed, it flashes
         if (border != null && enableBorder)
         {
-            border.color = new Color(1, 1, 1, ChoiceManager.instance.opacity);
+            border.color = new Color(1, 1, 1, NewManager.instance.opacity);
         }
         else if (border != null && !enableBorder)
         {
@@ -61,4 +62,5 @@ public class SendChoice : MonoBehaviour
         if (button != null)
             button.interactable = false;
     }
+    */
 }

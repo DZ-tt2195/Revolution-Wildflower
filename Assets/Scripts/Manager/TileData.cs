@@ -16,6 +16,7 @@ public class TileData : MonoBehaviour
     [Foldout("Mouse", true)]
         [Tooltip("timer that controls how long until a tool tip appears on hover")] float timeTillToolTip = 0.5f;
         [Tooltip("timer that controls how long until a tool tip appears on hover")] float toolTipHoverTimer = 0;
+        [Tooltip("Defines whether you can click this tile")][ReadOnly] public bool clickable = false;
         [Tooltip("Defines whether you can move onto this tile")][ReadOnly] public bool moveable = false;
         [Tooltip("If your mouse is over this")] private bool moused = false;
 
@@ -42,11 +43,11 @@ public class TileData : MonoBehaviour
         }
         if (NewManager.instance.selectedTile == this)
         {
-            border.color = new Color(SelectedColor.r, SelectedColor.g, SelectedColor.b, ChoiceManager.instance.opacity);
+            border.color = new Color(SelectedColor.r, SelectedColor.g, SelectedColor.b, NewManager.instance.opacity);
         }
         else if (moveable)
         {
-            border.color = new Color(MoveableColor.r, MoveableColor.g, MoveableColor.b, ChoiceManager.instance.opacity);
+            border.color = new Color(MoveableColor.r, MoveableColor.g, MoveableColor.b, NewManager.instance.opacity);
         }
         else if (moused)
         {
@@ -70,16 +71,18 @@ public class TileData : MonoBehaviour
 
     private void OnMouseOver()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (clickable && Input.GetKeyDown(KeyCode.Mouse0))
         {
-            if (moveable)
-                ChoiceManager.instance.ReceiveChoice(this);
-
             NewManager.instance.selectedTile = this;
+            if (moveable)
+            {
+                NewManager.instance.ReceiveChoice(this);
+            }
             if (myEntity != null)
             {
                 if (myEntity.CompareTag("Player"))
                 {
+                    NewManager.instance.StopAllCoroutines();
                     StartCoroutine(NewManager.instance.ChooseMovePlayer(this));
                 }
             }
