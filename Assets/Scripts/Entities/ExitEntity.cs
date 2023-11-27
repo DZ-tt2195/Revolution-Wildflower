@@ -14,9 +14,16 @@ public class ExitEntity : ObjectiveEntity
         return "Exit here when you've completed all other objectives";
     }
 
-    public override IEnumerator ObjectiveComplete()
+    public override IEnumerator ObjectiveComplete(PlayerEntity player)
     {
-        NewManager.instance.GameOver("You won!");
-        yield return base.ObjectiveComplete();
+        NewManager.instance.listOfPlayers.Remove(player);
+        Destroy(player.myBar.gameObject);
+        Destroy(player.gameObject);
+
+        if (NewManager.instance.listOfPlayers.Count == 0)
+        {
+            NewManager.instance.GameOver("You won!");
+            yield return base.ObjectiveComplete(player);
+        }
     }
 }

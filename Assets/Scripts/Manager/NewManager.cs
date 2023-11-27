@@ -302,16 +302,12 @@ public class NewManager : MonoBehaviour
 
     public void ResolveObjective()
     {
-        foreach (PlayerEntity player in listOfPlayers)
+        for (int i = listOfPlayers.Count - 1; i >= 0; i--)
         {
-            try
-            {
-                StartCoroutine(player.adjacentObjective.ObjectiveComplete());
-            }
-            catch (NullReferenceException)
-            {
-                continue;
-            }
+            Debug.Log(i);
+            PlayerEntity player = listOfPlayers[i];
+            try { StartCoroutine(player.adjacentObjective.ObjectiveComplete(player)); }
+            catch (NullReferenceException) { continue; }
         }
     }
 

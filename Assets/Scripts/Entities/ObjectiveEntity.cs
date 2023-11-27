@@ -12,7 +12,7 @@ public class ObjectiveEntity : Entity
         return true;
     }
 
-    public virtual IEnumerator ObjectiveComplete()
+    public virtual IEnumerator ObjectiveComplete(PlayerEntity player)
     {
         NewManager.instance.listOfObjectives.Remove(this);
         NewManager.instance.objectiveButton.gameObject.SetActive(false);
