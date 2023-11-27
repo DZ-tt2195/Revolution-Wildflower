@@ -16,7 +16,7 @@ public class ExitEntity : ObjectiveEntity
 
     public override IEnumerator ObjectiveComplete()
     {
-        yield return base.ObjectiveComplete();
         NewManager.instance.GameOver("You won!");
-  }
+        yield return base.ObjectiveComplete();
+    }
 }

@@ -20,7 +20,6 @@ public class AStarNode
     public int FCost => GCost + HCost;
 }
 
-
 public class NewManager : MonoBehaviour
 {
 
@@ -339,7 +338,7 @@ public class NewManager : MonoBehaviour
 
         foreach (PlayerEntity nextPlayer in listOfPlayers)
         {
-            nextPlayer.myBar.ChangeText($"{nextPlayer.myHand.Count} Cards; {nextPlayer.movementLeft} Moves; \n{nextPlayer.myEnergy} Energy");
+            nextPlayer.myBar.ChangeText($"{nextPlayer.myHand.Count} Cards; {nextPlayer.health} HP; \n{nextPlayer.movementLeft} Moves; {nextPlayer.myEnergy} Energy");
         }
     }
 
@@ -348,7 +347,7 @@ public class NewManager : MonoBehaviour
         this.instructions.text = instructions;
     }
 
-    #endregion
+#endregion
 
 #region Misc
 
@@ -371,14 +370,15 @@ public class NewManager : MonoBehaviour
 
     public void DisableAllTiles()
     {
-        for (int i = 0; i < NewManager.instance.listOfTiles.GetLength(0); i++)
+        for (int i = 0; i < listOfTiles.GetLength(0); i++)
         {
-            for (int j = 0; j < NewManager.instance.listOfTiles.GetLength(1); j++)
+            for (int j = 0; j < listOfTiles.GetLength(1); j++)
             {
                 try
                 {
-                    NewManager.instance.listOfTiles[i, j].clickable = false;
-                    NewManager.instance.listOfTiles[i, j].moveable = false;
+                    listOfTiles[i, j].clickable = false;
+                    listOfTiles[i, j].moveable = false;
+                    listOfTiles[i, j].choosable = false;
                 }
                 catch (NullReferenceException)
                 {
@@ -405,14 +405,8 @@ public class NewManager : MonoBehaviour
 
     public TileData FindTile(Vector2 vector) //find a tile based off Vector2
     {
-        try
-        {
-            return listOfTiles[(int)vector.x, (int)vector.y];
-        }
-        catch (IndexOutOfRangeException)
-        {
-            return null;
-        }
+        try { return listOfTiles[(int)vector.x, (int)vector.y]; }
+        catch (IndexOutOfRangeException) { return null; }
     }
 
     public TileData FindTile(Vector2Int vector) //find a tile based off Vector2Int
@@ -467,10 +461,11 @@ public class NewManager : MonoBehaviour
         {
             tile.moveable = true;
             tile.clickable = true;
+            tile.choosable = true;
         }
     }
 
-    #endregion
+#endregion
 
 #region Turn System
 
@@ -495,10 +490,10 @@ public class NewManager : MonoBehaviour
     void BackToStart()
     {
         currentTurn = TurnSystem.You;
-        UpdateInstructions("Choose a character to move / play a card.");
 
         DisableAllTiles();
         DisableAllCards();
+
         UpdateStats(lastSelectedPlayer);
         EnablePlayers();
         StopAllCoroutines();
@@ -515,17 +510,18 @@ public class NewManager : MonoBehaviour
         PlayerEntity currentPlayer = currentTile.myEntity.GetComponent<PlayerEntity>();
         lastSelectedPlayer = currentPlayer;
         AkSoundEngine.SetState("Character", currentPlayer.name);
+        UpdateInstructions("Choose a character to move / play a card.");
 
         List<TileData> possibleTiles = CalculateReachableGrids(currentTile, currentPlayer.movementLeft, true);
-        NewManager.instance.WaitForDecision(possibleTiles);
+        WaitForDecision(possibleTiles);
 
         UpdateStats(currentPlayer);
         StartCoroutine(ChooseCardPlay(currentPlayer));
         EnablePlayers();
 
-        while (NewManager.instance.chosenTile == null)
+        while (chosenTile == null)
         {
-            if (selectedTile != currentTile)
+            if (selectedTile != currentTile || currentTurn != TurnSystem.You)
             {
                 Debug.Log("switched off");
                 yield break;
@@ -560,9 +556,9 @@ public class NewManager : MonoBehaviour
                 if (card.CanPlay(player))
                     canBePlayed.Add(card);
             }
-            NewManager.instance.WaitForDecision(canBePlayed);
+            WaitForDecision(canBePlayed);
 
-            while (NewManager.instance.chosenCard == null)
+            while (chosenCard == null)
             {
                 if (currentTurn != TurnSystem.You)
                 {
@@ -573,13 +569,14 @@ public class NewManager : MonoBehaviour
                     yield return null;
                 }
             }
-            yield return PlayCard(player, NewManager.instance.chosenCard);
+            yield return PlayCard(player, chosenCard);
         }
     }
 
     IEnumerator PlayCard(PlayerEntity player, Card playMe) //resolve that card
     {
         currentTurn = TurnSystem.Resolving;
+        StopCoroutine(ChooseMovePlayer(player.currentTile));
         Debug.Log(playMe.cardPlay);
         playMe.cardPlay.Post(playMe.gameObject);
 
