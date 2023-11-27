@@ -13,7 +13,7 @@ public class GuardEntity : MovingEntity
         [Tooltip("Tiles this is searching")] List<TileData> inDetection = new List<TileData>();
         [Tooltip("Pauses between movement")] float movePauseTime = 0.25f;
         [Tooltip("How far this can see")][SerializeField] int DetectionRangePatrol = 3;
-    [Tooltip("half their field of view for detection")] [SerializeField] float DetectionAngle = 30;
+        [Tooltip("half their field of view for detection (MUST BE A MULTIPLE OF 5)")] [SerializeField] int DetectionAngle = 30;
         [Tooltip("Turns which this does nothing")] [ReadOnly] public int stunned = 0;
         [Tooltip("Times this attacks")] [ReadOnly] public int attacksPerTurn = 1;
         [Tooltip("Current number of attacks")][ReadOnly] int attacksLeft = 0;
@@ -64,154 +64,38 @@ public class GuardEntity : MovingEntity
             inDetection[i].SurveillanceState(false);
         inDetection.Clear();
 
-        //creating vectors
-        float angle = Mathf.Atan2(direction.y, direction.x);
-        float PosAngle = angle + (DetectionAngle * Mathf.Deg2Rad);
-        float NegAngle = angle - (DetectionAngle * Mathf.Deg2Rad);
-        Vector2 PosMaxVector = new Vector2(Mathf.Cos(PosAngle), Mathf.Sin(PosAngle));
-        Vector2 PosMinVector = new Vector2(Mathf.Cos(NegAngle), Mathf.Sin(NegAngle));
-
-        //drawing each line
-        HashSet<Vector2Int> MaxLine = NewManager.instance.line(currentTile.gridPosition, currentTile.gridPosition + Vector2Int.RoundToInt(PosMaxVector.normalized * DetectionRangePatrol));
-        HashSet<Vector2Int> MinLine = NewManager.instance.line(currentTile.gridPosition, currentTile.gridPosition +  Vector2Int.RoundToInt(PosMinVector.normalized * DetectionRangePatrol));
-        HashSet<Vector2Int> CenterLine = NewManager.instance.line(currentTile.gridPosition, currentTile.gridPosition + (direction * DetectionRangePatrol));
+        List<HashSet<Vector2Int>> DetectLines = new List<HashSet<Vector2Int>>();
+        float baseAngle = Mathf.Atan2(direction.y, direction.x);
         HashSet<Vector2Int> SpacesToCheck = new HashSet<Vector2Int>();
 
-        Vector2Int lastVisMax = currentTile.gridPosition;
-        Vector2Int lastVisMin = currentTile.gridPosition;
-        Vector2Int lastVisMid = currentTile.gridPosition;
-
-
-        //validating each line and drawing their ends
-        foreach (Vector2Int point in MaxLine)
+        //creating each of the lines of sight (seperated by 5 degrees) and adding them to a list of lines
+        for (int i = -DetectionAngle; i < DetectionAngle; i += 5)
         {
+            float lineAngle = baseAngle + (i * Mathf.Deg2Rad);
+            Vector2 newVector = new Vector2(Mathf.Cos(lineAngle), Mathf.Sin(lineAngle));
+            DetectLines.Add(NewManager.instance.line(currentTile.gridPosition,currentTile.gridPosition + Vector2Int.RoundToInt(newVector.normalized * DetectionRangePatrol)));
+        }
 
-            TileData TileToAdd = NewManager.instance.FindTile(point);
-            if (TileToAdd == null)
+        //running through each of the lines in the list, seeing how far they can look 
+        for (int i = 0; i < DetectLines.Count; i++)
+        {
+            foreach (Vector2Int point in DetectLines[i])
             {
-                break;
-            }
-            if (TileToAdd.myEntity != null)
-            {
-                if (TileToAdd.myEntity.Occlusion && point != currentTile.gridPosition)
+                TileData TileToAdd = NewManager.instance.FindTile(point);
+                if (TileToAdd == null)
                 {
                     break;
                 }
-            }
-            lastVisMax = point;
-            SpacesToCheck.Add(point);
-        }
-        foreach (Vector2Int point in MinLine)
-        {
-
-            TileData TileToAdd = NewManager.instance.FindTile(point);
-            if (TileToAdd == null)
-            {
-                break;
-            }
-            if (TileToAdd.myEntity != null)
-            {
-                if (TileToAdd.myEntity.Occlusion && point != currentTile.gridPosition)
+                if (TileToAdd.myEntity != null)
                 {
-                    break;
+                    if (TileToAdd.myEntity.Occlusion && point != currentTile.gridPosition)
+                    {
+                        break;
+                    }
                 }
+                SpacesToCheck.Add(point);
             }
-            lastVisMin = point;
-            SpacesToCheck.Add(point);
         }
-        foreach (Vector2Int point in CenterLine)
-        {
-             
-            TileData TileToAdd = NewManager.instance.FindTile(point);
-            if (TileToAdd == null)
-            {
-                break;
-            }
-            if (TileToAdd.myEntity != null)
-            {
-                if (TileToAdd.myEntity.Occlusion && point != currentTile.gridPosition)
-                {
-                    break;
-                }
-            }
-            lastVisMid = point;
-            SpacesToCheck.Add(point);
-        }
-
-        //filling the cone (+ validating fill, wildly inefficient but it works for now)
-        HashSet<Vector2Int> MinMidConnection = NewManager.instance.line(lastVisMin, currentTile.gridPosition + (direction * DetectionRangePatrol));
-        HashSet<Vector2Int> MaxMidConnection = NewManager.instance.line(lastVisMax, currentTile.gridPosition + (direction * DetectionRangePatrol));
-        HashSet<Vector2Int> MidMinConnection = NewManager.instance.line(lastVisMid, currentTile.gridPosition + Vector2Int.RoundToInt(PosMinVector.normalized * DetectionRangePatrol));
-        HashSet<Vector2Int> MidMaxConnection = NewManager.instance.line(lastVisMid, currentTile.gridPosition + Vector2Int.RoundToInt(PosMaxVector.normalized * DetectionRangePatrol));
-        foreach (Vector2Int point in MinMidConnection)
-        {
-
-            TileData TileToAdd = NewManager.instance.FindTile(point);
-            if (TileToAdd == null)
-            {
-                break;
-            }
-            if (TileToAdd.myEntity != null)
-            {
-                if (TileToAdd.myEntity.Occlusion && point != currentTile.gridPosition)
-                {
-                    break;
-                }
-            }
-            SpacesToCheck.Add(point);
-        }
-        foreach (Vector2Int point in MidMinConnection)
-        {
-
-            TileData TileToAdd = NewManager.instance.FindTile(point);
-            if (TileToAdd == null)
-            {
-                break;
-            }
-            if (TileToAdd.myEntity != null)
-            {
-                if (TileToAdd.myEntity.Occlusion && point != currentTile.gridPosition)
-                {
-                    break;
-                }
-            }
-            SpacesToCheck.Add(point);
-        }
-        foreach (Vector2Int point in MaxMidConnection)
-        {
-
-            TileData TileToAdd = NewManager.instance.FindTile(point);
-            if (TileToAdd == null)
-            {
-                break;
-            }
-            if (TileToAdd.myEntity != null)
-            {
-                if (TileToAdd.myEntity.Occlusion && point != currentTile.gridPosition)
-                {
-                    break;
-                }
-            }
-            SpacesToCheck.Add(point);
-        }
-        foreach (Vector2Int point in MidMaxConnection)
-        {
-
-            TileData TileToAdd = NewManager.instance.FindTile(point);
-            if (TileToAdd == null)
-            {
-                break;
-            }
-            if (TileToAdd.myEntity != null)
-            {
-                if (TileToAdd.myEntity.Occlusion && point != currentTile.gridPosition)
-                {
-                    break;
-                }
-            }
-            SpacesToCheck.Add(point);
-        }
-
         foreach (Vector2Int point in SpacesToCheck)
         {
             inDetection.Add(NewManager.instance.FindTile(point));
