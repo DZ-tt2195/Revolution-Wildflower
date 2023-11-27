@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -931,7 +931,7 @@ MonoBehaviour:
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 26.7
+  m_ScrollSensitivity: 50
   m_Viewport: {fileID: 374624431}
   m_HorizontalScrollbar: {fileID: 2124942430}
   m_VerticalScrollbar: {fileID: 0}
@@ -1657,7 +1657,7 @@ MonoBehaviour:
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 26.7
+  m_ScrollSensitivity: 50
   m_Viewport: {fileID: 758639666}
   m_HorizontalScrollbar: {fileID: 1743235954}
   m_VerticalScrollbar: {fileID: 0}
@@ -3594,7 +3594,7 @@ MonoBehaviour:
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 26.7
+  m_ScrollSensitivity: 50
   m_Viewport: {fileID: 1627631688}
   m_HorizontalScrollbar: {fileID: 1306710818}
   m_VerticalScrollbar: {fileID: 0}
@@ -5118,7 +5118,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 383833180}
   m_HandleRect: {fileID: 383833179}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
