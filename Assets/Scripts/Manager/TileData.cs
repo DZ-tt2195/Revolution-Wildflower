@@ -27,6 +27,10 @@ public class TileData : MonoBehaviour
         [Tooltip("color used for unselected moused over tiles")][SerializeField] Color mouseOverColor = new Color(0.9f,0.9f,0.9f,1);
         [Tooltip("color used for selected tiles")][SerializeField] Color SelectedColor;
         [Tooltip("color used for unselected moused over tiles")][SerializeField] Color MoveableColor = new Color(0.9f, 0.9f, 0.9f, 1);
+        [Tooltip("color used for unselected moused over tiles")] [SerializeField] Color AlertColor = new Color(0.9f, 0.7f, 0.1f, 1);
+        [Tooltip("Time for noise indecator to show")] [SerializeField] float AlertDelay = 0.2f;
+        [Tooltip("Base delay noise indecator")] [SerializeField] float BaseAlertDelay = 0.2f;
+        [Tooltip("Variable indicating when tile should highlight for noise")][ReadOnly] bool noiseThrough = false;
 
     private void Awake()
     {
@@ -42,7 +46,11 @@ public class TileData : MonoBehaviour
         {
             Debug.Log("border is null");
         }
-        if (NewManager.instance.selectedTile == this)
+        else if (noiseThrough)
+        {
+            border.color = AlertColor;
+        }
+        else if (NewManager.instance.selectedTile == this)
         {
             border.color = new Color(SelectedColor.r, SelectedColor.g, SelectedColor.b, NewManager.instance.opacity);
         }
@@ -58,6 +66,16 @@ public class TileData : MonoBehaviour
         {
             border.color = new Color(1, 1, 1, 0);
         }
+    }
+
+    public IEnumerator NoiseFlash(int distance)
+    {
+        print("noiseflash at distance " + distance);
+        print("Time to flash" + AlertDelay * distance);
+        yield return NewManager.Wait(AlertDelay * distance);
+        noiseThrough = true;
+        yield return NewManager.Wait(BaseAlertDelay + AlertDelay * distance);
+        noiseThrough = false;
     }
 
     private void OnMouseEnter()

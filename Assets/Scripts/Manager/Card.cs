@@ -417,18 +417,19 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     public void CalculateDistraction(TileData source)
     {
-        print("distractiong for " + textDescr.text);
+        print("distracting for " + textDescr.text);
         print("Intensity:" + distractionIntensity);
         List<TileData> affectedTiles = NewManager.instance.CalculateIntensity(source, distractionIntensity, true);
         print(affectedTiles.Count);
         for (int i = 0; i < affectedTiles.Count; i++)
         {
+            StartCoroutine(affectedTiles[i].NoiseFlash(NewManager.instance.GetDistance(source.gridPosition, affectedTiles[i].gridPosition)));
             if (affectedTiles[i].myEntity != null)
             {
-                print("Tile has entity " + affectedTiles[i].myEntity.tag);
+                //print("Tile has entity " + affectedTiles[i].myEntity.tag);
                 if (affectedTiles[i].myEntity.CompareTag("Enemy"))
                 {
-                    print("guard is notified");
+                    //print("guard is notified");
                     GuardEntity noticer = affectedTiles[i].myEntity.GetComponent<GuardEntity>();
                     noticer.addDistraction(source.gridPosition);
                 }

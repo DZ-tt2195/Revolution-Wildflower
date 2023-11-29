@@ -77,8 +77,7 @@ LineRenderer:
   m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 74a46a5c46f13ab4d8e5c5330abc14cf, type: 2}
+  m_Materials: []
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -190,6 +189,9 @@ MonoBehaviour:
   CurrentTarget: {fileID: 0}
   PatrolPoints: []
   DistractionPoints: []
+  chaseColor: {fileID: 2100000, guid: 74a46a5c46f13ab4d8e5c5330abc14cf, type: 2}
+  attackColor: {fileID: 2100000, guid: 13f748287d801094a97389ec0adf51ef, type: 2}
+  attackEffectDuration: 0.5
   distractionNotif: {fileID: 4833084862800118945, guid: 56619bf925a60454c899f16a561b26a3, type: 3}
   NotifOffset: 5
   footsteps:

@@ -7,29 +7,36 @@ using Unity.VisualScripting;
 
 public class GuardEntity : MovingEntity
 {
-    enum Alert { Patrol, Attack, Persue};
+    enum Alert { Patrol, Attack, Persue };
 
     [Foldout("Guard Entity", true)]
-        [Tooltip("Tiles this is searching")] List<TileData> inDetection = new List<TileData>();
-        [Tooltip("Pauses between movement")] float movePauseTime = 0.25f;
-        [Tooltip("How far this can see")][SerializeField] int DetectionRangePatrol = 3;
-        [Tooltip("half their field of view for detection (MUST BE A MULTIPLE OF 5)")] [SerializeField] int DetectionAngle = 30;
-        [Tooltip("Turns which this does nothing")] [ReadOnly] public int stunned = 0;
-        [Tooltip("Times this attacks")] [ReadOnly] public int attacksPerTurn = 1;
-        [Tooltip("Current number of attacks")][ReadOnly] int attacksLeft = 0;
-        [Tooltip("Current Target to attack & persue")] [ReadOnly] public PlayerEntity CurrentTarget;
-        [Tooltip("State of a guard's alert")] Alert alertStatus = 0;
-        [Tooltip("Guard Range")] int AttackRange = 1;
-        [Tooltip("list of patrol positions")] public List<Vector2Int> PatrolPoints = new List<Vector2Int>();
-        [Tooltip("current patrol target")] private int PatrolTarget = 0;
-        [Tooltip("List of distraction positions")] public List<Vector2Int> DistractionPoints = new List<Vector2Int>();
-        [Tooltip("Line renderer for showing the guard is attacking")] LineRenderer AttackLine = new LineRenderer();
-        [Tooltip("Object used for the distraction alert for the guard")][SerializeField] GameObject distractionNotif;
-        [Tooltip("offset used to spawn distraction notifications")] [SerializeField] float NotifOffset = 1;
-        [SerializeField] AK.Wwise.Event footsteps;
-        [SerializeField] AK.Wwise.Event alertedSound;
-        [SerializeField] AK.Wwise.Event gunshot;
-        public AK.Wwise.Event stunSound;
+    [Tooltip("Tiles this is searching")] List<TileData> inDetection = new List<TileData>();
+    [Tooltip("Pauses between movement")] float movePauseTime = 0.25f;
+    [Tooltip("How far this can see")] [SerializeField] int DetectionRangePatrol = 3;
+    [Tooltip("half their field of view for detection (MUST BE A MULTIPLE OF 5)")] [SerializeField] int DetectionAngle = 30;
+    [Tooltip("Turns which this does nothing")] [ReadOnly] public int stunned = 0;
+    [Tooltip("Times this attacks")] [ReadOnly] public int attacksPerTurn = 1;
+    [Tooltip("Current number of attacks")] [ReadOnly] int attacksLeft = 0;
+    [Tooltip("Current Target to attack & persue")] [ReadOnly] public PlayerEntity CurrentTarget;
+    [Tooltip("State of a guard's alert")] Alert alertStatus = 0;
+    [Tooltip("Guard Range")] int AttackRange = 1;
+    [Tooltip("list of patrol positions")] public List<Vector2Int> PatrolPoints = new List<Vector2Int>();
+    [Tooltip("current patrol target")] private int PatrolTarget = 0;
+    [Tooltip("List of distraction positions")] public List<Vector2Int> DistractionPoints = new List<Vector2Int>();
+
+
+    [Tooltip("Line renderer for showing the guard is attacking")] LineRenderer AttackLine = new LineRenderer();
+    [Tooltip("color for when the guard is chasing")] [SerializeField] Material chaseColor;
+    [Tooltip("color for when the guard is chasing")] [SerializeField] Material attackColor;
+    [Tooltip("duration of color switch when attacking")] [SerializeField] float attackEffectDuration = 0.2f;
+    bool attackEffect = false;
+
+    [Tooltip("Object used for the distraction alert for the guard")] [SerializeField] GameObject distractionNotif;
+    [Tooltip("offset used to spawn distraction notifications")] [SerializeField] float NotifOffset = 1;
+    [SerializeField] AK.Wwise.Event footsteps;
+    [SerializeField] AK.Wwise.Event alertedSound;
+    [SerializeField] AK.Wwise.Event gunshot;
+    public AK.Wwise.Event stunSound;
 
     private void Awake()
     {
@@ -51,11 +58,27 @@ public class GuardEntity : MovingEntity
         {
             AttackLine.enabled = true;
             AttackLine.SetPositions(new Vector3[] { transform.position, CurrentTarget.transform.position });
+            if (attackEffect)
+            {
+                print("attack color");
+                AttackLine.material = attackColor;
+            }
+            else
+            {
+                AttackLine.material = chaseColor;
+            }
         }
         else
         {
             AttackLine.enabled = false;
         }
+    }
+
+    IEnumerator attackEffectRoutine()
+    {
+        attackEffect = true;
+        yield return NewManager.Wait(attackEffectDuration);
+        attackEffect = false;
     }
 
     public override void CalculateTiles()
@@ -281,6 +304,7 @@ public class GuardEntity : MovingEntity
                 print("within range, attacking");
                 attacksLeft--;
                 detectedPlayer.health--;
+                StartCoroutine(attackEffectRoutine());
                 gunshot.Post(gameObject);
                 yield break;
 

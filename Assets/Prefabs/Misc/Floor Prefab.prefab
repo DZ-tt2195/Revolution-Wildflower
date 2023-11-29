@@ -169,10 +169,15 @@ MonoBehaviour:
   adjacentTiles: []
   gridPosition: {x: 0, y: 0}
   myEntity: {fileID: 0}
+  choosable: 0
+  clickable: 0
   moveable: 0
   mouseOverColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   SelectedColor: {r: 0, g: 0, b: 0, a: 0}
   MoveableColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  AlertColor: {r: 0.9019608, g: 0.4309494, b: 0.10196079, a: 1}
+  AlertDelay: 0.1
+  BaseAlertDelay: 0
 --- !u!212 &6299431183525030124
 SpriteRenderer:
   m_ObjectHideFlags: 0
