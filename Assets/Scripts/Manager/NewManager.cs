@@ -576,8 +576,9 @@ public class NewManager : MonoBehaviour
         Debug.Log(playMe.cardPlay);
         playMe.cardPlay.Post(playMe.gameObject);
 
-        player.DiscardFromHand(playMe);
+        StartCoroutine(player.DiscardFromHand(playMe));
         ChangeEnergy(player, -playMe.energyCost);
+        UpdateStats(player);
         yield return playMe.OnPlayEffect();
 
         futureEffects.Add(playMe);

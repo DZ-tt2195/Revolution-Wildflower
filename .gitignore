@@ -72,3 +72,4 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 Assets/Scripts/.DS_Store
 Assets/Resources/.DS_Store
+.DS_Store

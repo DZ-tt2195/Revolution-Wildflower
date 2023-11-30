@@ -12,6 +12,7 @@ using System.Linq;
 
 public class DownloadSheet : MonoBehaviour
 {
+    public bool downloadOn;
     private const string apiKey = "AIzaSyCl_GqHd1-WROqf7i2YddE3zH6vSv3sNTA";
     private const string baseUrl = "https://sheets.googleapis.com/v4/spreadsheets/";
     public static DownloadSheet instance;
@@ -31,25 +32,28 @@ public class DownloadSheet : MonoBehaviour
 
     IEnumerator DL(string ID, string range)
     {
-        string url = $"{baseUrl}{ID}/values/{range}?key={apiKey}";
-        using UnityWebRequest www = UnityWebRequest.Get(url);
-        yield return www.SendWebRequest();
-
-        if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
+        if (downloadOn)
         {
-            Debug.Log(range);
-            Debug.LogError($"Error: {www.error}");
-        }
-        else
-        {
-            string filePath = $"Assets/Resources/{range}.txt";
-            File.WriteAllText($"{filePath}", www.downloadHandler.text);
-            Debug.Log($"downloaded {range} from the internet");
+            string url = $"{baseUrl}{ID}/values/{range}?key={apiKey}";
+            using UnityWebRequest www = UnityWebRequest.Get(url);
+            yield return www.SendWebRequest();
 
-            string[] allLines = File.ReadAllLines($"{filePath}");
-            List<string> modifiedLines = allLines.ToList();
-            modifiedLines.RemoveRange(1, 3);
-            File.WriteAllLines($"{filePath}", modifiedLines.ToArray());
+            if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
+            {
+                Debug.Log(range);
+                Debug.LogError($"Error: {www.error}");
+            }
+            else
+            {
+                string filePath = $"Assets/Resources/{range}.txt";
+                File.WriteAllText($"{filePath}", www.downloadHandler.text);
+                Debug.Log($"downloaded {range} from the internet");
+
+                string[] allLines = File.ReadAllLines($"{filePath}");
+                List<string> modifiedLines = allLines.ToList();
+                modifiedLines.RemoveRange(1, 3);
+                File.WriteAllLines($"{filePath}", modifiedLines.ToArray());
+            }
         }
     }
 

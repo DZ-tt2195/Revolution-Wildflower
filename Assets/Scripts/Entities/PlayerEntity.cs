@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using MyBox;
 using System;
+using System.Linq;
 
 public class PlayerEntity : MovingEntity
 {
@@ -128,6 +129,7 @@ public class PlayerEntity : MovingEntity
                 break;
             }
         }
+        SortHand(0.4f);
     }
 
     public Card GetTopCard()
@@ -154,6 +156,34 @@ public class PlayerEntity : MovingEntity
         }
     }
 
+    void SortHand(float waitTime)
+    {
+        myHand = myHand.OrderBy(o => o.energyCost).ToList();
+
+        for (int i = 0; i<myHand.Count; i++)
+        {
+            Card nextCard = myHand[i];
+            float startingX = (myHand.Count >= 8) ? -900 : (myHand.Count - 1) * -150;
+            float difference = (myHand.Count >= 8) ? 1800f / (myHand.Count - 1) : 300;
+            Vector2 newPosition = new Vector2(startingX + difference * i, -500);
+            StartCoroutine(MoveCard(nextCard, newPosition, newPosition, waitTime));
+        }
+    }
+
+    IEnumerator MoveCard(Card card, Vector2 newPos, Vector2 finalPos, float waitTime)
+    {
+        float elapsedTime = 0;
+        Vector2 originalPos = card.transform.localPosition;
+
+        while (elapsedTime < waitTime)
+        {
+            card.transform.localPosition = Vector3.Lerp(originalPos, newPos, elapsedTime / waitTime);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        card.transform.localPosition = finalPos;
+    }
+
     public void PutIntoHand(Card drawMe)
     {
         if (drawMe != null)
@@ -161,14 +191,17 @@ public class PlayerEntity : MovingEntity
             myHand.Add(drawMe);
             drawMe.transform.SetParent(handTransform);
             drawMe.transform.localScale = new Vector3(1, 1, 1);
-            drawMe.transform.localPosition = new Vector3(0, 0, 0);
+            drawMe.transform.localPosition = new Vector3(0, -1000, 0);
             drawMe.cardMove.Post(drawMe.gameObject);
         }
     }
 
-    public void DiscardFromHand(Card discardMe)
+    public IEnumerator DiscardFromHand(Card discardMe)
     {
         myHand.Remove(discardMe);
+        StartCoroutine(MoveCard(discardMe, new Vector2(1200, -440), new Vector2(0, -1000), 0.25f));
+        SortHand(0.2f);
+        yield return NewManager.Wait(0.4f);
         PutIntoDiscard(discardMe);
     }
 
@@ -178,7 +211,6 @@ public class PlayerEntity : MovingEntity
         {
             myDiscardPile.Add(discardMe);
             discardMe.transform.SetParent(null);
-            discardMe.transform.localPosition = new Vector3(10000, 10000, 0); //send the card far away where you can't see it anymore
             discardMe.cardMove.Post(discardMe.gameObject);
         }
     }

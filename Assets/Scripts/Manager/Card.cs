@@ -497,12 +497,13 @@ public class Card : MonoBehaviour, IPointerClickHandler
                 NewManager.instance.WaitForDecision(player.myHand);
                 while (NewManager.instance.chosenCard == null)
                     yield return null;
-                player.DiscardFromHand(NewManager.instance.chosenCard);
+                yield return player.DiscardFromHand(NewManager.instance.chosenCard);
             }
             else if (player.myHand.Count == 1)
             {
-                player.DiscardFromHand(player.myHand[0]);
+                yield return player.DiscardFromHand(player.myHand[0]);
             }
+            NewManager.instance.UpdateStats(currentPlayer);
         }
     }
 
@@ -512,7 +513,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         while (player.myHand.Count > 0)
         {
             yield return NewManager.Wait(0.05f);
-            player.DiscardFromHand(player.myHand[0]);
+            StartCoroutine(player.DiscardFromHand(player.myHand[0]));
         }
     }
 
