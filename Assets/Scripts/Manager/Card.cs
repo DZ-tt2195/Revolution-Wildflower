@@ -50,6 +50,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         [ReadOnly] public TMP_Text textDescr { get; private set; }
 
         [ReadOnly] PlayerEntity currentPlayer;
+        [ReadOnly] TileData currentTarget;
         [ReadOnly] List<TileData> adjacentTilesWithPlayers = new();
         [ReadOnly] List<TileData> adjacentTilesWithGuards = new();
         [ReadOnly] List<TileData> adjacentTilesWithWalls = new();
@@ -327,6 +328,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     IEnumerator ResolveMethod(string methodName)
     {
+        currentTarget = currentPlayer.currentTile;
         if (methodName.Contains("CHOOSEBUTTON("))
         {
             string[] choices = methodName.Replace("CHOOSEBUTTON(", "").Replace(")", "").Replace("]","").Trim().Split('|');
@@ -351,6 +353,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
                 case "CHANGEADJACENTHP":
                     yield return ChoosePlayer();
                     PlayerEntity player = adjacentTilesWithPlayers[0].myEntity.GetComponent<PlayerEntity>();
+                    currentTarget = player.currentTile;
                     yield return ChangeHealth(player);
                     break;
                 case "CHANGEEP":
@@ -376,10 +379,20 @@ public class Card : MonoBehaviour, IPointerClickHandler
                     yield return ChooseWall();
                     yield return AttackWall(adjacentTilesWithWalls[0].myEntity.GetComponent<WallEntity>());
                     break;
+                case "CENTERDISTRACTION":
+                    yield return CalculateDistraction(currentPlayer.currentTile);
+                    break;
+                case "TARGETDISTRACTION&DAMAGE":
+                    yield return AttackOrDistraction();
+                    break;
                 default:
                     Debug.LogError($"{methodName} isn't a method");
                     yield return null;
                     break;
+            }
+            if (distractionIntensity > 0)
+            {
+                StartCoroutine(CalculateDistraction(currentTarget));
             }
         }
     }
@@ -415,7 +428,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         Destroy(newCollector.gameObject);
     }
 
-    public void CalculateDistraction(TileData source)
+    public IEnumerator CalculateDistraction(TileData source)
     {
         print("distracting for " + textDescr.text);
         print("Intensity:" + distractionIntensity);
@@ -435,6 +448,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
                 }
             }
         }
+        yield return null;
     }
 
     public IEnumerator OnPlayEffect()
@@ -458,7 +472,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
     internal IEnumerator DrawCards(PlayerEntity player)
     {
         player.PlusCards(changeInDraw);
-        CalculateDistraction(player.currentTile);
+        
         yield return null;
     }
 
@@ -557,8 +571,12 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     #endregion
 
-#region Interacts With Entities
+    #region Interacts With Entities
 
+    IEnumerator AttackOrDistraction()
+    {
+        yield return null;
+    }
     IEnumerator ChoosePlayer()
     {
         TileData targetPlayer = null;
@@ -605,7 +623,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
     internal IEnumerator AttackWall(WallEntity wall)
     {
         wall.AffectWall(changeInWall);
-        CalculateDistraction(wall.currentTile);
+        currentTarget = wall.currentTile;
         yield return null;
     }
 
@@ -635,7 +653,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         yield return null;
         guard.stunSound.Post(guard.gameObject);
         guard.stunned += stunDuration;
-        CalculateDistraction(guard.currentTile);
+        currentTarget = guard.currentTile;
     }
 
 #endregion

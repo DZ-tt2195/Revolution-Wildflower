@@ -9,33 +9,43 @@ public class GuardEntity : MovingEntity
 {
     enum Alert { Patrol, Attack, Persue };
 
-    [Foldout("Guard Entity", true)]
-    [Tooltip("Tiles this is searching")] List<TileData> inDetection = new List<TileData>();
-    [Tooltip("Pauses between movement")] float movePauseTime = 0.25f;
-    [Tooltip("How far this can see")] [SerializeField] int DetectionRangePatrol = 3;
-    [Tooltip("half their field of view for detection (MUST BE A MULTIPLE OF 5)")] [SerializeField] int DetectionAngle = 30;
-    [Tooltip("Turns which this does nothing")] [ReadOnly] public int stunned = 0;
-    [Tooltip("Times this attacks")] [ReadOnly] public int attacksPerTurn = 1;
-    [Tooltip("Current number of attacks")] [ReadOnly] int attacksLeft = 0;
-    [Tooltip("Current Target to attack & persue")] [ReadOnly] public PlayerEntity CurrentTarget;
-    [Tooltip("State of a guard's alert")] Alert alertStatus = 0;
-    [Tooltip("Guard Range")] int AttackRange = 1;
-    [Tooltip("list of patrol positions")] public List<Vector2Int> PatrolPoints = new List<Vector2Int>();
-    [Tooltip("current patrol target")] private int PatrolTarget = 0;
-    [Tooltip("List of distraction positions")] public List<Vector2Int> DistractionPoints = new List<Vector2Int>();
+    [Foldout("Guard Entity",true)]
+    [Header("Attacking")]
+        [Tooltip("Times this attacks")] [ReadOnly] public int attacksPerTurn = 1;
+        [Tooltip("Current number of attacks")] [ReadOnly] int attacksLeft = 0;
+        [Tooltip("Current Target to attack & persue")] [ReadOnly] public PlayerEntity CurrentTarget;
+        [Tooltip("Guard Range")] int AttackRange = 1;
+
+    [Header("Conditions")]
+        [Tooltip("Turns which this does nothing")] [ReadOnly] public int stunned = 0;
+
+    [Header("Detection")]
+        [Tooltip("Tiles this is searching")] List<TileData> inDetection = new List<TileData>();
+        [Tooltip("Pauses between movement")] float movePauseTime = 0.25f;
+        [Tooltip("How far this can see")] [SerializeField] int DetectionRangePatrol = 3;
+        [Tooltip("half their field of view for detection (MUST BE A MULTIPLE OF 5)")] [SerializeField] int DetectionAngle = 30;
+        [Tooltip("State of a guard's alert")] Alert alertStatus = 0;
+
+    [Header("Patrol")]
+        [Tooltip("list of patrol positions")] public List<Vector2Int> PatrolPoints = new List<Vector2Int>();
+        [Tooltip("current patrol target")] private int PatrolTarget = 0;
 
 
-    [Tooltip("Line renderer for showing the guard is attacking")] LineRenderer AttackLine = new LineRenderer();
-    [Tooltip("color for when the guard is chasing")] [SerializeField] Material chaseColor;
-    [Tooltip("color for when the guard is chasing")] [SerializeField] Material attackColor;
-    [Tooltip("duration of color switch when attacking")] [SerializeField] float attackEffectDuration = 0.2f;
-    bool attackEffect = false;
+    [Header("Distraction")]
+        [Tooltip("List of distraction positions")] public List<Vector2Int> DistractionPoints = new List<Vector2Int>();
+        [Tooltip("Object used for the distraction alert for the guard")] [SerializeField] GameObject distractionNotif;
+        [Tooltip("offset used to spawn distraction notifications")] [SerializeField] float NotifOffset = 1;
 
-    [Tooltip("Object used for the distraction alert for the guard")] [SerializeField] GameObject distractionNotif;
-    [Tooltip("offset used to spawn distraction notifications")] [SerializeField] float NotifOffset = 1;
-    [SerializeField] AK.Wwise.Event footsteps;
-    [SerializeField] AK.Wwise.Event alertedSound;
-    [SerializeField] AK.Wwise.Event gunshot;
+    [Header("Colors")]
+        [Tooltip("Line renderer for showing the guard is attacking")] LineRenderer AttackLine = new LineRenderer();
+        [Tooltip("color for when the guard is chasing")] [SerializeField] Material chaseColor;
+        [Tooltip("color for when the guard is chasing")] [SerializeField] Material attackColor;
+        [Tooltip("duration of color switch when attacking")] [SerializeField] float attackEffectDuration = 0.2f;
+        bool attackEffect = false;
+
+        [SerializeField] AK.Wwise.Event footsteps;
+        [SerializeField] AK.Wwise.Event alertedSound;
+        [SerializeField] AK.Wwise.Event gunshot;
     public AK.Wwise.Event stunSound;
 
     private void Awake()
