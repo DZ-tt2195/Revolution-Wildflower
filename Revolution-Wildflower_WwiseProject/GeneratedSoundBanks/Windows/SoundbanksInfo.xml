@@ -32,7 +32,7 @@
 				</StateGroup>
 			</StateGroups>
 		</SoundBank>
-		<SoundBank Id="1605876511" Type="User" Language="SFX" Hash="{0ACF8CA4-7C83-2045-5841-D9EF5C86EFAF}">
+		<SoundBank Id="1605876511" Type="User" Language="SFX" Hash="{4692C099-A1EF-10D9-B707-7AAE3776B766}">
 			<ShortName>SFX_Bank</ShortName>
 			<Path>SFX_Bank.bnk</Path>
 			<Media>
@@ -52,6 +52,10 @@
 					<ShortName>bottle-placeholder.wav</ShortName>
 					<CachePath>SFX/bottle-placeholder_10C4C929.wem</CachePath>
 				</File>
+				<File Id="149796096" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>guard-investigate.wav</ShortName>
+					<CachePath>SFX/guard-investigate_10C4C929.wem</CachePath>
+				</File>
 				<File Id="246890147" Language="SFX" Streaming="false" Location="Memory">
 					<ShortName>card-move.wav</ShortName>
 					<CachePath>SFX/card-move_10C4C929.wem</CachePath>
@@ -64,6 +68,10 @@
 					<ShortName>gunshot-placeholder.wav</ShortName>
 					<CachePath>SFX/gunshot-placeholder_10C4C929.wem</CachePath>
 				</File>
+				<File Id="342955723" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>distraction.wav</ShortName>
+					<CachePath>SFX/distraction_10C4C929.wem</CachePath>
+				</File>
 				<File Id="393097027" Language="SFX" Streaming="false" Location="Memory">
 					<ShortName>wildflower-wk-1-intro.wav</ShortName>
 					<CachePath>SFX/wildflower-wk-1-intro_D79FB2B7.wem</CachePath>
@@ -72,17 +80,29 @@
 					<ShortName>wildflower-frankie-1-intro.wav</ShortName>
 					<CachePath>SFX/wildflower-frankie-1-intro_D79FB2B7.wem</CachePath>
 				</File>
-				<File Id="412827956" Language="SFX" Streaming="false" Location="Memory">
-					<ShortName>movement-select-placeholder.wav</ShortName>
-					<CachePath>SFX/movement-select-placeholder_10C4C929.wem</CachePath>
-				</File>
 				<File Id="540079207" Language="SFX" Streaming="false" Location="Memory">
 					<ShortName>guard-notice-placeholder.wav</ShortName>
 					<CachePath>SFX/guard-notice-placeholder_10C4C929.wem</CachePath>
 				</File>
+				<File Id="561021390" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>character_select.wav</ShortName>
+					<CachePath>SFX/character_select_10C4C929.wem</CachePath>
+				</File>
 				<File Id="574353506" Language="SFX" Streaming="false" Location="Memory">
 					<ShortName>noise-with-hum.wav</ShortName>
 					<CachePath>SFX/noise-with-hum_D79FB2B7.wem</CachePath>
+				</File>
+				<File Id="585565765" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>dialogue-box-stop.wav</ShortName>
+					<CachePath>SFX/dialogue-box-stop_10C4C929.wem</CachePath>
+				</File>
+				<File Id="601800368" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>begin-turn.wav</ShortName>
+					<CachePath>SFX/begin-turn_10C4C929.wem</CachePath>
+				</File>
+				<File Id="607758753" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>dialogue-text-write.wav</ShortName>
+					<CachePath>SFX/dialogue-text-write_10C4C929.wem</CachePath>
 				</File>
 				<File Id="745579580" Language="SFX" Streaming="false" Location="Memory">
 					<ShortName>footsteps.wav</ShortName>
@@ -104,12 +124,21 @@
 					<ShortName>end-turn-placeholder.wav</ShortName>
 					<CachePath>SFX/end-turn-placeholder_10C4C929.wem</CachePath>
 				</File>
+				<File Id="997200349" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>view-deck.wav</ShortName>
+					<CachePath>SFX/view-deck_10C4C929.wem</CachePath>
+				</File>
 				<File Id="1041520263" Language="SFX" Streaming="false" Location="Memory">
 					<ShortName>button-base-placeholder.wav</ShortName>
 					<CachePath>SFX/button-base-placeholder_10C4C929.wem</CachePath>
 				</File>
 			</Media>
 			<Events>
+				<Event Id="547032497" Name="Play_begin_turn" DurationType="OneShot" DurationMin="1.4179592" DurationMax="1.4179592">
+					<MediaRefs>
+						<MediaRef Id="601800368"/>
+					</MediaRefs>
+				</Event>
 				<Event Id="3382157760" Name="Play_bottle_placeholder" DurationType="OneShot" DurationMin="1.0074375" DurationMax="1.0074375">
 					<MediaRefs>
 						<MediaRef Id="114177002"/>
@@ -120,7 +149,7 @@
 						<MediaRef Id="1041520263"/>
 					</MediaRefs>
 				</Event>
-				<Event Id="2342783904" Name="Play_card_move" DurationType="OneShot" DurationMin="0.13460726" DurationMax="0.13460726">
+				<Event Id="2342783904" Name="Play_card_move" DurationType="OneShot" DurationMin="0.12486964" DurationMax="0.12486964">
 					<MediaRefs>
 						<MediaRef Id="246890147"/>
 					</MediaRefs>
@@ -135,9 +164,29 @@
 						<MediaRef Id="745579580"/>
 					</MediaRefs>
 				</Event>
+				<Event Id="2069859097" Name="Play_dialogue_box_stop" DurationType="OneShot" DurationMin="0.6250113" DurationMax="0.6250113">
+					<MediaRefs>
+						<MediaRef Id="585565765"/>
+					</MediaRefs>
+				</Event>
+				<Event Id="1790008526" Name="Play_dialogue_text_write" DurationType="OneShot" DurationMin="0.5" DurationMax="0.5">
+					<MediaRefs>
+						<MediaRef Id="607758753"/>
+					</MediaRefs>
+				</Event>
+				<Event Id="1662486726" Name="Play_distraction" DurationType="OneShot" DurationMin="1.0572789" DurationMax="1.0572789">
+					<MediaRefs>
+						<MediaRef Id="342955723"/>
+					</MediaRefs>
+				</Event>
 				<Event Id="2000740979" Name="Play_end_turn_placeholder" DurationType="OneShot" DurationMin="1.6828125" DurationMax="1.6828125">
 					<MediaRefs>
 						<MediaRef Id="940959831"/>
+					</MediaRefs>
+				</Event>
+				<Event Id="1673056553" Name="Play_guard_investigate" DurationType="OneShot" DurationMin="1.33" DurationMax="1.33">
+					<MediaRefs>
+						<MediaRef Id="149796096"/>
 					</MediaRefs>
 				</Event>
 				<Event Id="2157469724" Name="Play_guard_ko_placeholder" DurationType="OneShot" DurationMin="0.5805" DurationMax="0.5805">
@@ -145,7 +194,7 @@
 						<MediaRef Id="67583277"/>
 					</MediaRefs>
 				</Event>
-				<Event Id="3136084898" Name="Play_guard_notice_placeholder" DurationType="OneShot" DurationMin="1.7910658" DurationMax="1.7910658">
+				<Event Id="3136084898" Name="Play_guard_notice_placeholder" DurationType="OneShot" DurationMin="1.4" DurationMax="1.4">
 					<MediaRefs>
 						<MediaRef Id="540079207"/>
 					</MediaRefs>
@@ -187,9 +236,9 @@
 						</SwitchContainer>
 					</SwitchContainers>
 				</Event>
-				<Event Id="3274460198" Name="Play_movement_select_placeholder" DurationType="OneShot" DurationMin="0.5390625" DurationMax="0.5390625">
+				<Event Id="3274460198" Name="Play_movement_select_placeholder" DurationType="OneShot" DurationMin="0.5" DurationMax="0.5">
 					<MediaRefs>
-						<MediaRef Id="412827956"/>
+						<MediaRef Id="561021390"/>
 					</MediaRefs>
 				</Event>
 				<Event Id="4098207900" Name="Play_OfficeAmbientNoise" DurationType="Infinite">
@@ -197,9 +246,14 @@
 						<MediaRef Id="574353506"/>
 					</MediaRefs>
 				</Event>
-				<Event Id="310530060" Name="Play_ui_button_hover" DurationType="OneShot" DurationMin="1" DurationMax="1">
+				<Event Id="310530060" Name="Play_ui_button_hover" DurationType="OneShot" DurationMin="2" DurationMax="2">
 					<MediaRefs>
 						<MediaRef Id="272861178"/>
+					</MediaRefs>
+				</Event>
+				<Event Id="510162235" Name="Play_view_deck" DurationType="OneShot" DurationMin="1.497755" DurationMax="1.497755">
+					<MediaRefs>
+						<MediaRef Id="997200349"/>
 					</MediaRefs>
 				</Event>
 				<Event Id="3265032750" Name="Stop_OfficeAmbientNoise" MaxAttenuation="0" DurationType="OneShot" DurationMin="0" DurationMax="0"/>
@@ -216,5 +270,5 @@
 			</StateGroups>
 		</SoundBank>
 	</SoundBanks>
-	<FileHash>{DAE2CB19-8EDA-0692-1A8D-053CC767D98A}</FileHash>
+	<FileHash>{22C0949A-E45E-0F56-DEB1-462948D0DABF}</FileHash>
 </SoundBanksInfo>

@@ -79,9 +79,11 @@ public class NewManager : MonoBehaviour
         [Tooltip("Effects to do on future turns")][ReadOnly] public List<Card> futureEffects = new List<Card>();
 
     [Foldout("Sound Effects", true)]
-        [SerializeField] AK.Wwise.Event button;
+        [SerializeField] AK.Wwise.Event buttonSound;
         [SerializeField] AK.Wwise.Event endTurnSound;
         [SerializeField] AK.Wwise.Event footsteps;
+        [SerializeField] AK.Wwise.Event characterSelectSound;
+        [SerializeField] AK.Wwise.Event beginTurnSound;
 
     #endregion
 
@@ -471,6 +473,7 @@ public class NewManager : MonoBehaviour
             yield return card.NextRoundEffect();
         futureEffects.Clear();
         selectedTile = null;
+        beginTurnSound.Post(gameObject);
         BackToStart();
     }
 
@@ -504,8 +507,13 @@ public class NewManager : MonoBehaviour
     public IEnumerator ChooseMovePlayer(TileData currentTile)
     {
         PlayerEntity currentPlayer = currentTile.myEntity.GetComponent<PlayerEntity>();
+        if (lastSelectedPlayer != currentPlayer)
+        {
+            characterSelectSound.Post(currentPlayer.gameObject);
+        }
         lastSelectedPlayer = currentPlayer;
         AkSoundEngine.SetState("Character", currentPlayer.name);
+        
         UpdateInstructions("Choose a character to move / play a card.");
 
         List<TileData> possibleTiles = CalculateReachableGrids(currentTile, currentPlayer.movementLeft, true);
@@ -536,7 +544,7 @@ public class NewManager : MonoBehaviour
         currentTurn = TurnSystem.Resolving;
         int distanceTraveled = GetDistance(currentPlayer.currentTile.gridPosition, NewManager.instance.chosenTile.gridPosition);
         ChangeMovement(currentPlayer, -distanceTraveled);
-        footsteps.Post(currentPlayer.gameObject);
+        if (distanceTraveled != 0) footsteps.Post(currentPlayer.gameObject);
         currentPlayer.MoveTile(NewManager.instance.chosenTile);
         StopAllCoroutines();
         BackToStart();

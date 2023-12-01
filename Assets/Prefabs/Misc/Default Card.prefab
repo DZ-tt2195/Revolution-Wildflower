@@ -377,6 +377,10 @@ MonoBehaviour:
     idInternal: 0
     valueGuidInternal: 
     WwiseObjectReference: {fileID: 11400000, guid: 51998c64abf638747996da929bd885b8, type: 2}
+  addDistractionSound:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 11400000, guid: 4f8ee22764f068249963f399b9d98390, type: 2}
 --- !u!114 &6508822373905849686
 MonoBehaviour:
   m_ObjectHideFlags: 0

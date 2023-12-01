@@ -43,10 +43,12 @@ public class GuardEntity : MovingEntity
         [Tooltip("duration of color switch when attacking")] [SerializeField] float attackEffectDuration = 0.2f;
         bool attackEffect = false;
 
+    [Header("Sounds")]
         [SerializeField] AK.Wwise.Event footsteps;
         [SerializeField] AK.Wwise.Event alertedSound;
-        [SerializeField] AK.Wwise.Event gunshot;
-    public AK.Wwise.Event stunSound;
+        [SerializeField] AK.Wwise.Event meleeHit;
+        [SerializeField] AK.Wwise.Event investigateSound;
+        public AK.Wwise.Event stunSound;
 
     private void Awake()
     {
@@ -142,6 +144,7 @@ public class GuardEntity : MovingEntity
     {
         print("distraction added");
         DistractionPoints.Add(position);
+        investigateSound.Post(gameObject);
         GameObject notification = Instantiate(distractionNotif, transform);
         notification.transform.position = new Vector3(transform.position.x, transform.position.y + NotifOffset, transform.position.z);
     }
@@ -237,7 +240,7 @@ public class GuardEntity : MovingEntity
             direction = nextTile.gridPosition - currentTile.gridPosition;
             print("moving too " + nextTile.gridPosition);
             MoveTile(nextTile);//move to the tile
-            footsteps.Post(gameObject);
+            //footsteps.Post(gameObject);
             movementLeft--;
 
             yield return NewManager.Wait(movePauseTime);
@@ -315,7 +318,7 @@ public class GuardEntity : MovingEntity
                 attacksLeft--;
                 detectedPlayer.health--;
                 StartCoroutine(attackEffectRoutine());
-                gunshot.Post(gameObject);
+                meleeHit.Post(gameObject);
                 yield break;
 
             }
@@ -330,7 +333,7 @@ public class GuardEntity : MovingEntity
                     direction = nextTile.gridPosition - currentTile.gridPosition;
                     print("moving too " + nextTile.gridPosition);
                     MoveTile(nextTile);//move to the tile
-                    footsteps.Post(gameObject);
+                    //footsteps.Post(gameObject);
                     movementLeft--;
                 }
                 else
@@ -381,7 +384,7 @@ public class GuardEntity : MovingEntity
         direction = nextTile.gridPosition - currentTile.gridPosition;
         //print("moving too " + nextTile.gridPosition);
         MoveTile(nextTile);//move to the tile
-        footsteps.Post(gameObject);
+        //footsteps.Post(gameObject);
         movementLeft--;
 
 

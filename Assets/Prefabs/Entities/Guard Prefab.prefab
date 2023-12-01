@@ -182,34 +182,38 @@ MonoBehaviour:
   direction: {x: 0, y: 0}
   movementLeft: 0
   movesPerTurn: 4
-  DetectionRangePatrol: 4
-  DetectionAngle: 30
-  stunned: 0
   attacksPerTurn: 1
   CurrentTarget: {fileID: 0}
+  stunned: 0
+  DetectionRangePatrol: 4
+  DetectionAngle: 30
   PatrolPoints: []
   DistractionPoints: []
+  distractionNotif: {fileID: 4833084862800118945, guid: 56619bf925a60454c899f16a561b26a3, type: 3}
+  NotifOffset: 5
   chaseColor: {fileID: 2100000, guid: 74a46a5c46f13ab4d8e5c5330abc14cf, type: 2}
   attackColor: {fileID: 2100000, guid: 13f748287d801094a97389ec0adf51ef, type: 2}
   attackEffectDuration: 0.5
-  distractionNotif: {fileID: 4833084862800118945, guid: 56619bf925a60454c899f16a561b26a3, type: 3}
-  NotifOffset: 5
   footsteps:
     idInternal: 0
     valueGuidInternal: 
-    WwiseObjectReference: {fileID: 0}
+    WwiseObjectReference: {fileID: 11400000, guid: d3f25bbf502ab924994e7a5324f52945, type: 2}
   alertedSound:
     idInternal: 0
     valueGuidInternal: 
-    WwiseObjectReference: {fileID: 0}
-  gunshot:
+    WwiseObjectReference: {fileID: 11400000, guid: bca27126c871ef64c9f939ac170b279d, type: 2}
+  meleeHit:
     idInternal: 0
     valueGuidInternal: 
-    WwiseObjectReference: {fileID: 0}
+    WwiseObjectReference: {fileID: 11400000, guid: 4543201dda2cb72408636f74dd19d0b9, type: 2}
+  investigateSound:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 11400000, guid: 03da36e1425c4de4b88c0a04b4c18ae3, type: 2}
   stunSound:
     idInternal: 0
     valueGuidInternal: 
-    WwiseObjectReference: {fileID: 0}
+    WwiseObjectReference: {fileID: 11400000, guid: 3a0be6cc37c56b146a00b03bf493461f, type: 2}
 --- !u!114 &5545540189652443486
 MonoBehaviour:
   m_ObjectHideFlags: 0
