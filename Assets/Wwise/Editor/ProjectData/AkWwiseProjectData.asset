@@ -66,7 +66,7 @@ MonoBehaviour:
     ParentPath: SoundBanks\Default Work Unit
     guid: 45c008903f9bc0458acdfbd56132c8c3
     GuidInternal: 
-    m_lastTime: -8585002145926063222
+    m_lastTime: -8585002051986546279
     List:
     - name: SFX_Bank
       guid: 5d5c45d3c5ae5942be5f72be6b5d9f73
@@ -94,7 +94,7 @@ MonoBehaviour:
     ParentPath: Events\Default Work Unit
     guid: aa9cb76dd7a7b94db368aaabd6160f55
     GuidInternal: 
-    m_lastTime: -8585002145926246262
+    m_lastTime: -8585002051986625939
     List:
     - name: Ambience-Music
       guid: 6a004c3abf552b49b35335caca9cf2f2
@@ -164,6 +164,26 @@ MonoBehaviour:
       maxAttenuation: 0
       maxDuration: -1
       minDuration: -1
+    - name: Play_begin_turn
+      guid: ae4bc133d92d5e4c825dbb3bb32fadf0
+      id: 547032497
+      PathAndIcons:
+      - ElementName: Events
+        ObjectType: 5
+        guid: 00000000000000000000000000000000
+      - ElementName: Default Work Unit
+        ObjectType: 12
+        guid: aa9cb76dd7a7b94db368aaabd6160f55
+      - ElementName: UI-Interactions
+        ObjectType: 4
+        guid: d2c1dc016723c14fa44cbddab0e50d0b
+      - ElementName: Play_begin_turn
+        ObjectType: 3
+        guid: ae4bc133d92d5e4c825dbb3bb32fadf0
+      Path: Events\Default Work Unit\UI-Interactions\Play_begin_turn
+      maxAttenuation: 0
+      maxDuration: 1.4179592
+      minDuration: 1.4179592
     - name: Play_bottle_placeholder
       guid: da629e37e37cac47918a6bd2cb6f6ae7
       id: 3382157760
@@ -264,6 +284,66 @@ MonoBehaviour:
       maxAttenuation: 0
       maxDuration: 1.4013542
       minDuration: 1.4013542
+    - name: Play_dialogue_box_stop
+      guid: 56e1acc7037f7e4e928ae26bb388e428
+      id: 2069859097
+      PathAndIcons:
+      - ElementName: Events
+        ObjectType: 5
+        guid: 00000000000000000000000000000000
+      - ElementName: Default Work Unit
+        ObjectType: 12
+        guid: aa9cb76dd7a7b94db368aaabd6160f55
+      - ElementName: UI-Interactions
+        ObjectType: 4
+        guid: d2c1dc016723c14fa44cbddab0e50d0b
+      - ElementName: Play_dialogue_box_stop
+        ObjectType: 3
+        guid: 56e1acc7037f7e4e928ae26bb388e428
+      Path: Events\Default Work Unit\UI-Interactions\Play_dialogue_box_stop
+      maxAttenuation: 0
+      maxDuration: 0.6250113
+      minDuration: 0.6250113
+    - name: Play_dialogue_text_write
+      guid: e8afe178d5f3194496ab9f44f825373d
+      id: 1790008526
+      PathAndIcons:
+      - ElementName: Events
+        ObjectType: 5
+        guid: 00000000000000000000000000000000
+      - ElementName: Default Work Unit
+        ObjectType: 12
+        guid: aa9cb76dd7a7b94db368aaabd6160f55
+      - ElementName: UI-Interactions
+        ObjectType: 4
+        guid: d2c1dc016723c14fa44cbddab0e50d0b
+      - ElementName: Play_dialogue_text_write
+        ObjectType: 3
+        guid: e8afe178d5f3194496ab9f44f825373d
+      Path: Events\Default Work Unit\UI-Interactions\Play_dialogue_text_write
+      maxAttenuation: 0
+      maxDuration: 0.5
+      minDuration: 0.5
+    - name: Play_distraction
+      guid: a2aa74ee1158484e861dd658083fb4f7
+      id: 1662486726
+      PathAndIcons:
+      - ElementName: Events
+        ObjectType: 5
+        guid: 00000000000000000000000000000000
+      - ElementName: Default Work Unit
+        ObjectType: 12
+        guid: aa9cb76dd7a7b94db368aaabd6160f55
+      - ElementName: Cards-Actions
+        ObjectType: 4
+        guid: 96485ddc19541b4f88e1aa37878ff02f
+      - ElementName: Play_distraction
+        ObjectType: 3
+        guid: a2aa74ee1158484e861dd658083fb4f7
+      Path: Events\Default Work Unit\Cards-Actions\Play_distraction
+      maxAttenuation: 0
+      maxDuration: 1.0572789
+      minDuration: 1.0572789
     - name: Play_end_turn_placeholder
       guid: 66115a428a3b7e4c8aafb3d5ae0ac4e0
       id: 2000740979
@@ -284,6 +364,26 @@ MonoBehaviour:
       maxAttenuation: 0
       maxDuration: 1.6828125
       minDuration: 1.6828125
+    - name: Play_guard_investigate
+      guid: 858ffce346efeb40bfa96a19b56ae4f5
+      id: 1673056553
+      PathAndIcons:
+      - ElementName: Events
+        ObjectType: 5
+        guid: 00000000000000000000000000000000
+      - ElementName: Default Work Unit
+        ObjectType: 12
+        guid: aa9cb76dd7a7b94db368aaabd6160f55
+      - ElementName: Guards-Security
+        ObjectType: 4
+        guid: 89086d2046efa8498ec8b82c717bc4e0
+      - ElementName: Play_guard_investigate
+        ObjectType: 3
+        guid: 858ffce346efeb40bfa96a19b56ae4f5
+      Path: Events\Default Work Unit\Guards-Security\Play_guard_investigate
+      maxAttenuation: 0
+      maxDuration: 1.33
+      minDuration: 1.33
     - name: Play_guard_ko_placeholder
       guid: 43586b87a3809440ba07a9ae9150d8cf
       id: 2157469724
@@ -444,6 +544,26 @@ MonoBehaviour:
       maxAttenuation: 0
       maxDuration: 2
       minDuration: 2
+    - name: Play_view_deck
+      guid: 4a698f54b7ad854185e03aa610db5976
+      id: 510162235
+      PathAndIcons:
+      - ElementName: Events
+        ObjectType: 5
+        guid: 00000000000000000000000000000000
+      - ElementName: Default Work Unit
+        ObjectType: 12
+        guid: aa9cb76dd7a7b94db368aaabd6160f55
+      - ElementName: Cards-Actions
+        ObjectType: 4
+        guid: 96485ddc19541b4f88e1aa37878ff02f
+      - ElementName: Play_view_deck
+        ObjectType: 3
+        guid: 4a698f54b7ad854185e03aa610db5976
+      Path: Events\Default Work Unit\Cards-Actions\Play_view_deck
+      maxAttenuation: 0
+      maxDuration: 1.497755
+      minDuration: 1.497755
     - name: Stop_LevelMusic
       guid: 219538dc4beecb4189c5da90186b6cb3
       id: 2518039975

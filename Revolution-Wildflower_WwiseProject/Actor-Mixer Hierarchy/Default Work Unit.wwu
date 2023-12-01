@@ -124,6 +124,13 @@
 							</ActiveSourceList>
 						</Sound>
 						<Sound Name="button-base-placeholder" ID="{47834163-E476-49BB-AAA8-6CE35F5D661E}" ShortID="279256962">
+							<PropertyList>
+								<Property Name="Volume" Type="Real64">
+									<ValueList>
+										<Value>-3</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Conversion">
 									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{100BE001-2367-43C2-97F3-A212E8B5F1FD}"/>
@@ -369,7 +376,7 @@
 							<PropertyList>
 								<Property Name="Volume" Type="Real64">
 									<ValueList>
-										<Value>2</Value>
+										<Value>1</Value>
 									</ValueList>
 								</Property>
 							</PropertyList>
