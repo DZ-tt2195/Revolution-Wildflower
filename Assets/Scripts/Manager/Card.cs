@@ -58,6 +58,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
     [Foldout("Audio files", true)]
         public AK.Wwise.Event cardMove;
         public AK.Wwise.Event cardPlay;
+        [SerializeField] AK.Wwise.Event addDistractionSound;
 
     #endregion
 
@@ -434,6 +435,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         print("Intensity:" + distractionIntensity);
         List<TileData> affectedTiles = NewManager.instance.CalculateIntensity(source, distractionIntensity, true);
         print(affectedTiles.Count);
+        if (affectedTiles.Count > 0) addDistractionSound.Post(source.gameObject);
         for (int i = 0; i < affectedTiles.Count; i++)
         {
             StartCoroutine(affectedTiles[i].NoiseFlash(NewManager.instance.GetDistance(source.gridPosition, affectedTiles[i].gridPosition)));

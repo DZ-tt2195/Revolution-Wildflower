@@ -130,6 +130,11 @@
 				<MusicSwitchContainer Name="LevelMusic" ID="{916F4B94-8303-4B43-8E9F-D44133931B93}" ShortID="1020433059">
 					<PropertyList>
 						<Property Name="Tempo" Type="Real64" Value="100"/>
+						<Property Name="Volume" Type="Real64">
+							<ValueList>
+								<Value>-96</Value>
+							</ValueList>
+						</Property>
 					</PropertyList>
 					<ReferenceList>
 						<Reference Name="Conversion">

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -850,6 +850,14 @@ MonoBehaviour:
   displayNameText: {fileID: 1283703661}
   portraitAnimator: {fileID: 1283703660}
   layoutAnimator: {fileID: 1283703658}
+  textCrawlSound:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 11400000, guid: f449223a4cd5faa41a4a96d34cc9d69b, type: 2}
+  textboxStopSound:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 11400000, guid: 7e8d94225a3b4de4fa6f29ce2f795f87, type: 2}
 --- !u!1 &374624430
 GameObject:
   m_ObjectHideFlags: 0
@@ -5118,7 +5126,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 383833180}
   m_HandleRect: {fileID: 383833179}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:

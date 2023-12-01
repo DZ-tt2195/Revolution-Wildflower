@@ -13,12 +13,17 @@ namespace AK
 {
     namespace EVENTS
     {
+        static const AkUniqueID PLAY_BEGIN_TURN = 547032497U;
         static const AkUniqueID PLAY_BOTTLE_PLACEHOLDER = 3382157760U;
         static const AkUniqueID PLAY_BUTTON_BASE_PLACEHOLDER = 4193244264U;
         static const AkUniqueID PLAY_CARD_MOVE = 2342783904U;
         static const AkUniqueID PLAY_CARD_PLAY = 3452973965U;
         static const AkUniqueID PLAY_CHARACTERFOOTSTEPS = 2603299628U;
+        static const AkUniqueID PLAY_DIALOGUE_BOX_STOP = 2069859097U;
+        static const AkUniqueID PLAY_DIALOGUE_TEXT_WRITE = 1790008526U;
+        static const AkUniqueID PLAY_DISTRACTION = 1662486726U;
         static const AkUniqueID PLAY_END_TURN_PLACEHOLDER = 2000740979U;
+        static const AkUniqueID PLAY_GUARD_INVESTIGATE = 1673056553U;
         static const AkUniqueID PLAY_GUARD_KO_PLACEHOLDER = 2157469724U;
         static const AkUniqueID PLAY_GUARD_NOTICE_PLACEHOLDER = 3136084898U;
         static const AkUniqueID PLAY_GUNSHOT_PLACEHOLDER = 1795322234U;
@@ -26,6 +31,7 @@ namespace AK
         static const AkUniqueID PLAY_MOVEMENT_SELECT_PLACEHOLDER = 3274460198U;
         static const AkUniqueID PLAY_OFFICEAMBIENTNOISE = 4098207900U;
         static const AkUniqueID PLAY_UI_BUTTON_HOVER = 310530060U;
+        static const AkUniqueID PLAY_VIEW_DECK = 510162235U;
         static const AkUniqueID STOP_OFFICEAMBIENTNOISE = 3265032750U;
     } // namespace EVENTS
 

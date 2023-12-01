@@ -51,6 +51,8 @@ MonoBehaviour:
   listOfGuards: []
   listOfEnvironmentals: []
   listOfObjectives: []
+  chosenTile: {fileID: 0}
+  chosenCard: {fileID: 0}
   selectedTile: {fileID: 0}
   CurrentAvailableMoveTarget: {fileID: 0}
   handContainer: {fileID: 0}
@@ -64,10 +66,12 @@ MonoBehaviour:
   objectivePrefab: {fileID: 3366395209525496084, guid: 93e86e5b63f364f8dbfd4ab842b55d2b, type: 3}
   exitPrefab: {fileID: -7563352408502380383, guid: 118fc5b90705644c59316bccbf8dfa3b, type: 3}
   turnCount: 30
-  levelToLoad: Level Grids - 3PlayerLevelTest
+  levelToLoad: 0
+  opacity: 1
+  decrease: 1
   currentTurn: 0
   futureEffects: []
-  button:
+  buttonSound:
     idInternal: 0
     valueGuidInternal: 
     WwiseObjectReference: {fileID: 11400000, guid: bec5b2c164351da4fb49d51fa16fd714, type: 2}
@@ -79,6 +83,14 @@ MonoBehaviour:
     idInternal: 0
     valueGuidInternal: 
     WwiseObjectReference: {fileID: 11400000, guid: d3f25bbf502ab924994e7a5324f52945, type: 2}
+  characterSelectSound:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 11400000, guid: 4cab419324f92884ea06d9a8f65442c0, type: 2}
+  beginTurnSound:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 11400000, guid: 69b05751cb7a5d241b07d094d4457a33, type: 2}
 --- !u!114 &8972214315868440545
 MonoBehaviour:
   m_ObjectHideFlags: 0
