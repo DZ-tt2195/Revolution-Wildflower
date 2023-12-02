@@ -54,7 +54,6 @@ public class Card : MonoBehaviour, IPointerClickHandler
         [ReadOnly] List<TileData> adjacentTilesWithPlayers = new();
         [ReadOnly] List<TileData> adjacentTilesWithGuards = new();
         [ReadOnly] List<TileData> adjacentTilesWithWalls = new();
-        [ReadOnly] List<TileData> GeneralTargetableTiles = new();
 
     [Foldout("Audio files", true)]
         public AK.Wwise.Event cardMove;
@@ -575,47 +574,10 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     #endregion
 
-#region Interacts With Entities
+    #region Interacts With Entities
 
     IEnumerator AttackOrDistraction()
     {
-        List<HashSet<Vector2Int>> DetectLines = new List<HashSet<Vector2Int>>();
-        HashSet<Vector2Int> SpacesToCheck = new HashSet<Vector2Int>();
-
-        //creating each of the lines of sight (seperated by 5 degrees) and adding them to a list of lines
-        for (int i = 0; i < 360; i += 10)
-        {
-            float lineAngle = (i * Mathf.Deg2Rad);
-            Vector2 newVector = new Vector2(Mathf.Cos(lineAngle), Mathf.Sin(lineAngle));
-            DetectLines.Add(NewManager.instance.line(currentPlayer.currentTile.gridPosition, currentPlayer.currentTile.gridPosition + Vector2Int.RoundToInt(newVector.normalized * range)));
-        }
-
-        //running through each of the lines in the list, seeing how far they can look 
-        for (int i = 0; i < DetectLines.Count; i++)
-        {
-            foreach (Vector2Int point in DetectLines[i])
-            {
-                TileData TileToAdd = NewManager.instance.FindTile(point);
-                if (TileToAdd == null)
-                {
-                    break;
-                }
-                if (TileToAdd.myEntity != null)
-                {
-                    if (TileToAdd.myEntity.Occlusion && point != currentPlayer.currentTile.gridPosition)
-                    {
-                        break;
-                    }
-                }
-                SpacesToCheck.Add(point);
-            }
-        }
-        
-        foreach (Vector2Int point in SpacesToCheck)
-        {
-            GeneralTargetableTiles.Add(NewManager.instance.FindTile(point));
-        }
-        GeneralTargetableTiles.RemoveAll(item => item == null); //delete all tiles that are null
         yield return null;
     }
     IEnumerator ChoosePlayer()
