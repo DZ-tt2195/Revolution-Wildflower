@@ -216,8 +216,9 @@ public class Card : MonoBehaviour, IPointerClickHandler
             "ISGUARD" => SearchAdjacentGuard(currentPlayer.currentTile).Count > 0,
             "ISWALL" => SearchAdjacentWall(currentPlayer.currentTile).Count > 0,
             "ISOCCUPIED" => OccupiedAdjacent(currentPlayer.currentTile).Count > 0,
-            "EMPTYHAND" => currentPlayer.myHand.Count > 0,
-            "NOENERGY" => currentPlayer.myEnergy > 0,
+            "CARDSINHAND" => currentPlayer.myHand.Count >= 2,
+            "EMPTYHAND" => currentPlayer.myHand.Count == 1,
+            "NOENERGY" => currentPlayer.myEnergy == 0,
             "TARGETTED" => IsTargetted(),
             _ => true,
         };
@@ -345,6 +346,9 @@ public class Card : MonoBehaviour, IPointerClickHandler
                     break;
                 case "CHOOSEDISCARD":
                     yield return ChooseDiscard(currentPlayer);
+                    break;
+                case "CHOOSEEXHAUST":
+                    yield return ChooseExhaust(currentPlayer);
                     break;
                 case "ALLDRAWCARDS":
                     yield return AllDrawCards(NewManager.instance.listOfPlayers);
@@ -505,6 +509,27 @@ public class Card : MonoBehaviour, IPointerClickHandler
             else if (player.myHand.Count == 1)
             {
                 yield return player.DiscardFromHand(player.myHand[0]);
+            }
+            NewManager.instance.UpdateStats(currentPlayer);
+        }
+    }
+
+    internal IEnumerator ChooseExhaust(PlayerEntity player)
+    {
+        CalculateDistraction(player.currentTile);
+        for (int i = 0; i < chooseHand; i++)
+        {
+            NewManager.instance.UpdateInstructions($"Exhaust a card from your hand ({chooseHand - i} more).");
+            if (player.myHand.Count >= 2)
+            {
+                NewManager.instance.WaitForDecision(player.myHand);
+                while (NewManager.instance.chosenCard == null)
+                    yield return null;
+                yield return player.ExhaustFromHand(NewManager.instance.chosenCard);
+            }
+            else if (player.myHand.Count == 1)
+            {
+                yield return player.ExhaustFromHand(player.myHand[0]);
             }
             NewManager.instance.UpdateStats(currentPlayer);
         }

@@ -318,8 +318,11 @@ public class NewManager : MonoBehaviour
             stats.text = $"{player.name} | <color=#ffc73b>{player.health} Health <color=#ffffff>" +
                 $"| <color=#ecff59>{player.movementLeft} Movement <color=#ffffff>" +
                 $"| <color=#59fff4>{player.myEnergy} Energy <color=#ffffff>";
+
             deckTracker.text = $"<color=#70f5ff>Draw Pile <color=#ffffff>/ <color=#ff9670>Discard Pile " +
-                $"\n\n<color=#70f5ff>{player.myDrawPile.Count} <color=#ffffff>/ <color=#ff9670>{player.myDiscardPile.Count}";
+                $"\n\n<color=#70f5ff>{player.myDrawPile.Count} <color=#ffffff>/ <color=#ff9670>{player.myDiscardPile.Count}" +
+                $"\n({player.myExhaust.Count} exhausted)";
+
             handContainer.transform.localPosition = new Vector3(player.myPosition * -2000, -75, 0);
         }
         else

@@ -27,6 +27,7 @@ public class PlayerEntity : MovingEntity
         [Tooltip("list of cards in hand")][ReadOnly] public List<Card> myHand;
         [Tooltip("list of cards in draw pile")][ReadOnly] public List<Card> myDrawPile;
         [Tooltip("list of cards in discard pile")][ReadOnly] public List<Card> myDiscardPile;
+        [Tooltip("list of cards that're exhausted")][ReadOnly] public List<Card> myExhaust;
         [Tooltip("list of cards played this turn")][ReadOnly] public List<Card> cardsPlayed;
         [Tooltip("list of cost reduction effects")][ReadOnly] public List<Card> costChange;
 
@@ -116,6 +117,20 @@ public class PlayerEntity : MovingEntity
 
 #region Card Stuff
 
+    void SortHand(float waitTime)
+    {
+        myHand = myHand.OrderBy(o => o.energyCost).ToList();
+
+        for (int i = 0; i < myHand.Count; i++)
+        {
+            Card nextCard = myHand[i];
+            float startingX = (myHand.Count >= 8) ? -900 : (myHand.Count - 1) * -150;
+            float difference = (myHand.Count >= 8) ? 1800f / (myHand.Count - 1) : 300;
+            Vector2 newPosition = new(startingX + difference * i, -500);
+            StartCoroutine(MoveCard(nextCard, newPosition, newPosition, new Vector3(0, 0, 0), waitTime));
+        }
+    }
+
     public void PlusCards(int num)
     {
         for (int i = 0; i < num; i++)
@@ -156,20 +171,6 @@ public class PlayerEntity : MovingEntity
         }
     }
 
-    void SortHand(float waitTime)
-    {
-        myHand = myHand.OrderBy(o => o.energyCost).ToList();
-
-        for (int i = 0; i<myHand.Count; i++)
-        {
-            Card nextCard = myHand[i];
-            float startingX = (myHand.Count >= 8) ? -900 : (myHand.Count - 1) * -150;
-            float difference = (myHand.Count >= 8) ? 1800f / (myHand.Count - 1) : 300;
-            Vector2 newPosition = new(startingX + difference * i, -500);
-            StartCoroutine(MoveCard(nextCard, newPosition, newPosition, new Vector3(0, 0, 0), waitTime));
-        }
-    }
-
     public void PutIntoHand(Card drawMe)
     {
         if (drawMe != null)
@@ -185,20 +186,30 @@ public class PlayerEntity : MovingEntity
     public IEnumerator DiscardFromHand(Card discardMe)
     {
         myHand.Remove(discardMe);
+        discardMe.transform.SetAsLastSibling();
         StartCoroutine(MoveCard(discardMe, new Vector2(1200, -440), new Vector2(0, -1000), new Vector3(0, 0, 0), 0.25f));
         SortHand(0.2f);
         yield return NewManager.Wait(0.4f);
-        PutIntoDiscard(discardMe);
+
+        myDiscardPile.Add(discardMe);
+        discardMe.transform.SetParent(null);
+        discardMe.cardMove.Post(discardMe.gameObject);
     }
 
-    public void PutIntoDiscard(Card discardMe)
+    public IEnumerator ExhaustFromHand(Card exhaustMe)
     {
-        if (discardMe != null)
-        {
-            myDiscardPile.Add(discardMe);
-            discardMe.transform.SetParent(null);
-            discardMe.cardMove.Post(discardMe.gameObject);
-        }
+        myHand.Remove(exhaustMe);
+        myDrawPile.Remove(exhaustMe);
+        myDiscardPile.Remove(exhaustMe);
+
+        float zRot = UnityEngine.Random.Range(-45f, 45f);
+        exhaustMe.transform.SetAsLastSibling();
+        StartCoroutine(MoveCard(exhaustMe, new Vector2(exhaustMe.transform.localPosition.x, -700), new Vector2(0, -1000), new Vector3(0, 0, zRot), 0.3f));
+        SortHand(0.2f);
+        yield return NewManager.Wait(0.4f);
+
+        myExhaust.Add(exhaustMe);
+        exhaustMe.transform.SetParent(null);
     }
 
     IEnumerator MoveCard(Card card, Vector2 newPos, Vector2 finalPos, Vector3 newRot, float waitTime)
@@ -216,9 +227,6 @@ public class PlayerEntity : MovingEntity
         }
         card.transform.localPosition = finalPos;
     }
-
-    /*float zRot = UnityEngine.Random.Range(-30f, 30f);
-    StartCoroutine(MoveCard(exhaustMe, new Vector2(exhaustMe.transform.localPosition.x, -600), new Vector2(0, -1000), new Vector3(0, 0, zRot), 1f));*/
 
     #endregion
 }

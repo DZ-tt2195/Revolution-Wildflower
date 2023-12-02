@@ -19,7 +19,7 @@
       "HP Walls",
       "Burn #",
       "intensity",
-      "any extra condition needed to select a tile",
+      "any extra condition needed to select a card",
       "the function to call when card is played",
       "the function to call at start of next round"
     ],
@@ -118,17 +118,17 @@
     ],
     [
       "Dash",
-      "\"+2 Movement.\"",
+      "Exhaust a card from your hand for +2 Movement.",
       "mvmt",
       "",
       "3",
-      "2",
+      "1",
       "nv",
       "",
       "2",
       "",
       "",
-      "",
+      "1",
       "",
       "",
       "",
@@ -137,7 +137,7 @@
       "",
       "0",
       "",
-      "ChangeMP"
+      "ChooseExhaust/ChangeMP"
     ],
     [
       "Nope",
