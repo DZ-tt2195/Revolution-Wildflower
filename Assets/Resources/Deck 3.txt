@@ -183,7 +183,7 @@
       "",
       "0",
       "",
-      "DrawCards/GainEnergy",
+      "DrawCards/ChangeEP",
       "ZeroEnergy/ZeroMovement"
     ],
     [
