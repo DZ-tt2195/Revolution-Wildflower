@@ -165,23 +165,9 @@ public class PlayerEntity : MovingEntity
             Card nextCard = myHand[i];
             float startingX = (myHand.Count >= 8) ? -900 : (myHand.Count - 1) * -150;
             float difference = (myHand.Count >= 8) ? 1800f / (myHand.Count - 1) : 300;
-            Vector2 newPosition = new Vector2(startingX + difference * i, -500);
-            StartCoroutine(MoveCard(nextCard, newPosition, newPosition, waitTime));
+            Vector2 newPosition = new(startingX + difference * i, -500);
+            StartCoroutine(MoveCard(nextCard, newPosition, newPosition, new Vector3(0, 0, 0), waitTime));
         }
-    }
-
-    IEnumerator MoveCard(Card card, Vector2 newPos, Vector2 finalPos, float waitTime)
-    {
-        float elapsedTime = 0;
-        Vector2 originalPos = card.transform.localPosition;
-
-        while (elapsedTime < waitTime)
-        {
-            card.transform.localPosition = Vector3.Lerp(originalPos, newPos, elapsedTime / waitTime);
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-        card.transform.localPosition = finalPos;
     }
 
     public void PutIntoHand(Card drawMe)
@@ -199,7 +185,7 @@ public class PlayerEntity : MovingEntity
     public IEnumerator DiscardFromHand(Card discardMe)
     {
         myHand.Remove(discardMe);
-        StartCoroutine(MoveCard(discardMe, new Vector2(1200, -440), new Vector2(0, -1000), 0.25f));
+        StartCoroutine(MoveCard(discardMe, new Vector2(1200, -440), new Vector2(0, -1000), new Vector3(0, 0, 0), 0.25f));
         SortHand(0.2f);
         yield return NewManager.Wait(0.4f);
         PutIntoDiscard(discardMe);
@@ -215,5 +201,24 @@ public class PlayerEntity : MovingEntity
         }
     }
 
-#endregion
+    IEnumerator MoveCard(Card card, Vector2 newPos, Vector2 finalPos, Vector3 newRot, float waitTime)
+    {
+        float elapsedTime = 0;
+        Vector2 originalPos = card.transform.localPosition;
+        Vector3 originalRot = card.transform.localEulerAngles;
+
+        while (elapsedTime < waitTime)
+        {
+            card.transform.localPosition = Vector2.Lerp(originalPos, newPos, elapsedTime / waitTime);
+            card.transform.localEulerAngles = Vector3.Lerp(originalRot, newRot, elapsedTime / waitTime);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        card.transform.localPosition = finalPos;
+    }
+
+    /*float zRot = UnityEngine.Random.Range(-30f, 30f);
+    StartCoroutine(MoveCard(exhaustMe, new Vector2(exhaustMe.transform.localPosition.x, -600), new Vector2(0, -1000), new Vector3(0, 0, zRot), 1f));*/
+
+    #endregion
 }

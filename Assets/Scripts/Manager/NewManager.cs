@@ -6,7 +6,6 @@ using UnityEngine.UI;
 using TMPro;
 using MyBox;
 using UnityEngine.SceneManagement;
-using static UnityEditor.Experimental.GraphView.Port;
 
 public class AStarNode
 {
@@ -306,7 +305,6 @@ public class NewManager : MonoBehaviour
     {
         for (int i = listOfPlayers.Count - 1; i >= 0; i--)
         {
-            Debug.Log(i);
             PlayerEntity player = listOfPlayers[i];
             try { StartCoroutine(player.adjacentObjective.ObjectiveComplete(player)); }
             catch (NullReferenceException) { continue; }
