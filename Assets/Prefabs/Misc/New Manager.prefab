@@ -58,7 +58,7 @@ MonoBehaviour:
   handContainer: {fileID: 0}
   objectiveButton: {fileID: 0}
   toolTip: {fileID: 0}
-  tileSpacing: 3.5
+  tileSpacing: 3.75
   floorTilePrefab: {fileID: 2642816440497754149, guid: 416081d422f0447bf81278803b96f973, type: 3}
   playerPrefab: {fileID: 6421295861255831564, guid: e68cbc9ff88a24d4d9abfef76230b41f, type: 3}
   wallPrefab: {fileID: 3780071206512033230, guid: dc8aa844dc4e549bbb30d8da98a75ea1, type: 3}
@@ -69,6 +69,7 @@ MonoBehaviour:
   levelToLoad: 0
   opacity: 1
   decrease: 1
+  lastSelectedPlayer: {fileID: 0}
   currentTurn: 0
   futureEffects: []
   buttonSound:

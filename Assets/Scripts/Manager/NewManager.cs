@@ -73,7 +73,7 @@ public class NewManager : MonoBehaviour
 
     public enum TurnSystem { You, Resolving, Environmentals, Enemy };
     [Foldout("Turn System", true)]
-        [Tooltip("last selected player")] PlayerEntity lastSelectedPlayer;
+        [Tooltip("last selected player")] [ReadOnly] public PlayerEntity lastSelectedPlayer;
         [Tooltip("What's happening in the game")][ReadOnly] public TurnSystem currentTurn;
         [Tooltip("Effects to do on future turns")][ReadOnly] public List<Card> futureEffects = new List<Card>();
 
@@ -353,7 +353,7 @@ public class NewManager : MonoBehaviour
     private void Update()
     {
         endTurnButton.gameObject.SetActive(currentTurn == TurnSystem.You);
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Escape))
             GameOver("You quit.");
     }
 
@@ -500,21 +500,22 @@ public class NewManager : MonoBehaviour
         
         if (lastSelectedPlayer != null)
         {
+            Debug.Log($"{lastSelectedPlayer.name} was last selected");
             selectedTile = lastSelectedPlayer.currentTile;
-            StartCoroutine(ChooseMovePlayer(selectedTile));
+            StartCoroutine(ChooseMovePlayer(lastSelectedPlayer));
         }
     }
 
-    public IEnumerator ChooseMovePlayer(TileData currentTile)
+    public IEnumerator ChooseMovePlayer(PlayerEntity currentPlayer)
     {
-        PlayerEntity currentPlayer = currentTile.myEntity.GetComponent<PlayerEntity>();
         if (lastSelectedPlayer != currentPlayer)
         {
             characterSelectSound.Post(currentPlayer.gameObject);
         }
         lastSelectedPlayer = currentPlayer;
         AkSoundEngine.SetState("Character", currentPlayer.name);
-        
+
+        TileData currentTile = currentPlayer.currentTile;
         UpdateInstructions("Choose a character to move / play a card.");
 
         List<TileData> possibleTiles = CalculateReachableGrids(currentTile, currentPlayer.movementLeft, true);
@@ -581,8 +582,8 @@ public class NewManager : MonoBehaviour
     IEnumerator PlayCard(PlayerEntity player, Card playMe) //resolve that card
     {
         currentTurn = TurnSystem.Resolving;
-        StopCoroutine(ChooseMovePlayer(player.currentTile));
-        Debug.Log(playMe.cardPlay);
+        StopCoroutine(ChooseMovePlayer(player));
+        Debug.Log(playMe.name);
         playMe.cardPlay.Post(playMe.gameObject);
 
         StartCoroutine(player.DiscardFromHand(playMe));
@@ -617,8 +618,8 @@ public class NewManager : MonoBehaviour
     {
         selectedTile = null;
         currentTurn = TurnSystem.Environmentals;
-        NewManager.instance.DisableAllTiles();
-        NewManager.instance.DisableAllCards();
+        DisableAllTiles();
+        DisableAllCards();
 
         currentTurn = TurnSystem.Environmentals;
         foreach (EnvironmentalEntity environment in  listOfEnvironmentals)

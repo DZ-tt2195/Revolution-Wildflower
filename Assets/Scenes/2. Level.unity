@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4797,7 +4797,7 @@ MonoBehaviour:
 
     Right Click: Read a card larger
 
-    Space: Quit the level'
+    Escape: Quit the level'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a2d267a6292f79743913f2392055d2e0, type: 2}
   m_sharedMaterial: {fileID: -4425755550803455606, guid: a2d267a6292f79743913f2392055d2e0, type: 2}

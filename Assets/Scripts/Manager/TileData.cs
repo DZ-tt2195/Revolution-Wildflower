@@ -102,7 +102,7 @@ public class TileData : MonoBehaviour
                 if (myEntity.CompareTag("Player"))
                 {
                     NewManager.instance.StopAllCoroutines();
-                    StartCoroutine(NewManager.instance.ChooseMovePlayer(this));
+                    StartCoroutine(NewManager.instance.ChooseMovePlayer(myEntity.GetComponent<PlayerEntity>()));
                 }
             }
         }
