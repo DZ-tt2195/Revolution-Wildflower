@@ -59,6 +59,9 @@ public class NewManager : MonoBehaviour
         [Tooltip("Floor tile prefab")] [SerializeField] TileData floorTilePrefab;
         [Tooltip("Player prefab")][SerializeField] PlayerEntity playerPrefab;
         [Tooltip("Wall prefab")][SerializeField] WallEntity wallPrefab;
+        [Tooltip("Wall T prefab")][SerializeField] WallEntity wallTSplitPrefab;
+        [Tooltip("Wall Corner prefab")][SerializeField] WallEntity wallCornerPrefab;
+        [Tooltip("Wall Plus prefab")][SerializeField] WallEntity wallPlusPrefab;
         [Tooltip("Guard prefab")][SerializeField] GuardEntity guardPrefab;
         [Tooltip("Objective prefab")][SerializeField] ObjectiveEntity objectivePrefab;
         [Tooltip("Guard prefab")][SerializeField] ExitEntity exitPrefab;
@@ -152,7 +155,9 @@ public class NewManager : MonoBehaviour
 
                     switch (int.Parse(numberPlusAddition[0]))
                     {
+
                         case 1: //create player
+                            print("player");
                             thisTileEntity = Instantiate(playerPrefab, nextTile.transform);
                             PlayerEntity player = thisTileEntity.GetComponent<PlayerEntity>();
                             player.myPosition = listOfPlayers.Count;
@@ -163,6 +168,7 @@ public class NewManager : MonoBehaviour
                             break;
 
                         case 2: //create exit
+                            print("exit");
                             thisTileEntity = Instantiate(exitPrefab, nextTile.transform);
                             thisTileEntity.name = "Exit";
                             ObjectiveEntity exitObjective = thisTileEntity.GetComponent<ExitEntity>();
@@ -170,6 +176,7 @@ public class NewManager : MonoBehaviour
                             break;
 
                         case 3: //create objective
+                            print("objective");
                             thisTileEntity = Instantiate(objectivePrefab, nextTile.transform);
                             thisTileEntity.name = numberPlusAddition[1];
                             ObjectiveEntity defaultObjective = thisTileEntity.GetComponent<ObjectiveEntity>();
@@ -177,12 +184,40 @@ public class NewManager : MonoBehaviour
                             break;
 
                         case 10: //create wall
+                            print("wall");
                             thisTileEntity = Instantiate(wallPrefab, nextTile.transform);
                             thisTileEntity.name = "Wall";
                             WallEntity wall = thisTileEntity.GetComponent<WallEntity>();
                             listOfWalls.Add(wall);
                             wall.health = int.Parse(numberPlusAddition[1]);
                             wall.WallDirection(numberPlusAddition[2]);
+                            break;
+
+                        case 30: //create +
+                            thisTileEntity = Instantiate(wallPlusPrefab, nextTile.transform);
+                            thisTileEntity.name = "PlusWall";
+                            WallEntity PlusWall = thisTileEntity.GetComponent<WallEntity>();
+                            listOfWalls.Add(PlusWall);
+                            PlusWall.health = int.Parse(numberPlusAddition[1]);
+                            PlusWall.WallDirection(numberPlusAddition[2]);
+                            break;
+
+                        case 40: //create T
+                            thisTileEntity = Instantiate(wallTSplitPrefab, nextTile.transform);
+                            thisTileEntity.name = "T-Wall";
+                            WallEntity Twall = thisTileEntity.GetComponent<WallEntity>();
+                            listOfWalls.Add(Twall);
+                            Twall.health = int.Parse(numberPlusAddition[1]);
+                            Twall.WallDirection(numberPlusAddition[2]);
+                            break;
+
+                        case 50: //create corner
+                            thisTileEntity = Instantiate(wallCornerPrefab, nextTile.transform);
+                            thisTileEntity.name = "CornerWall";
+                            WallEntity CornerWall = thisTileEntity.GetComponent<WallEntity>();
+                            listOfWalls.Add(CornerWall);
+                            CornerWall.health = int.Parse(numberPlusAddition[1]);
+                            CornerWall.WallDirection(numberPlusAddition[2]);
                             break;
 
                         case 20: //create guard

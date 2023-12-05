@@ -5,10 +5,9 @@ using UnityEngine;
 
 public class WallEntity : Entity
 {
-    [Foldout("Wall Entity",true)]
-        [Tooltip("Health a wall has")] [ReadOnly] public int health;
-        [Tooltip("Wall facing left")] [SerializeField] Sprite leftWall;
-        [Tooltip("Wall facing right")][SerializeField] Sprite rightWall;
+    [Foldout("Wall Entity", true)]
+    [Tooltip("Health a wall has")] [ReadOnly] public int health;
+
 
     public override string HoverBoxText()
     {
@@ -19,13 +18,19 @@ public class WallEntity : Entity
     {
         switch (data)
         {
-            case "l":
+            case "l": //wall faces left
                 direction = new Vector2Int(-1, 0);
-                spriteRenderer.sprite = leftWall;
+                transform.Rotate(0f, 0f, 0f);
                 break;
-            case "r":
+            case "r": //wall faces right
                 direction = new Vector2Int(1, 0);
-                spriteRenderer.sprite = rightWall;
+                transform.Rotate(0f, 90f, 0f);
+                break;
+            case "n": //wall faces north
+                transform.Rotate(0f, 180f, 0f);
+                break;
+            case "s": //wall faces south
+                transform.Rotate(0f, 270f, 0f);
                 break;
         }
     }

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -5523,7 +5523,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 383833180}
   m_HandleRect: {fileID: 383833179}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -5587,6 +5587,18 @@ PrefabInstance:
       propertyPath: levelToLoad
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5914281999929805311, guid: 4d80205612fbb450097423700f1424c9, type: 3}
+      propertyPath: wallPlusPrefab
+      value: 
+      objectReference: {fileID: 4222996662149608765, guid: 6019f30927dd7aa48accd8d94cd2d463, type: 3}
+    - target: {fileID: 5914281999929805311, guid: 4d80205612fbb450097423700f1424c9, type: 3}
+      propertyPath: wallCornerPrefab
+      value: 
+      objectReference: {fileID: 4990786732049469002, guid: 8e9dec9b025fb114c8702bddb184a4f0, type: 3}
+    - target: {fileID: 5914281999929805311, guid: 4d80205612fbb450097423700f1424c9, type: 3}
+      propertyPath: wallTSplitPrefab
+      value: 
+      objectReference: {fileID: 22534131588069659, guid: 20dc37b4e68cb3042a1d5f3b3465b897, type: 3}
     - target: {fileID: 6312952286243973944, guid: 4d80205612fbb450097423700f1424c9, type: 3}
       propertyPath: m_LocalPosition.x
       value: -904.627
