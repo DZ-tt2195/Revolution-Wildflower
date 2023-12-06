@@ -228,7 +228,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
     {
         foreach (GuardEntity guard in NewManager.instance.listOfGuards)
         {
-            if (guard.CurrentTarget == currentPlayer)
+            if (guard.CurrentTarget == currentPlayer && guard.stunned == 0)
                 return true;
         }
 
@@ -327,11 +327,14 @@ public class Card : MonoBehaviour, IPointerClickHandler
                 NewManager.instance.UpdateStats(currentPlayer);
             }
         }
+        NewManager.instance.selectedTile = currentPlayer.currentTile;
     }
 
     IEnumerator ResolveMethod(string methodName)
     {
         currentTarget = currentPlayer.currentTile;
+        methodName = methodName.Replace("]", "").Trim();
+
         if (methodName.Contains("CHOOSEBUTTON("))
         {
             string[] choices = methodName.Replace("CHOOSEBUTTON(", "").Replace(")", "").Replace("]","").Trim().Split('|');
@@ -380,6 +383,11 @@ public class Card : MonoBehaviour, IPointerClickHandler
                 case "STUNADJACENTGUARD":
                     yield return ChooseGuard();
                     yield return StunGuard(adjacentTilesWithGuards[0].myEntity.GetComponent<GuardEntity>());
+                    break;
+                case "SWAPADJACENTGUARD":
+                    Debug.Log("swapping adjacent guards");
+                    yield return ChooseGuard();
+                    yield return SwapGuard(adjacentTilesWithGuards[0].myEntity.GetComponent<GuardEntity>());
                     break;
                 case "ATTACKADJACENTWALL":
                     yield return ChooseWall();
@@ -667,6 +675,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         yield return CalculateDistraction(target);
         yield return null;
     }
+
     IEnumerator ChoosePlayer()
     {
         TileData targetPlayer = null;
@@ -736,6 +745,18 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
         adjacentTilesWithWalls.Clear();
         adjacentTilesWithWalls.Add(targetGuard);
+        Debug.Log(targetGuard.name);
+    }
+
+    IEnumerator SwapGuard(GuardEntity guard)
+    {
+        yield return null;
+        TileData guardsOriginalTile = guard.currentTile;
+        TileData playersOriginalTile = currentPlayer.currentTile;
+
+        currentPlayer.MoveTile(guardsOriginalTile);
+        guard.MoveTile(playersOriginalTile);
+        yield return NewManager.Wait(0.2f);
     }
 
     internal IEnumerator StunGuard(GuardEntity guard)
@@ -746,6 +767,6 @@ public class Card : MonoBehaviour, IPointerClickHandler
         currentTarget = guard.currentTile;
     }
 
-#endregion
+    #endregion
 
 }

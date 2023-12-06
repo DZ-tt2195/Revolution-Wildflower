@@ -1,10 +1,10 @@
 {
     [
-      " ",
+      "Frankie - move",
       "card explanation displayed on the card itself",
       "atk, draw, dist, eng, mvmt, misc",
       "",
-      "15 cards in the deck",
+      "21 cards in the deck",
       "EP cost",
       "v/nv tagging",
       "health change",
@@ -117,6 +117,29 @@
       "AllDrawCards"
     ],
     [
+      "Boom",
+      "Deal 2 damage to a wall that's up to 2 tiles away, intensity 3.",
+      "atk",
+      "",
+      "3",
+      "1",
+      "nv",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "2",
+      "",
+      "",
+      "-3",
+      "",
+      "2",
+      "IsWall",
+      "AttackAdjacentWall"
+    ],
+    [
       "Dash",
       "Exhaust a card from your hand for +2 Movement.",
       "mvmt",
@@ -136,7 +159,7 @@
       "",
       "",
       "0",
-      "",
+      "CardsInHand",
       "ChooseExhaust/ChangeMP"
     ],
     [
@@ -184,6 +207,29 @@
       "0",
       "",
       "ChooseButton(ChangeMP|ChangeEP)"
+    ],
+    [
+      "Swap",
+      "Swap locations with a guard up to 3 tiles away.",
+      "mvmt",
+      "",
+      "3",
+      "1",
+      "nv",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "3",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "IsGuard",
+      "SwapAdjacentGuard"
     ]
   ]
 }
