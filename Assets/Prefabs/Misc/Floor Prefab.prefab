@@ -172,7 +172,6 @@ MonoBehaviour:
   choosable: 0
   clickable: 0
   moveable: 0
-  renderer3d: {fileID: 7738949998751105727}
   mouseOverColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   SelectedColor: {r: 0, g: 0, b: 0, a: 0}
   MoveableColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
