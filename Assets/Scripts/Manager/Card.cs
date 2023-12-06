@@ -389,7 +389,8 @@ public class Card : MonoBehaviour, IPointerClickHandler
                     yield return CalculateDistraction(currentPlayer.currentTile);
                     break;
                 case "TARGETDISTRACTION&DAMAGE":
-                    yield return AttackOrDistraction();
+                    yield return ChooseTileLineOfSight();
+                    yield return AttackOrDistraction(GeneralTargetableTiles[0]);
                     break;
                 default:
                     Debug.LogError($"{methodName} isn't a method");
@@ -600,10 +601,11 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     #endregion
 
-#region Interacts With Entities
+    #region Interacts With Entities
 
-    IEnumerator AttackOrDistraction()
+    IEnumerator ChooseTileLineOfSight()
     {
+        GeneralTargetableTiles.Clear();
         List<HashSet<Vector2Int>> DetectLines = new List<HashSet<Vector2Int>>();
         HashSet<Vector2Int> SpacesToCheck = new HashSet<Vector2Int>();
 
@@ -629,18 +631,40 @@ public class Card : MonoBehaviour, IPointerClickHandler
                 {
                     if (TileToAdd.myEntity.Occlusion && point != currentPlayer.currentTile.gridPosition)
                     {
+                        SpacesToCheck.Add(point);
                         break;
                     }
                 }
                 SpacesToCheck.Add(point);
             }
         }
-        
+
         foreach (Vector2Int point in SpacesToCheck)
         {
             GeneralTargetableTiles.Add(NewManager.instance.FindTile(point));
         }
         GeneralTargetableTiles.RemoveAll(item => item == null); //delete all tiles that are null
+
+        NewManager.instance.UpdateInstructions("Choose a tile in range.");
+        NewManager.instance.WaitForDecision(GeneralTargetableTiles);
+        while (NewManager.instance.chosenTile == null)
+        {
+            yield return null;
+        }
+        GeneralTargetableTiles.Clear();
+        GeneralTargetableTiles.Add(NewManager.instance.chosenTile);
+    }
+
+    IEnumerator AttackOrDistraction(TileData target)
+    {
+        if (target.myEntity != null)
+        {
+            if (target.myEntity.tag == "Enemy")
+            {
+                yield return StunGuard(target.myEntity.GetComponent<GuardEntity>());
+            }
+        }
+        yield return CalculateDistraction(target);
         yield return null;
     }
     IEnumerator ChoosePlayer()
