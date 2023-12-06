@@ -62,6 +62,7 @@ public class NewManager : MonoBehaviour
         [Tooltip("Guard prefab")][SerializeField] GuardEntity guardPrefab;
         [Tooltip("Objective prefab")][SerializeField] ObjectiveEntity objectivePrefab;
         [Tooltip("Guard prefab")][SerializeField] ExitEntity exitPrefab;
+        [Tooltip("Environmental prefab")][SerializeField] EnvironmentalEntity environmentPrefab;
 
     [Foldout("Setup", true)]
         [Tooltip("Amount of turns before a game over")] public int turnCount;
@@ -464,17 +465,25 @@ public class NewManager : MonoBehaviour
         }
     }
 
+    public EnvironmentalEntity CreateEnvironmental()
+    {
+        EnvironmentalEntity newEnviro = Instantiate(environmentPrefab);
+        return newEnviro;
+    }
+
 #endregion
 
 #region Turn System
 
     IEnumerator StartPlayerTurn()
     {
-        foreach(Card card in futureEffects)
+        foreach (Card card in futureEffects)
             yield return card.NextRoundEffect();
         futureEffects.Clear();
+
         selectedTile = null;
         beginTurnSound.Post(gameObject);
+
         BackToStart();
     }
 
@@ -575,26 +584,11 @@ public class NewManager : MonoBehaviour
                     yield return null;
                 }
             }
-            yield return PlayCard(player, chosenCard);
+
+            currentTurn = TurnSystem.Resolving;
+            yield return player.PlayCard(chosenCard, true);
+            BackToStart();
         }
-    }
-
-    IEnumerator PlayCard(PlayerEntity player, Card playMe) //resolve that card
-    {
-        currentTurn = TurnSystem.Resolving;
-        StopCoroutine(ChooseMovePlayer(player));
-        Debug.Log(playMe.name);
-        playMe.cardPlay.Post(playMe.gameObject);
-
-        StartCoroutine(player.DiscardFromHand(playMe));
-        ChangeEnergy(player, -playMe.energyCost);
-        UpdateStats(player);
-        yield return playMe.OnPlayEffect();
-
-        futureEffects.Add(playMe);
-        player.cardsPlayed.Add(playMe);
-        StopAllCoroutines();
-        BackToStart();
     }
 
     public void Regain()
@@ -621,13 +615,18 @@ public class NewManager : MonoBehaviour
         DisableAllTiles();
         DisableAllCards();
 
-        currentTurn = TurnSystem.Environmentals;
-        foreach (EnvironmentalEntity environment in  listOfEnvironmentals)
+        foreach (PlayerEntity player in listOfPlayers)
         {
-            yield return environment.EndOfTurn();
+            if (player.stunned > 0)
+                player.stunned--;
+        }
+
+        foreach (EnvironmentalEntity environment in listOfEnvironmentals)
+        {
+            if (environment != null)
+                yield return environment.EndOfTurn();
         }
         StartCoroutine(EndTurn());
-        yield return null;
     }
 
     IEnumerator EndTurn() //Starts Guard Phase

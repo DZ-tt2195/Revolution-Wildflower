@@ -16,9 +16,6 @@ public class GuardEntity : MovingEntity
         [Tooltip("Current Target to attack & persue")] [ReadOnly] public PlayerEntity CurrentTarget;
         [Tooltip("Guard Range")] int AttackRange = 1;
 
-    [Header("Conditions")]
-        [Tooltip("Turns which this does nothing")] [ReadOnly] public int stunned = 0;
-
     [Header("Detection")]
         [Tooltip("Tiles this is searching")] List<TileData> inDetection = new List<TileData>();
         [Tooltip("Pauses between movement")] float movePauseTime = 0.25f;
@@ -142,7 +139,7 @@ public class GuardEntity : MovingEntity
 
     public void addDistraction(Vector2Int position)
     {
-        print("distraction added");
+        //print("distraction added");
         DistractionPoints.Add(position);
         investigateSound.Post(gameObject);
         GameObject notification = Instantiate(distractionNotif, transform);

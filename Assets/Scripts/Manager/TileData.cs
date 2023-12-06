@@ -70,8 +70,8 @@ public class TileData : MonoBehaviour
 
     public IEnumerator NoiseFlash(int distance)
     {
-        print("noiseflash at distance " + distance);
-        print("Time to flash" + AlertDelay * distance);
+        //print("noiseflash at distance " + distance);
+        //print("Time to flash" + AlertDelay * distance);
         yield return NewManager.Wait(AlertDelay * distance);
         noiseThrough = true;
         yield return NewManager.Wait(BaseAlertDelay + AlertDelay * distance);
@@ -101,8 +101,12 @@ public class TileData : MonoBehaviour
             {
                 if (myEntity.CompareTag("Player"))
                 {
-                    NewManager.instance.StopAllCoroutines();
-                    StartCoroutine(NewManager.instance.ChooseMovePlayer(myEntity.GetComponent<PlayerEntity>()));
+                    PlayerEntity player = myEntity.GetComponent<PlayerEntity>();
+                    if (player.stunned == 0)
+                    {
+                        NewManager.instance.StopAllCoroutines();
+                        StartCoroutine(NewManager.instance.ChooseMovePlayer(player));
+                    }
                 }
             }
         }

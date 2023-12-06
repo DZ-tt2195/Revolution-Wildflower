@@ -35,6 +35,7 @@ public class CardData
 
     public string select;  //any extra condition needed to select a tile
     public string action;  //action to do
+    public string enviroaction;  //environmental effect to do
     public string nextAct; //action to do next turn
 }
 
@@ -79,14 +80,8 @@ public class CardDataLoader
             newCard.intn = StringToInt(line[18]);
             newCard.select = line[19];
             newCard.action = line[20];
-            try
-            {
-                newCard.nextAct = line[21];
-            }
-            catch (IndexOutOfRangeException)
-            {
-                newCard.nextAct = "";
-            }
+            try { newCard.enviroaction = line[21]; } catch (IndexOutOfRangeException) { newCard.nextAct = ""; }
+            try { newCard.nextAct = line[22];}catch (IndexOutOfRangeException) {newCard.nextAct = "";}
         }
         return cardData;
     }

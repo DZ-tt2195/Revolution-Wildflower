@@ -65,6 +65,7 @@ MonoBehaviour:
   guardPrefab: {fileID: 127779131077801882, guid: 13d7840c131d341de8dbd9115b5fec71, type: 3}
   objectivePrefab: {fileID: 3366395209525496084, guid: 93e86e5b63f364f8dbfd4ab842b55d2b, type: 3}
   exitPrefab: {fileID: -7563352408502380383, guid: 118fc5b90705644c59316bccbf8dfa3b, type: 3}
+  environmentPrefab: {fileID: 3367193512638715697, guid: 8725941e61b5240d9a7bf521fdb08eea, type: 3}
   turnCount: 30
   levelToLoad: 0
   opacity: 1

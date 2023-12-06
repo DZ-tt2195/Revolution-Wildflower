@@ -77,7 +77,10 @@ public class PlayerEntity : MovingEntity
 
     public override string HoverBoxText()
     {
-        return $"Moves left: {movementLeft}";
+        string answer = $"Moves left: {movementLeft}\n";
+        if (stunned > 0)
+            answer += $"Stunned for {stunned} turns\n";
+        return answer;
     }
 
     public override void MoveTile(TileData newTile)
@@ -113,7 +116,7 @@ public class PlayerEntity : MovingEntity
 
         //meshRenderer.material = (hidden > 0) ? HiddenPlayerMaterial : DefaultPlayerMaterial;
     }
-    #endregion
+#endregion
 
 #region Card Stuff
 
@@ -185,15 +188,18 @@ public class PlayerEntity : MovingEntity
 
     public IEnumerator DiscardFromHand(Card discardMe)
     {
-        myHand.Remove(discardMe);
-        discardMe.transform.SetAsLastSibling();
-        StartCoroutine(MoveCard(discardMe, new Vector2(1200, -440), new Vector2(0, -1000), new Vector3(0, 0, 0), 0.25f));
-        SortHand(0.2f);
-        yield return NewManager.Wait(0.4f);
+        if (!myDiscardPile.Contains(discardMe))
+        {
+            myHand.Remove(discardMe);
+            discardMe.transform.SetAsLastSibling();
+            StartCoroutine(MoveCard(discardMe, new Vector2(1200, -440), new Vector2(0, -1000), new Vector3(0, 0, 0), 0.25f));
+            SortHand(0.2f);
+            yield return NewManager.Wait(0.4f);
 
-        myDiscardPile.Add(discardMe);
-        discardMe.transform.SetParent(null);
-        discardMe.cardMove.Post(discardMe.gameObject);
+            myDiscardPile.Add(discardMe);
+            discardMe.transform.SetParent(null);
+            discardMe.cardMove.Post(discardMe.gameObject);
+        }
     }
 
     public IEnumerator ExhaustFromHand(Card exhaustMe)
@@ -225,7 +231,24 @@ public class PlayerEntity : MovingEntity
             elapsedTime += Time.deltaTime;
             yield return null;
         }
+        
         card.transform.localPosition = finalPos;
+    }
+
+    public IEnumerator PlayCard(Card playMe, bool payEnergy)
+    {
+        playMe.cardPlay.Post(playMe.gameObject);
+        StartCoroutine(this.DiscardFromHand(playMe));
+
+        if (payEnergy)
+            NewManager.instance.ChangeEnergy(this, -playMe.energyCost);
+
+        NewManager.instance.UpdateStats(this);
+        yield return playMe.OnPlayEffect();
+
+        if (playMe.nextRoundEffectsInOrder != "")
+            NewManager.instance.futureEffects.Add(playMe);
+        this.cardsPlayed.Add(playMe);
     }
 
     #endregion
