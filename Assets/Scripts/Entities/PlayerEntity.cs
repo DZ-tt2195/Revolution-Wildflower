@@ -20,6 +20,9 @@ public class PlayerEntity : MovingEntity
         [Tooltip("Gail's sprite")][SerializeField] Sprite gailSprite;
         [Tooltip("Frankie's sprite")][SerializeField] Sprite frankieSprite;
         [Tooltip("WK's sprite")][SerializeField] Sprite wkSprite;
+        [Tooltip("HazardBox Sprite")][ReadOnly] CanvasGroup HazardBox;
+        [Tooltip("HazardBox fade speed")][SerializeField] float FadeSpeed = 0.08f;
+
 
     [Foldout("Player's Cards", true)]
         [Tooltip("energy count")][ReadOnly] public int myEnergy;
@@ -35,6 +38,8 @@ public class PlayerEntity : MovingEntity
 
     public void PlayerSetup(string name, Transform hand)
     {
+        HazardBox = NewManager.instance.ManagerHazardBox;
+        HazardBox.alpha = 0;
         handTransform = hand;
         movementLeft = movesPerTurn;
         this.name = name;
@@ -103,6 +108,23 @@ public class PlayerEntity : MovingEntity
         }
 
         return false;
+    }
+
+    public IEnumerator TakeDamage(int damage)
+    {
+        HazardBox.alpha = 0;
+        while (HazardBox.alpha < 1)
+        {
+            HazardBox.alpha += FadeSpeed;
+            yield return null;
+        }
+        while (HazardBox.alpha > 0)
+        {
+            HazardBox.alpha -= FadeSpeed;
+            yield return null;
+        }
+        health -= damage;
+        yield return null;
     }
 
     public override IEnumerator EndOfTurn()

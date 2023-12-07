@@ -40,6 +40,11 @@ public class NewManager : MonoBehaviour
         [Tooltip("Quick reference to current movable tile")][ReadOnly] public TileData CurrentAvailableMoveTarget;
 
     [Foldout("UI Elements", true)]
+        [Tooltip("Hazardbox to give to players")][SerializeField] public CanvasGroup ManagerHazardBox;
+        [Tooltip("Speed of turn fade")][SerializeField] float turnFadeSpeed = 0.05f;
+        [Tooltip("How much time the turn banner appears")][SerializeField] float turnHangDuration = 0.5f;
+        [Tooltip("pop up alerting player of turn")][SerializeField] private CanvasGroup turnAlertBar;
+        [Tooltip("text on turn banner")][SerializeField] private TMP_Text turnText;
         [Tooltip("Your hand in the canvas")] [ReadOnly] public Transform handContainer;
         [Tooltip("The bar in the bottom center of the screen")] Transform informationImage;
         [Tooltip("All the player's stats in text form")] TMP_Text stats;
@@ -92,6 +97,7 @@ public class NewManager : MonoBehaviour
     {
         instance = this;
 
+        turnAlertBar.alpha = 0;
         informationImage = GameObject.Find("Information Image").transform;
         stats = informationImage.GetChild(0).GetComponent<TMP_Text>();
         instructions = informationImage.GetChild(1).GetComponent<TMP_Text>();
@@ -470,12 +476,33 @@ public class NewManager : MonoBehaviour
 
     IEnumerator StartPlayerTurn()
     {
+        yield return Wait(0.5f);
         foreach(Card card in futureEffects)
             yield return card.NextRoundEffect();
         futureEffects.Clear();
         selectedTile = null;
         beginTurnSound.Post(gameObject);
-        BackToStart();
+        BackToStart(true);
+    }
+
+    public IEnumerator FadeTurnBar(string message)
+    {
+        turnAlertBar.alpha = 0;
+        turnText.text = message;
+        
+        while (turnAlertBar.alpha < 1)
+        {
+            turnAlertBar.alpha += turnFadeSpeed;
+            yield return null;
+        }
+        yield return Wait(turnHangDuration);
+        while (turnAlertBar.alpha > 0)
+        {
+            turnAlertBar.alpha -= turnFadeSpeed;
+            yield return null;
+        }
+        
+        turnAlertBar.alpha = 0;
     }
 
     public void EnablePlayers()
@@ -487,7 +514,7 @@ public class NewManager : MonoBehaviour
         }
     }
 
-    void BackToStart()
+    void BackToStart(bool startTurn)
     {
         currentTurn = TurnSystem.You;
 
@@ -497,7 +524,9 @@ public class NewManager : MonoBehaviour
         UpdateStats(lastSelectedPlayer);
         EnablePlayers();
         StopAllCoroutines();
-        
+        if (startTurn)
+            StartCoroutine(FadeTurnBar("Player Turn"));
+
         if (lastSelectedPlayer != null)
         {
             Debug.Log($"{lastSelectedPlayer.name} was last selected");
@@ -549,7 +578,7 @@ public class NewManager : MonoBehaviour
         if (distanceTraveled != 0) footsteps.Post(currentPlayer.gameObject);
         currentPlayer.MoveTile(NewManager.instance.chosenTile);
         StopAllCoroutines();
-        BackToStart();
+        BackToStart(false);
     }
 
     IEnumerator ChooseCardPlay(PlayerEntity player) //choose a card to play
@@ -594,7 +623,7 @@ public class NewManager : MonoBehaviour
         futureEffects.Add(playMe);
         player.cardsPlayed.Add(playMe);
         StopAllCoroutines();
-        BackToStart();
+        BackToStart(false);
     }
 
     public void Regain()
@@ -640,6 +669,7 @@ public class NewManager : MonoBehaviour
         currentTurn = TurnSystem.Enemy;
 
         CoroutineGroup group = new CoroutineGroup(this);
+        yield return FadeTurnBar("Company Turn");
         foreach (GuardEntity guard in listOfGuards)
             group.StartCoroutine(guard.EndOfTurn());
         while (group.AnyProcessing)

@@ -445,8 +445,6 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     public IEnumerator CalculateDistraction(TileData source)
     {
-        print("distracting for " + textDescr.text);
-        print("Intensity:" + distractionIntensity);
         List<TileData> affectedTiles = NewManager.instance.CalculateIntensity(source, distractionIntensity, true);
         print(affectedTiles.Count);
         if (affectedTiles.Count > 0) addDistractionSound.Post(source.gameObject);
@@ -653,6 +651,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         }
         GeneralTargetableTiles.RemoveAll(item => item == null); //delete all tiles that are null
 
+
         NewManager.instance.UpdateInstructions("Choose a tile in range.");
         NewManager.instance.WaitForDecision(GeneralTargetableTiles);
         while (NewManager.instance.chosenTile == null)
@@ -665,6 +664,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     IEnumerator AttackOrDistraction(TileData target)
     {
+        currentTarget = target;
         if (target.myEntity != null)
         {
             if (target.myEntity.tag == "Enemy")
@@ -672,7 +672,6 @@ public class Card : MonoBehaviour, IPointerClickHandler
                 yield return StunGuard(target.myEntity.GetComponent<GuardEntity>());
             }
         }
-        yield return CalculateDistraction(target);
         yield return null;
     }
 
