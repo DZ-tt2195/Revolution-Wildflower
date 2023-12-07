@@ -41,8 +41,13 @@ public class NewManager : MonoBehaviour
 
     [Foldout("UI Elements", true)]
         [Tooltip("Your hand in the canvas")] [ReadOnly] public Transform handContainer;
+        [Tooltip("The bar in the bottom center of the screen")] Transform playerStats;
         [Tooltip("The bar in the bottom center of the screen")] Transform informationImage;
         [Tooltip("All the player's stats in text form")] TMP_Text stats;
+        [Tooltip("Current player selected")] TMP_Text currentCharacter;
+        [Tooltip("Selected player's health")] TMP_Text health;
+        [Tooltip("Selected player's moves left")] TMP_Text moves;
+        [Tooltip("Selected player's energy")] TMP_Text energy; 
         [Tooltip("Instructions for what the player is allowed to do right now")] TMP_Text instructions;
         [Tooltip("End the turn")] Button endTurnButton;
         [Tooltip("Complete an objective you're next to")] [ReadOnly] public Button objectiveButton;
@@ -93,8 +98,13 @@ public class NewManager : MonoBehaviour
     {
         instance = this;
 
+        playerStats = GameObject.Find("Player Stats").transform;
         informationImage = GameObject.Find("Information Image").transform;
         stats = informationImage.GetChild(0).GetComponent<TMP_Text>();
+        currentCharacter = playerStats.GetChild(0).GetComponent<TMP_Text>();
+        health = playerStats.GetChild(1).GetComponent<TMP_Text>();
+        moves = playerStats.GetChild(2).GetComponent<TMP_Text>();
+        energy = playerStats.GetChild(3).GetComponent<TMP_Text>();
         instructions = informationImage.GetChild(1).GetComponent<TMP_Text>();
         deckTracker = GameObject.Find("Deck Tracker").GetComponent<TMP_Text>();
 
@@ -320,6 +330,11 @@ public class NewManager : MonoBehaviour
                 $"| <color=#ecff59>{player.movementLeft} Movement <color=#ffffff>" +
                 $"| <color=#59fff4>{player.myEnergy} Energy <color=#ffffff>";
 
+            currentCharacter.text = $"{player.name}";
+            health.text = $"Health: {player.health}";
+            moves.text = $"Moves: {player.movementLeft}";
+            energy.text = $"Energy: {player.myEnergy}";
+
             deckTracker.text = $"<color=#70f5ff>Draw Pile <color=#ffffff>/ <color=#ff9670>Discard Pile " +
                 $"\n\n<color=#70f5ff>{player.myDrawPile.Count} <color=#ffffff>/ <color=#ff9670>{player.myDiscardPile.Count}" +
                 $"\n({player.myExhaust.Count} exhausted)";
@@ -329,6 +344,11 @@ public class NewManager : MonoBehaviour
         else
         {
             stats.text = "";
+            currentCharacter.text = "Character";
+            health.text = "Health:";
+            moves.text = "Moves:";
+            energy.text = "Energy:";
+
             deckTracker.text = "";
             handContainer.transform.localPosition = new Vector3(10000, 10000, 0);
         }
