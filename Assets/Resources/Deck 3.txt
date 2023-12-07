@@ -4,7 +4,7 @@
       "card explanation displayed on the card itself",
       "atk, draw, dist, eng, mvmt, misc",
       "",
-      "18 cards in the deck",
+      "21 cards in the deck",
       "EP cost",
       "v/nv tagging",
       "health change",
@@ -21,6 +21,7 @@
       "intensity",
       "any extra condition needed to select a tile",
       "the function to call when card is played",
+      "the function to call when using the environmental",
       "the function to call at start of next round"
     ],
     [
@@ -45,6 +46,7 @@
       "intn",
       "selectable",
       "act",
+      "enviroAct",
       "nextAct"
     ],
     [
@@ -52,7 +54,7 @@
       "\"+2 Cards, -2 Cards.\"",
       "draw",
       "",
-      "1",
+      "2",
       "0",
       "nv",
       "",
@@ -207,6 +209,7 @@
       "0",
       "",
       "DrawCards/ChangeEP",
+      "",
       "ZeroEnergy/ZeroMovement"
     ],
     [
@@ -257,7 +260,7 @@
     ],
     [
       "Thrown Bottle",
-      "(DOES NOT WORK)Range 5. If the target tile is unoccupied, create a distraction (Intensity 3). If it is occupied by a guard, Stun 2 on that guard.",
+      "Range 5. If the target tile is unoccupied, create a distraction (Intensity 3). If it is occupied by a guard, Stun 2 on that guard.",
       "dist",
       "atk",
       "2",
@@ -268,15 +271,39 @@
       "",
       "",
       "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
+      "2",
       "5",
       "",
+      "",
+      "",
+      "",
+      "3",
+      "",
       "TargetDistraction&Damage"
+    ],
+    [
+      "Flashbang",
+      "Range 3, Area of Effect 3. With Delay 1, Stun 1 on everyone within area of effect. Intensity 7",
+      "atk",
+      "",
+      "2",
+      "1",
+      "nv",
+      "",
+      "1",
+      "",
+      "",
+      "",
+      "1",
+      "3",
+      "3",
+      "1",
+      "",
+      "",
+      "7",
+      "",
+      "ThrowEnvironmental",
+      "StunAll"
     ]
   ]
 }

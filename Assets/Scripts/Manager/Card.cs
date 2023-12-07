@@ -22,29 +22,30 @@ public class Card : MonoBehaviour, IPointerClickHandler
     [Foldout("Card stats", true)]
         [ReadOnly] public int energyCost;
         public enum CardType { Attack, Draw, Distraction, Energy, Movement, Misc, None };
-        [ReadOnly] public CardType typeOne;
-        [ReadOnly] public CardType typeTwo;
-        [ReadOnly] public bool violent;
+        [ReadOnly] public CardType typeOne { get; private set; }
+        [ReadOnly] public CardType typeTwo { get; private set; }
+        [ReadOnly] public bool violent { get; private set; }
 
-        [ReadOnly] int changeInHP;
-        [ReadOnly] int changeInMP;
-        [ReadOnly] int changeInEP;
-        [ReadOnly] int changeInDraw;
-        [ReadOnly] int chooseHand;
+        [ReadOnly] public int changeInHP { get; private set; }
+        [ReadOnly] public int changeInMP { get; private set; }
+        [ReadOnly] public int changeInEP { get; private set; }
+        [ReadOnly] public int changeInDraw { get; private set; }
+        [ReadOnly] public int chooseHand { get; private set; }
 
-        [ReadOnly] int stunDuration;
+        [ReadOnly] public int stunDuration { get; private set; }
         [ReadOnly] int range;
-        [ReadOnly] int areaOfEffect;
-        [ReadOnly] int delay;
+        [ReadOnly] public int areaOfEffect { get; private set; }
+        [ReadOnly] public int delay { get; private set; }
         [ReadOnly] int changeInWall;
         [ReadOnly] int burnDuration;
         [ReadOnly] int distractionIntensity;
 
         [ReadOnly] string selectCondition;
-        [ReadOnly] string effectsInOrder;
-        [ReadOnly] string nextRoundEffectsInOrder;
-        [ReadOnly] string costChangeCondition;
-        
+        [ReadOnly] public string effectsInOrder{ get; private set; }
+        [ReadOnly] public string enviroEffect { get; private set; }
+        [ReadOnly] public string nextRoundEffectsInOrder { get; private set; }
+        [ReadOnly] public string costChangeCondition{ get; private set; }
+
         [ReadOnly] public TMP_Text textName { get; private set; }
         [ReadOnly] public TMP_Text textCost { get; private set; }
         [ReadOnly] public TMP_Text textDescr { get; private set; }
@@ -54,14 +55,13 @@ public class Card : MonoBehaviour, IPointerClickHandler
         [ReadOnly] List<TileData> adjacentTilesWithPlayers = new();
         [ReadOnly] List<TileData> adjacentTilesWithGuards = new();
         [ReadOnly] List<TileData> adjacentTilesWithWalls = new();
-        [ReadOnly] List<TileData> GeneralTargetableTiles = new();
 
     [Foldout("Audio files", true)]
         public AK.Wwise.Event cardMove;
         public AK.Wwise.Event cardPlay;
         [SerializeField] AK.Wwise.Event addDistractionSound;
 
-    #endregion
+#endregion
 
 #region Setup
 
@@ -119,6 +119,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         distractionIntensity = data.intn;
 
         selectCondition = data.select;
+        enviroEffect = data.enviroaction;
         effectsInOrder = data.action;
         nextRoundEffectsInOrder = data.nextAct;
     }
@@ -237,7 +238,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     List<TileData> OccupiedAdjacent(TileData playerTile)
     {
-        List<TileData> occupiedTiles = new List<TileData>();
+        List<TileData> occupiedTiles = new();
         List<TileData> tilesInRange = NewManager.instance.CalculateReachableGrids(playerTile, range, false);
 
         foreach (TileData tile in tilesInRange)
@@ -311,6 +312,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         string divide = effects.Replace(" ", "");
         divide = divide.ToUpper().Trim();
         string[] methodsInStrings = divide.Split('/');
+        currentTarget = currentPlayer.currentTile;
 
         foreach (string nextMethod in methodsInStrings)
         {
@@ -332,7 +334,6 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     IEnumerator ResolveMethod(string methodName)
     {
-        currentTarget = currentPlayer.currentTile;
         methodName = methodName.Replace("]", "").Trim();
 
         if (methodName.Contains("CHOOSEBUTTON("))
@@ -397,8 +398,12 @@ public class Card : MonoBehaviour, IPointerClickHandler
                     yield return CalculateDistraction(currentPlayer.currentTile);
                     break;
                 case "TARGETDISTRACTION&DAMAGE":
-                    yield return ChooseTileLineOfSight();
-                    yield return AttackOrDistraction(GeneralTargetableTiles[0]);
+                    yield return ChooseTile();
+                    yield return AttackOrDistraction(currentTarget);
+                    break;
+                case "THROWENVIRONMENTAL":
+                    yield return ChooseTile();
+                    yield return CreateEnvironmental();
                     break;
                 default:
                     Debug.LogError($"{methodName} isn't a method");
@@ -445,8 +450,10 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     public IEnumerator CalculateDistraction(TileData source)
     {
+        //print("distracting for " + textDescr.text);
+        //print("Intensity:" + distractionIntensity);
         List<TileData> affectedTiles = NewManager.instance.CalculateIntensity(source, distractionIntensity, true);
-        print(affectedTiles.Count);
+        //print(affectedTiles.Count);
         if (affectedTiles.Count > 0) addDistractionSound.Post(source.gameObject);
         for (int i = 0; i < affectedTiles.Count; i++)
         {
@@ -481,146 +488,23 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
 #endregion
 
-#region Interacts With Cards
+#region Choose Options
 
-    internal IEnumerator DrawCards(PlayerEntity player)
+    IEnumerator ChooseGuard()
     {
-        player.PlusCards(changeInDraw);
-        
-        yield return null;
-    }
+        TileData targetGuard = null;
 
-    internal IEnumerator AllDrawCards(List<PlayerEntity> listOfPlayers)
-    {
-        CalculateDistraction(currentPlayer.currentTile);
-        foreach (PlayerEntity player in listOfPlayers)
+        if (adjacentTilesWithGuards.Count == 1)
         {
-            player.PlusCards(changeInDraw);
+            targetGuard = adjacentTilesWithGuards[0];
         }
-        yield return null;
-    }
-
-    internal IEnumerator ChooseDiscard(PlayerEntity player)
-    {
-        CalculateDistraction(player.currentTile);
-        for (int i = 0; i < chooseHand; i++)
+        else
         {
-            NewManager.instance.UpdateInstructions($"Discard a card from your hand ({chooseHand - i} more).");
-            if (player.myHand.Count >= 2)
-            {
-                NewManager.instance.WaitForDecision(player.myHand);
-                while (NewManager.instance.chosenCard == null)
-                    yield return null;
-                yield return player.DiscardFromHand(NewManager.instance.chosenCard);
-            }
-            else if (player.myHand.Count == 1)
-            {
-                yield return player.DiscardFromHand(player.myHand[0]);
-            }
-            NewManager.instance.UpdateStats(currentPlayer);
-        }
-    }
-
-    internal IEnumerator ChooseExhaust(PlayerEntity player)
-    {
-        CalculateDistraction(player.currentTile);
-        for (int i = 0; i < chooseHand; i++)
-        {
-            NewManager.instance.UpdateInstructions($"Exhaust a card from your hand ({chooseHand - i} more).");
-            if (player.myHand.Count >= 2)
-            {
-                NewManager.instance.WaitForDecision(player.myHand);
-                while (NewManager.instance.chosenCard == null)
-                    yield return null;
-                yield return player.ExhaustFromHand(NewManager.instance.chosenCard);
-            }
-            else if (player.myHand.Count == 1)
-            {
-                yield return player.ExhaustFromHand(player.myHand[0]);
-            }
-            NewManager.instance.UpdateStats(currentPlayer);
-        }
-    }
-
-    internal IEnumerator DiscardHand(PlayerEntity player)
-    {
-        CalculateDistraction(player.currentTile);
-        while (player.myHand.Count > 0)
-        {
-            yield return NewManager.Wait(0.05f);
-            StartCoroutine(player.DiscardFromHand(player.myHand[0]));
-        }
-    }
-
-#endregion
-
-#region Interacts With Stats
-
-    internal IEnumerator ChangeCost(PlayerEntity player)
-    {
-        CalculateDistraction(player.currentTile);
-        player.costChange.Add(this);
-        yield return null;
-    }
-
-    internal IEnumerator ChangeCostTwoPlus(PlayerEntity player)
-    {
-        CalculateDistraction(player.currentTile);
-        costChangeCondition = "COSTS 2+";
-        yield return ChangeCost(player);
-    }
-
-    internal IEnumerator ChangeHealth(PlayerEntity player)
-    {
-        CalculateDistraction(player.currentTile);
-        NewManager.instance.ChangeHealth(player, changeInHP);
-        yield return null;
-    }
-
-    internal IEnumerator ChangeEnergy(PlayerEntity player)
-    {
-        CalculateDistraction(player.currentTile);
-        NewManager.instance.ChangeEnergy(player, changeInEP);
-        yield return null;
-    }
-
-    internal IEnumerator ZeroEnergy(PlayerEntity player)
-    {
-        CalculateDistraction(player.currentTile);
-        NewManager.instance.SetEnergy(player, 0);
-        yield return null;
-    }
-
-    internal IEnumerator ChangeMovement(PlayerEntity player)
-    {
-        CalculateDistraction(player.currentTile);
-        NewManager.instance.ChangeMovement(player, changeInMP);
-        yield return null;
-    }
-
-    internal IEnumerator ZeroMovement(PlayerEntity player)
-    {
-        CalculateDistraction(player.currentTile);
-        NewManager.instance.SetMovement(player, 0);
-        yield return null;
-    }
-
-    #endregion
-
-    #region Interacts With Entities
-
-    IEnumerator ChooseTileLineOfSight()
-    {
-        GeneralTargetableTiles.Clear();
-        List<HashSet<Vector2Int>> DetectLines = new List<HashSet<Vector2Int>>();
-        HashSet<Vector2Int> SpacesToCheck = new HashSet<Vector2Int>();
-
-        //creating each of the lines of sight (seperated by 5 degrees) and adding them to a list of lines
-        for (int i = 0; i < 360; i += 10)
-        {
-            float lineAngle = (i * Mathf.Deg2Rad);
-            Vector2 newVector = new Vector2(Mathf.Cos(lineAngle), Mathf.Sin(lineAngle));
-            DetectLines.Add(NewManager.instance.line(currentPlayer.currentTile.gridPosition, currentPlayer.currentTile.gridPosition + Vector2Int.RoundToInt(newVector.normalized * range)));
+            NewManager.instance.UpdateInstructions("Choose a guard in range.");
+            NewManager.instance.WaitForDecision(adjacentTilesWithGuards);
+            while (NewManager.instance.chosenTile == null)
+                yield return null;
+            targetGuard = NewManager.instance.chosenTile;
         }
 
         //running through each of the lines in the list, seeing how far they can look 
@@ -718,6 +602,150 @@ public class Card : MonoBehaviour, IPointerClickHandler
         adjacentTilesWithWalls.Add(targetWall);
     }
 
+    IEnumerator ChooseTile()
+    {
+        List<TileData> tilesInRange = NewManager.instance.CalculateReachableGrids(currentPlayer.currentTile, range, false);
+        NewManager.instance.UpdateInstructions("Choose a tile in range.");
+        NewManager.instance.WaitForDecision(tilesInRange);
+        while (NewManager.instance.chosenTile == null)
+            yield return null;
+        currentTarget = NewManager.instance.chosenTile;
+    }
+
+#endregion
+
+#region Interacts With Cards
+
+    internal IEnumerator DrawCards(PlayerEntity player)
+    {
+        player.PlusCards(changeInDraw);      
+        yield return null;
+    }
+
+    internal IEnumerator AllDrawCards(List<PlayerEntity> listOfPlayers)
+    {
+        foreach (PlayerEntity player in listOfPlayers)
+        {
+            player.PlusCards(changeInDraw);
+        }
+        yield return null;
+    }
+
+    internal IEnumerator ChooseDiscard(PlayerEntity player)
+    {
+        for (int i = 0; i < chooseHand; i++)
+        {
+            NewManager.instance.UpdateInstructions($"Discard a card from your hand ({chooseHand - i} more).");
+            if (player.myHand.Count >= 2)
+            {
+                NewManager.instance.WaitForDecision(player.myHand);
+                while (NewManager.instance.chosenCard == null)
+                    yield return null;
+                yield return player.DiscardFromHand(NewManager.instance.chosenCard);
+            }
+            else if (player.myHand.Count == 1)
+            {
+                yield return player.DiscardFromHand(player.myHand[0]);
+            }
+            NewManager.instance.UpdateStats(currentPlayer);
+        }
+    }
+
+    internal IEnumerator ChooseExhaust(PlayerEntity player)
+    {
+        for (int i = 0; i < chooseHand; i++)
+        {
+            NewManager.instance.UpdateInstructions($"Exhaust a card from your hand ({chooseHand - i} more).");
+            if (player.myHand.Count >= 2)
+            {
+                NewManager.instance.WaitForDecision(player.myHand);
+                while (NewManager.instance.chosenCard == null)
+                    yield return null;
+                yield return player.ExhaustFromHand(NewManager.instance.chosenCard);
+            }
+            else if (player.myHand.Count == 1)
+            {
+                yield return player.ExhaustFromHand(player.myHand[0]);
+            }
+            NewManager.instance.UpdateStats(currentPlayer);
+        }
+    }
+
+    internal IEnumerator DiscardHand(PlayerEntity player)
+    {
+        while (player.myHand.Count > 0)
+        {
+            yield return NewManager.Wait(0.05f);
+            StartCoroutine(player.DiscardFromHand(player.myHand[0]));
+        }
+    }
+
+#endregion
+
+#region Interacts With Stats
+
+    internal IEnumerator ChangeCost(PlayerEntity player)
+    {
+        player.costChange.Add(this);
+        yield return null;
+    }
+
+    internal IEnumerator ChangeCostTwoPlus(PlayerEntity player)
+    {
+        costChangeCondition = "COSTS 2+";
+        yield return ChangeCost(player);
+    }
+
+    internal IEnumerator ChangeHealth(PlayerEntity player)
+    {
+        NewManager.instance.ChangeHealth(player, changeInHP);
+        yield return null;
+    }
+
+    internal IEnumerator ChangeEnergy(PlayerEntity player)
+    {
+        NewManager.instance.ChangeEnergy(player, changeInEP);
+        yield return null;
+    }
+
+    internal IEnumerator ZeroEnergy(PlayerEntity player)
+    {
+        NewManager.instance.SetEnergy(player, 0);
+        yield return null;
+    }
+
+    internal IEnumerator ChangeMovement(PlayerEntity player)
+    {
+        NewManager.instance.ChangeMovement(player, changeInMP);
+        yield return null;
+    }
+
+    internal IEnumerator ZeroMovement(PlayerEntity player)
+    {
+        NewManager.instance.SetMovement(player, 0);
+        yield return null;
+    }
+
+#endregion
+
+#region Interacts With Entities
+
+    IEnumerator AttackOrDistraction(TileData target)
+    {
+        if (target.myEntity != null)
+        {
+            if (target.myEntity.CompareTag("Enemy"))
+            {
+                Debug.Log("stunned guard");
+                yield return StunGuard(target.myEntity.GetComponent<GuardEntity>());
+            }
+        }
+        else
+        {
+            yield return CalculateDistraction(target);
+        }
+    }
+
     internal IEnumerator AttackWall(WallEntity wall)
     {
         wall.AffectWall(changeInWall);
@@ -725,31 +753,8 @@ public class Card : MonoBehaviour, IPointerClickHandler
         yield return null;
     }
 
-    IEnumerator ChooseGuard()
-    {
-        TileData targetGuard = null;
-
-        if (adjacentTilesWithGuards.Count == 1)
-        {
-            targetGuard = adjacentTilesWithGuards[0];
-        }
-        else
-        {
-            NewManager.instance.UpdateInstructions("Choose a guard in range.");
-            NewManager.instance.WaitForDecision(adjacentTilesWithGuards);
-            while (NewManager.instance.chosenTile == null)
-                yield return null;
-            targetGuard = NewManager.instance.chosenTile;
-        }
-
-        adjacentTilesWithWalls.Clear();
-        adjacentTilesWithWalls.Add(targetGuard);
-        Debug.Log(targetGuard.name);
-    }
-
     IEnumerator SwapGuard(GuardEntity guard)
     {
-        yield return null;
         TileData guardsOriginalTile = guard.currentTile;
         TileData playersOriginalTile = currentPlayer.currentTile;
 
@@ -766,6 +771,17 @@ public class Card : MonoBehaviour, IPointerClickHandler
         currentTarget = guard.currentTile;
     }
 
-    #endregion
+    IEnumerator CreateEnvironmental()
+    {
+        EnvironmentalEntity newEnviro = NewManager.instance.CreateEnvironmental();
+        newEnviro.currentTile = currentTarget;
+        newEnviro.name = this.name;
+        newEnviro.card = this;
+        newEnviro.delay = delay;
+        NewManager.instance.listOfEnvironmentals.Add(newEnviro);
+        yield return null;
+    }
+
+#endregion
 
 }

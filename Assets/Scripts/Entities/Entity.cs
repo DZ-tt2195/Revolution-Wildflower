@@ -22,7 +22,8 @@ public class Entity : MonoBehaviour
     void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        spriteRenderer.sortingOrder = 1;
+        if (spriteRenderer != null)
+            spriteRenderer.sortingOrder = 1;
         lineRenderer = GetComponent<LineRenderer>();
     }
 
