@@ -507,56 +507,6 @@ public class Card : MonoBehaviour, IPointerClickHandler
             targetGuard = NewManager.instance.chosenTile;
         }
 
-        //running through each of the lines in the list, seeing how far they can look 
-        for (int i = 0; i < DetectLines.Count; i++)
-        {
-            foreach (Vector2Int point in DetectLines[i])
-            {
-                TileData TileToAdd = NewManager.instance.FindTile(point);
-                if (TileToAdd == null)
-                {
-                    break;
-                }
-                if (TileToAdd.myEntity != null)
-                {
-                    if (TileToAdd.myEntity.Occlusion && point != currentPlayer.currentTile.gridPosition)
-                    {
-                        SpacesToCheck.Add(point);
-                        break;
-                    }
-                }
-                SpacesToCheck.Add(point);
-            }
-        }
-
-        foreach (Vector2Int point in SpacesToCheck)
-        {
-            GeneralTargetableTiles.Add(NewManager.instance.FindTile(point));
-        }
-        GeneralTargetableTiles.RemoveAll(item => item == null); //delete all tiles that are null
-
-
-        NewManager.instance.UpdateInstructions("Choose a tile in range.");
-        NewManager.instance.WaitForDecision(GeneralTargetableTiles);
-        while (NewManager.instance.chosenTile == null)
-        {
-            yield return null;
-        }
-        GeneralTargetableTiles.Clear();
-        GeneralTargetableTiles.Add(NewManager.instance.chosenTile);
-    }
-
-    IEnumerator AttackOrDistraction(TileData target)
-    {
-        currentTarget = target;
-        if (target.myEntity != null)
-        {
-            if (target.myEntity.tag == "Enemy")
-            {
-                yield return StunGuard(target.myEntity.GetComponent<GuardEntity>());
-            }
-        }
-        yield return null;
     }
 
     IEnumerator ChoosePlayer()

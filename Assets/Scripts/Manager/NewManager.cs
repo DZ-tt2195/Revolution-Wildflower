@@ -107,13 +107,13 @@ public class NewManager : MonoBehaviour
         instance = this;
 
         turnAlertBar.alpha = 0;
-        playerStats = GameObject.Find("Player Stats").transform;
+        //playerStats = GameObject.Find("Player Stats").transform;
         informationImage = GameObject.Find("Information Image").transform;
         stats = informationImage.GetChild(0).GetComponent<TMP_Text>();
-        currentCharacter = playerStats.GetChild(0).GetComponent<TMP_Text>();
-        health = playerStats.GetChild(1).GetComponent<TMP_Text>();
-        moves = playerStats.GetChild(2).GetComponent<TMP_Text>();
-        energy = playerStats.GetChild(3).GetComponent<TMP_Text>();
+        //currentCharacter = playerStats.GetChild(0).GetComponent<TMP_Text>();
+        //health = playerStats.GetChild(1).GetComponent<TMP_Text>();
+        //moves = playerStats.GetChild(2).GetComponent<TMP_Text>();
+        //energy = playerStats.GetChild(3).GetComponent<TMP_Text>();
         instructions = informationImage.GetChild(1).GetComponent<TMP_Text>();
         deckTracker = GameObject.Find("Deck Tracker").GetComponent<TMP_Text>();
 
@@ -371,10 +371,10 @@ public class NewManager : MonoBehaviour
                 $"| <color=#ecff59>{player.movementLeft} Movement <color=#ffffff>" +
                 $"| <color=#59fff4>{player.myEnergy} Energy <color=#ffffff>";
 
-            currentCharacter.text = $"{player.name}";
-            health.text = $"Health: {player.health}";
-            moves.text = $"Moves: {player.movementLeft}";
-            energy.text = $"Energy: {player.myEnergy}";
+            //currentCharacter.text = $"{player.name}";
+            //health.text = $"Health: {player.health}";
+            //moves.text = $"Moves: {player.movementLeft}";
+            //energy.text = $"Energy: {player.myEnergy}";
 
             deckTracker.text = $"<color=#70f5ff>Draw Pile <color=#ffffff>/ <color=#ff9670>Discard Pile " +
                 $"\n\n<color=#70f5ff>{player.myDrawPile.Count} <color=#ffffff>/ <color=#ff9670>{player.myDiscardPile.Count}" +
@@ -385,10 +385,10 @@ public class NewManager : MonoBehaviour
         else
         {
             stats.text = "";
-            currentCharacter.text = "Character";
-            health.text = "Health:";
-            moves.text = "Moves:";
-            energy.text = "Energy:";
+            //currentCharacter.text = "Character";
+            //health.text = "Health:";
+            //moves.text = "Moves:";
+            //energy.text = "Energy:";
 
             deckTracker.text = "";
             handContainer.transform.localPosition = new Vector3(10000, 10000, 0);
@@ -670,7 +670,7 @@ public class NewManager : MonoBehaviour
 
             currentTurn = TurnSystem.Resolving;
             yield return player.PlayCard(chosenCard, true);
-            BackToStart();
+            BackToStart(false);
         }
     }
 
