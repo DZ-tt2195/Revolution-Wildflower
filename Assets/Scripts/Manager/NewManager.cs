@@ -172,6 +172,7 @@ public class NewManager : MonoBehaviour
                             thisTileEntity = Instantiate(objectivePrefab, nextTile.transform);
                             thisTileEntity.name = numberPlusAddition[1];
                             ObjectiveEntity defaultObjective = thisTileEntity.GetComponent<ObjectiveEntity>();
+                            defaultObjective.objective = numberPlusAddition[2];
                             listOfObjectives.Add(defaultObjective);
                             break;
 
