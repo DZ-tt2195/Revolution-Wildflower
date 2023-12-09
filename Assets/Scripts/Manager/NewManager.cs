@@ -384,7 +384,7 @@ public class NewManager : MonoBehaviour
             if (player.myPosition * -2000 != handContainer.transform.localPosition.x)
             {
                 player.MyTurn();
-                handContainer.transform.localPosition = new Vector3(player.myPosition * -2000, -75, 0);
+                handContainer.transform.localPosition = new Vector3(player.myPosition * -2000, 0, 0);
             }
         }
         else
@@ -493,6 +493,8 @@ public class NewManager : MonoBehaviour
     public void FocusOnPlayer(PlayerEntity player)
     {
         Camera.main.transform.position = new Vector3(player.transform.position.x, Camera.main.transform.position.y, player.transform.position.z);
+        if (currentTurn == TurnSystem.You)
+            StartCoroutine(ChooseMovePlayer(player));
     }
 
     public void ReceiveChoice(Card card)
@@ -610,6 +612,7 @@ public class NewManager : MonoBehaviour
         {
             characterSelectSound.Post(currentPlayer.gameObject);
         }
+
         lastSelectedPlayer = currentPlayer;
         AkSoundEngine.SetState("Character", currentPlayer.name);
 
