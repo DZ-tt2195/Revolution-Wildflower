@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using TMPro;
 using MyBox;
 using UnityEngine.EventSystems;
+using UnityEditor.SceneManagement;
 
 public class Card : MonoBehaviour, IPointerClickHandler
 {
@@ -18,6 +19,14 @@ public class Card : MonoBehaviour, IPointerClickHandler
         [ReadOnly] public Image border;
         [ReadOnly] public Button button;
         [SerializeField] Collector collector;
+        [Tooltip("the front of a card")][SerializeField] Sprite cardFront;
+        [Tooltip("the back of a card")][SerializeField] Sprite cardBack;
+
+    [Foldout("Texts", true)]
+        public CanvasGroup canvasgroup;
+        public TMP_Text textName;
+        public TMP_Text textCost;
+        public TMP_Text textDescr;
 
     [Foldout("Card stats", true)]
         [ReadOnly] public int energyCost;
@@ -46,10 +55,6 @@ public class Card : MonoBehaviour, IPointerClickHandler
         [ReadOnly] public string nextRoundEffectsInOrder { get; private set; }
         [ReadOnly] public string costChangeCondition{ get; private set; }
 
-        [ReadOnly] public TMP_Text textName { get; private set; }
-        [ReadOnly] public TMP_Text textCost { get; private set; }
-        [ReadOnly] public TMP_Text textDescr { get; private set; }
-
         [ReadOnly] PlayerEntity currentPlayer;
         [ReadOnly] TileData currentTarget;
         [ReadOnly] List<TileData> adjacentTilesWithPlayers = new();
@@ -71,10 +76,6 @@ public class Card : MonoBehaviour, IPointerClickHandler
         border = this.transform.GetChild(0).GetComponent<Image>();
         button = this.GetComponent<Button>();
         button.onClick.AddListener(SendMe);
-
-        textName = this.transform.GetChild(1).GetComponent<TMP_Text>();
-        textCost = this.transform.GetChild(2).GetComponent<TMP_Text>();
-        textDescr = this.transform.GetChild(3).GetComponent<TMP_Text>();
     }
 
     void SendMe()
@@ -142,30 +143,6 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
 #region Play Condition
 
-    public void EnableCard()
-    {
-        enableBorder = true;
-        button.interactable = true;
-    }
-
-    public void DisableCard()
-    {
-        enableBorder = false;
-        button.interactable = false;
-    }
-
-    private void FixedUpdate()
-    {
-        if (border != null && enableBorder)
-        {
-            border.color = new Color(1, 1, 1, NewManager.instance.opacity);
-        }
-        else if (border != null && !enableBorder)
-        {
-            border.color = new Color(1, 1, 1, 0);
-        }
-    }
-
     int ApplyCostChange()
     {
         int changedEnergyCost = energyCost;
@@ -182,7 +159,6 @@ public class Card : MonoBehaviour, IPointerClickHandler
     public bool CanPlay(PlayerEntity player)
     {
         currentPlayer = player;
-        image.color = Color.white;
 
         if (player.myEnergy >= ApplyCostChange())
         {
@@ -194,17 +170,14 @@ public class Card : MonoBehaviour, IPointerClickHandler
             {
                 if (!CheckIfCanPlay(nextMethod))
                 {
-                    image.color = Color.gray;
                     return false;
                 }
             }
 
-            image.color = Color.white;
             return true;
         }
         else
         {
-            image.color = Color.gray;
             return false;
         }
     }
@@ -292,6 +265,111 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
         adjacentTilesWithWalls = wallsInRange;
         return wallsInRange;
+    }
+
+    #endregion
+
+#region Animations
+
+    public void HideCard()
+    {
+        image.sprite = cardBack;
+        canvasgroup.alpha = 0;
+    }
+
+    public IEnumerator RevealCard(float totalTime)
+    {
+        if (image.sprite != cardFront)
+        {
+            transform.localEulerAngles = new Vector3(0, 0, 0);
+            float elapsedTime = 0f;
+
+            Vector3 originalRot = this.transform.localEulerAngles;
+            Vector3 newRot = new(0, 90, 0);
+
+            while (elapsedTime < totalTime)
+            {
+                this.transform.localEulerAngles = Vector3.Lerp(originalRot, newRot, elapsedTime / totalTime);
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+
+            image.sprite = cardFront;
+            canvasgroup.alpha = 1;
+            elapsedTime = 0f;
+
+            while (elapsedTime < totalTime)
+            {
+                this.transform.localEulerAngles = Vector3.Lerp(newRot, originalRot, elapsedTime / totalTime);
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+
+            this.transform.localEulerAngles = originalRot;
+        }
+    }
+
+    public IEnumerator MoveCard(Vector2 newPos, Vector2 finalPos, Vector3 newRot, float waitTime)
+    {
+        float elapsedTime = 0;
+        Vector2 originalPos = this.transform.localPosition;
+        Vector3 originalRot = this.transform.localEulerAngles;
+
+        while (elapsedTime < waitTime)
+        {
+            this.transform.localPosition = Vector2.Lerp(originalPos, newPos, elapsedTime / waitTime);
+            this.transform.localEulerAngles = Vector3.Lerp(originalRot, newRot, elapsedTime / waitTime);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        this.transform.localPosition = finalPos;
+    }
+
+    public void EnableCard()
+    {
+        enableBorder = true;
+        image.color = Color.white;
+        button.interactable = true;
+    }
+
+    public void DisableCard()
+    {
+        enableBorder = false;
+        image.color = Color.gray;
+        button.interactable = false;
+    }
+
+    void FixedUpdate()
+    {
+        if (border != null && enableBorder)
+            border.SetAlpha(NewManager.instance.opacity);
+        else if (border != null && !enableBorder)
+            border.SetAlpha(0);
+    }
+
+    public IEnumerator FadeAway(float totalTime)
+    {
+        float elapsedTime = 0;
+        while (elapsedTime < totalTime)
+        {
+            this.image.SetAlpha(1f-(elapsedTime/totalTime));
+            this.canvasgroup.alpha = 1f - (elapsedTime / totalTime);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        this.image.SetAlpha(0);
+        this.canvasgroup.alpha = 0;
+
+        StartCoroutine(Unfade());
+    }
+
+    IEnumerator Unfade()
+    {
+        yield return NewManager.Wait(5f);
+        image.SetAlpha(0);
+        canvasgroup.alpha = 1;
     }
 
 #endregion

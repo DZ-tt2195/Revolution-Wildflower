@@ -381,7 +381,11 @@ public class NewManager : MonoBehaviour
                 $"\n\n<color=#70f5ff>{player.myDrawPile.Count} <color=#ffffff>/ <color=#ff9670>{player.myDiscardPile.Count}" +
                 $"\n({player.myExhaust.Count} exhausted)";
 
-            handContainer.transform.localPosition = new Vector3(player.myPosition * -2000, -75, 0);
+            if (player.myPosition * -2000 != handContainer.transform.localPosition.x)
+            {
+                player.MyTurn();
+                handContainer.transform.localPosition = new Vector3(player.myPosition * -2000, -75, 0);
+            }
         }
         else
         {
@@ -539,6 +543,7 @@ public class NewManager : MonoBehaviour
 
     IEnumerator StartPlayerTurn()
     {
+        UpdateStats(null);
         yield return Wait(0.5f);
         foreach(Card card in futureEffects)
             yield return card.NextRoundEffect();
