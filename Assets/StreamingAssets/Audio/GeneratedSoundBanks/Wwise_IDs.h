@@ -32,6 +32,7 @@ namespace AK
         static const AkUniqueID PLAY_OFFICEAMBIENTNOISE = 4098207900U;
         static const AkUniqueID PLAY_UI_BUTTON_HOVER = 310530060U;
         static const AkUniqueID PLAY_VIEW_DECK = 510162235U;
+        static const AkUniqueID STOP_LEVELMUSIC = 2518039975U;
         static const AkUniqueID STOP_OFFICEAMBIENTNOISE = 3265032750U;
     } // namespace EVENTS
 

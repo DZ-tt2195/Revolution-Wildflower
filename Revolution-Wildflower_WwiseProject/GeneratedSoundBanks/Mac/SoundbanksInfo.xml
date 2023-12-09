@@ -32,7 +32,7 @@
 				</StateGroup>
 			</StateGroups>
 		</SoundBank>
-		<SoundBank Id="1605876511" Type="User" Language="SFX" Hash="{4692C099-A1EF-10D9-B707-7AAE3776B766}">
+		<SoundBank Id="1605876511" Type="User" Language="SFX" Hash="{11A84998-0D58-1B0D-615C-D1E40354BE80}">
 			<ShortName>SFX_Bank</ShortName>
 			<Path>SFX_Bank.bnk</Path>
 			<Media>
@@ -256,6 +256,7 @@
 						<MediaRef Id="997200349"/>
 					</MediaRefs>
 				</Event>
+				<Event Id="2518039975" Name="Stop_LevelMusic" MaxAttenuation="0" DurationType="OneShot" DurationMin="0" DurationMax="0"/>
 				<Event Id="3265032750" Name="Stop_OfficeAmbientNoise" MaxAttenuation="0" DurationType="OneShot" DurationMin="0" DurationMax="0"/>
 			</Events>
 			<StateGroups>
@@ -270,5 +271,5 @@
 			</StateGroups>
 		</SoundBank>
 	</SoundBanks>
-	<FileHash>{DF1DB39B-A26C-E726-EACD-48C92D657CE3}</FileHash>
+	<FileHash>{531FFC49-ECBB-EFE7-371A-E6DE5554C796}</FileHash>
 </SoundBanksInfo>

@@ -6,6 +6,8 @@ public class SoundManager : MonoBehaviour
 {
     public static SoundManager instance;
 
+    public AK.Wwise.Bank sfxBank;
+
     public AK.Wwise.Event playing { get; private set; }
     void Awake()
     {
@@ -13,6 +15,8 @@ public class SoundManager : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(this.gameObject);
+
+            sfxBank.Load();
         }
         else
         {
