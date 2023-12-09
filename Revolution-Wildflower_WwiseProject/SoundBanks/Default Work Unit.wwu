@@ -9,6 +9,7 @@
 						<ObjectRef Name="Play_CharacterFootsteps" ID="{93C9C64A-F1E8-40BC-A3D6-A05848F84CA7}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Play_guard_investigate" ID="{E3FC8F85-EF46-40EB-BFA9-6A19B56AE4F5}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Play_view_deck" ID="{548F694A-ADB7-4185-85E0-3AA610DB5976}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Stop_LevelMusic" ID="{DC389521-EE4B-41CB-89C5-DA90186B6CB3}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Play_card_move" ID="{8830F802-91A4-43E2-BD77-DB583AB8663B}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Play_OfficeAmbientNoise" ID="{139C58A2-9C3B-43F6-88D7-6B1CC85E4D78}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Play_dialogue_text_write" ID="{78E1AFE8-F3D5-4419-96AB-9F44F825373D}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
