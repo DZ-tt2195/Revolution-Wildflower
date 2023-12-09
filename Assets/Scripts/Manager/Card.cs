@@ -447,8 +447,14 @@ public class Card : MonoBehaviour, IPointerClickHandler
                 case "CHANGEEP":
                     yield return ChangeEnergy(currentPlayer);
                     break;
+                case "ZEROENERGY":
+                    yield return ZeroEnergy(currentPlayer);
+                    break;
                 case "CHANGEMP":
                     yield return ChangeMovement(currentPlayer);
+                    break;
+                case "ZEROMOVEMENT":
+                    yield return ZeroMovement(currentPlayer);
                     break;
                 case "DISCARDHAND":
                     yield return DiscardHand(currentPlayer);
@@ -803,6 +809,9 @@ public class Card : MonoBehaviour, IPointerClickHandler
     {
         EnvironmentalEntity newEnviro = NewManager.instance.CreateEnvironmental();
         newEnviro.currentTile = currentTarget;
+        newEnviro.spriteRenderer.sortingOrder = 10;
+        newEnviro.transform.SetParent(newEnviro.currentTile.transform);
+        newEnviro.transform.localPosition = new Vector3(0, 1, 0);
         newEnviro.name = this.name;
         newEnviro.card = this;
         newEnviro.delay = delay;
