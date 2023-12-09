@@ -1,4 +1,3 @@
-//modified from code by Teemu Ikonen
 using System.Linq;
 using UnityEngine;
 using System;
@@ -8,12 +7,6 @@ using System.Text.RegularExpressions;
 
 public class TSVReader
 {
-	/// <summary>
-	/// Reads a TSV from a file in the Resources folder for use in card data generation
-	/// </summary>
-	/// <param name="file">The path of the file to load</param>
-	/// <param name="headerLines">The number of lines at the top to skip over as headers</param>
-	/// <returns>A jagged array of strings to use in card scripts</returns>
 	public static string[][] ReadCards(string file)
 	{
 		TextAsset data = Resources.Load(file) as TextAsset;
@@ -31,11 +24,6 @@ public class TSVReader
 		return list;
 	}
 
-	/// <summary>
-	/// Reads a TSV from a file in the Resources folder for use in level generation
-	/// </summary>
-	/// <param name="file">The path of the file to load</param>
-	/// <returns>A 2D array of strings to be translated into the level grid</returns>
 	public static string[,] ReadLevel(string file)
     {
         TextAsset data = Resources.Load(file) as TextAsset;

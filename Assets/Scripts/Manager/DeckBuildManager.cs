@@ -18,7 +18,7 @@ public class DeckBuildManager : MonoBehaviour
     Transform keepDecks;
     Button playGameButton;
 
-    [SerializeField] AK.Wwise.Event cardMove;
+    [SerializeField] AK.Wwise.Event viewDeckSound;
 
     private void Awake()
     {
@@ -107,6 +107,7 @@ public class DeckBuildManager : MonoBehaviour
     public void ViewDeck(int character)
     {
         int deckNumber = listOfDropdowns[character].value;
+        viewDeckSound.Post(gameObject);
         keepDecks.transform.localPosition = new Vector3(deckNumber * 2000, 0, 0);
     }
 }

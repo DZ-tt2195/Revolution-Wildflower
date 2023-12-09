@@ -22,6 +22,10 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private Animator portraitAnimator;
     [SerializeField]private Animator layoutAnimator;
 
+    [Header("Sounds")]
+    [SerializeField] AK.Wwise.Event textCrawlSound;
+    [SerializeField] AK.Wwise.Event textboxStopSound;
+
     private Story currentStory;
 
     public bool dialogueIsPlaying { get; private set; }
@@ -105,6 +109,8 @@ public class DialogueManager : MonoBehaviour
             dialogueIsPlaying = false;
             dialoguePanel.SetActive(false);
             dialogueText.text = "";
+
+            textboxStopSound.Post(gameObject);
         }
 
     private IEnumerator DisplayLine(string line)
@@ -144,6 +150,7 @@ public class DialogueManager : MonoBehaviour
             {
                 dialogueText.maxVisibleCharacters++;
                 //dialogueText.text += letter;
+                textCrawlSound.Post(gameObject);
                 yield return new WaitForSeconds(typingSpeed);
             }
         }

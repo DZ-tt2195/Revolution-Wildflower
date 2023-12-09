@@ -23,6 +23,7 @@ public class TileData : MonoBehaviour
 
     [Foldout("Colors", true)]
         [Tooltip("Tile's sprite renderer")] SpriteRenderer myRenderer;
+      [Tooltip("Tile's materal")] [SerializeField] Renderer renderer3d;
         [Tooltip("Glowing border's sprite renderer")] SpriteRenderer border;
         [Tooltip("color used for unselected moused over tiles")][SerializeField] Color mouseOverColor = new Color(0.9f,0.9f,0.9f,1);
         [Tooltip("color used for selected tiles")][SerializeField] Color SelectedColor;
@@ -70,8 +71,8 @@ public class TileData : MonoBehaviour
 
     public IEnumerator NoiseFlash(int distance)
     {
-        print("noiseflash at distance " + distance);
-        print("Time to flash" + AlertDelay * distance);
+        //print("noiseflash at distance " + distance);
+        //print("Time to flash" + AlertDelay * distance);
         yield return NewManager.Wait(AlertDelay * distance);
         noiseThrough = true;
         yield return NewManager.Wait(BaseAlertDelay + AlertDelay * distance);
@@ -90,7 +91,7 @@ public class TileData : MonoBehaviour
 
     private void OnMouseOver()
     {
-        if (clickable && Input.GetKeyDown(KeyCode.Mouse0))
+        if (clickable && Input.GetKeyDown(KeyCode.Mouse0) && Input.mousePosition.y > 335)
         {
             NewManager.instance.selectedTile = this;
             if (choosable)
@@ -101,8 +102,12 @@ public class TileData : MonoBehaviour
             {
                 if (myEntity.CompareTag("Player"))
                 {
-                    NewManager.instance.StopAllCoroutines();
-                    StartCoroutine(NewManager.instance.ChooseMovePlayer(this));
+                    PlayerEntity player = myEntity.GetComponent<PlayerEntity>();
+                    if (player.stunned == 0)
+                    {
+                        NewManager.instance.StopAllCoroutines();
+                        StartCoroutine(NewManager.instance.ChooseMovePlayer(player));
+                    }
                 }
             }
         }
@@ -122,7 +127,7 @@ public class TileData : MonoBehaviour
 
     public void SurveillanceState(bool underSurveillance)
     {
-        myRenderer.color = (underSurveillance) ? Color.red : Color.gray;
+        renderer3d.material.color = (underSurveillance) ? Color.red : Color.gray;
     }
 
     private void Update()

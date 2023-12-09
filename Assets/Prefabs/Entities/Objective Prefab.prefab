@@ -69,7 +69,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentTile: {fileID: 0}
-  tileOffset: {x: 0, y: 0, z: 0}
+  tileOffset: {x: 0, y: 1.5, z: 0}
   spriteRenderer: {fileID: 0}
   lineRenderer: {fileID: 0}
   MoveCost: 999

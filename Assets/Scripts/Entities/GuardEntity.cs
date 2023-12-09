@@ -9,34 +9,43 @@ public class GuardEntity : MovingEntity
 {
     enum Alert { Patrol, Attack, Persue };
 
-    [Foldout("Guard Entity", true)]
-    [Tooltip("Tiles this is searching")] List<TileData> inDetection = new List<TileData>();
-    [Tooltip("Pauses between movement")] float movePauseTime = 0.25f;
-    [Tooltip("How far this can see")] [SerializeField] int DetectionRangePatrol = 3;
-    [Tooltip("half their field of view for detection (MUST BE A MULTIPLE OF 5)")] [SerializeField] int DetectionAngle = 30;
-    [Tooltip("Turns which this does nothing")] [ReadOnly] public int stunned = 0;
-    [Tooltip("Times this attacks")] [ReadOnly] public int attacksPerTurn = 1;
-    [Tooltip("Current number of attacks")] [ReadOnly] int attacksLeft = 0;
-    [Tooltip("Current Target to attack & persue")] [ReadOnly] public PlayerEntity CurrentTarget;
-    [Tooltip("State of a guard's alert")] Alert alertStatus = 0;
-    [Tooltip("Guard Range")] int AttackRange = 1;
-    [Tooltip("list of patrol positions")] public List<Vector2Int> PatrolPoints = new List<Vector2Int>();
-    [Tooltip("current patrol target")] private int PatrolTarget = 0;
-    [Tooltip("List of distraction positions")] public List<Vector2Int> DistractionPoints = new List<Vector2Int>();
+    [Foldout("Guard Entity",true)]
+    [Header("Attacking")]
+        [Tooltip("Times this attacks")] [ReadOnly] public int attacksPerTurn = 1;
+        [Tooltip("Current number of attacks")] [ReadOnly] int attacksLeft = 0;
+        [Tooltip("Current Target to attack & persue")] [ReadOnly] public PlayerEntity CurrentTarget;
+        [Tooltip("Guard Range")] int AttackRange = 1;
+
+    [Header("Detection")]
+        [Tooltip("Tiles this is searching")] List<TileData> inDetection = new List<TileData>();
+        [Tooltip("Pauses between movement")] float movePauseTime = 0.25f;
+        [Tooltip("How far this can see")] [SerializeField] int DetectionRangePatrol = 3;
+        [Tooltip("half their field of view for detection (MUST BE A MULTIPLE OF 5)")] [SerializeField] int DetectionAngle = 30;
+        [Tooltip("State of a guard's alert")] Alert alertStatus = 0;
+
+    [Header("Patrol")]
+        [Tooltip("list of patrol positions")] public List<Vector2Int> PatrolPoints = new List<Vector2Int>();
+        [Tooltip("current patrol target")] private int PatrolTarget = 0;
 
 
-    [Tooltip("Line renderer for showing the guard is attacking")] LineRenderer AttackLine = new LineRenderer();
-    [Tooltip("color for when the guard is chasing")] [SerializeField] Material chaseColor;
-    [Tooltip("color for when the guard is chasing")] [SerializeField] Material attackColor;
-    [Tooltip("duration of color switch when attacking")] [SerializeField] float attackEffectDuration = 0.2f;
-    bool attackEffect = false;
+    [Header("Distraction")]
+        [Tooltip("List of distraction positions")] public List<Vector2Int> DistractionPoints = new List<Vector2Int>();
+        [Tooltip("Object used for the distraction alert for the guard")] [SerializeField] GameObject distractionNotif;
+        [Tooltip("offset used to spawn distraction notifications")] [SerializeField] float NotifOffset = 1;
 
-    [Tooltip("Object used for the distraction alert for the guard")] [SerializeField] GameObject distractionNotif;
-    [Tooltip("offset used to spawn distraction notifications")] [SerializeField] float NotifOffset = 1;
-    [SerializeField] AK.Wwise.Event footsteps;
-    [SerializeField] AK.Wwise.Event alertedSound;
-    [SerializeField] AK.Wwise.Event gunshot;
-    public AK.Wwise.Event stunSound;
+    [Header("Colors")]
+        [Tooltip("Line renderer for showing the guard is attacking")] LineRenderer AttackLine = new LineRenderer();
+        [Tooltip("color for when the guard is chasing")] [SerializeField] Material chaseColor;
+        [Tooltip("color for when the guard is chasing")] [SerializeField] Material attackColor;
+        [Tooltip("duration of color switch when attacking")] [SerializeField] float attackEffectDuration = 0.2f;
+        bool attackEffect = false;
+
+    [Header("Sounds")]
+        [SerializeField] AK.Wwise.Event footsteps;
+        [SerializeField] AK.Wwise.Event alertedSound;
+        [SerializeField] AK.Wwise.Event meleeHit;
+        [SerializeField] AK.Wwise.Event investigateSound;
+        public AK.Wwise.Event stunSound;
 
     private void Awake()
     {
@@ -130,8 +139,9 @@ public class GuardEntity : MovingEntity
 
     public void addDistraction(Vector2Int position)
     {
-        print("distraction added");
+        //print("distraction added");
         DistractionPoints.Add(position);
+        investigateSound.Post(gameObject);
         GameObject notification = Instantiate(distractionNotif, transform);
         notification.transform.position = new Vector3(transform.position.x, transform.position.y + NotifOffset, transform.position.z);
     }
@@ -182,9 +192,12 @@ public class GuardEntity : MovingEntity
 
     public void Alerted(PlayerEntity target)
     {
-        alertStatus = Alert.Attack;
+        if (alertStatus != Alert.Attack)
+        {
+            alertStatus = Alert.Attack;
+            alertedSound.Post(gameObject);
+        }
         CurrentTarget = target;
-        alertedSound.Post(gameObject);
         print("New target, player at " + target.currentTile.gridPosition);
     }
 
@@ -227,7 +240,7 @@ public class GuardEntity : MovingEntity
             direction = nextTile.gridPosition - currentTile.gridPosition;
             print("moving too " + nextTile.gridPosition);
             MoveTile(nextTile);//move to the tile
-            footsteps.Post(gameObject);
+            //footsteps.Post(gameObject);
             movementLeft--;
 
             yield return NewManager.Wait(movePauseTime);
@@ -303,9 +316,9 @@ public class GuardEntity : MovingEntity
             {
                 print("within range, attacking");
                 attacksLeft--;
-                detectedPlayer.health--;
+                StartCoroutine(detectedPlayer.TakeDamage(1));
                 StartCoroutine(attackEffectRoutine());
-                gunshot.Post(gameObject);
+                meleeHit.Post(gameObject);
                 yield break;
 
             }
@@ -320,7 +333,7 @@ public class GuardEntity : MovingEntity
                     direction = nextTile.gridPosition - currentTile.gridPosition;
                     print("moving too " + nextTile.gridPosition);
                     MoveTile(nextTile);//move to the tile
-                    footsteps.Post(gameObject);
+                    //footsteps.Post(gameObject);
                     movementLeft--;
                 }
                 else
@@ -371,7 +384,7 @@ public class GuardEntity : MovingEntity
         direction = nextTile.gridPosition - currentTile.gridPosition;
         //print("moving too " + nextTile.gridPosition);
         MoveTile(nextTile);//move to the tile
-        footsteps.Post(gameObject);
+        //footsteps.Post(gameObject);
         movementLeft--;
 
 

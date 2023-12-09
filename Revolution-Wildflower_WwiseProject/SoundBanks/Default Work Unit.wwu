@@ -7,15 +7,22 @@
 					<ObjectInclusionList>
 						<ObjectRef Name="Play_guard_ko_placeholder" ID="{876B5843-80A3-4094-BA07-A9AE9150D8CF}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Play_CharacterFootsteps" ID="{93C9C64A-F1E8-40BC-A3D6-A05848F84CA7}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Play_guard_investigate" ID="{E3FC8F85-EF46-40EB-BFA9-6A19B56AE4F5}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Play_view_deck" ID="{548F694A-ADB7-4185-85E0-3AA610DB5976}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Stop_LevelMusic" ID="{DC389521-EE4B-41CB-89C5-DA90186B6CB3}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Play_card_move" ID="{8830F802-91A4-43E2-BD77-DB583AB8663B}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Play_OfficeAmbientNoise" ID="{139C58A2-9C3B-43F6-88D7-6B1CC85E4D78}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Play_dialogue_text_write" ID="{78E1AFE8-F3D5-4419-96AB-9F44F825373D}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Play_gunshot_placeholder" ID="{C1F8F92B-A27E-4532-A697-1756B54EF79C}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Play_ui_button_hover" ID="{0E31DAE5-2865-455B-823C-E19EAB5983C6}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Play_LevelMusic" ID="{56A51A5B-0B33-46B8-BE58-8050F2D5627B}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Play_bottle_placeholder" ID="{379E62DA-7CE3-47AC-918A-6BD2CB6F6AE7}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Play_guard_notice_placeholder" ID="{D29D02B2-F63F-48FA-A65E-7312E9B1F4A8}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Play_card_play" ID="{6B602F4D-35CA-4ACF-8420-D1D47321483C}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Play_begin_turn" ID="{33C14BAE-2DD9-4C5E-825D-BB3BB32FADF0}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Play_end_turn_placeholder" ID="{425A1166-3B8A-4C7E-8AAF-B3D5AE0AC4E0}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="dialogue-box-stop" ID="{B0836968-7639-4D9F-94C0-94A6C0C2D906}" WorkUnitID="{1BC092A5-567E-4219-B9A1-7F41A7E3F1D8}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Play_distraction" ID="{EE74AAA2-5811-4E48-861D-D658083FB4F7}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Play_button_base_placeholder" ID="{CE0DD96D-3402-4E54-8DB9-12B3B4C88F9B}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Stop_OfficeAmbientNoise" ID="{6677A665-3BDE-4E6A-BAAB-69211BCDA66B}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Play_movement_select_placeholder" ID="{31BCE2DE-D081-4F25-B390-FE3F0745BC1D}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>

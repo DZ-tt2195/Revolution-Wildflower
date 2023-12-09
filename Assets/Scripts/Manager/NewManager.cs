@@ -6,7 +6,6 @@ using UnityEngine.UI;
 using TMPro;
 using MyBox;
 using UnityEngine.SceneManagement;
-using static UnityEditor.Experimental.GraphView.Port;
 
 public class AStarNode
 {
@@ -41,9 +40,19 @@ public class NewManager : MonoBehaviour
         [Tooltip("Quick reference to current movable tile")][ReadOnly] public TileData CurrentAvailableMoveTarget;
 
     [Foldout("UI Elements", true)]
+        [Tooltip("Hazardbox to give to players")][SerializeField] public CanvasGroup ManagerHazardBox;
+        [Tooltip("Speed of turn fade")][SerializeField] float turnFadeSpeed = 0.05f;
+        [Tooltip("How much time the turn banner appears")][SerializeField] float turnHangDuration = 0.5f;
+        [Tooltip("pop up alerting player of turn")][SerializeField] private CanvasGroup turnAlertBar;
+        [Tooltip("text on turn banner")][SerializeField] private TMP_Text turnText;
         [Tooltip("Your hand in the canvas")] [ReadOnly] public Transform handContainer;
+        [Tooltip("The bar in the bottom center of the screen")] Transform playerStats;
         [Tooltip("The bar in the bottom center of the screen")] Transform informationImage;
         [Tooltip("All the player's stats in text form")] TMP_Text stats;
+        [Tooltip("Current player selected")] TMP_Text currentCharacter;
+        [Tooltip("Selected player's health")] TMP_Text health;
+        [Tooltip("Selected player's moves left")] TMP_Text moves;
+        [Tooltip("Selected player's energy")] TMP_Text energy; 
         [Tooltip("Instructions for what the player is allowed to do right now")] TMP_Text instructions;
         [Tooltip("End the turn")] Button endTurnButton;
         [Tooltip("Complete an objective you're next to")] [ReadOnly] public Button objectiveButton;
@@ -60,9 +69,13 @@ public class NewManager : MonoBehaviour
         [Tooltip("Floor tile prefab")] [SerializeField] TileData floorTilePrefab;
         [Tooltip("Player prefab")][SerializeField] PlayerEntity playerPrefab;
         [Tooltip("Wall prefab")][SerializeField] WallEntity wallPrefab;
+        [Tooltip("Wall T prefab")][SerializeField] WallEntity wallTSplitPrefab;
+        [Tooltip("Wall Corner prefab")][SerializeField] WallEntity wallCornerPrefab;
+        [Tooltip("Wall Plus prefab")][SerializeField] WallEntity wallPlusPrefab;
         [Tooltip("Guard prefab")][SerializeField] GuardEntity guardPrefab;
         [Tooltip("Objective prefab")][SerializeField] ObjectiveEntity objectivePrefab;
         [Tooltip("Guard prefab")][SerializeField] ExitEntity exitPrefab;
+        [Tooltip("Environmental prefab")][SerializeField] EnvironmentalEntity environmentPrefab;
 
     [Foldout("Setup", true)]
         [Tooltip("Amount of turns before a game over")] public int turnCount;
@@ -74,14 +87,16 @@ public class NewManager : MonoBehaviour
 
     public enum TurnSystem { You, Resolving, Environmentals, Enemy };
     [Foldout("Turn System", true)]
-        [Tooltip("last selected player")] PlayerEntity lastSelectedPlayer;
+        [Tooltip("last selected player")] [ReadOnly] public PlayerEntity lastSelectedPlayer;
         [Tooltip("What's happening in the game")][ReadOnly] public TurnSystem currentTurn;
         [Tooltip("Effects to do on future turns")][ReadOnly] public List<Card> futureEffects = new List<Card>();
 
     [Foldout("Sound Effects", true)]
-        [SerializeField] AK.Wwise.Event button;
+        [SerializeField] AK.Wwise.Event buttonSound;
         [SerializeField] AK.Wwise.Event endTurnSound;
         [SerializeField] AK.Wwise.Event footsteps;
+        [SerializeField] AK.Wwise.Event characterSelectSound;
+        [SerializeField] AK.Wwise.Event beginTurnSound;
 
     #endregion
 
@@ -90,6 +105,13 @@ public class NewManager : MonoBehaviour
     void Awake()
     {
         instance = this;
+
+        turnAlertBar.alpha = 0;
+        playerStats = GameObject.Find("Player Stats").transform;
+        currentCharacter = playerStats.GetChild(0).GetComponent<TMP_Text>();
+        health = playerStats.GetChild(1).GetComponent<TMP_Text>();
+        moves = playerStats.GetChild(2).GetComponent<TMP_Text>();
+        energy = playerStats.GetChild(3).GetComponent<TMP_Text>();
 
         informationImage = GameObject.Find("Information Image").transform;
         stats = informationImage.GetChild(0).GetComponent<TMP_Text>();
@@ -151,7 +173,9 @@ public class NewManager : MonoBehaviour
 
                     switch (int.Parse(numberPlusAddition[0]))
                     {
+
                         case 1: //create player
+                            print("player");
                             thisTileEntity = Instantiate(playerPrefab, nextTile.transform);
                             PlayerEntity player = thisTileEntity.GetComponent<PlayerEntity>();
                             player.myPosition = listOfPlayers.Count;
@@ -162,6 +186,7 @@ public class NewManager : MonoBehaviour
                             break;
 
                         case 2: //create exit
+                            print("exit");
                             thisTileEntity = Instantiate(exitPrefab, nextTile.transform);
                             thisTileEntity.name = "Exit";
                             ObjectiveEntity exitObjective = thisTileEntity.GetComponent<ExitEntity>();
@@ -169,6 +194,7 @@ public class NewManager : MonoBehaviour
                             break;
 
                         case 3: //create objective
+                            print("objective");
                             thisTileEntity = Instantiate(objectivePrefab, nextTile.transform);
                             thisTileEntity.name = numberPlusAddition[1];
                             ObjectiveEntity defaultObjective = thisTileEntity.GetComponent<ObjectiveEntity>();
@@ -177,12 +203,40 @@ public class NewManager : MonoBehaviour
                             break;
 
                         case 10: //create wall
+                            print("wall");
                             thisTileEntity = Instantiate(wallPrefab, nextTile.transform);
                             thisTileEntity.name = "Wall";
                             WallEntity wall = thisTileEntity.GetComponent<WallEntity>();
                             listOfWalls.Add(wall);
                             wall.health = int.Parse(numberPlusAddition[1]);
                             wall.WallDirection(numberPlusAddition[2]);
+                            break;
+
+                        case 30: //create +
+                            thisTileEntity = Instantiate(wallPlusPrefab, nextTile.transform);
+                            thisTileEntity.name = "PlusWall";
+                            WallEntity PlusWall = thisTileEntity.GetComponent<WallEntity>();
+                            listOfWalls.Add(PlusWall);
+                            PlusWall.health = int.Parse(numberPlusAddition[1]);
+                            PlusWall.WallDirection(numberPlusAddition[2]);
+                            break;
+
+                        case 40: //create T
+                            thisTileEntity = Instantiate(wallTSplitPrefab, nextTile.transform);
+                            thisTileEntity.name = "T-Wall";
+                            WallEntity Twall = thisTileEntity.GetComponent<WallEntity>();
+                            listOfWalls.Add(Twall);
+                            Twall.health = int.Parse(numberPlusAddition[1]);
+                            Twall.WallDirection(numberPlusAddition[2]);
+                            break;
+
+                        case 50: //create corner
+                            thisTileEntity = Instantiate(wallCornerPrefab, nextTile.transform);
+                            thisTileEntity.name = "CornerWall";
+                            WallEntity CornerWall = thisTileEntity.GetComponent<WallEntity>();
+                            listOfWalls.Add(CornerWall);
+                            CornerWall.health = int.Parse(numberPlusAddition[1]);
+                            CornerWall.WallDirection(numberPlusAddition[2]);
                             break;
 
                         case 20: //create guard
@@ -305,7 +359,6 @@ public class NewManager : MonoBehaviour
     {
         for (int i = listOfPlayers.Count - 1; i >= 0; i--)
         {
-            Debug.Log(i);
             PlayerEntity player = listOfPlayers[i];
             try { StartCoroutine(player.adjacentObjective.ObjectiveComplete(player)); }
             catch (NullReferenceException) { continue; }
@@ -319,13 +372,30 @@ public class NewManager : MonoBehaviour
             stats.text = $"{player.name} | <color=#ffc73b>{player.health} Health <color=#ffffff>" +
                 $"| <color=#ecff59>{player.movementLeft} Movement <color=#ffffff>" +
                 $"| <color=#59fff4>{player.myEnergy} Energy <color=#ffffff>";
+
+            currentCharacter.text = $"{player.name}";
+            health.text = $"Health: {player.health}";
+            moves.text = $"Moves: {player.movementLeft}";
+            energy.text = $"Energy: {player.myEnergy}";
+
             deckTracker.text = $"<color=#70f5ff>Draw Pile <color=#ffffff>/ <color=#ff9670>Discard Pile " +
-                $"\n\n<color=#70f5ff>{player.myDrawPile.Count} <color=#ffffff>/ <color=#ff9670>{player.myDiscardPile.Count}";
-            handContainer.transform.localPosition = new Vector3(player.myPosition * -2000, -75, 0);
+                $"\n\n<color=#70f5ff>{player.myDrawPile.Count} <color=#ffffff>/ <color=#ff9670>{player.myDiscardPile.Count}" +
+                $"\n({player.myExhaust.Count} exhausted)";
+
+            if (player.myPosition * -2000 != handContainer.transform.localPosition.x)
+            {
+                player.MyTurn();
+                handContainer.transform.localPosition = new Vector3(player.myPosition * -2000, 0, 0);
+            }
         }
         else
         {
             stats.text = "";
+            currentCharacter.text = "Character";
+            health.text = "Health:";
+            moves.text = "Moves:";
+            energy.text = "Energy:";
+
             deckTracker.text = "";
             handContainer.transform.localPosition = new Vector3(10000, 10000, 0);
         }
@@ -351,7 +421,7 @@ public class NewManager : MonoBehaviour
     private void Update()
     {
         endTurnButton.gameObject.SetActive(currentTurn == TurnSystem.You);
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Escape))
             GameOver("You quit.");
     }
 
@@ -424,6 +494,8 @@ public class NewManager : MonoBehaviour
     public void FocusOnPlayer(PlayerEntity player)
     {
         Camera.main.transform.position = new Vector3(player.transform.position.x, Camera.main.transform.position.y, player.transform.position.z);
+        if (currentTurn == TurnSystem.You)
+            StartCoroutine(ChooseMovePlayer(player));
     }
 
     public void ReceiveChoice(Card card)
@@ -462,17 +534,47 @@ public class NewManager : MonoBehaviour
         }
     }
 
+    public EnvironmentalEntity CreateEnvironmental()
+    {
+        EnvironmentalEntity newEnviro = Instantiate(environmentPrefab);
+        return newEnviro;
+    }
+
 #endregion
 
 #region Turn System
 
     IEnumerator StartPlayerTurn()
     {
+        UpdateStats(null);
+        yield return Wait(0.5f);
         foreach(Card card in futureEffects)
             yield return card.NextRoundEffect();
         futureEffects.Clear();
+
         selectedTile = null;
-        BackToStart();
+        beginTurnSound.Post(gameObject);
+        BackToStart(true);
+    }
+
+    public IEnumerator FadeTurnBar(string message)
+    {
+        turnAlertBar.alpha = 0;
+        turnText.text = message;
+        
+        while (turnAlertBar.alpha < 1)
+        {
+            turnAlertBar.alpha += turnFadeSpeed;
+            yield return null;
+        }
+        yield return Wait(turnHangDuration);
+        while (turnAlertBar.alpha > 0)
+        {
+            turnAlertBar.alpha -= turnFadeSpeed;
+            yield return null;
+        }
+        
+        turnAlertBar.alpha = 0;
     }
 
     public void EnablePlayers()
@@ -484,7 +586,7 @@ public class NewManager : MonoBehaviour
         }
     }
 
-    void BackToStart()
+    void BackToStart(bool startTurn)
     {
         currentTurn = TurnSystem.You;
 
@@ -494,19 +596,28 @@ public class NewManager : MonoBehaviour
         UpdateStats(lastSelectedPlayer);
         EnablePlayers();
         StopAllCoroutines();
-        
+        if (startTurn)
+            StartCoroutine(FadeTurnBar("Player Turn"));
+
         if (lastSelectedPlayer != null)
         {
+            Debug.Log($"{lastSelectedPlayer.name} was last selected");
             selectedTile = lastSelectedPlayer.currentTile;
-            StartCoroutine(ChooseMovePlayer(selectedTile));
+            StartCoroutine(ChooseMovePlayer(lastSelectedPlayer));
         }
     }
 
-    public IEnumerator ChooseMovePlayer(TileData currentTile)
+    public IEnumerator ChooseMovePlayer(PlayerEntity currentPlayer)
     {
-        PlayerEntity currentPlayer = currentTile.myEntity.GetComponent<PlayerEntity>();
+        if (lastSelectedPlayer != currentPlayer)
+        {
+            characterSelectSound.Post(currentPlayer.gameObject);
+        }
+
         lastSelectedPlayer = currentPlayer;
         AkSoundEngine.SetState("Character", currentPlayer.name);
+
+        TileData currentTile = currentPlayer.currentTile;
         UpdateInstructions("Choose a character to move / play a card.");
 
         List<TileData> possibleTiles = CalculateReachableGrids(currentTile, currentPlayer.movementLeft, true);
@@ -537,10 +648,10 @@ public class NewManager : MonoBehaviour
         currentTurn = TurnSystem.Resolving;
         int distanceTraveled = GetDistance(currentPlayer.currentTile.gridPosition, NewManager.instance.chosenTile.gridPosition);
         ChangeMovement(currentPlayer, -distanceTraveled);
-        footsteps.Post(currentPlayer.gameObject);
+        if (distanceTraveled != 0) footsteps.Post(currentPlayer.gameObject);
         currentPlayer.MoveTile(NewManager.instance.chosenTile);
         StopAllCoroutines();
-        BackToStart();
+        BackToStart(false);
     }
 
     IEnumerator ChooseCardPlay(PlayerEntity player) //choose a card to play
@@ -566,26 +677,11 @@ public class NewManager : MonoBehaviour
                     yield return null;
                 }
             }
-            yield return PlayCard(player, chosenCard);
+
+            currentTurn = TurnSystem.Resolving;
+            yield return player.PlayCard(chosenCard, true);
+            BackToStart(false);
         }
-    }
-
-    IEnumerator PlayCard(PlayerEntity player, Card playMe) //resolve that card
-    {
-        currentTurn = TurnSystem.Resolving;
-        StopCoroutine(ChooseMovePlayer(player.currentTile));
-        Debug.Log(playMe.cardPlay);
-        playMe.cardPlay.Post(playMe.gameObject);
-
-        StartCoroutine(player.DiscardFromHand(playMe));
-        ChangeEnergy(player, -playMe.energyCost);
-        UpdateStats(player);
-        yield return playMe.OnPlayEffect();
-
-        futureEffects.Add(playMe);
-        player.cardsPlayed.Add(playMe);
-        StopAllCoroutines();
-        BackToStart();
     }
 
     public void Regain()
@@ -609,16 +705,21 @@ public class NewManager : MonoBehaviour
     {
         selectedTile = null;
         currentTurn = TurnSystem.Environmentals;
-        NewManager.instance.DisableAllTiles();
-        NewManager.instance.DisableAllCards();
+        DisableAllTiles();
+        DisableAllCards();
 
-        currentTurn = TurnSystem.Environmentals;
-        foreach (EnvironmentalEntity environment in  listOfEnvironmentals)
+        foreach (PlayerEntity player in listOfPlayers)
         {
-            yield return environment.EndOfTurn();
+            if (player.stunned > 0)
+                player.stunned--;
+        }
+
+        foreach (EnvironmentalEntity environment in listOfEnvironmentals)
+        {
+            if (environment != null)
+                yield return environment.EndOfTurn();
         }
         StartCoroutine(EndTurn());
-        yield return null;
     }
 
     IEnumerator EndTurn() //Starts Guard Phase
@@ -631,6 +732,7 @@ public class NewManager : MonoBehaviour
         currentTurn = TurnSystem.Enemy;
 
         CoroutineGroup group = new CoroutineGroup(this);
+        yield return FadeTurnBar("Company Turn");
         foreach (GuardEntity guard in listOfGuards)
             group.StartCoroutine(guard.EndOfTurn());
         while (group.AnyProcessing)

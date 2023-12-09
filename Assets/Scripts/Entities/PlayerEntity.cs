@@ -20,6 +20,8 @@ public class PlayerEntity : MovingEntity
         [Tooltip("Gail's sprite")][SerializeField] Sprite gailSprite;
         [Tooltip("Frankie's sprite")][SerializeField] Sprite frankieSprite;
         [Tooltip("WK's sprite")][SerializeField] Sprite wkSprite;
+        [Tooltip("HazardBox Sprite")][ReadOnly] CanvasGroup HazardBox;
+        [Tooltip("HazardBox fade speed")][SerializeField] float FadeSpeed = 0.08f;
 
     [Foldout("Player's Cards", true)]
         [Tooltip("energy count")][ReadOnly] public int myEnergy;
@@ -27,6 +29,7 @@ public class PlayerEntity : MovingEntity
         [Tooltip("list of cards in hand")][ReadOnly] public List<Card> myHand;
         [Tooltip("list of cards in draw pile")][ReadOnly] public List<Card> myDrawPile;
         [Tooltip("list of cards in discard pile")][ReadOnly] public List<Card> myDiscardPile;
+        [Tooltip("list of cards that're exhausted")][ReadOnly] public List<Card> myExhaust;
         [Tooltip("list of cards played this turn")][ReadOnly] public List<Card> cardsPlayed;
         [Tooltip("list of cost reduction effects")][ReadOnly] public List<Card> costChange;
 
@@ -34,6 +37,8 @@ public class PlayerEntity : MovingEntity
 
     public void PlayerSetup(string name, Transform hand)
     {
+        HazardBox = NewManager.instance.ManagerHazardBox;
+        HazardBox.alpha = 0;
         handTransform = hand;
         movementLeft = movesPerTurn;
         this.name = name;
@@ -76,7 +81,10 @@ public class PlayerEntity : MovingEntity
 
     public override string HoverBoxText()
     {
-        return $"Moves left: {movementLeft}";
+        string answer = $"Moves left: {movementLeft}\n";
+        if (stunned > 0)
+            answer += $"Stunned for {stunned} turns\n";
+        return answer;
     }
 
     public override void MoveTile(TileData newTile)
@@ -104,6 +112,23 @@ public class PlayerEntity : MovingEntity
         return false;
     }
 
+    public IEnumerator TakeDamage(int damage)
+    {
+        HazardBox.alpha = 0;
+        while (HazardBox.alpha < 1)
+        {
+            HazardBox.alpha += FadeSpeed;
+            yield return null;
+        }
+        while (HazardBox.alpha > 0)
+        {
+            HazardBox.alpha -= FadeSpeed;
+            yield return null;
+        }
+        health -= damage;
+        yield return null;
+    }
+
     public override IEnumerator EndOfTurn()
     {
         yield return null;
@@ -112,9 +137,26 @@ public class PlayerEntity : MovingEntity
 
         //meshRenderer.material = (hidden > 0) ? HiddenPlayerMaterial : DefaultPlayerMaterial;
     }
-    #endregion
+#endregion
 
 #region Card Stuff
+
+    void SortHand(float waitTime)
+    {
+        myHand = myHand.OrderBy(o => o.energyCost).ToList();
+
+        for (int i = 0; i < myHand.Count; i++)
+        {
+            Card nextCard = myHand[i];
+            float startingX = (myHand.Count >= 8) ? -900 : (myHand.Count - 1) * -150;
+            float difference = (myHand.Count >= 8) ? 1800f / (myHand.Count - 1) : 300;
+            Vector2 newPosition = new(startingX + difference * i, -500);
+            StartCoroutine(nextCard.MoveCard(newPosition, newPosition, new Vector3(0, 0, 0), waitTime));
+        }
+
+        foreach (Card card in myHand)
+            StartCoroutine(card.RevealCard(0.25f));
+    }
 
     public void PlusCards(int num)
     {
@@ -122,12 +164,11 @@ public class PlayerEntity : MovingEntity
         {
             try
             {
-                PutIntoHand(GetTopCard());
+                Card nextCard = GetTopCard();
+                nextCard.HideCard();
+                PutIntoHand(nextCard);
             }
-            catch (NullReferenceException)
-            {
-                break;
-            }
+            catch (NullReferenceException){break;}
         }
         SortHand(0.4f);
     }
@@ -156,35 +197,7 @@ public class PlayerEntity : MovingEntity
         }
     }
 
-    void SortHand(float waitTime)
-    {
-        myHand = myHand.OrderBy(o => o.energyCost).ToList();
-
-        for (int i = 0; i<myHand.Count; i++)
-        {
-            Card nextCard = myHand[i];
-            float startingX = (myHand.Count >= 8) ? -900 : (myHand.Count - 1) * -150;
-            float difference = (myHand.Count >= 8) ? 1800f / (myHand.Count - 1) : 300;
-            Vector2 newPosition = new Vector2(startingX + difference * i, -500);
-            StartCoroutine(MoveCard(nextCard, newPosition, newPosition, waitTime));
-        }
-    }
-
-    IEnumerator MoveCard(Card card, Vector2 newPos, Vector2 finalPos, float waitTime)
-    {
-        float elapsedTime = 0;
-        Vector2 originalPos = card.transform.localPosition;
-
-        while (elapsedTime < waitTime)
-        {
-            card.transform.localPosition = Vector3.Lerp(originalPos, newPos, elapsedTime / waitTime);
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-        card.transform.localPosition = finalPos;
-    }
-
-    public void PutIntoHand(Card drawMe)
+    void PutIntoHand(Card drawMe)
     {
         if (drawMe != null)
         {
@@ -198,22 +211,65 @@ public class PlayerEntity : MovingEntity
 
     public IEnumerator DiscardFromHand(Card discardMe)
     {
-        myHand.Remove(discardMe);
-        StartCoroutine(MoveCard(discardMe, new Vector2(1200, -440), new Vector2(0, -1000), 0.25f));
-        SortHand(0.2f);
-        yield return NewManager.Wait(0.4f);
-        PutIntoDiscard(discardMe);
-    }
-
-    public void PutIntoDiscard(Card discardMe)
-    {
-        if (discardMe != null)
+        if (!myDiscardPile.Contains(discardMe))
         {
+            myHand.Remove(discardMe);
+            discardMe.transform.SetAsLastSibling();
+            StartCoroutine(discardMe.MoveCard(new Vector2(1200, -440), new Vector2(0, -1000), new Vector3(0, 0, 0), 0.25f));
+            SortHand(0.25f);
+            yield return NewManager.Wait(0.25f);
+
             myDiscardPile.Add(discardMe);
             discardMe.transform.SetParent(null);
             discardMe.cardMove.Post(discardMe.gameObject);
         }
     }
 
-#endregion
+    public IEnumerator ExhaustFromHand(Card exhaustMe)
+    {
+        myHand.Remove(exhaustMe);
+        myDrawPile.Remove(exhaustMe);
+        myDiscardPile.Remove(exhaustMe);
+
+        float zRot = UnityEngine.Random.Range(-45f, 45f);
+        exhaustMe.transform.SetAsLastSibling();
+        StartCoroutine(exhaustMe.MoveCard(new Vector2(exhaustMe.transform.localPosition.x, -700), new Vector2(0, -1000), new Vector3(0, 0, zRot), 0.25f));
+        StartCoroutine(exhaustMe.FadeAway(0.25f));
+        SortHand(0.25f);
+        yield return NewManager.Wait(0.25f);
+
+        myExhaust.Add(exhaustMe);
+        exhaustMe.transform.SetParent(null);
+    }
+
+    public IEnumerator PlayCard(Card playMe, bool payEnergy)
+    {
+        NewManager.instance.DisableAllCards();
+        playMe.cardPlay.Post(playMe.gameObject);
+        StartCoroutine(playMe.MoveCard(new Vector2(playMe.transform.localPosition.x, -200), new Vector2(playMe.transform.localPosition.x, -200), new Vector3(0, 0, 0), 0.25f));
+        yield return playMe.FadeAway(0.25f);
+        StartCoroutine(this.DiscardFromHand(playMe));
+
+        if (payEnergy)
+            NewManager.instance.ChangeEnergy(this, -playMe.energyCost);
+
+        NewManager.instance.UpdateStats(this);
+        yield return playMe.OnPlayEffect();
+
+        if (playMe.nextRoundEffectsInOrder != "")
+            NewManager.instance.futureEffects.Add(playMe);
+        this.cardsPlayed.Add(playMe);
+    }
+
+    public void MyTurn()
+    {
+        foreach (Card card in myHand)
+        {
+            card.transform.localPosition = new Vector3(0, -1000, 0);
+            card.HideCard();
+        }
+        SortHand(0.4f);
+    }
+
+    #endregion
 }
