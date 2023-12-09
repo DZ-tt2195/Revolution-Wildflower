@@ -192,9 +192,12 @@ public class GuardEntity : MovingEntity
 
     public void Alerted(PlayerEntity target)
     {
-        alertStatus = Alert.Attack;
+        if (alertStatus != Alert.Attack)
+        {
+            alertStatus = Alert.Attack;
+            alertedSound.Post(gameObject);
+        }
         CurrentTarget = target;
-        alertedSound.Post(gameObject);
         print("New target, player at " + target.currentTile.gridPosition);
     }
 
