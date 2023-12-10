@@ -45,7 +45,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         [ReadOnly] int range;
         [ReadOnly] public int areaOfEffect { get; private set; }
         [ReadOnly] public int delay { get; private set; }
-        [ReadOnly] int changeInWall;
+        [ReadOnly] public int changeInWall { get; private set; }
         [ReadOnly] int burnDuration;
         [ReadOnly] int distractionIntensity;
 

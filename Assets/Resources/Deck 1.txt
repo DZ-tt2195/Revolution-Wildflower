@@ -4,7 +4,7 @@
       "card explanation displayed on the card itself",
       "atk, draw, dist, eng, mvmt, misc",
       "",
-      "17 cards in the deck",
+      "19 cards in the deck",
       "EP cost",
       "v/nv tagging",
       "health change",
@@ -232,6 +232,30 @@
       "",
       "CardsInHand",
       "ChooseExhaust/DrawCards"
+    ],
+    [
+      "TNT",
+      "Range 3. With Delay 1, Deal 3 damage to all walls within 3 tiles. Intensity 7",
+      "atk",
+      "",
+      "2",
+      "1",
+      "nv",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "3",
+      "3",
+      "1",
+      "-4",
+      "",
+      "7",
+      "",
+      "ThrowEnvironmental",
+      "DamageWalls"
     ]
   ]
 }
