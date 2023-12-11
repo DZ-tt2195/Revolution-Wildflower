@@ -739,12 +739,11 @@ public class NewManager : MonoBehaviour
         //sets turn to the enemies, and counts through the grid activating all enemies simultaniously
         currentTurn = TurnSystem.Enemy;
 
-        CoroutineGroup group = new CoroutineGroup(this);
         yield return FadeTurnBar("Company Turn");
         foreach (GuardEntity guard in listOfGuards)
-            group.StartCoroutine(guard.EndOfTurn());
-        while (group.AnyProcessing)
-            yield return null;
+        {
+            yield return (guard.EndOfTurn());
+        }
 
         turnCount--;
         if (turnCount == 0)
