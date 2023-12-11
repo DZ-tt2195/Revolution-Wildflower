@@ -560,7 +560,7 @@ public class NewManager : MonoBehaviour
     {
         turnAlertBar.alpha = 0;
         turnText.text = message;
-        
+
         while (turnAlertBar.alpha < 1)
         {
             turnAlertBar.alpha += turnFadeSpeed;
@@ -572,8 +572,15 @@ public class NewManager : MonoBehaviour
             turnAlertBar.alpha -= turnFadeSpeed;
             yield return null;
         }
-        
+
         turnAlertBar.alpha = 0;
+        EnablePlayers();
+        if (lastSelectedPlayer != null)
+        {
+            Debug.Log($"{lastSelectedPlayer.name} was last selected");
+            selectedTile = lastSelectedPlayer.currentTile;
+            StartCoroutine(ChooseMovePlayer(lastSelectedPlayer));
+        }
     }
 
     public void EnablePlayers()
@@ -593,16 +600,18 @@ public class NewManager : MonoBehaviour
         DisableAllCards();
 
         UpdateStats(lastSelectedPlayer);
-        EnablePlayers();
         StopAllCoroutines();
         if (startTurn)
             StartCoroutine(FadeTurnBar("Player Turn"));
-
-        if (lastSelectedPlayer != null)
+        else
         {
-            Debug.Log($"{lastSelectedPlayer.name} was last selected");
-            selectedTile = lastSelectedPlayer.currentTile;
-            StartCoroutine(ChooseMovePlayer(lastSelectedPlayer));
+            EnablePlayers();
+            if (lastSelectedPlayer != null)
+            {
+                Debug.Log($"{lastSelectedPlayer.name} was last selected");
+                selectedTile = lastSelectedPlayer.currentTile;
+                StartCoroutine(ChooseMovePlayer(lastSelectedPlayer));
+            }
         }
     }
 
