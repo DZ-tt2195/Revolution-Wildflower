@@ -157,6 +157,7 @@ public class GuardEntity : MovingEntity
 
     public void CheckForPlayer()
     {
+        List<PlayerEntity> newTargets = new List<PlayerEntity>();
         for (int i = 0; i < inDetection.Count; i++)
         {
             //print("guard: " + currentTile.gridPosition + " Looking at " + inDetection[i].gridPosition);
@@ -167,13 +168,27 @@ public class GuardEntity : MovingEntity
                     if (inDetection[i].myEntity.GetComponent<PlayerEntity>().hidden == 0)
                     {
                         print("found player");
-                        Alerted(inDetection[i].myEntity.GetComponent<PlayerEntity>());
-                        break;
+                        newTargets.Add(inDetection[i].myEntity.GetComponent<PlayerEntity>());
                     }
                 }
             }
         }
-
+        if (newTargets.Count == 1)
+        {
+            Alerted(newTargets[0]);
+        }
+        else if (newTargets.Count > 1)
+        {
+            int minDistance = 1000;
+            for (int i = 0;i < newTargets.Count;i++) 
+            {
+                if (NewManager.instance.GetDistance(currentTile.gridPosition, newTargets[i].currentTile.gridPosition) < minDistance)
+                {
+                    minDistance = NewManager.instance.GetDistance(currentTile.gridPosition, newTargets[i].currentTile.gridPosition);
+                    Alerted(newTargets[i]);
+                }
+            }
+        }
     }
 
     public override IEnumerator EndOfTurn()
