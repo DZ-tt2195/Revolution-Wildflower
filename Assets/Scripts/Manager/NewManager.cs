@@ -547,6 +547,7 @@ public class NewManager : MonoBehaviour
     {
         UpdateStats(null);
         yield return Wait(0.5f);
+
         foreach(Card card in futureEffects)
             yield return card.NextRoundEffect();
         futureEffects.Clear();
@@ -601,8 +602,11 @@ public class NewManager : MonoBehaviour
 
         UpdateStats(lastSelectedPlayer);
         StopAllCoroutines();
+
         if (startTurn)
+        {
             StartCoroutine(FadeTurnBar("Player Turn"));
+        }
         else
         {
             EnablePlayers();
@@ -617,10 +621,8 @@ public class NewManager : MonoBehaviour
 
     public IEnumerator ChooseMovePlayer(PlayerEntity currentPlayer)
     {
-        if (lastSelectedPlayer != currentPlayer)
-        {
-            characterSelectSound.Post(currentPlayer.gameObject);
-        }
+        if (lastSelectedPlayer != currentPlayer){
+            characterSelectSound.Post(currentPlayer.gameObject);}
 
         lastSelectedPlayer = currentPlayer;
         AkSoundEngine.SetState("Character", currentPlayer.name);
@@ -642,10 +644,7 @@ public class NewManager : MonoBehaviour
                 Debug.Log("switched off");
                 yield break;
             }
-            else
-            {
-                yield return null;
-            }
+            else{yield return null;}
         }
 
         MovePlayer(currentPlayer);
@@ -676,14 +675,8 @@ public class NewManager : MonoBehaviour
 
             while (chosenCard == null)
             {
-                if (currentTurn != TurnSystem.You)
-                {
-                    yield break;
-                }
-                else
-                {
-                    yield return null;
-                }
+                if (currentTurn != TurnSystem.You){yield break;}
+                else{yield return null;}
             }
 
             currentTurn = TurnSystem.Resolving;
@@ -736,9 +729,7 @@ public class NewManager : MonoBehaviour
         foreach (PlayerEntity player in listOfPlayers)
             yield return player.EndOfTurn();
 
-        //sets turn to the enemies, and counts through the grid activating all enemies simultaniously
         currentTurn = TurnSystem.Enemy;
-
         yield return FadeTurnBar("Company Turn");
         foreach (GuardEntity guard in listOfGuards)
         {
