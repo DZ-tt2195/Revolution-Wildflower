@@ -15,16 +15,20 @@ public class ObjectiveEntity : Entity
 
     public virtual IEnumerator ObjectiveComplete(PlayerEntity player)
     {
-        NewManager.instance.listOfObjectives.Remove(this);
-        NewManager.instance.objectiveButton.gameObject.SetActive(false);
-
         if (!DialogueManager.GetInstance().dialogueIsPlaying)
         {
              DialogueManager.GetInstance().dialogueVariables.globalVariablesStory.variablesState["current_player"] = player.name;
              DialogueManager.GetInstance().dialogueVariables.globalVariablesStory.variablesState["current_objective"] = objective;
              DialogueManager.GetInstance().EnterDialogueMode(inkJSON);
         }
+        
+        NewManager.instance.listOfObjectives.Remove(this);
+        NewManager.instance.objectiveButton.gameObject.SetActive(false);
+        currentTile.myEntity = null;
+        player.adjacentObjective = null;
+
         Destroy(this.gameObject);
+
         yield return null;
     }
 }

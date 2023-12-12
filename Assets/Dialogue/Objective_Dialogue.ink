@@ -13,7 +13,7 @@ INCLUDE globals.ink
 - current_objective == "Mis1_Obj2" && current_player == "Gail":
     -> Mis1_Obj2_Gail
 
-- current_objective == "Mis1_Obj2" && current_player == "Franke":
+- current_objective == "Mis1_Obj2" && current_player == "Frankie":
     -> Mis1_Obj2_Frankie
 
 - current_objective == "Mis1_Obj2" && current_player == "WK":
@@ -21,19 +21,27 @@ INCLUDE globals.ink
     
 }
 
+=== Mis1_Obj1_WK ===
+Found it #speaker: WK #portrait: WK
+-> DONE
+
 === Mis1_Obj1_Gail ===
 Reorganization effort! There we go… seems to be encrypted, hopefully Clover can open it for us. #speaker: Gail #portrait: Gail
-I think that’s everything, we should get out before security gets tighter. 
+
 -> DONE
 
 === Mis1_Obj1_Frankie ===
 Finally! #speaker: Frankie #portrait: Frankie
 ...
 I can't open it. I realy hope I didn't break it. I'll save it for now so Clover can look over it. 
+
 -> DONE
 
-=== Mis1_Obj1_WK ===
-Found it #speaker: WK #portrait: WK
+
+
+=== Mis1_Obj2_WK ===
+Hmm... #speaker: WK #portrait: WK
+Doesn't seem like the files we wanted but could be interesting to look in to.
 -> DONE
 
 === Mis1_Obj2_Gail ===
@@ -49,9 +57,4 @@ Shit, wrong computer. #speaker: Frankie #portrait: Frankie
 Wait a second, That's Gail's last name. Why is it connected to those files.
 I'll save it for later.
 
--> DONE
-
-=== Mis1_Obj2_WK ===
-Hmm... #speaker: WK #portrait: WK
-Doesn't seem like the files we wanted but could be interesting to look in to.
 -> DONE

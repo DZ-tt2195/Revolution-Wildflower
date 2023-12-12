@@ -360,7 +360,10 @@ public class NewManager : MonoBehaviour
         for (int i = listOfPlayers.Count - 1; i >= 0; i--)
         {
             PlayerEntity player = listOfPlayers[i];
-            try { StartCoroutine(player.adjacentObjective.ObjectiveComplete(player)); }
+            try { 
+                StartCoroutine(player.adjacentObjective.ObjectiveComplete(player));
+                return;
+            }
             catch (NullReferenceException) { continue; }
         }
     }
