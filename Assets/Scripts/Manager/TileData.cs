@@ -23,7 +23,7 @@ public class TileData : MonoBehaviour
 
     [Foldout("Colors", true)]
         [Tooltip("Tile's sprite renderer")] SpriteRenderer myRenderer;
-      [Tooltip("Tile's materal")] [SerializeField] Renderer renderer3d;
+        [Tooltip("Tile's materal")] [SerializeField] Renderer renderer3d;
         [Tooltip("Glowing border's sprite renderer")] SpriteRenderer border;
         [Tooltip("color used for unselected moused over tiles")][SerializeField] Color mouseOverColor = new Color(0.9f,0.9f,0.9f,1);
         [Tooltip("color used for selected tiles")][SerializeField] Color SelectedColor;

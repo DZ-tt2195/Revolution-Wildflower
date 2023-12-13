@@ -125,7 +125,7 @@ public class PlayerEntity : MovingEntity
             HazardBox.alpha -= FadeSpeed;
             yield return null;
         }
-        health -= damage;
+        NewManager.instance.ChangeHealth(this, -damage);
         yield return null;
     }
 
