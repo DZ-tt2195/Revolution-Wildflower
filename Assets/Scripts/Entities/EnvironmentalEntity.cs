@@ -98,7 +98,7 @@ public class EnvironmentalEntity : MovingEntity
         return entitiesInRange;
     }
 
-#endregion
+    #endregion
 
 #region Effects 
 
