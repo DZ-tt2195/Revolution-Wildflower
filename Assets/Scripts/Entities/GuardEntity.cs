@@ -232,9 +232,11 @@ public class GuardEntity : MovingEntity
         print(currentTile.gridPosition + "checking distraction");
         if (currentTile.gridPosition == DistractionPoints[DistractionPoints.Count - 1])
         {
+            print("on distraction point");
             DistractionPoints.RemoveAt(DistractionPoints.Count - 1);
             if (DistractionPoints.Count == 0)
             {
+                print("no more distractions");
                 alertStatus = Alert.Patrol;
                 CheckForPlayer();
                 if (alertStatus == Alert.Attack)
@@ -253,8 +255,12 @@ public class GuardEntity : MovingEntity
                         yield return Patrol();
                     }
                     else
-                       yield break;
+                        yield break;
                 }
+            }
+            else if (currentTile.gridPosition == DistractionPoints[DistractionPoints.Count - 1])
+            {
+                yield return persue();
             }
         }
         if (movementLeft > 0)
