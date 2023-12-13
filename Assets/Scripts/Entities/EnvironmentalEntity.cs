@@ -7,8 +7,8 @@ using System;
 public class EnvironmentalEntity : MovingEntity
 {
     [Foldout("Enviromental Entity", true)]
-        [Tooltip("Store this entity's instructions")][ReadOnly] public Card card;
-        [Tooltip("Store this entity's delay time")][ReadOnly] public int delay;
+    [Tooltip("Store this entity's instructions")][ReadOnly] public Card card;
+    [Tooltip("Store this entity's delay time")][ReadOnly] public int delay;
 
 #region Entity Stuff
 
@@ -106,7 +106,10 @@ public class EnvironmentalEntity : MovingEntity
     {
         foreach (MovingEntity entity in allEntities)
         {
-            entity.stunned += card.stunDuration;
+            if (entity.CompareTag("Player"))
+                yield return card.StunPlayer(entity.GetComponent<PlayerEntity>());
+            if (entity.CompareTag("Guard"))
+                yield return card.StunGuard(entity.GetComponent<GuardEntity>());
         }
         yield return null;
     }
@@ -115,10 +118,11 @@ public class EnvironmentalEntity : MovingEntity
     {
         foreach (WallEntity entity in allWalls)
         {
-            entity.AffectWall(card.changeInWall);
+            yield return card.AttackWall(entity);
         }
         yield return null;
     }
 
     #endregion
+
 }
