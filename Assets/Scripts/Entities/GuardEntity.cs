@@ -261,16 +261,25 @@ public class GuardEntity : MovingEntity
         {
             print(movementLeft);
             TileData nextTile;
-            NewManager.instance.CalculatePathfinding(currentTile, NewManager.instance.FindTile(DistractionPoints[DistractionPoints.Count - 1]), movementLeft, true);
+            NewManager.instance.CalculatePathfinding(currentTile, NewManager.instance.FindTile(DistractionPoints[DistractionPoints.Count - 1]), movementLeft, true,true);
             nextTile = NewManager.instance.CurrentAvailableMoveTarget;  //moves towards the next patrol point
-            direction = nextTile.gridPosition - currentTile.gridPosition;
-            print("moving too " + nextTile.gridPosition);
-            if (nextTile.myEntity == null)
+            Vector2Int nextDirection = nextTile.gridPosition - currentTile.gridPosition;
+
+            if (nextDirection != direction)
             {
-                MoveTile(nextTile);//move to the tile
-                                   //footsteps.Post(gameObject);
+                direction = nextDirection;
+                CalculateTiles();
             }
-            movementLeft--;
+            else
+            {
+                //print("moving too " + nextTile.gridPosition);
+                if (nextTile.myEntity == null)
+                {
+                    MoveTile(nextTile);//move to the tile
+                                       //footsteps.Post(gameObject);
+                }
+                movementLeft--;
+            }
 
             yield return NewManager.Wait(movePauseTime);
             alertStatus = Alert.Patrol;
@@ -357,16 +366,25 @@ public class GuardEntity : MovingEntity
                 if (movementLeft > 0)
                 {
                     TileData nextTile;
-                    NewManager.instance.CalculatePathfinding(currentTile, detectedPlayer.currentTile, movementLeft, true);
+                    NewManager.instance.CalculatePathfinding(currentTile, detectedPlayer.currentTile, movementLeft, true,true);
                     nextTile = NewManager.instance.CurrentAvailableMoveTarget;  //moves towards the next patrol point
-                    direction = nextTile.gridPosition - currentTile.gridPosition;
-                    print("moving too " + nextTile.gridPosition);
-                    if (nextTile.myEntity == null)
+                    Vector2Int nextDirection = nextTile.gridPosition - currentTile.gridPosition;
+
+                    if (nextDirection != direction)
                     {
-                        MoveTile(nextTile);//move to the tile
-                                           //footsteps.Post(gameObject);
+                        direction = nextDirection;
+                        CalculateTiles();
                     }
-                    movementLeft--;
+                    else
+                    {
+                        //print("moving too " + nextTile.gridPosition);
+                        if (nextTile.myEntity == null)
+                        {
+                            MoveTile(nextTile);//move to the tile
+                                               //footsteps.Post(gameObject);
+                        }
+                        movementLeft--;
+                    }
                 }
                 else
                     yield break;
@@ -411,16 +429,26 @@ public class GuardEntity : MovingEntity
                 PatrolTarget = 0;
             }
         }
-        NewManager.instance.CalculatePathfinding(currentTile, NewManager.instance.listOfTiles[PatrolPoints[PatrolTarget].x, PatrolPoints[PatrolTarget].y], movementLeft, true);
+        NewManager.instance.CalculatePathfinding(currentTile, NewManager.instance.listOfTiles[PatrolPoints[PatrolTarget].x, PatrolPoints[PatrolTarget].y], movementLeft, true, true);
         nextTile = NewManager.instance.CurrentAvailableMoveTarget;  //moves towards the next patrol point
-        direction = nextTile.gridPosition - currentTile.gridPosition;
-        //print("moving too " + nextTile.gridPosition);
-        if (nextTile.myEntity == null)
+        Vector2Int nextDirection = nextTile.gridPosition - currentTile.gridPosition;
+
+        if (nextDirection != direction)
         {
-            MoveTile(nextTile);//move to the tile
-                               //footsteps.Post(gameObject);
+            direction = nextDirection;
+            CalculateTiles();
         }
-        movementLeft--;
+        else
+        {
+            //print("moving too " + nextTile.gridPosition);
+            if (nextTile.myEntity == null)
+            {
+                MoveTile(nextTile);//move to the tile
+                                   //footsteps.Post(gameObject);
+            }
+            movementLeft--;
+        }
+
 
 
 

@@ -890,8 +890,13 @@ public class NewManager : MonoBehaviour
     }
 
     //find fastest way to get from one point to another
+    //startLocation - the tile the entity is starting from
+    //targetLocation - the tile the entity wants to move to
+    //movementPoints - the max amount of spaces the entity can move 
+    //singleMovement - whether or not the entity will stop after 1 spaces moved
+    //considerEntities - whether or not the entity will see players as pathable tiles (used for guards looking for players)
 
-    public void CalculatePathfinding(TileData startLocation, TileData targetLocation, int movementPoints, bool singleMovement)
+    public void CalculatePathfinding(TileData startLocation, TileData targetLocation, int movementPoints, bool singleMovement, bool considerPlayers)
     {
         //open list is all the current neighbors to the analyzed path, the tiles are avalible to be scanned and haven't been checked yet
         List<AStarNode> openList = new List<AStarNode>();
@@ -929,11 +934,19 @@ public class NewManager : MonoBehaviour
                 }
                 if (neighbor.myEntity != null)
                 {
-                    if (neighbor.gridPosition != targetLocation.gridPosition && neighbor.myEntity.MoveCost > 100)
+                    if (considerPlayers && neighbor.myEntity.tag == "Player")
                     {
-                        continue;
+                        movementCostToNeighbor = currentNode.GCost + GetDistance(currentNode.ATileData.gridPosition, neighbor.gridPosition);
                     }
-                    movementCostToNeighbor = currentNode.GCost + GetDistance(currentNode.ATileData.gridPosition, neighbor.gridPosition) * neighbor.myEntity.MoveCost;
+                    else
+                    {
+                        if (neighbor.gridPosition != targetLocation.gridPosition && neighbor.myEntity.MoveCost > 100)
+                        {
+                            continue;
+                        }
+                        movementCostToNeighbor = currentNode.GCost + GetDistance(currentNode.ATileData.gridPosition, neighbor.gridPosition) * neighbor.myEntity.MoveCost;
+                    }
+
                 }
                 else
                 {

@@ -782,8 +782,11 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     internal IEnumerator AttackWall(WallEntity wall)
     {
-        wall.AffectWall(changeInWall);
-        currentTarget = wall.currentTile;
+        if (wall != null)
+        {
+            wall.AffectWall(changeInWall);
+            currentTarget = wall.currentTile;
+        }
         yield return null;
     }
 
