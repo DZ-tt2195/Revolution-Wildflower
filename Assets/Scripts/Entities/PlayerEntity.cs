@@ -141,7 +141,7 @@ public class PlayerEntity : MovingEntity
 
 #region Card Stuff
 
-    void SortHand()
+    void SortHand(float waitTime)
     {
         myHand = myHand.OrderBy(o => o.energyCost).ToList();
 
@@ -151,11 +151,11 @@ public class PlayerEntity : MovingEntity
             float startingX = (myHand.Count >= 8) ? -900 : (myHand.Count - 1) * -150;
             float difference = (myHand.Count >= 8) ? 1800f / (myHand.Count - 1) : 300;
             Vector2 newPosition = new(startingX + difference * i, -500);
-            StartCoroutine(nextCard.MoveCard(newPosition, newPosition, new Vector3(0, 0, 0), PlayerPrefs.GetFloat("Animation Speed")));
+            StartCoroutine(nextCard.MoveCard(newPosition, newPosition, new Vector3(0, 0, 0), waitTime));
         }
 
         foreach (Card card in myHand)
-            StartCoroutine(card.RevealCard(PlayerPrefs.GetFloat("Animation Speed")));
+            StartCoroutine(card.RevealCard(0.25f));
     }
 
     public void PlusCards(int num)
@@ -170,7 +170,7 @@ public class PlayerEntity : MovingEntity
             }
             catch (NullReferenceException){break;}
         }
-        SortHand();
+        SortHand(0.4f);
     }
 
     public Card GetTopCard()
@@ -215,9 +215,9 @@ public class PlayerEntity : MovingEntity
         {
             myHand.Remove(discardMe);
             discardMe.transform.SetAsLastSibling();
-            StartCoroutine(discardMe.MoveCard(new Vector2(1200, -440), new Vector2(0, -1000), new Vector3(0, 0, 0), PlayerPrefs.GetFloat("Animation Speed")));
-            SortHand();
-            yield return NewManager.Wait(PlayerPrefs.GetFloat("Animation Speed"));
+            StartCoroutine(discardMe.MoveCard(new Vector2(1200, -440), new Vector2(0, -1000), new Vector3(0, 0, 0), 0.25f));
+            SortHand(0.25f);
+            yield return NewManager.Wait(0.25f);
 
             myDiscardPile.Add(discardMe);
             discardMe.transform.SetParent(null);
@@ -233,10 +233,10 @@ public class PlayerEntity : MovingEntity
 
         float zRot = UnityEngine.Random.Range(-45f, 45f);
         exhaustMe.transform.SetAsLastSibling();
-        StartCoroutine(exhaustMe.MoveCard(new Vector2(exhaustMe.transform.localPosition.x, -700), new Vector2(0, -1000), new Vector3(0, 0, zRot), PlayerPrefs.GetFloat("Animation Speed")));
-        StartCoroutine(exhaustMe.FadeAway(PlayerPrefs.GetFloat("Animation Speed")));
-        SortHand();
-        yield return NewManager.Wait(PlayerPrefs.GetFloat("Animation Speed"));
+        StartCoroutine(exhaustMe.MoveCard(new Vector2(exhaustMe.transform.localPosition.x, -700), new Vector2(0, -1000), new Vector3(0, 0, zRot), 0.25f));
+        StartCoroutine(exhaustMe.FadeAway(0.25f));
+        SortHand(0.25f);
+        yield return NewManager.Wait(0.25f);
 
         myExhaust.Add(exhaustMe);
         exhaustMe.transform.SetParent(null);
@@ -246,8 +246,8 @@ public class PlayerEntity : MovingEntity
     {
         NewManager.instance.DisableAllCards();
         playMe.cardPlay.Post(playMe.gameObject);
-        StartCoroutine(playMe.MoveCard(new Vector2(playMe.transform.localPosition.x, -200), new Vector2(playMe.transform.localPosition.x, -200), new Vector3(0, 0, 0), PlayerPrefs.GetFloat("Animation Speed")));
-        yield return playMe.FadeAway(PlayerPrefs.GetFloat("Animation Speed"));
+        StartCoroutine(playMe.MoveCard(new Vector2(playMe.transform.localPosition.x, -200), new Vector2(playMe.transform.localPosition.x, -200), new Vector3(0, 0, 0), 0.25f));
+        yield return playMe.FadeAway(0.25f);
         StartCoroutine(this.DiscardFromHand(playMe));
 
         if (payEnergy)
@@ -268,7 +268,7 @@ public class PlayerEntity : MovingEntity
             card.transform.localPosition = new Vector3(0, -1000, 0);
             card.HideCard();
         }
-        SortHand();
+        SortHand(0.4f);
     }
 
     #endregion

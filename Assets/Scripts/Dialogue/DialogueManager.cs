@@ -20,7 +20,7 @@ public class DialogueManager : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI displayNameText;
     [SerializeField] private Animator portraitAnimator;
-    [SerializeField ]private Animator layoutAnimator;
+    [SerializeField]private Animator layoutAnimator;
 
     [Header("Sounds")]
     [SerializeField] AK.Wwise.Event textCrawlSound;
@@ -40,7 +40,7 @@ public class DialogueManager : MonoBehaviour
     private const string PORTRAIT_TAG = "portrait";
     private const string LAYOUT_TAG  = "layout";
 
-    private DialogueVariables dialogueVariables;
+    [HideInInspector] public DialogueVariables dialogueVariables;
 
     private void Awake()
     {

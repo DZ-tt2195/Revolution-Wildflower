@@ -198,6 +198,7 @@ public class NewManager : MonoBehaviour
                             thisTileEntity = Instantiate(objectivePrefab, nextTile.transform);
                             thisTileEntity.name = numberPlusAddition[1];
                             ObjectiveEntity defaultObjective = thisTileEntity.GetComponent<ObjectiveEntity>();
+                            defaultObjective.objective = numberPlusAddition[2];
                             listOfObjectives.Add(defaultObjective);
                             break;
 
@@ -359,7 +360,10 @@ public class NewManager : MonoBehaviour
         for (int i = listOfPlayers.Count - 1; i >= 0; i--)
         {
             PlayerEntity player = listOfPlayers[i];
-            try { StartCoroutine(player.adjacentObjective.ObjectiveComplete(player)); }
+            try { 
+                StartCoroutine(player.adjacentObjective.ObjectiveComplete(player));
+                return;
+            }
             catch (NullReferenceException) { continue; }
         }
     }
@@ -547,7 +551,6 @@ public class NewManager : MonoBehaviour
     {
         UpdateStats(null);
         yield return Wait(0.5f);
-
         foreach(Card card in futureEffects)
             yield return card.NextRoundEffect();
         futureEffects.Clear();
@@ -561,7 +564,7 @@ public class NewManager : MonoBehaviour
     {
         turnAlertBar.alpha = 0;
         turnText.text = message;
-
+        
         while (turnAlertBar.alpha < 1)
         {
             turnAlertBar.alpha += turnFadeSpeed;
@@ -573,15 +576,8 @@ public class NewManager : MonoBehaviour
             turnAlertBar.alpha -= turnFadeSpeed;
             yield return null;
         }
-
+        
         turnAlertBar.alpha = 0;
-        EnablePlayers();
-        if (lastSelectedPlayer != null)
-        {
-            Debug.Log($"{lastSelectedPlayer.name} was last selected");
-            selectedTile = lastSelectedPlayer.currentTile;
-            StartCoroutine(ChooseMovePlayer(lastSelectedPlayer));
-        }
     }
 
     public void EnablePlayers()
@@ -601,28 +597,25 @@ public class NewManager : MonoBehaviour
         DisableAllCards();
 
         UpdateStats(lastSelectedPlayer);
+        EnablePlayers();
         StopAllCoroutines();
-
         if (startTurn)
-        {
             StartCoroutine(FadeTurnBar("Player Turn"));
-        }
-        else
+
+        if (lastSelectedPlayer != null)
         {
-            EnablePlayers();
-            if (lastSelectedPlayer != null)
-            {
-                Debug.Log($"{lastSelectedPlayer.name} was last selected");
-                selectedTile = lastSelectedPlayer.currentTile;
-                StartCoroutine(ChooseMovePlayer(lastSelectedPlayer));
-            }
+            Debug.Log($"{lastSelectedPlayer.name} was last selected");
+            selectedTile = lastSelectedPlayer.currentTile;
+            StartCoroutine(ChooseMovePlayer(lastSelectedPlayer));
         }
     }
 
     public IEnumerator ChooseMovePlayer(PlayerEntity currentPlayer)
     {
-        if (lastSelectedPlayer != currentPlayer){
-            characterSelectSound.Post(currentPlayer.gameObject);}
+        if (lastSelectedPlayer != currentPlayer)
+        {
+            characterSelectSound.Post(currentPlayer.gameObject);
+        }
 
         lastSelectedPlayer = currentPlayer;
         AkSoundEngine.SetState("Character", currentPlayer.name);
@@ -644,7 +637,10 @@ public class NewManager : MonoBehaviour
                 Debug.Log("switched off");
                 yield break;
             }
-            else{yield return null;}
+            else
+            {
+                yield return null;
+            }
         }
 
         MovePlayer(currentPlayer);
@@ -675,8 +671,14 @@ public class NewManager : MonoBehaviour
 
             while (chosenCard == null)
             {
-                if (currentTurn != TurnSystem.You){yield break;}
-                else{yield return null;}
+                if (currentTurn != TurnSystem.You)
+                {
+                    yield break;
+                }
+                else
+                {
+                    yield return null;
+                }
             }
 
             currentTurn = TurnSystem.Resolving;
@@ -729,12 +731,15 @@ public class NewManager : MonoBehaviour
         foreach (PlayerEntity player in listOfPlayers)
             yield return player.EndOfTurn();
 
+        //sets turn to the enemies, and counts through the grid activating all enemies simultaniously
         currentTurn = TurnSystem.Enemy;
+
+        CoroutineGroup group = new CoroutineGroup(this);
         yield return FadeTurnBar("Company Turn");
         foreach (GuardEntity guard in listOfGuards)
-        {
-            yield return (guard.EndOfTurn());
-        }
+            group.StartCoroutine(guard.EndOfTurn());
+        while (group.AnyProcessing)
+            yield return null;
 
         turnCount--;
         if (turnCount == 0)
