@@ -69,7 +69,7 @@ public class TitleScreen : MonoBehaviour
                 animationSpeed.value = 0;
                 break;
         }
-        UnityEngine.Debug.Log(PlayerPrefs.GetFloat("Animation Speed"));
+        //UnityEngine.Debug.Log(PlayerPrefs.GetFloat("Animation Speed"));
     }
 
     IEnumerator CausedError(string newText)

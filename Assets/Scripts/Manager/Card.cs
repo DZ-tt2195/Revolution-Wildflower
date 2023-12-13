@@ -189,6 +189,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
             "ISPLAYER" => SearchAdjacentPlayers(currentPlayer.currentTile).Count > 0,
             "ISGUARD" => SearchAdjacentGuard(currentPlayer.currentTile).Count > 0,
             "ISWALL" => SearchAdjacentWall(currentPlayer.currentTile).Count > 0,
+            "ISUNOCCUPIED" => UnoccupiedAdjacent(currentPlayer.currentTile).Count > 0,
             "ISOCCUPIED" => OccupiedAdjacent(currentPlayer.currentTile).Count > 0,
             "CARDSINHAND" => currentPlayer.myHand.Count >= 2,
             "EMPTYHAND" => currentPlayer.myHand.Count == 1,
@@ -220,6 +221,20 @@ public class Card : MonoBehaviour, IPointerClickHandler
                 occupiedTiles.Add(tile);
         }
         return occupiedTiles;
+    }
+
+    List<TileData> UnoccupiedAdjacent(TileData playerTile)
+    {
+        List<TileData> occupiedTiles = new();
+        List<TileData> tilesInRange = NewManager.instance.CalculateReachableGrids(playerTile, range, false);
+
+        foreach (TileData tile in tilesInRange)
+        {
+            if (tile.myEntity == null)
+                occupiedTiles.Add(tile);
+        }
+        return occupiedTiles;
+
     }
 
     List<TileData> SearchAdjacentPlayers(TileData playerTile)
@@ -267,7 +282,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         return wallsInRange;
     }
 
-    #endregion
+#endregion
 
 #region Animations
 
@@ -576,64 +591,51 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     IEnumerator ChooseGuard()
     {
-        TileData targetGuard = null;
-
-        if (adjacentTilesWithGuards.Count == 1)
-        {
-            targetGuard = adjacentTilesWithGuards[0];
-        }
-        else
+        if (adjacentTilesWithGuards.Count != 1)
         {
             NewManager.instance.UpdateInstructions("Choose a guard in range.");
             NewManager.instance.WaitForDecision(adjacentTilesWithGuards);
+
             while (NewManager.instance.chosenTile == null)
                 yield return null;
-            targetGuard = NewManager.instance.chosenTile;
+
+            adjacentTilesWithGuards.Clear();
+            adjacentTilesWithGuards.Add(NewManager.instance.chosenTile);
         }
 
     }
 
     IEnumerator ChoosePlayer()
     {
-        TileData targetPlayer = null;
-
-        if (adjacentTilesWithPlayers.Count == 1)
-        {
-            targetPlayer = adjacentTilesWithPlayers[0];
-        }
-        else
+        if (adjacentTilesWithPlayers.Count != 1)
         {
             NewManager.instance.UpdateInstructions("Choose a player in range.");
             NewManager.instance.WaitForDecision(adjacentTilesWithPlayers);
 
             while (NewManager.instance.chosenTile == null)
                 yield return null;
-            targetPlayer = NewManager.instance.chosenTile;
+
+            adjacentTilesWithPlayers.Clear();
+            adjacentTilesWithPlayers.Add(NewManager.instance.chosenTile);
         }
 
         adjacentTilesWithPlayers.Clear();
-        adjacentTilesWithPlayers.Add(targetPlayer);
+        adjacentTilesWithPlayers.Add(NewManager.instance.chosenTile);
     }
 
     IEnumerator ChooseWall()
     {
-        TileData targetWall = null;
-
-        if (adjacentTilesWithWalls.Count == 1)
-        {
-            targetWall = adjacentTilesWithWalls[0];
-        }
-        else
+        if (adjacentTilesWithWalls.Count != 1)
         {
             NewManager.instance.UpdateInstructions("Choose a wall in range.");
             NewManager.instance.WaitForDecision(adjacentTilesWithWalls);
+
             while (NewManager.instance.chosenTile == null)
                 yield return null;
-            targetWall = NewManager.instance.chosenTile;
-        }
 
-        adjacentTilesWithWalls.Clear();
-        adjacentTilesWithWalls.Add(targetWall);
+            adjacentTilesWithWalls.Clear();
+            adjacentTilesWithWalls.Add(NewManager.instance.chosenTile);
+        }
     }
 
     //selects a tile, using line of sight around the player,
