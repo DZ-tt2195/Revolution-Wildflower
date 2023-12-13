@@ -7,8 +7,10 @@ using System;
 public class EnvironmentalEntity : MovingEntity
 {
     [Foldout("Enviromental Entity", true)]
-        [Tooltip("Store this entity's instructions")][ReadOnly] public Card card;
-        [Tooltip("Store this entity's delay time")][ReadOnly] public int delay;
+    [Tooltip("Store this entity's instructions")][ReadOnly] public Card card;
+    [Tooltip("Store this entity's delay time")][ReadOnly] public int delay;
+
+#region Entity Stuff
 
     public override IEnumerator EndOfTurn()
     {
@@ -20,6 +22,10 @@ public class EnvironmentalEntity : MovingEntity
             Destroy(this.gameObject);
         }
     }
+
+    #endregion
+
+#region Activation 
 
     IEnumerator ResolveList()
     {
@@ -52,11 +58,29 @@ public class EnvironmentalEntity : MovingEntity
             case "STUNALL":
                 yield return StunAll(FindEntitiesInRange());
                 break;
+            case "DAMAGEWALLS":
+                yield return DamageWalls(FindWallsInRange());
+                break;
             default:
                 Debug.LogError($"{methodName} isn't a method");
                 yield return null;
                 break;
         }
+    }
+
+    List<WallEntity> FindWallsInRange()
+    {
+        List<TileData> tilesInRange = NewManager.instance.CalculateReachableGrids(this.currentTile, card.areaOfEffect, false);
+        List<WallEntity> entitiesInRange = new();
+
+        foreach (TileData tile in tilesInRange)
+        {
+            try { entitiesInRange.Add(tile.myEntity.GetComponent<WallEntity>()); }
+            catch (NullReferenceException) { continue; }
+        }
+
+        entitiesInRange.RemoveAll(item => item == null); //delete all tiles that are null
+        return entitiesInRange;
     }
 
     List<MovingEntity> FindEntitiesInRange()
@@ -74,20 +98,31 @@ public class EnvironmentalEntity : MovingEntity
         return entitiesInRange;
     }
 
+    #endregion
+
+#region Effects 
+
     IEnumerator StunAll(List<MovingEntity> allEntities)
     {
         foreach (MovingEntity entity in allEntities)
         {
-            if (entity == null)
-                Debug.Log("null");
-            else
-                Debug.Log($"{entity.name}");
-        }
-
-        foreach (MovingEntity entity in allEntities)
-        {
-            entity.stunned += card.stunDuration;
+            if (entity.CompareTag("Player"))
+                yield return card.StunPlayer(entity.GetComponent<PlayerEntity>());
+            if (entity.CompareTag("Guard"))
+                yield return card.StunGuard(entity.GetComponent<GuardEntity>());
         }
         yield return null;
     }
-}   
+
+    IEnumerator DamageWalls(List<WallEntity> allWalls)
+    {
+        foreach (WallEntity entity in allWalls)
+        {
+            yield return card.AttackWall(entity);
+        }
+        yield return null;
+    }
+
+    #endregion
+
+}

@@ -806,11 +806,11 @@ public class Card : MonoBehaviour, IPointerClickHandler
         yield return null;
     }
 
-#endregion
+    #endregion
 
 #region Interacts With Entities
 
-    IEnumerator AttackOrDistraction(TileData target)
+    internal IEnumerator AttackOrDistraction(TileData target)
     {
         if (target.myEntity != null)
         {
@@ -836,7 +836,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         yield return null;
     }
 
-    IEnumerator SwapGuard(GuardEntity guard)
+    internal IEnumerator SwapGuard(GuardEntity guard)
     {
         TileData guardsOriginalTile = guard.currentTile;
         TileData playersOriginalTile = currentPlayer.currentTile;
@@ -844,6 +844,16 @@ public class Card : MonoBehaviour, IPointerClickHandler
         currentPlayer.MoveTile(guardsOriginalTile);
         guard.MoveTile(playersOriginalTile);
         yield return NewManager.Wait(0.2f);
+    }
+
+    internal IEnumerator StunPlayer(PlayerEntity player)
+    {
+        yield return null;
+        //guard.stunSound.Post(guard.gameObject);
+        //guard.DetectionRangePatrol = 0;
+        player.stunned += stunDuration;
+        //guard.CalculateTiles();
+        //currentTarget = guard.currentTile;
     }
 
     internal IEnumerator StunGuard(GuardEntity guard)
@@ -856,7 +866,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         currentTarget = guard.currentTile;
     }
 
-    IEnumerator CreateEnvironmental()
+    internal IEnumerator CreateEnvironmental()
     {
         EnvironmentalEntity newEnviro = NewManager.instance.CreateEnvironmental();
         newEnviro.currentTile = currentTarget;
