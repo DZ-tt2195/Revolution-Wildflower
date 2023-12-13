@@ -685,6 +685,50 @@ public class Card : MonoBehaviour, IPointerClickHandler
         currentTarget = NewManager.instance.chosenTile;
     }
 
+    //selects a tile, using line of sight around the player,
+    IEnumerator ChooseTileLOS()
+    {
+        List<HashSet<Vector2Int>> DetectLines = new List<HashSet<Vector2Int>>();
+        HashSet<Vector2Int> tilesInRange = new HashSet<Vector2Int>();
+
+        for (int i = 0; i < 360; i += 5)
+        {
+            float lineAngle = (i * Mathf.Deg2Rad);
+            Vector2 newVector = new Vector2(Mathf.Cos(lineAngle), Mathf.Sin(lineAngle));
+            DetectLines.Add(NewManager.instance.line(currentPlayer.currentTile.gridPosition, currentPlayer.currentTile.gridPosition + Vector2Int.RoundToInt(newVector.normalized * range)));
+        }
+        for (int i = 0; i < DetectLines.Count; i++)
+        {
+            foreach (Vector2Int point in DetectLines[i])
+            {
+                TileData TileToAdd = NewManager.instance.FindTile(point);
+                if (TileToAdd == null)
+                {
+                    break;
+                }
+                if (TileToAdd.myEntity != null)
+                {
+                    if (TileToAdd.myEntity.Occlusion && point != currentPlayer.currentTile.gridPosition)
+                    {
+                        break;
+                    }
+                }
+                tilesInRange.Add(point);
+            }
+        }
+        List<TileData> tilesToSelect = new List<TileData>();
+        foreach (Vector2Int point in tilesInRange)
+        {
+            tilesToSelect.Add(NewManager.instance.FindTile(point));
+        }
+
+        NewManager.instance.UpdateInstructions("Choose a tile in range.");
+        NewManager.instance.WaitForDecision(tilesToSelect);
+        while (NewManager.instance.chosenTile == null)
+            yield return null;
+        currentTarget = NewManager.instance.chosenTile;
+    }
+
     IEnumerator ChooseTile()
     {
         List<TileData> tilesInRange = NewManager.instance.CalculateReachableGrids(currentPlayer.currentTile, range, false);
