@@ -120,7 +120,7 @@
     ],
     [
       "Hammer",
-      "Deal 2 damage to a wall that is 1 tile away, intensity 10.",
+      "Deal 2 damage to a wall that's up to 2 tiles away, intensity 3.",
       "atk",
       "",
       "2",
@@ -132,12 +132,12 @@
       "",
       "",
       "",
-      "1",
+      "2",
       "",
       "",
       "-3",
       "",
-      "10",
+      "2",
       "IsWall",
       "AttackAdjacentWall"
     ],
@@ -235,7 +235,7 @@
     ],
     [
       "TNT",
-      "Range 3. With Delay 1, Deal 4 damage to all walls within 3 tiles. Intensity 7.",
+      "Range 3. With Delay 1, Deal 4 damage to all walls within 3 tiles. Intensity 7",
       "atk",
       "",
       "2",
