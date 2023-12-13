@@ -379,6 +379,8 @@ public class NewManager : MonoBehaviour
 
     public void UpdateStats(PlayerEntity player)
     {
+        int facesIndex = 0;
+
         if (player != null)
         {
             stats.text = $"{player.name} | <color=#ffc73b>{player.health} Health <color=#ffffff>" +
@@ -392,19 +394,17 @@ public class NewManager : MonoBehaviour
             
             if(player.name == "Gail")
             {
-                characterFace.sprite = facesSpritesheet[2];
-                Debug.Log("gail");
+                facesIndex = 2;
             }
             else if(player.name == "Frankie")
             {
-                characterFace.sprite = facesSpritesheet[0];
-                Debug.Log("Frankie");
+                facesIndex = 0;
             }
             else if (player.name == "WK")
             {
-                characterFace.sprite = facesSpritesheet[1];
-                Debug.Log("WK");
+                facesIndex = 1;
             }
+            characterFace.sprite = facesSpritesheet[facesIndex];
 
             deckTracker.text = $"<color=#70f5ff>Draw Pile <color=#ffffff>/ <color=#ff9670>Discard Pile " +
                 $"\n\n<color=#70f5ff>{player.myDrawPile.Count} <color=#ffffff>/ <color=#ff9670>{player.myDiscardPile.Count}" +
@@ -424,7 +424,11 @@ public class NewManager : MonoBehaviour
             moves.text = "Moves:";
             energy.text = "Energy:";
             characterFace.sprite = null;
-
+            /*
+            Color currentColor = facesSpritesheet[facesIndex].color;
+            currentColor.a = Mathf.Clamp01(newAlpha); // Ensure the alpha value is between 0 and 1
+            myImage.color = currentColor;
+            */
             deckTracker.text = "";
             handContainer.transform.localPosition = new Vector3(10000, 10000, 0);
         }
