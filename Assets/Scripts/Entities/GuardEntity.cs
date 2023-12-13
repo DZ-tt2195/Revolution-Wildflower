@@ -265,8 +265,11 @@ public class GuardEntity : MovingEntity
             nextTile = NewManager.instance.CurrentAvailableMoveTarget;  //moves towards the next patrol point
             direction = nextTile.gridPosition - currentTile.gridPosition;
             print("moving too " + nextTile.gridPosition);
-            MoveTile(nextTile);//move to the tile
-            //footsteps.Post(gameObject);
+            if (nextTile.myEntity == null)
+            {
+                MoveTile(nextTile);//move to the tile
+                                   //footsteps.Post(gameObject);
+            }
             movementLeft--;
 
             yield return NewManager.Wait(movePauseTime);
@@ -358,8 +361,11 @@ public class GuardEntity : MovingEntity
                     nextTile = NewManager.instance.CurrentAvailableMoveTarget;  //moves towards the next patrol point
                     direction = nextTile.gridPosition - currentTile.gridPosition;
                     print("moving too " + nextTile.gridPosition);
-                    MoveTile(nextTile);//move to the tile
-                    //footsteps.Post(gameObject);
+                    if (nextTile.myEntity == null)
+                    {
+                        MoveTile(nextTile);//move to the tile
+                                           //footsteps.Post(gameObject);
+                    }
                     movementLeft--;
                 }
                 else
@@ -409,9 +415,13 @@ public class GuardEntity : MovingEntity
         nextTile = NewManager.instance.CurrentAvailableMoveTarget;  //moves towards the next patrol point
         direction = nextTile.gridPosition - currentTile.gridPosition;
         //print("moving too " + nextTile.gridPosition);
-        MoveTile(nextTile);//move to the tile
-        //footsteps.Post(gameObject);
+        if (nextTile.myEntity == null)
+        {
+            MoveTile(nextTile);//move to the tile
+                               //footsteps.Post(gameObject);
+        }
         movementLeft--;
+
 
 
         CheckForPlayer();

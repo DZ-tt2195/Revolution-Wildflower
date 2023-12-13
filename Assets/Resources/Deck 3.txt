@@ -143,7 +143,7 @@
     ],
     [
       "Stun",
-      "Stun 2 on a guard that's up to 2 tiles away, intensity 8",
+      "Stun 2 on a guard that's up to 2 tiles away, Intensity 8.",
       "atk",
       "",
       "2",
@@ -166,7 +166,7 @@
     ],
     [
       "Brass Knuckles",
-      "Stun 5 on an adjacent guard, intensity 8.",
+      "Stun 5 on an adjacent guard, intensity 8",
       "atk",
       "",
       "2",
@@ -260,7 +260,7 @@
     ],
     [
       "Thrown Bottle",
-      "Range 10. If the target tile is unoccupied, create a distraction (Intensity 8. If it is occupied by a guard, Stun 2 on that guard.",
+      "Range 10. If the target tile is unoccupied, create a distraction (Intensity 8). If it is occupied by a guard, Stun 2 on that guard.",
       "dist",
       "atk",
       "2",
@@ -283,12 +283,12 @@
     ],
     [
       "Flashbang",
-      "Range 3, With Delay 1, Stun 1 to all players and guards within 3 tiles. Intensity 7",
+      "Range 3, With Delay 1, Stun 1 to everyone within 3 tiles. Intensity 7",
       "atk",
       "",
       "2",
       "2",
-      "v",
+      "nv",
       "",
       "",
       "",
