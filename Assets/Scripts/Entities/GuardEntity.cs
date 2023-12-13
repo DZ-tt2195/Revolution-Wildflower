@@ -20,7 +20,10 @@ public class GuardEntity : MovingEntity
         [Tooltip("Tiles this is searching")] List<TileData> inDetection = new List<TileData>();
         [Tooltip("Pauses between movement")] float movePauseTime = 0.25f;
         [Tooltip("How far this can see")] [SerializeField] public int DetectionRangePatrol = 3;
+<<<<<<< HEAD
         int DetectionRangeMax = 3; 
+=======
+>>>>>>> cf9095d (Dialogue text fixed)
         [Tooltip("half their field of view for detection (MUST BE A MULTIPLE OF 5)")] [SerializeField] int DetectionAngle = 30;
         [Tooltip("State of a guard's alert")] Alert alertStatus = 0;
 
