@@ -4,8 +4,13 @@
       "card explanation displayed on the card itself",
       "atk, draw, dist, eng, mvmt, misc",
       "",
+<<<<<<< HEAD
       "21 cards in the deck",
       "EP cost",
+=======
+      "20 cards in the deck",
+      "average cost: 1.5",
+>>>>>>> main
       "v/nv tagging",
       "health change",
       "movement change",
@@ -54,8 +59,13 @@
       "\"+2 Cards, -2 Cards.\"",
       "draw",
       "",
+<<<<<<< HEAD
       "2",
       "0",
+=======
+      "1",
+      "1",
+>>>>>>> main
       "nv",
       "",
       "",
@@ -74,7 +84,7 @@
     ],
     [
       "Bandage",
-      "This or another character that's up to 2 tiles away gets +1 Health.",
+      "This or another character that's up to 1 tile away gets +1 Health.",
       "misc",
       "",
       "2",
@@ -86,7 +96,7 @@
       "",
       "",
       "",
-      "2",
+      "1",
       "",
       "",
       "",
@@ -100,8 +110,12 @@
       "Each character gets +1 Card.",
       "draw",
       "",
+<<<<<<< HEAD
       "1",
+=======
+>>>>>>> main
       "1",
+      "2",
       "nv",
       "",
       "",
@@ -119,6 +133,7 @@
       "AllDrawCards"
     ],
     [
+<<<<<<< HEAD
       "Boom",
       "Deal 2 damage to a wall that's up to 2 tiles away, intensity 3.",
       "atk",
@@ -148,6 +163,37 @@
       "",
       "2",
       "0",
+=======
+      "Hammer",
+      "Deal 2 damage to a wall that's up to 2 tiles away, intensity 3.",
+      "atk",
+      "",
+      "2",
+      "1",
+      "nv",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "2",
+      "",
+      "",
+      "-3",
+      "",
+      "2",
+      "IsWall",
+      "AttackAdjacentWall"
+    ],
+    [
+      "Stun",
+      "Stun 2 on a guard that's up to 2 tiles away, Intensity 8.",
+      "atk",
+      "",
+      "2",
+      "1",
+>>>>>>> main
       "v",
       "",
       "",
@@ -160,13 +206,13 @@
       "",
       "",
       "",
-      "3",
+      "8",
       "IsGuard",
       "StunAdjacentGuard"
     ],
     [
       "Brass Knuckles",
-      "Stun 5 on an adjacent guard, intensity 3.",
+      "Stun 5 on an adjacent guard, intensity 8",
       "atk",
       "",
       "2",
@@ -183,7 +229,7 @@
       "",
       "",
       "",
-      "3",
+      "8",
       "IsGuard",
       "StunAdjacentGuard"
     ],
@@ -215,9 +261,9 @@
     [
       "Practice",
       "This turn, cards that cost 2 EP or more cost 1 EP less.",
-      "Energy",
+      "eng",
       "",
-      "1",
+      "2",
       "2",
       "nv",
       "",
@@ -237,7 +283,11 @@
     ],
     [
       "Whistle",
+<<<<<<< HEAD
       "Create a distraction with Intensity 5 on your current location.",
+=======
+      "Create a distraction with Intensity 12 on your current location.",
+>>>>>>> main
       "dist",
       "",
       "2",
@@ -254,13 +304,21 @@
       "",
       "",
       "",
+<<<<<<< HEAD
       "8",
+=======
+      "12",
+>>>>>>> main
       "",
       "CenterDistraction"
     ],
     [
       "Thrown Bottle",
+<<<<<<< HEAD
       "Range 5. If the target tile is unoccupied, create a distraction (Intensity 3). If it is occupied by a guard, Stun 2 on that guard.",
+=======
+      "Range 10. If the target tile is unoccupied, create a distraction (Intensity 8). If it is occupied by a guard, Stun 2 on that guard.",
+>>>>>>> main
       "dist",
       "atk",
       "2",
@@ -272,17 +330,26 @@
       "",
       "",
       "2",
+<<<<<<< HEAD
       "5",
+=======
+      "10",
+>>>>>>> main
       "",
       "",
       "",
       "",
+<<<<<<< HEAD
       "3",
+=======
+      "8",
+>>>>>>> main
       "",
       "TargetDistraction&Damage"
     ],
     [
       "Flashbang",
+<<<<<<< HEAD
       "Range 3, Area of Effect 3. With Delay 1, Stun 1 on everyone within area of effect. Intensity 7",
       "atk",
       "",
@@ -291,6 +358,16 @@
       "nv",
       "",
       "1",
+=======
+      "Range 3, With Delay 1, Stun 1 to everyone within 3 tiles. Intensity 7",
+      "atk",
+      "",
+      "2",
+      "2",
+      "nv",
+      "",
+      "",
+>>>>>>> main
       "",
       "",
       "",

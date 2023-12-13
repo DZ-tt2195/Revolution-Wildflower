@@ -4,8 +4,13 @@
       "card explanation displayed on the card itself",
       "atk, draw, dist, eng, mvmt, misc",
       "",
+<<<<<<< HEAD
       "19 cards in the deck",
       "EP cost",
+=======
+      "20 cards in the deck",
+      "average cost: 1.2",
+>>>>>>> main
       "v/nv tagging",
       "health change",
       "movement change",
@@ -55,7 +60,11 @@
       "draw",
       "",
       "2",
+<<<<<<< HEAD
       "0",
+=======
+      "1",
+>>>>>>> main
       "nv",
       "",
       "",
@@ -74,7 +83,7 @@
     ],
     [
       "Bandage",
-      "This or another character that's up to 2 tiles away gets +1 Health.",
+      "This or another character that's up to 1 tile away gets +1 Health.",
       "misc",
       "",
       "2",
@@ -86,7 +95,7 @@
       "",
       "",
       "",
-      "2",
+      "1",
       "",
       "",
       "",
@@ -101,7 +110,7 @@
       "draw",
       "",
       "2",
-      "1",
+      "2",
       "nv",
       "",
       "",
@@ -119,11 +128,19 @@
       "AllDrawCards"
     ],
     [
+<<<<<<< HEAD
       "Boom",
       "Deal 2 damage to a wall that's up to 2 tiles away, intensity 3.",
       "atk",
       "",
       "3",
+=======
+      "Hammer",
+      "Deal 2 damage to a wall that's up to 2 tiles away, intensity 3.",
+      "atk",
+      "",
+      "2",
+>>>>>>> main
       "1",
       "nv",
       "",
@@ -146,7 +163,11 @@
       "Exhaust a card from your hand for +2 Movement.",
       "mvmt",
       "",
+<<<<<<< HEAD
       "3",
+=======
+      "1",
+>>>>>>> main
       "1",
       "nv",
       "",
@@ -170,7 +191,7 @@
       "mvmt",
       "",
       "2",
-      "0",
+      "1",
       "nv",
       "",
       "4",
@@ -192,7 +213,7 @@
       "Choose one: +1 Energy; or +1 Movement.",
       "mvmt",
       "eng",
-      "3",
+      "2",
       "0",
       "nv",
       "",
@@ -211,9 +232,40 @@
       "ChooseButton(ChangeMP|ChangeEP)"
     ],
     [
+<<<<<<< HEAD
       "Swap",
       "Swap locations with a guard up to 3 tiles away.",
       "mvmt",
+=======
+      "Prepare",
+      "+2 Movement and +2 Energy for this character at the beginning of next round.",
+      "mvmt",
+      "eng",
+      "2",
+      "2",
+      "nv",
+      "2",
+      "2",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "ChangeMP/ChangeEP"
+    ],
+    [
+      "Whistle",
+      "Create a distraction with Intensity 12 on your current location.",
+      "dist",
+>>>>>>> main
       "",
       "2",
       "1",
@@ -224,14 +276,70 @@
       "",
       "",
       "",
+<<<<<<< HEAD
+=======
+      "0",
+      "",
+      "",
+      "",
+      "",
+      "12",
+      "",
+      "CenterDistraction"
+    ],
+    [
+      "Smack",
+      "Stun 1 on a guard that's up to 2 tiles away, Intensity 8.",
+      "atk",
+      "",
+      "2",
+      "1",
+      "v",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "1",
+      "2",
+      "",
+      "",
+      "",
+      "",
+      "8",
+      "IsGuard",
+      "StunAdjacentGuard"
+    ],
+    [
+      "Overexert",
+      "+3 Cards, +3 Energy. At the beginning of next round, 0 MP and 0 EP for this character.",
+      "draw",
+      "eng",
+      "1",
+      "2",
+      "nv",
+      "",
+      "",
+      "3",
+>>>>>>> main
       "3",
       "",
       "",
       "",
       "",
       "",
+<<<<<<< HEAD
       "IsGuard",
       "SwapAdjacentGuard"
+=======
+      "",
+      "",
+      "0",
+      "",
+      "DrawCards/ChangeEP",
+      "",
+      "ZeroEnergy/ZeroMovement"
+>>>>>>> main
     ]
   ]
 }

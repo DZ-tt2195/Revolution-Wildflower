@@ -26,6 +26,10 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] AK.Wwise.Event textCrawlSound;
     [SerializeField] AK.Wwise.Event textboxStopSound;
 
+    [Header("Sounds")]
+    [SerializeField] AK.Wwise.Event textCrawlSound;
+    [SerializeField] AK.Wwise.Event textboxStopSound;
+
     private Story currentStory;
 
     public bool dialogueIsPlaying { get; private set; }

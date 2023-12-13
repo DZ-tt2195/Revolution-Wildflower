@@ -22,6 +22,8 @@ public class TitleScreen : MonoBehaviour
     TMP_InputField newName;
     TMP_Dropdown fileChoose;
 
+    TMP_Dropdown animationSpeed;
+
     private void Awake()
     {
         deleteFile = GameObject.Find("Delete Deck").GetComponent<Button>();
@@ -39,6 +41,9 @@ public class TitleScreen : MonoBehaviour
 
         fileChoose = GameObject.Find("Save File Dropdown").GetComponent<TMP_Dropdown>();
         fileChoose.onValueChanged.AddListener(delegate { LoadCheck(); });
+
+        animationSpeed = GameObject.Find("Card Animation Dropdown").GetComponent<TMP_Dropdown>();
+        animationSpeed.onValueChanged.AddListener(delegate { SetAnimationSpeed(); });
     }
 
     private void Start()
@@ -52,6 +57,19 @@ public class TitleScreen : MonoBehaviour
                 fileChoose.RefreshShownValue();
             }
         }
+        switch (PlayerPrefs.GetFloat("Animation Speed"))
+        {
+            case 0f:
+                animationSpeed.value = 2;
+                break;
+            case 0.25f:
+                animationSpeed.value = 1;
+                break;
+            case 0.5f:
+                animationSpeed.value = 0;
+                break;
+        }
+        UnityEngine.Debug.Log(PlayerPrefs.GetFloat("Animation Speed"));
     }
 
     IEnumerator CausedError(string newText)
@@ -116,6 +134,22 @@ public class TitleScreen : MonoBehaviour
             SaveManager.instance.DeleteData(fileChoose.options[fileChoose.value].text);
             fileChoose.options.RemoveAt(fileChoose.value);
             fileChoose.RefreshShownValue();
+        }
+    }
+
+    void SetAnimationSpeed()
+    {
+        switch (animationSpeed.options[animationSpeed.value].text)
+        {
+            case "Slow":
+                PlayerPrefs.SetFloat("Animation Speed", 0.5f);
+                break;
+            case "Fast":
+                PlayerPrefs.SetFloat("Animation Speed", 0.25f);
+                break;
+            case "None":
+                PlayerPrefs.SetFloat("Animation Speed", 0f);
+                break;
         }
     }
 }

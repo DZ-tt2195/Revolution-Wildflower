@@ -551,6 +551,10 @@ public class NewManager : MonoBehaviour
     {
         UpdateStats(null);
         yield return Wait(0.5f);
+<<<<<<< HEAD
+=======
+
+>>>>>>> main
         foreach(Card card in futureEffects)
             yield return card.NextRoundEffect();
         futureEffects.Clear();
@@ -564,7 +568,11 @@ public class NewManager : MonoBehaviour
     {
         turnAlertBar.alpha = 0;
         turnText.text = message;
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> main
         while (turnAlertBar.alpha < 1)
         {
             turnAlertBar.alpha += turnFadeSpeed;
@@ -576,8 +584,20 @@ public class NewManager : MonoBehaviour
             turnAlertBar.alpha -= turnFadeSpeed;
             yield return null;
         }
+<<<<<<< HEAD
         
         turnAlertBar.alpha = 0;
+=======
+
+        turnAlertBar.alpha = 0;
+        EnablePlayers();
+        if (lastSelectedPlayer != null)
+        {
+            Debug.Log($"{lastSelectedPlayer.name} was last selected");
+            selectedTile = lastSelectedPlayer.currentTile;
+            StartCoroutine(ChooseMovePlayer(lastSelectedPlayer));
+        }
+>>>>>>> main
     }
 
     public void EnablePlayers()
@@ -597,8 +617,8 @@ public class NewManager : MonoBehaviour
         DisableAllCards();
 
         UpdateStats(lastSelectedPlayer);
-        EnablePlayers();
         StopAllCoroutines();
+<<<<<<< HEAD
         if (startTurn)
             StartCoroutine(FadeTurnBar("Player Turn"));
 
@@ -607,15 +627,36 @@ public class NewManager : MonoBehaviour
             Debug.Log($"{lastSelectedPlayer.name} was last selected");
             selectedTile = lastSelectedPlayer.currentTile;
             StartCoroutine(ChooseMovePlayer(lastSelectedPlayer));
+=======
+
+        if (startTurn)
+        {
+            StartCoroutine(FadeTurnBar("Player Turn"));
+        }
+        else
+        {
+            EnablePlayers();
+            if (lastSelectedPlayer != null)
+            {
+                Debug.Log($"{lastSelectedPlayer.name} was last selected");
+                selectedTile = lastSelectedPlayer.currentTile;
+                StartCoroutine(ChooseMovePlayer(lastSelectedPlayer));
+            }
+>>>>>>> main
         }
     }
 
     public IEnumerator ChooseMovePlayer(PlayerEntity currentPlayer)
     {
+<<<<<<< HEAD
         if (lastSelectedPlayer != currentPlayer)
         {
             characterSelectSound.Post(currentPlayer.gameObject);
         }
+=======
+        if (lastSelectedPlayer != currentPlayer){
+            characterSelectSound.Post(currentPlayer.gameObject);}
+>>>>>>> main
 
         lastSelectedPlayer = currentPlayer;
         AkSoundEngine.SetState("Character", currentPlayer.name);
@@ -637,10 +678,7 @@ public class NewManager : MonoBehaviour
                 Debug.Log("switched off");
                 yield break;
             }
-            else
-            {
-                yield return null;
-            }
+            else{yield return null;}
         }
 
         MovePlayer(currentPlayer);
@@ -671,14 +709,8 @@ public class NewManager : MonoBehaviour
 
             while (chosenCard == null)
             {
-                if (currentTurn != TurnSystem.You)
-                {
-                    yield break;
-                }
-                else
-                {
-                    yield return null;
-                }
+                if (currentTurn != TurnSystem.You){yield break;}
+                else{yield return null;}
             }
 
             currentTurn = TurnSystem.Resolving;
@@ -731,15 +763,17 @@ public class NewManager : MonoBehaviour
         foreach (PlayerEntity player in listOfPlayers)
             yield return player.EndOfTurn();
 
-        //sets turn to the enemies, and counts through the grid activating all enemies simultaniously
         currentTurn = TurnSystem.Enemy;
+<<<<<<< HEAD
 
         CoroutineGroup group = new CoroutineGroup(this);
+=======
+>>>>>>> main
         yield return FadeTurnBar("Company Turn");
         foreach (GuardEntity guard in listOfGuards)
-            group.StartCoroutine(guard.EndOfTurn());
-        while (group.AnyProcessing)
-            yield return null;
+        {
+            yield return (guard.EndOfTurn());
+        }
 
         turnCount--;
         if (turnCount == 0)

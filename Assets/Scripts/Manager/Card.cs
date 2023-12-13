@@ -45,7 +45,11 @@ public class Card : MonoBehaviour, IPointerClickHandler
         [ReadOnly] int range;
         [ReadOnly] public int areaOfEffect { get; private set; }
         [ReadOnly] public int delay { get; private set; }
+<<<<<<< HEAD
         [ReadOnly] int changeInWall;
+=======
+        [ReadOnly] public int changeInWall { get; private set; }
+>>>>>>> main
         [ReadOnly] int burnDuration;
         [ReadOnly] int distractionIntensity;
 
@@ -447,8 +451,14 @@ public class Card : MonoBehaviour, IPointerClickHandler
                 case "CHANGEEP":
                     yield return ChangeEnergy(currentPlayer);
                     break;
+                case "ZEROENERGY":
+                    yield return ZeroEnergy(currentPlayer);
+                    break;
                 case "CHANGEMP":
                     yield return ChangeMovement(currentPlayer);
+                    break;
+                case "ZEROMOVEMENT":
+                    yield return ZeroMovement(currentPlayer);
                     break;
                 case "DISCARDHAND":
                     yield return DiscardHand(currentPlayer);
@@ -795,7 +805,12 @@ public class Card : MonoBehaviour, IPointerClickHandler
     {
         yield return null;
         guard.stunSound.Post(guard.gameObject);
+        guard.DetectionRangePatrol = 0;
         guard.stunned += stunDuration;
+<<<<<<< HEAD
+=======
+        guard.CalculateTiles();
+>>>>>>> main
         currentTarget = guard.currentTile;
     }
 
@@ -803,6 +818,12 @@ public class Card : MonoBehaviour, IPointerClickHandler
     {
         EnvironmentalEntity newEnviro = NewManager.instance.CreateEnvironmental();
         newEnviro.currentTile = currentTarget;
+<<<<<<< HEAD
+=======
+        newEnviro.spriteRenderer.sortingOrder = 10;
+        newEnviro.transform.SetParent(newEnviro.currentTile.transform);
+        newEnviro.transform.localPosition = new Vector3(0, 1, 0);
+>>>>>>> main
         newEnviro.name = this.name;
         newEnviro.card = this;
         newEnviro.delay = delay;
