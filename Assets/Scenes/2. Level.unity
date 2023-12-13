@@ -167,7 +167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce291f4213d69644891cd6bfbf2b196b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  typingSpeed: 0.04
+  typingSpeed: 0.02
   loadGlobalsJSON: {fileID: 4900000, guid: 970cadc979ef2e9428a77652034c8951, type: 3}
   dialoguePanel: {fileID: 2102917861}
   continueIcon: {fileID: 2102917860}
@@ -178,11 +178,10 @@ MonoBehaviour:
   textCrawlSound:
     idInternal: 0
     valueGuidInternal: 
-    WwiseObjectReference: {fileID: 11400000, guid: f449223a4cd5faa41a4a96d34cc9d69b, type: 2}
+    WwiseObjectReference: {fileID: 0}
   textboxStopSound:
     idInternal: 0
     valueGuidInternal: 
-    WwiseObjectReference: {fileID: 11400000, guid: 7e8d94225a3b4de4fa6f29ce2f795f87, type: 2}
 --- !u!1 &10563917
 GameObject:
   m_ObjectHideFlags: 0
@@ -15086,7 +15085,6 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2102917862}
   - {fileID: 1835741876}
   - {fileID: 1966956913}
   - {fileID: 10563921}
@@ -15097,6 +15095,7 @@ RectTransform:
   - {fileID: 1166408842}
   - {fileID: 559126169}
   - {fileID: 1655085524}
+  - {fileID: 2102917862}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}

@@ -7,7 +7,7 @@ using Ink.Runtime;
 public class DialogueManager : MonoBehaviour
 {
     [Header("Params")]
-    [SerializeField] private float typingSpeed = 0.04f;
+    [SerializeField] private float typingSpeed = 0.02f;
 
     [Header("Load Globals JSON")]
     [SerializeField] private TextAsset loadGlobalsJSON;
@@ -77,7 +77,7 @@ public class DialogueManager : MonoBehaviour
         // handle continuine to the next line in dialogue when submite is pressed
        if (canContinueToNextLine  
             &&  currentStory.currentChoices.Count == 0
-            && Input.GetKey(KeyCode.E))
+            && Input.GetKeyDown(KeyCode.Space))
        {
            ContinueStory();
        }
@@ -118,7 +118,7 @@ public class DialogueManager : MonoBehaviour
         // set the text to the full line, but set the visible characters to 0
         dialogueText.text = line;
         dialogueText.maxVisibleCharacters = 0;
-       // dialogueText.text = "";
+        dialogueText.text = "";
 
         // hide items while text is typing
         continueIcon.SetActive(false);
@@ -129,10 +129,10 @@ public class DialogueManager : MonoBehaviour
 
         foreach (char letter in line.ToCharArray())
         {
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.Space) && dialogueText.maxVisibleCharacters > 0)
             {
                 dialogueText.maxVisibleCharacters = line.Length;
-                //dialogueText.text = line;
+                dialogueText.text = line;
                 break;
             }
 
@@ -149,7 +149,7 @@ public class DialogueManager : MonoBehaviour
             else
             {
                 dialogueText.maxVisibleCharacters++;
-                //dialogueText.text += letter;
+                dialogueText.text += letter;
                 textCrawlSound.Post(gameObject);
                 yield return new WaitForSeconds(typingSpeed);
             }
