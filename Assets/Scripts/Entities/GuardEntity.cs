@@ -19,12 +19,7 @@ public class GuardEntity : MovingEntity
     [Header("Detection")]
         [Tooltip("Tiles this is searching")] List<TileData> inDetection = new List<TileData>();
         [Tooltip("Pauses between movement")] float movePauseTime = 0.25f;
-<<<<<<< HEAD
         [Tooltip("How far this can see")] [SerializeField] int DetectionRangePatrol = 3;
-=======
-        [Tooltip("How far this can see")] [SerializeField] public int DetectionRangePatrol = 3;
-        int DetectionRangeMax = 3; 
->>>>>>> main
         [Tooltip("half their field of view for detection (MUST BE A MULTIPLE OF 5)")] [SerializeField] int DetectionAngle = 30;
         [Tooltip("State of a guard's alert")] Alert alertStatus = 0;
 
@@ -55,7 +50,6 @@ public class GuardEntity : MovingEntity
     private void Awake()
     {
         AttackLine = GetComponent<LineRenderer>();
-        DetectionRangeMax = DetectionRangePatrol;
     }
 
     public override string HoverBoxText()
@@ -138,13 +132,6 @@ public class GuardEntity : MovingEntity
         {
             inDetection.Add(NewManager.instance.FindTile(point));
         }
-        if (DetectionRangePatrol > 0)
-        {
-            inDetection.Add(NewManager.instance.FindTile(new Vector2Int(currentTile.gridPosition.x + direction.y, currentTile.gridPosition.y + direction.x)));
-            inDetection.Add(NewManager.instance.FindTile(new Vector2Int(currentTile.gridPosition.x - direction.y, currentTile.gridPosition.y - direction.x)));
-            inDetection.Add(NewManager.instance.FindTile(new Vector2Int(currentTile.gridPosition.x + direction.y + direction.x, currentTile.gridPosition.y + direction.x + direction.y)));
-            inDetection.Add(NewManager.instance.FindTile(new Vector2Int(currentTile.gridPosition.x - direction.y + direction.x, currentTile.gridPosition.y - direction.x + direction.y)));
-        }
         inDetection.RemoveAll(item => item == null); //delete all tiles that are null
         for (int i = 0; i < inDetection.Count; i++)
             inDetection[i].SurveillanceState(true);
@@ -161,7 +148,6 @@ public class GuardEntity : MovingEntity
 
     public void CheckForPlayer()
     {
-        List<PlayerEntity> newTargets = new List<PlayerEntity>();
         for (int i = 0; i < inDetection.Count; i++)
         {
             //print("guard: " + currentTile.gridPosition + " Looking at " + inDetection[i].gridPosition);
@@ -172,27 +158,13 @@ public class GuardEntity : MovingEntity
                     if (inDetection[i].myEntity.GetComponent<PlayerEntity>().hidden == 0)
                     {
                         print("found player");
-                        newTargets.Add(inDetection[i].myEntity.GetComponent<PlayerEntity>());
+                        Alerted(inDetection[i].myEntity.GetComponent<PlayerEntity>());
+                        break;
                     }
                 }
             }
         }
-        if (newTargets.Count == 1)
-        {
-            Alerted(newTargets[0]);
-        }
-        else if (newTargets.Count > 1)
-        {
-            int minDistance = 1000;
-            for (int i = 0;i < newTargets.Count;i++) 
-            {
-                if (NewManager.instance.GetDistance(currentTile.gridPosition, newTargets[i].currentTile.gridPosition) < minDistance)
-                {
-                    minDistance = NewManager.instance.GetDistance(currentTile.gridPosition, newTargets[i].currentTile.gridPosition);
-                    Alerted(newTargets[i]);
-                }
-            }
-        }
+
     }
 
     public override IEnumerator EndOfTurn()
@@ -200,11 +172,9 @@ public class GuardEntity : MovingEntity
         if (stunned > 0)
         {
             stunned--;
-            CurrentTarget = null;
         }
         else
         {
-            DetectionRangePatrol = DetectionRangeMax;
             movementLeft = movesPerTurn;
             attacksLeft = attacksPerTurn;
             CheckForPlayer();

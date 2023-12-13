@@ -47,7 +47,7 @@ public class CardDataLoader
     {
         List<CardData> cardData = new List<CardData>();
         var data = TSVReader.ReadCards(fileToLoad);
-        for (int i = 3; i < data.Length; i++)
+        for (int i = 3; i<data.Length; i++)
         {
             string[] line = data[i];
             for (int j = 0; j < line.Length; j++)
@@ -77,18 +77,11 @@ public class CardDataLoader
             newCard.delay = StringToInt(line[15]);
             newCard.wHP = StringToInt(line[16]);
             newCard.burn = StringToInt(line[17]);
-
-            try { newCard.intn = StringToInt(line[18]); }
-            catch (IndexOutOfRangeException) { Debug.Log(newCard.name); }
-
+            newCard.intn = StringToInt(line[18]);
             newCard.select = line[19];
             newCard.action = line[20];
             try { newCard.enviroaction = line[21]; } catch (IndexOutOfRangeException) { newCard.nextAct = ""; }
-<<<<<<< HEAD
             try { newCard.nextAct = line[22];}catch (IndexOutOfRangeException) {newCard.nextAct = "";}
-=======
-            try { newCard.nextAct = line[22]; } catch (IndexOutOfRangeException) { newCard.nextAct = ""; }
->>>>>>> main
         }
         return cardData;
     }
