@@ -6,6 +6,8 @@ using UnityEngine.UI;
 using TMPro;
 using MyBox;
 using UnityEngine.SceneManagement;
+using UnityEditor.U2D;
+using Unity.VisualScripting;
 
 public class AStarNode
 {
@@ -45,14 +47,19 @@ public class NewManager : MonoBehaviour
         [Tooltip("How much time the turn banner appears")][SerializeField] float turnHangDuration = 0.5f;
         [Tooltip("pop up alerting player of turn")][SerializeField] private CanvasGroup turnAlertBar;
         [Tooltip("text on turn banner")][SerializeField] private TMP_Text turnText;
+        [Tooltip("Face of Gail")][SerializeField] private Sprite [] facesSpritesheet;
+        [Tooltip("Face of Gail")][SerializeField] private Sprite faceGail;
+        [Tooltip("Face of Frankie")][SerializeField] private Sprite faceFrankie;
+        [Tooltip("Face of WK")][SerializeField] private Sprite faceWK;
         [Tooltip("Your hand in the canvas")] [ReadOnly] public Transform handContainer;
         [Tooltip("The bar in the bottom center of the screen")] Transform playerStats;
-        [Tooltip("The bar in the bottom center of the screen")] Transform informationImage;
+        [Tooltip("Image section containing objective, actions, and debug popups")] Transform informationImage;
         [Tooltip("All the player's stats in text form")] TMP_Text stats;
         [Tooltip("Current player selected")] TMP_Text currentCharacter;
         [Tooltip("Selected player's health")] TMP_Text health;
         [Tooltip("Selected player's moves left")] TMP_Text moves;
-        [Tooltip("Selected player's energy")] TMP_Text energy; 
+        [Tooltip("Selected player's energy")] TMP_Text energy;
+        [Tooltip("Face of selected character")] Image characterFace;
         [Tooltip("Instructions for what the player is allowed to do right now")] TMP_Text instructions;
         [Tooltip("End the turn")] Button endTurnButton;
         [Tooltip("Complete an objective you're next to")] [ReadOnly] public Button objectiveButton;
@@ -112,6 +119,11 @@ public class NewManager : MonoBehaviour
         health = playerStats.GetChild(1).GetComponent<TMP_Text>();
         moves = playerStats.GetChild(2).GetComponent<TMP_Text>();
         energy = playerStats.GetChild(3).GetComponent<TMP_Text>();
+        characterFace = playerStats.GetChild(4).GetComponentInChildren<Image>();
+
+        facesSpritesheet = Resources.LoadAll<Sprite>("Sprites/portrait_spritesheet");
+        //faceFrankie = Resources.Load<Sprite>("Sprites/portrait_spritesheet");
+        //faceWK = Resources.Load<Sprite>("Sprites/portrait_spritesheet");
 
         informationImage = GameObject.Find("Information Image").transform;
         stats = informationImage.GetChild(0).GetComponent<TMP_Text>();
@@ -377,6 +389,22 @@ public class NewManager : MonoBehaviour
             health.text = $"Health: {player.health}";
             moves.text = $"Moves: {player.movementLeft}";
             energy.text = $"Energy: {player.myEnergy}";
+            
+            if(player.name == "Gail")
+            {
+                characterFace.sprite = facesSpritesheet[2];
+                Debug.Log("gail");
+            }
+            else if(player.name == "Frankie")
+            {
+                characterFace.sprite = facesSpritesheet[0];
+                Debug.Log("Frankie");
+            }
+            else if (player.name == "WK")
+            {
+                characterFace.sprite = facesSpritesheet[1];
+                Debug.Log("WK");
+            }
 
             deckTracker.text = $"<color=#70f5ff>Draw Pile <color=#ffffff>/ <color=#ff9670>Discard Pile " +
                 $"\n\n<color=#70f5ff>{player.myDrawPile.Count} <color=#ffffff>/ <color=#ff9670>{player.myDiscardPile.Count}" +
@@ -395,6 +423,7 @@ public class NewManager : MonoBehaviour
             health.text = "Health:";
             moves.text = "Moves:";
             energy.text = "Energy:";
+            characterFace.sprite = null;
 
             deckTracker.text = "";
             handContainer.transform.localPosition = new Vector3(10000, 10000, 0);
