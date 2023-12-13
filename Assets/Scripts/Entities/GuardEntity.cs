@@ -85,6 +85,11 @@ public class GuardEntity : MovingEntity
         }
     }
 
+    public void resetAlert()
+    {
+        alertStatus = Alert.Patrol;
+        CurrentTarget = null;
+    }
     IEnumerator attackEffectRoutine()
     {
         attackEffect = true;
