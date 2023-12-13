@@ -6,12 +6,11 @@ using Ink.Runtime;
 public class DialogueVariables 
 {
     public Dictionary<string, Ink.Runtime.Object> variables {get; private set; } 
-    public Story globalVariablesStory;
 
     public DialogueVariables(TextAsset loadGlobalsJSON)
     {
         // create the story 
-        globalVariablesStory = new Story(loadGlobalsJSON.text);
+        Story globalVariablesStory = new Story(loadGlobalsJSON.text);
 
         // initialize the Dictionary
         variables = new Dictionary<string, Ink.Runtime.Object>();
@@ -22,7 +21,6 @@ public class DialogueVariables
             Debug.Log("Initialized global dialogue variable: " + name + " = " + value);
         }
 
-        globalVariablesStory.variablesState.variableChangedEvent += VariableChanged;
     }
     
     public void StartListening(Story story)

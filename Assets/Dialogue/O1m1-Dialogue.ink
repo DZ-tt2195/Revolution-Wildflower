@@ -1,0 +1,1 @@
+Reorganization effort! There we go… seems to be encrypted, hopefully Clover can open it for us. I think that’s everything, we should get out before security gets tighter. #speaker: Gail #portrait: Gail
