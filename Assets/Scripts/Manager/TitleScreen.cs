@@ -57,6 +57,10 @@ public class TitleScreen : MonoBehaviour
                 fileChoose.RefreshShownValue();
             }
         }
+
+        if (!PlayerPrefs.HasKey("Animation Speed"))
+            PlayerPrefs.SetFloat("Animation Speed", 0.5f);
+
         switch (PlayerPrefs.GetFloat("Animation Speed"))
         {
             case 0f:
@@ -65,7 +69,7 @@ public class TitleScreen : MonoBehaviour
             case 0.25f:
                 animationSpeed.value = 1;
                 break;
-            case 0.5f:
+            case 0.4f:
                 animationSpeed.value = 0;
                 break;
         }
@@ -142,7 +146,7 @@ public class TitleScreen : MonoBehaviour
         switch (animationSpeed.options[animationSpeed.value].text)
         {
             case "Slow":
-                PlayerPrefs.SetFloat("Animation Speed", 0.5f);
+                PlayerPrefs.SetFloat("Animation Speed", 0.4f);
                 break;
             case "Fast":
                 PlayerPrefs.SetFloat("Animation Speed", 0.25f);

@@ -340,7 +340,7 @@ public class NewManager : MonoBehaviour
         player.health += n;
         UpdateStats(player);
         if (player.health <= 0)
-            GameOver($"{player.name} lost all their HP.");
+            GameOver($"{player.name} lost all their HP.", false);
     }
 
     public void SetMovement(PlayerEntity player, int n) //if you want to set movement to 2, type SetMovement(2);
@@ -421,7 +421,7 @@ public class NewManager : MonoBehaviour
     {
         endTurnButton.gameObject.SetActive(currentTurn == TurnSystem.You);
         if (Input.GetKeyDown(KeyCode.Escape))
-            GameOver("You quit.");
+            GameOver("You quit.", false);
     }
 
     private void FixedUpdate()
@@ -462,11 +462,12 @@ public class NewManager : MonoBehaviour
         }
     }
 
-    public void GameOver(string cause)
+    public void GameOver(string cause, bool won)
     {
         gameOverText.text = cause;
         gameOverText.transform.parent.gameObject.SetActive(true);
         StopAllCoroutines();
+        GameObject.Find("Debrief Button").SetActive(won);
     }
 
     public TileData FindTile(Vector2 vector) //find a tile based off Vector2
@@ -739,7 +740,7 @@ public class NewManager : MonoBehaviour
         turnCount--;
         if (turnCount == 0)
         {
-            GameOver("You ran out of time.");
+            GameOver("You ran out of time.", false);
         }
         else
         {

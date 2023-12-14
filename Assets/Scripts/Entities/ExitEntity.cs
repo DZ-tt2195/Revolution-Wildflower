@@ -29,7 +29,7 @@ public class ExitEntity : ObjectiveEntity
 
         if (NewManager.instance.listOfPlayers.Count == 0)
         {
-            NewManager.instance.GameOver("You won!");
+            NewManager.instance.GameOver("You won!", true);
             yield return base.ObjectiveComplete(player);
         }
     }
