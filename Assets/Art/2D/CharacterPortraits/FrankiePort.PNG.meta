@@ -43,7 +43,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -121,7 +121,49 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: FrankiePort_2
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 0
+        width: 803
+        height: 1529
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fb34f356e2b09d841b47513b34daa9b4
+      internalID: -1307320597
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FrankiePort_0
+      rect:
+        serializedVersion: 2
+        x: 124
+        y: 1006
+        width: 420
+        height: 420
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ae91dc94d4dd174885d246245ee05e3
+      internalID: -1878527002
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -132,7 +174,15 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      FrankiePort_0: -1878527002
+      FrankiePort_1: 2021436156
+      FrankiePort_2: -1307320597
+      FrankiePort_3: 163677840
+      FrankiePort_4: 818139118
+      FrankiePort_5: 1295138655
+      FrankiePort_6: -1037530564
+      FrankiePort_7: 1638236510
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
