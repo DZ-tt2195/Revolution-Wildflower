@@ -439,15 +439,20 @@ public class Card : MonoBehaviour, IPointerClickHandler
                 case "DRAWCARDS":
                     yield return DrawCards(currentPlayer);
                     break;
+                case "ALLDRAWCARDS":
+                    yield return AllDrawCards(NewManager.instance.listOfPlayers);
+                    break;
+
                 case "CHOOSEDISCARD":
                     yield return ChooseDiscard(currentPlayer);
                     break;
                 case "CHOOSEEXHAUST":
                     yield return ChooseExhaust(currentPlayer);
                     break;
-                case "ALLDRAWCARDS":
-                    yield return AllDrawCards(NewManager.instance.listOfPlayers);
+                case "DISCARDHAND":
+                    yield return DiscardHand(currentPlayer);
                     break;
+
                 case "CHANGEHP":
                     yield return ChangeHealth(currentPlayer);
                     break;
@@ -457,27 +462,28 @@ public class Card : MonoBehaviour, IPointerClickHandler
                     currentTarget = player.currentTile;
                     yield return ChangeHealth(player);
                     break;
+
                 case "CHANGEEP":
                     yield return ChangeEnergy(currentPlayer);
                     break;
                 case "ZEROENERGY":
                     yield return ZeroEnergy(currentPlayer);
                     break;
+
                 case "CHANGEMP":
                     yield return ChangeMovement(currentPlayer);
                     break;
                 case "ZEROMOVEMENT":
                     yield return ZeroMovement(currentPlayer);
                     break;
-                case "DISCARDHAND":
-                    yield return DiscardHand(currentPlayer);
-                    break;
+
                 case "CHANGECOST":
                     yield return ChangeCost(currentPlayer);
                     break;
                 case "CHANGECOSTTWOPLUS":
                     yield return ChangeCostTwoPlus(currentPlayer);
                     break;
+
                 case "STUNADJACENTGUARD":
                     yield return ChooseGuard();
                     yield return StunGuard(adjacentTilesWithGuards[0].myEntity.GetComponent<GuardEntity>());
@@ -487,6 +493,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
                     yield return ChooseGuard();
                     yield return SwapGuard(adjacentTilesWithGuards[0].myEntity.GetComponent<GuardEntity>());
                     break;
+
                 case "ATTACKADJACENTWALL":
                     yield return ChooseWall();
                     yield return AttackWall(adjacentTilesWithWalls[0].myEntity.GetComponent<WallEntity>());
@@ -494,6 +501,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
                 case "CENTERDISTRACTION":
                     yield return CalculateDistraction(currentPlayer.currentTile);
                     break;
+
                 case "TARGETDISTRACTION&DAMAGE":
                     yield return ChooseTileLOS();
                     yield return AttackOrDistraction(currentTarget);
@@ -502,6 +510,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
                     yield return ChooseTile();
                     yield return CreateEnvironmental();
                     break;
+
                 default:
                     Debug.LogError($"{methodName} isn't a method");
                     yield return null;
@@ -616,9 +625,6 @@ public class Card : MonoBehaviour, IPointerClickHandler
             adjacentTilesWithPlayers.Clear();
             adjacentTilesWithPlayers.Add(NewManager.instance.chosenTile);
         }
-
-        adjacentTilesWithPlayers.Clear();
-        adjacentTilesWithPlayers.Add(NewManager.instance.chosenTile);
     }
 
     IEnumerator ChooseWall()
@@ -679,7 +685,6 @@ public class Card : MonoBehaviour, IPointerClickHandler
             yield return null;
         currentTarget = NewManager.instance.chosenTile;
     }
-
 
     IEnumerator ChooseTile()
     {
