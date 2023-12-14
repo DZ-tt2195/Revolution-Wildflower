@@ -1,22 +1,22 @@
 INCLUDE globals.ink
 
 {
-- current_objective == "Mis1_Obj1" && current_player == "Gail":
+- current_objective == "real info" && current_player == "Gail":
     -> Mis1_Obj1_Gail
 
-- current_objective == "Mis1_Obj1" && current_player == "Frankie":
+- current_objective == "real info" && current_player == "Frankie":
     -> Mis1_Obj1_Frankie
 
-- current_objective == "Mis1_Obj1" && current_player == "WK":
+- current_objective == "real info" && current_player == "WK":
     -> Mis1_Obj1_WK
 
-- current_objective == "Mis1_Obj2" && current_player == "Gail":
+- current_objective == "false lead" && current_player == "Gail":
     -> Mis1_Obj2_Gail
 
-- current_objective == "Mis1_Obj2" && current_player == "Frankie":
+- current_objective == "false lead" && current_player == "Frankie":
     -> Mis1_Obj2_Frankie
 
-- current_objective == "Mis1_Obj2" && current_player == "WK":
+- current_objective == "false lead" && current_player == "WK":
     -> Mis1_Obj2_WK
     
 }
