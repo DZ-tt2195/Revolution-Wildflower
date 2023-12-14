@@ -595,9 +595,10 @@ public class NewManager : MonoBehaviour
         }
     }
 
-    void BackToStart(bool startTurn)
+    public void BackToStart(bool startTurn)
     {
         currentTurn = TurnSystem.You;
+        Debug.Log("back to start");
 
         DisableAllTiles();
         DisableAllCards();
@@ -655,10 +656,11 @@ public class NewManager : MonoBehaviour
     void MovePlayer(PlayerEntity currentPlayer)
     { 
         currentTurn = TurnSystem.Resolving;
-        int distanceTraveled = GetDistance(currentPlayer.currentTile.gridPosition, NewManager.instance.chosenTile.gridPosition);
+        int distanceTraveled = GetDistance(currentPlayer.currentTile.gridPosition, chosenTile.gridPosition);
         ChangeMovement(currentPlayer, -distanceTraveled);
-        if (distanceTraveled != 0) footsteps.Post(currentPlayer.gameObject);
-        currentPlayer.MoveTile(NewManager.instance.chosenTile);
+        if (distanceTraveled != 0)
+            footsteps.Post(currentPlayer.gameObject);
+        currentPlayer.MoveTile(chosenTile);
         StopAllCoroutines();
         BackToStart(false);
     }
