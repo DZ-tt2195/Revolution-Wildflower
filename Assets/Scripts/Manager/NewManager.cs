@@ -47,10 +47,8 @@ public class NewManager : MonoBehaviour
         [Tooltip("How much time the turn banner appears")][SerializeField] float turnHangDuration = 0.5f;
         [Tooltip("pop up alerting player of turn")][SerializeField] private CanvasGroup turnAlertBar;
         [Tooltip("text on turn banner")][SerializeField] private TMP_Text turnText;
-        [Tooltip("Face of Gail")][SerializeField] private Sprite [] facesSpritesheet;
-        [Tooltip("Face of Gail")][SerializeField] private Sprite faceGail;
-        [Tooltip("Face of Frankie")][SerializeField] private Sprite faceFrankie;
-        [Tooltip("Face of WK")][SerializeField] private Sprite faceWK;
+        [Tooltip("Spritesheet of player character faces")][SerializeField] private Sprite [] facesSpritesheet;
+        [Tooltip("Blank character face")][SerializeField] private Sprite emptyFace;
         [Tooltip("Your hand in the canvas")] [ReadOnly] public Transform handContainer;
         [Tooltip("The bar in the bottom center of the screen")] Transform playerStats;
         [Tooltip("Image section containing objective, actions, and debug popups")] Transform informationImage;
@@ -122,8 +120,7 @@ public class NewManager : MonoBehaviour
         characterFace = playerStats.GetChild(4).GetComponentInChildren<Image>();
 
         facesSpritesheet = Resources.LoadAll<Sprite>("Sprites/portrait_spritesheet");
-        //faceFrankie = Resources.Load<Sprite>("Sprites/portrait_spritesheet");
-        //faceWK = Resources.Load<Sprite>("Sprites/portrait_spritesheet");
+        emptyFace = Resources.Load<Sprite>("Sprites/characterSill");
 
         informationImage = GameObject.Find("Information Image").transform;
         stats = informationImage.GetChild(0).GetComponent<TMP_Text>();
@@ -423,12 +420,8 @@ public class NewManager : MonoBehaviour
             health.text = "Health:";
             moves.text = "Moves:";
             energy.text = "Energy:";
-            characterFace.sprite = null;
-            /*
-            Color currentColor = facesSpritesheet[facesIndex].color;
-            currentColor.a = Mathf.Clamp01(newAlpha); // Ensure the alpha value is between 0 and 1
-            myImage.color = currentColor;
-            */
+            characterFace.sprite = emptyFace;
+
             deckTracker.text = "";
             handContainer.transform.localPosition = new Vector3(10000, 10000, 0);
         }
