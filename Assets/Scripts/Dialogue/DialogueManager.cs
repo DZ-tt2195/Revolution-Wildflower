@@ -40,8 +40,8 @@ public class DialogueManager : MonoBehaviour
     private const string PORTRAIT_TAG = "portrait";
     private const string LAYOUT_TAG  = "layout";
 
-    private DialogueVariables dialogueVariables;
-
+    [HideInInspector] public DialogueVariables dialogueVariables;
+   
     private void Awake()
     {
         if (instance != null)
