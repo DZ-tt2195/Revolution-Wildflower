@@ -184,7 +184,7 @@ public class NewManager : MonoBehaviour
                     {
 
                         case 1: //create player
-                            print("player");
+                            //print("player");
                             thisTileEntity = Instantiate(playerPrefab, nextTile.transform);
                             PlayerEntity player = thisTileEntity.GetComponent<PlayerEntity>();
                             player.myPosition = listOfPlayers.Count;
@@ -195,7 +195,7 @@ public class NewManager : MonoBehaviour
                             break;
 
                         case 2: //create exit
-                            print("exit");
+                            //print("exit");
                             thisTileEntity = Instantiate(exitPrefab, nextTile.transform);
                             thisTileEntity.name = "Exit";
                             ObjectiveEntity exitObjective = thisTileEntity.GetComponent<ExitEntity>();
@@ -203,7 +203,7 @@ public class NewManager : MonoBehaviour
                             break;
 
                         case 3: //create objective
-                            print("objective");
+                            //print("objective");
                             thisTileEntity = Instantiate(objectivePrefab, nextTile.transform);
                             thisTileEntity.name = numberPlusAddition[1];
                             ObjectiveEntity defaultObjective = thisTileEntity.GetComponent<ObjectiveEntity>();
@@ -212,7 +212,7 @@ public class NewManager : MonoBehaviour
                             break;
 
                         case 10: //create wall
-                            print("wall");
+                            //print("wall");
                             thisTileEntity = Instantiate(wallPrefab, nextTile.transform);
                             thisTileEntity.name = "Wall";
                             WallEntity wall = thisTileEntity.GetComponent<WallEntity>();
@@ -267,9 +267,7 @@ public class NewManager : MonoBehaviour
                                     theGuard.PatrolPoints.Add(new Vector2Int(curX, curY));
                                 }
                             }
-                            catch (IndexOutOfRangeException)
-                            {
-                            }
+                            catch (IndexOutOfRangeException){ continue; }
                             break;
                     }
 
@@ -393,7 +391,7 @@ public class NewManager : MonoBehaviour
             {
                 facesIndex = 2;
             }
-            else if(player.name == "Frankie")
+            else if (player.name == "Frankie")
             {
                 facesIndex = 0;
             }
@@ -574,7 +572,7 @@ public class NewManager : MonoBehaviour
     IEnumerator StartPlayerTurn()
     {
         UpdateStats(null);
-        yield return Wait(0.5f);
+        //yield return Wait(0.5f);
 
         foreach(Card card in futureEffects)
             yield return card.NextRoundEffect();
@@ -585,7 +583,7 @@ public class NewManager : MonoBehaviour
         BackToStart(true);
     }
 
-    public IEnumerator FadeTurnBar(string message)
+    IEnumerator FadeTurnBar(string message)
     {
         turnAlertBar.alpha = 0;
         turnText.text = message;
@@ -603,6 +601,7 @@ public class NewManager : MonoBehaviour
         }
 
         turnAlertBar.alpha = 0;
+        /*
         EnablePlayers();
         if (lastSelectedPlayer != null)
         {
@@ -610,6 +609,7 @@ public class NewManager : MonoBehaviour
             selectedTile = lastSelectedPlayer.currentTile;
             StartCoroutine(ChooseMovePlayer(lastSelectedPlayer));
         }
+        */
     }
 
     public void EnablePlayers()
@@ -624,13 +624,14 @@ public class NewManager : MonoBehaviour
     public void BackToStart(bool startTurn)
     {
         currentTurn = TurnSystem.You;
-        Debug.Log("back to start");
+        //Debug.Log("back to start");
 
         DisableAllTiles();
         DisableAllCards();
 
         UpdateStats(lastSelectedPlayer);
         StopAllCoroutines();
+        EnablePlayers();
 
         if (startTurn)
         {
@@ -638,7 +639,6 @@ public class NewManager : MonoBehaviour
         }
         else
         {
-            EnablePlayers();
             if (lastSelectedPlayer != null)
             {
                 Debug.Log($"{lastSelectedPlayer.name} was last selected");
@@ -670,7 +670,7 @@ public class NewManager : MonoBehaviour
         {
             if (selectedTile != currentTile || currentTurn != TurnSystem.You)
             {
-                Debug.Log("switched off");
+                //Debug.Log("switched off");
                 yield break;
             }
             else{yield return null;}
