@@ -34,7 +34,8 @@ MonoBehaviour:
     hdrDebugViewPS: {fileID: 4800000, guid: 573620ae32aec764abd4d728906d2587, type: 3}
   m_RendererFeatures:
   - {fileID: -836299648863468040}
-  m_RendererFeatureMap: f885b577e6dd64f4
+  - {fileID: 7410809233296693675}
+  m_RendererFeatureMap: f885b577e6dd64f4ab99d5c8bb7bd866
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -73,3 +74,18 @@ MonoBehaviour:
   m_CopyDepthMode: 1
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 1
+--- !u!114 &7410809233296693675
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ae28912455d58f429b22cf735c66b6d, type: 3}
+  m_Name: CustomPost
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  bloomShader: {fileID: 4800000, guid: 5f1864addb451f54bae8c86d230f736e, type: 3}
+  compositeShader: {fileID: -6465566751694194690, guid: 12792dab8d027294eb477ce44f14df1f, type: 3}

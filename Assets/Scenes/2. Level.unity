@@ -455,7 +455,7 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 0.11992704, g: 0.46226418, b: 0.2884394, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1.75
   m_Range: 10
   m_SpotAngle: 30
@@ -1100,10 +1100,18 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 858592807}
+    - target: {fileID: 5001520976150973151, guid: ebd54c6fbfa9de147b59cb37d3b25531, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 7224d91eb525df54cb8b64960b53a831, type: 2}
     - target: {fileID: 5305213460045894369, guid: ebd54c6fbfa9de147b59cb37d3b25531, type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 858592807}
+    - target: {fileID: 5331637172326573383, guid: ebd54c6fbfa9de147b59cb37d3b25531, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 7224d91eb525df54cb8b64960b53a831, type: 2}
     - target: {fileID: 7573567067421487452, guid: ebd54c6fbfa9de147b59cb37d3b25531, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -6107,7 +6115,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2087921933}
   m_HandleRect: {fileID: 2087921932}
   m_Direction: 0
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -22272,7 +22280,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 7224d91eb525df54cb8b64960b53a831, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -33713,7 +33721,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 7224d91eb525df54cb8b64960b53a831, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -43226,7 +43234,7 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 1, g: 0.7483261, b: 0.504717, a: 1}
-  m_Intensity: 252.4
+  m_Intensity: 129.74
   m_Range: 30.3
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -43461,6 +43469,10 @@ PrefabInstance:
     - target: {fileID: 6946678762728737530, guid: 6f085459fbe18274f9af4d477be04729, type: 3}
       propertyPath: m_Name
       value: Dialogue Panel
+      objectReference: {fileID: 0}
+    - target: {fileID: 6946678762728737530, guid: 6f085459fbe18274f9af4d477be04729, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
