@@ -6,19 +6,17 @@ using UnityEngine.UI;
 using TMPro;
 using MyBox;
 using UnityEngine.SceneManagement;
-using UnityEditor.U2D;
-using Unity.VisualScripting;
+//using UnityEditor.U2D;
+//using Unity.VisualScripting;
 
 public class AStarNode
 {
     public TileData ATileData;
     public AStarNode Parent;
-    //travel distance from node to start node
-    public int GCost;
-    //travel distance from node to target node
-    public int HCost;
-    //Astar value of this tile, the lower it is, the better for the pathfinder.
-    public int FCost => GCost + HCost;
+
+    public int GCost; //travel distance from node to start node
+    public int HCost; //travel distance from node to target node
+    public int FCost => GCost + HCost; //Astar value of this tile, the lower it is, the better for the pathfinder.
 }
 
 public class NewManager : MonoBehaviour
@@ -706,7 +704,7 @@ public class NewManager : MonoBehaviour
             while (chosenCard == null)
             {
                 if (currentTurn != TurnSystem.You){yield break;}
-                else{yield return null;}
+                else {yield return null;}
             }
 
             currentTurn = TurnSystem.Resolving;
@@ -715,7 +713,7 @@ public class NewManager : MonoBehaviour
         }
     }
 
-    public void Regain()
+    void Regain()
     {
         StopAllCoroutines();
         UpdateInstructions("");

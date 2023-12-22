@@ -22,11 +22,12 @@ public class Collector : MonoBehaviour
         imageWidth = this.transform.GetChild(0).GetComponent<RectTransform>();
     }
 
-    public void StatsSetup(string text, int thisPosition)
+    public void StatsSetup(string header, Vector3 position)
     {
-        this.textbox.text = text;
+        this.textbox.text = header;
         this.transform.SetParent(canvas.transform);
-        this.transform.localPosition = new Vector3(0, thisPosition, 0);
+        this.transform.localPosition = position;
+        this.transform.localScale = new Vector3(1, 1, 1);
     }
 
     public void DestroyButton(int sibling)
@@ -55,7 +56,7 @@ public class Collector : MonoBehaviour
             imageWidth.sizeDelta = new Vector2(250 * (this.transform.GetChild(2).childCount), 240);
     }
 
-    public void ReceiveChoice(int buttonNumber)
+    void ReceiveChoice(int buttonNumber)
     {
         chosenButton = buttonNumber;
     }
@@ -64,14 +65,8 @@ public class Collector : MonoBehaviour
     {
         foreach (Button x in buttonsInCollector)
         {
-            try
-            {
-                x.enabled = false;
-            }
-            catch (NullReferenceException)
-            {
-                continue;
-            }
+            try{x.enabled = false;}
+            catch (NullReferenceException){continue;}
         }
     }
 
@@ -79,14 +74,8 @@ public class Collector : MonoBehaviour
     {
         foreach (Button x in buttonsInCollector)
         {
-            try
-            {
-                x.enabled = true;
-            }
-            catch (NullReferenceException)
-            {
-                continue;
-            }
+            try{x.enabled = true;}
+            catch (NullReferenceException){continue;}
         }
     }
 }

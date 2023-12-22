@@ -158,7 +158,7 @@ public class PlayerEntity : MovingEntity
             StartCoroutine(card.RevealCard(PlayerPrefs.GetFloat("Animation Speed")));
     }
 
-    public void PlusCards(int num)
+    internal void PlusCards(int num)
     {
         for (int i = 0; i < num; i++)
         {
@@ -173,7 +173,7 @@ public class PlayerEntity : MovingEntity
         SortHand();
     }
 
-    public Card GetTopCard()
+    internal Card GetTopCard()
     {
         if (myDrawPile.Count == 0)
         {
@@ -209,7 +209,7 @@ public class PlayerEntity : MovingEntity
         }
     }
 
-    public IEnumerator DiscardFromHand(Card discardMe)
+    internal IEnumerator DiscardFromHand(Card discardMe)
     {
         if (!myDiscardPile.Contains(discardMe))
         {
@@ -225,7 +225,7 @@ public class PlayerEntity : MovingEntity
         }
     }
 
-    public IEnumerator ExhaustFromHand(Card exhaustMe)
+    internal IEnumerator ExhaustFromHand(Card exhaustMe)
     {
         myHand.Remove(exhaustMe);
         myDrawPile.Remove(exhaustMe);
@@ -242,7 +242,7 @@ public class PlayerEntity : MovingEntity
         exhaustMe.transform.SetParent(null);
     }
 
-    public IEnumerator PlayCard(Card playMe, bool payEnergy)
+    internal IEnumerator PlayCard(Card playMe, bool payEnergy)
     {
         NewManager.instance.DisableAllCards();
         playMe.cardPlay.Post(playMe.gameObject);
@@ -261,7 +261,7 @@ public class PlayerEntity : MovingEntity
         this.cardsPlayed.Add(playMe);
     }
 
-    public void MyTurn()
+    internal void MyTurn()
     {
         foreach (Card card in myHand)
         {

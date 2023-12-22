@@ -413,7 +413,8 @@ MonoBehaviour:
   image: {fileID: 0}
   border: {fileID: 0}
   button: {fileID: 0}
-  collector: {fileID: 7928303491963949573, guid: 0ce383b7ea8ca488c810cadf3b089e7e, type: 3}
+  buttonCollector: {fileID: 7928303491963949573, guid: 0ce383b7ea8ca488c810cadf3b089e7e, type: 3}
+  sliderChoice: {fileID: 7815619922120165151, guid: 0ebd54c98e7064e6c9bda8ae56b32fd1, type: 3}
   cardFront: {fileID: 21300000, guid: 2f8407ee3f6ad7848842bdfbebe0f370, type: 3}
   cardBack: {fileID: 21300000, guid: 62f7d64deab854e199b31c625ad44b97, type: 3}
   canvasgroup: {fileID: 4488513342833194333}

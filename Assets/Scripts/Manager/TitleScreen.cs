@@ -59,7 +59,7 @@ public class TitleScreen : MonoBehaviour
         }
 
         if (!PlayerPrefs.HasKey("Animation Speed"))
-            PlayerPrefs.SetFloat("Animation Speed", 0.5f);
+            PlayerPrefs.SetFloat("Animation Speed", 0.4f);
 
         switch (PlayerPrefs.GetFloat("Animation Speed"))
         {
@@ -80,7 +80,7 @@ public class TitleScreen : MonoBehaviour
     {
         errorText.gameObject.SetActive(true);
         errorText.text = newText;
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(3f);
         errorText.gameObject.SetActive(false);
     }
 

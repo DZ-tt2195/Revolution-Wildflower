@@ -16,7 +16,8 @@ public class Card : MonoBehaviour, IPointerClickHandler
         bool enableBorder;
         [ReadOnly] public Image border;
         [ReadOnly] public Button button;
-        [SerializeField] Collector collector;
+        [SerializeField] Collector buttonCollector;
+        [SerializeField] SliderChoice sliderChoice;
         [Tooltip("the front of a card")][SerializeField] Sprite cardFront;
         [Tooltip("the back of a card")][SerializeField] Sprite cardBack;
 
@@ -53,6 +54,8 @@ public class Card : MonoBehaviour, IPointerClickHandler
         [ReadOnly] public string nextRoundEffectsInOrder { get; private set; }
         [ReadOnly] public string costChangeCondition{ get; private set; }
 
+    [Foldout("Saved information", true)]
+        [ReadOnly] int sliderData;
         [ReadOnly] PlayerEntity currentPlayer;
         [ReadOnly] TileData currentTarget;
         [ReadOnly] List<TileData> adjacentTilesWithPlayers = new();
@@ -420,7 +423,10 @@ public class Card : MonoBehaviour, IPointerClickHandler
                 NewManager.instance.UpdateStats(currentPlayer);
             }
         }
+
         NewManager.instance.selectedTile = currentPlayer.currentTile;
+        if (distractionIntensity > 0)
+            StartCoroutine(CalculateDistraction(currentTarget));
     }
 
     IEnumerator ResolveMethod(string methodName)
@@ -469,6 +475,13 @@ public class Card : MonoBehaviour, IPointerClickHandler
                 case "ZEROENERGY":
                     yield return ZeroEnergy(currentPlayer);
                     break;
+                case "CONVERTMOVEMENTTOENERGY":
+                    yield return ChooseFromSlider("Pay how much movement?", 0, currentPlayer.movementLeft);
+                    changeInMP = -1 * sliderData;
+                    yield return ChangeMovement(currentPlayer);
+                    changeInEP = sliderData;
+                    yield return ChangeEnergy(currentPlayer);
+                    break;
 
                 case "CHANGEMP":
                     yield return ChangeMovement(currentPlayer);
@@ -516,42 +529,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
                     yield return null;
                     break;
             }
-            if (distractionIntensity > 0)
-            {
-                StartCoroutine(CalculateDistraction(currentTarget));
-            }
         }
-    }
-
-    IEnumerator ChooseOptions(string[] choices)
-    {
-        Collector newCollector = Instantiate(collector);
-        newCollector.StatsSetup("Make a choice.", 0);
-
-        foreach (string choice in choices)
-        {
-            switch (choice)
-            {
-                case "DRAWCARDS":
-                    newCollector.AddTextButton($"Draw {changeInDraw}");
-                    break;
-                case "CHANGEMP":
-                    newCollector.AddTextButton($"+{changeInMP} Movement");
-                    break;
-                case "CHANGEEP":
-                    newCollector.AddTextButton($"+{changeInEP} Energy");
-                    break;
-                case "CHANGEHP":
-                    newCollector.AddTextButton($"+{changeInHP} Health");
-                    break;
-            }
-        }
-
-        while (newCollector.chosenButton == -1)
-            yield return null;
-
-        yield return ResolveMethod(choices[newCollector.chosenButton]);
-        Destroy(newCollector.gameObject);
     }
 
     public IEnumerator CalculateDistraction(TileData source)
@@ -696,7 +674,50 @@ public class Card : MonoBehaviour, IPointerClickHandler
         currentTarget = NewManager.instance.chosenTile;
     }
 
-#endregion
+    IEnumerator ChooseFromSlider(string header, int min, int max)
+    {
+        SliderChoice newCollector = Instantiate(sliderChoice);
+        newCollector.StatsSetup(header, min, max, new Vector3(0, 0, 0));
+
+        while (newCollector.makingDecision)
+            yield return null;
+
+        sliderData = newCollector.currentSliderValue;
+        Destroy(newCollector.gameObject);
+    }
+
+    IEnumerator ChooseOptions(string[] choices)
+    {
+        Collector newCollector = Instantiate(buttonCollector);
+        newCollector.StatsSetup("Make a choice.", new Vector3(0, 0, 0));
+
+        foreach (string choice in choices)
+        {
+            switch (choice)
+            {
+                case "DRAWCARDS":
+                    newCollector.AddTextButton($"Draw {changeInDraw}");
+                    break;
+                case "CHANGEMP":
+                    newCollector.AddTextButton($"+{changeInMP} Movement");
+                    break;
+                case "CHANGEEP":
+                    newCollector.AddTextButton($"+{changeInEP} Energy");
+                    break;
+                case "CHANGEHP":
+                    newCollector.AddTextButton($"+{changeInHP} Health");
+                    break;
+            }
+        }
+
+        while (newCollector.chosenButton == -1)
+            yield return null;
+
+        yield return ResolveMethod(choices[newCollector.chosenButton]);
+        Destroy(newCollector.gameObject);
+    }
+
+    #endregion
 
 #region Interacts With Cards
 
@@ -810,7 +831,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         yield return null;
     }
 
-    #endregion
+#endregion
 
 #region Interacts With Entities
 

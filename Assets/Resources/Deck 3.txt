@@ -19,7 +19,7 @@
       "HP Walls",
       "Burn #",
       "intensity",
-      "any extra condition needed to select a tile",
+      "any extra condition needed to select a card",
       "the function to call when card is played",
       "the function to call when using the environmental",
       "the function to call at start of next round"
