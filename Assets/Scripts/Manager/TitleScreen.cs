@@ -23,6 +23,7 @@ public class TitleScreen : MonoBehaviour
     TMP_Dropdown fileChoose;
 
     TMP_Dropdown animationSpeed;
+    Toggle confirmationToggle;
 
     private void Awake()
     {
@@ -44,6 +45,9 @@ public class TitleScreen : MonoBehaviour
 
         animationSpeed = GameObject.Find("Card Animation Dropdown").GetComponent<TMP_Dropdown>();
         animationSpeed.onValueChanged.AddListener(delegate { SetAnimationSpeed(); });
+
+        confirmationToggle = GameObject.Find("Confirmation Toggle").GetComponent<Toggle>();
+        confirmationToggle.onValueChanged.AddListener(delegate { SetConfirmationStatus(); });
     }
 
     private void Start()
@@ -57,6 +61,10 @@ public class TitleScreen : MonoBehaviour
                 fileChoose.RefreshShownValue();
             }
         }
+
+        if (!PlayerPrefs.HasKey("Confirm Choices")) //0 doesn't ask for confirmation, 1 does
+            PlayerPrefs.SetInt("Confirm Choices", 1);
+        confirmationToggle.isOn = (PlayerPrefs.GetInt("Confirm Choices") == 1);
 
         if (!PlayerPrefs.HasKey("Animation Speed"))
             PlayerPrefs.SetFloat("Animation Speed", 0.4f);
@@ -73,7 +81,6 @@ public class TitleScreen : MonoBehaviour
                 animationSpeed.value = 0;
                 break;
         }
-        //UnityEngine.Debug.Log(PlayerPrefs.GetFloat("Animation Speed"));
     }
 
     IEnumerator CausedError(string newText)
@@ -139,6 +146,11 @@ public class TitleScreen : MonoBehaviour
             fileChoose.options.RemoveAt(fileChoose.value);
             fileChoose.RefreshShownValue();
         }
+    }
+
+    void SetConfirmationStatus()
+    {
+        PlayerPrefs.SetInt("Confirm Choices", confirmationToggle.isOn ? 1 : 0);
     }
 
     void SetAnimationSpeed()

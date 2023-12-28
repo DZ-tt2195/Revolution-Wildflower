@@ -38,6 +38,7 @@ public class NewManager : MonoBehaviour
         [Tooltip("A acard that the player chose")][ReadOnly] public Card chosenCard;
         [Tooltip("Current Selected Tile")][ReadOnly] public TileData selectedTile;
         [Tooltip("Quick reference to current movable tile")][ReadOnly] public TileData CurrentAvailableMoveTarget;
+        [Tooltip("Confirm your decisions")] public Collector confirmationCollector;
 
     [Foldout("UI Elements", true)]
         [Tooltip("Hazardbox to give to players")][SerializeField] public CanvasGroup ManagerHazardBox;
@@ -457,34 +458,6 @@ public class NewManager : MonoBehaviour
             decrease = !decrease;
     }
 
-    public void DisableAllTiles()
-    {
-        for (int i = 0; i < listOfTiles.GetLength(0); i++)
-        {
-            for (int j = 0; j < listOfTiles.GetLength(1); j++)
-            {
-                try
-                {
-                    listOfTiles[i, j].clickable = false;
-                    listOfTiles[i, j].moveable = false;
-                    listOfTiles[i, j].choosable = false;
-                }
-                catch (NullReferenceException)
-                {
-                    continue;
-                }
-            }
-        }
-    }
-
-    public void DisableAllCards()
-    {
-        foreach (Card card in SaveManager.instance.allCards)
-        {
-            card.DisableCard();
-        }
-    }
-
     public void GameOver(string cause, bool won)
     {
         gameOverText.text = cause;
@@ -521,6 +494,44 @@ public class NewManager : MonoBehaviour
             StartCoroutine(ChooseMovePlayer(player));
     }
 
+    public EnvironmentalEntity CreateEnvironmental()
+    {
+        EnvironmentalEntity newEnviro = Instantiate(environmentPrefab);
+        return newEnviro;
+    }
+
+    #endregion
+
+#region Decision-making
+
+    public void DisableAllTiles()
+    {
+        for (int i = 0; i < listOfTiles.GetLength(0); i++)
+        {
+            for (int j = 0; j < listOfTiles.GetLength(1); j++)
+            {
+                try
+                {
+                    listOfTiles[i, j].clickable = false;
+                    listOfTiles[i, j].moveable = false;
+                    listOfTiles[i, j].choosable = false;
+                }
+                catch (NullReferenceException)
+                {
+                    continue;
+                }
+            }
+        }
+    }
+
+    public void DisableAllCards()
+    {
+        foreach (Card card in SaveManager.instance.allCards)
+        {
+            card.DisableCard();
+        }
+    }
+
     public void ReceiveChoice(Card card)
     {
         chosenCard = card;
@@ -549,7 +560,7 @@ public class NewManager : MonoBehaviour
         chosenCard = null;
         DisableAllTiles();
 
-        foreach(TileData tile in canBeChosen)
+        foreach (TileData tile in canBeChosen)
         {
             tile.moveable = true;
             tile.clickable = true;
@@ -557,10 +568,24 @@ public class NewManager : MonoBehaviour
         }
     }
 
-    public EnvironmentalEntity CreateEnvironmental()
+    public Collector ConfirmDecision(string header, Vector3 position)
     {
-        EnvironmentalEntity newEnviro = Instantiate(environmentPrefab);
-        return newEnviro;
+        if (PlayerPrefs.GetInt("Confirm Choices") == 1)
+        {
+            DisableAllCards();
+            DisableAllTiles();
+
+            Collector collector = Instantiate(confirmationCollector);
+            collector.StatsSetup(header, position);
+
+            collector.AddTextButton("Confirm");
+            collector.AddTextButton("Rechoose");
+            return collector;
+        }
+        else
+        {
+            return null;
+        }
     }
 
 #endregion
@@ -655,6 +680,7 @@ public class NewManager : MonoBehaviour
         AkSoundEngine.SetState("Character", currentPlayer.name);
 
         TileData currentTile = currentPlayer.currentTile;
+        selectedTile = currentPlayer.currentTile;
         UpdateInstructions("Choose a character to move / play a card.");
 
         List<TileData> possibleTiles = CalculateReachableGrids(currentTile, currentPlayer.movementLeft, true);
@@ -674,6 +700,21 @@ public class NewManager : MonoBehaviour
             else{yield return null;}
         }
 
+        Collector confirmDecision = ConfirmDecision("Confirm movement?", new Vector2(0, 200));
+        if (confirmDecision != null)
+        {
+            selectedTile = chosenTile;
+            yield return confirmDecision.WaitForChoice();
+            int decision = confirmDecision.chosenButton;
+            Destroy(confirmDecision.gameObject);
+
+            if (decision == 1)
+            {
+                StartCoroutine(ChooseMovePlayer(currentPlayer));
+                yield break;
+            }
+        }
+
         MovePlayer(currentPlayer);
     }
 
@@ -689,14 +730,14 @@ public class NewManager : MonoBehaviour
         BackToStart(false);
     }
 
-    IEnumerator ChooseCardPlay(PlayerEntity player) //choose a card to play
+    IEnumerator ChooseCardPlay(PlayerEntity currentPlayer) //choose a card to play
     {
-        if (player != null)
+        if (currentPlayer != null)
         {
             List<Card> canBePlayed = new List<Card>();
-            foreach (Card card in player.myHand)
+            foreach (Card card in currentPlayer.myHand)
             {
-                if (card.CanPlay(player))
+                if (card.CanPlay(currentPlayer))
                     canBePlayed.Add(card);
             }
             WaitForDecision(canBePlayed);
@@ -707,8 +748,22 @@ public class NewManager : MonoBehaviour
                 else {yield return null;}
             }
 
+            Collector confirmDecision = ConfirmDecision($"Play {chosenCard.name}?", new Vector2(0, -85));
+            if (confirmDecision != null)
+            {
+                yield return confirmDecision.WaitForChoice();
+                int decision = confirmDecision.chosenButton;
+                Destroy(confirmDecision.gameObject);
+
+                if (decision == 1)
+                {
+                    StartCoroutine(ChooseCardPlay(currentPlayer));
+                    yield break;
+                }
+            }
+
             currentTurn = TurnSystem.Resolving;
-            yield return player.PlayCard(chosenCard, true);
+            yield return currentPlayer.PlayCard(chosenCard, true);
             BackToStart(false);
         }
     }

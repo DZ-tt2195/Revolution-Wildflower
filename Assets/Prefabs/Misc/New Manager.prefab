@@ -55,6 +55,14 @@ MonoBehaviour:
   chosenCard: {fileID: 0}
   selectedTile: {fileID: 0}
   CurrentAvailableMoveTarget: {fileID: 0}
+  confirmationCollector: {fileID: 7928303491963949573, guid: 0ce383b7ea8ca488c810cadf3b089e7e, type: 3}
+  ManagerHazardBox: {fileID: 0}
+  turnFadeSpeed: 0.05
+  turnHangDuration: 0.5
+  turnAlertBar: {fileID: 0}
+  turnText: {fileID: 0}
+  facesSpritesheet: []
+  emptyFace: {fileID: 0}
   handContainer: {fileID: 0}
   objectiveButton: {fileID: 0}
   toolTip: {fileID: 0}
@@ -62,6 +70,9 @@ MonoBehaviour:
   floorTilePrefab: {fileID: 2642816440497754149, guid: 416081d422f0447bf81278803b96f973, type: 3}
   playerPrefab: {fileID: 6421295861255831564, guid: e68cbc9ff88a24d4d9abfef76230b41f, type: 3}
   wallPrefab: {fileID: 3780071206512033230, guid: dc8aa844dc4e549bbb30d8da98a75ea1, type: 3}
+  wallTSplitPrefab: {fileID: 22534131588069659, guid: 20dc37b4e68cb3042a1d5f3b3465b897, type: 3}
+  wallCornerPrefab: {fileID: 4990786732049469002, guid: 8e9dec9b025fb114c8702bddb184a4f0, type: 3}
+  wallPlusPrefab: {fileID: 4222996662149608765, guid: 6019f30927dd7aa48accd8d94cd2d463, type: 3}
   guardPrefab: {fileID: 127779131077801882, guid: 13d7840c131d341de8dbd9115b5fec71, type: 3}
   objectivePrefab: {fileID: 3366395209525496084, guid: 93e86e5b63f364f8dbfd4ab842b55d2b, type: 3}
   exitPrefab: {fileID: -7563352408502380383, guid: 118fc5b90705644c59316bccbf8dfa3b, type: 3}
