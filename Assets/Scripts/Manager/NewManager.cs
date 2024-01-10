@@ -78,6 +78,7 @@ public class NewManager : MonoBehaviour
         [Tooltip("Wall Plus prefab")][SerializeField] WallEntity wallPlusPrefab;
         [Tooltip("Guard prefab")][SerializeField] GuardEntity guardPrefab;
         [Tooltip("Objective prefab")][SerializeField] ObjectiveEntity objectivePrefab;
+        [Tooltip("Toggle prefab")][SerializeField] ToggleEntity togglePrefab;
         [Tooltip("Guard prefab")][SerializeField] ExitEntity exitPrefab;
         [Tooltip("Environmental prefab")][SerializeField] EnvironmentalEntity environmentPrefab;
 
@@ -181,7 +182,6 @@ public class NewManager : MonoBehaviour
 
                     switch (int.Parse(numberPlusAddition[0]))
                     {
-
                         case 1: //create player
                             //print("player");
                             thisTileEntity = Instantiate(playerPrefab, nextTile.transform);
@@ -198,6 +198,7 @@ public class NewManager : MonoBehaviour
                             thisTileEntity = Instantiate(exitPrefab, nextTile.transform);
                             thisTileEntity.name = "Exit";
                             ObjectiveEntity exitObjective = thisTileEntity.GetComponent<ExitEntity>();
+                            exitObjective.objective = "Exit";
                             listOfObjectives.Add(exitObjective);
                             break;
 
@@ -208,6 +209,36 @@ public class NewManager : MonoBehaviour
                             ObjectiveEntity defaultObjective = thisTileEntity.GetComponent<ObjectiveEntity>();
                             defaultObjective.objective = numberPlusAddition[2];
                             listOfObjectives.Add(defaultObjective);
+                            break;
+
+                        case 4: //create toggle
+                            //print("toggle");
+                            thisTileEntity = Instantiate(togglePrefab, nextTile.transform);
+                            thisTileEntity.name = numberPlusAddition[2];
+                            ToggleEntity defaultToggle = thisTileEntity.GetComponent<ToggleEntity>();
+                            defaultToggle.interactCondition = numberPlusAddition[1].ToUpper();
+                            defaultToggle.interactInstructions = numberPlusAddition[2].ToUpper();
+                            defaultToggle.toggledOn = (numberPlusAddition[3] != "true");
+
+                            try
+                            {
+                                string[] pointList = numberPlusAddition[4].Split('|');
+                                foreach (string patrol in pointList)
+                                {
+                                    string[] points = patrol.Split(",");
+                                    int.TryParse(points[0], out int curX);
+                                    int.TryParse(points[1], out int curY);
+                                    defaultToggle.targetPoints.Add(new Vector2Int(curX, curY));
+                                }
+                            }
+                            catch (IndexOutOfRangeException)
+                            {
+                                Debug.Log("failed to get target points");
+                                continue;
+                            }
+
+                            StartCoroutine(defaultToggle.ObjectiveComplete(null));
+
                             break;
 
                         case 10: //create wall
@@ -361,16 +392,6 @@ public class NewManager : MonoBehaviour
         UpdateStats(player);
     }
 
-    public void ResolveObjective()
-    {
-        for (int i = listOfPlayers.Count - 1; i >= 0; i--)
-        {
-            PlayerEntity player = listOfPlayers[i];
-            try { StartCoroutine(player.adjacentObjective.ObjectiveComplete(player)); }
-            catch (NullReferenceException) { continue; }
-        }
-    }
-
     public void UpdateStats(PlayerEntity player)
     {
         int facesIndex = 0;
@@ -487,11 +508,14 @@ public class NewManager : MonoBehaviour
         }
     }
 
-    public void FocusOnPlayer(PlayerEntity player)
+    public void FocusOnTile(TileData tile)
     {
-        Camera.main.transform.position = new Vector3(player.transform.position.x, Camera.main.transform.position.y, player.transform.position.z);
-        if (currentTurn == TurnSystem.You)
-            StartCoroutine(ChooseMovePlayer(player));
+        if (tile != null)
+        {
+            Camera.main.transform.position = new Vector3(tile.transform.position.x, Camera.main.transform.position.y, tile.transform.position.z);
+            if (currentTurn == TurnSystem.You)
+                StartCoroutine(ChooseMovePlayer(tile.myEntity.GetComponent<PlayerEntity>()));
+        }
     }
 
     public EnvironmentalEntity CreateEnvironmental()
@@ -500,7 +524,7 @@ public class NewManager : MonoBehaviour
         return newEnviro;
     }
 
-    #endregion
+#endregion
 
 #region Decision-making
 
@@ -595,7 +619,6 @@ public class NewManager : MonoBehaviour
     IEnumerator StartPlayerTurn()
     {
         UpdateStats(null);
-        //yield return Wait(0.5f);
 
         foreach(Card card in futureEffects)
             yield return card.NextRoundEffect();
@@ -647,14 +670,13 @@ public class NewManager : MonoBehaviour
     public void BackToStart(bool startTurn)
     {
         currentTurn = TurnSystem.You;
-        //Debug.Log("back to start");
 
         DisableAllTiles();
         DisableAllCards();
 
         UpdateStats(lastSelectedPlayer);
-        StopAllCoroutines();
         EnablePlayers();
+        objectiveButton.gameObject.SetActive(false);
 
         if (startTurn)
         {
@@ -664,7 +686,6 @@ public class NewManager : MonoBehaviour
         {
             if (lastSelectedPlayer != null)
             {
-                Debug.Log($"{lastSelectedPlayer.name} was last selected");
                 selectedTile = lastSelectedPlayer.currentTile;
                 StartCoroutine(ChooseMovePlayer(lastSelectedPlayer));
             }
@@ -690,14 +711,20 @@ public class NewManager : MonoBehaviour
         StartCoroutine(ChooseCardPlay(currentPlayer));
         EnablePlayers();
 
+        objectiveButton.gameObject.SetActive(currentPlayer.CheckForObjectives());
+        if (currentPlayer.adjacentObjective != null)
+            objectiveButton.transform.GetChild(0).GetComponent<TMP_Text>().text = currentPlayer.adjacentObjective.name;
+
         while (chosenTile == null)
         {
             if (selectedTile != currentTile || currentTurn != TurnSystem.You)
             {
-                //Debug.Log("switched off");
                 yield break;
             }
-            else{yield return null;}
+            else
+            {
+                yield return null;
+            }
         }
 
         Collector confirmDecision = ConfirmDecision("Confirm movement?", new Vector2(0, 200));
@@ -744,8 +771,10 @@ public class NewManager : MonoBehaviour
 
             while (chosenCard == null)
             {
-                if (currentTurn != TurnSystem.You){yield break;}
-                else {yield return null;}
+                if (currentTurn != TurnSystem.You)
+                    yield break;
+                else
+                    yield return null;
             }
 
             Collector confirmDecision = ConfirmDecision($"Play {chosenCard.name}?", new Vector2(0, -85));
@@ -764,6 +793,17 @@ public class NewManager : MonoBehaviour
 
             currentTurn = TurnSystem.Resolving;
             yield return currentPlayer.PlayCard(chosenCard, true);
+            BackToStart(false);
+        }
+    }
+
+    void ResolveObjective()
+    {
+        if (currentTurn == TurnSystem.You)
+        {
+            currentTurn = TurnSystem.Resolving;
+            if (lastSelectedPlayer != null && lastSelectedPlayer.adjacentObjective != null)
+                StartCoroutine(lastSelectedPlayer.adjacentObjective.ObjectiveComplete(lastSelectedPlayer));
             BackToStart(false);
         }
     }
@@ -830,7 +870,7 @@ public class NewManager : MonoBehaviour
         }
     }
 
-    #endregion
+#endregion
 
 #region Pathfinding
 

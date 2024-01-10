@@ -1,20 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MyBox;
 
 public class ObjectiveEntity : Entity
 {
     [Header("Ink JSON")]
     [SerializeField] private TextAsset inkJSON;
-
-    [HideInInspector] public string objective;
+    [ReadOnly] public string objective;
 
     public virtual bool CanInteract()
     {
         return true;
     }
 
-      public virtual IEnumerator ObjectiveComplete(PlayerEntity player)
+    public virtual IEnumerator ObjectiveComplete(PlayerEntity player)
     {
         NewManager.instance.listOfObjectives.Remove(this);
         NewManager.instance.objectiveButton.gameObject.SetActive(false);
@@ -32,7 +32,6 @@ public class ObjectiveEntity : Entity
         player.adjacentObjective = null;
 
         Destroy(this.gameObject);
-
         yield return null;
     }
 }

@@ -5,6 +5,8 @@ using UnityEngine.UI;
 using TMPro;
 using MyBox;
 using UnityEngine.EventSystems;
+using System.Text.RegularExpressions;
+using System.Drawing;
 
 public class Card : MonoBehaviour, IPointerClickHandler
 {
@@ -96,7 +98,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
     public void CardSetup(CardData data)
     {
         textName.text = data.name;
-        textDescr.text = data.desc;
+        textDescr.text = BoldAllKeywords(data.desc);
 
         typeOne = ConvertToType(data.cat1);
         typeTwo = ConvertToType(data.cat2);
@@ -138,6 +140,42 @@ public class Card : MonoBehaviour, IPointerClickHandler
             "misc" => CardType.Misc,
             _ => CardType.None,
         };
+    }
+
+    string BoldAllKeywords(string cardText)
+    {
+        cardText = $"<color=#000000>{cardText}";
+        cardText = BoldKeyword(cardText, @"[-+]\d+ Cards", "000000");
+        cardText = BoldKeyword(cardText, @"[-+]\d+ Card", "000000");
+
+        cardText = BoldKeyword(cardText, @"[-+]\d+ Movement", "d6bd00");
+        cardText = BoldKeyword(cardText, @"\d+ MP", "d6bd00");
+
+        cardText = BoldKeyword(cardText, @"[-+]\d+ Energy", "ADD8E6");
+        cardText = BoldKeyword(cardText, @"\d+ EP", "ADD8E6");
+
+        cardText = BoldKeyword(cardText, @"[-+]\d+ Health", "FFC0CB");
+        cardText = BoldKeyword(cardText, @"\d+ HP", "FFC0CB");
+        cardText = BoldKeyword(cardText, @"\d+ Damage", "8B0000");
+
+        cardText = BoldKeyword(cardText, @"Intensity \d+", "FFA500");
+        cardText = BoldKeyword(cardText, @"Range \d+", "0000FF");
+        cardText = BoldKeyword(cardText, @"Stun \d+", "800080");
+        cardText = BoldKeyword(cardText, @"Delay \d+", "00FFFF");
+
+        return cardText;
+    }
+
+    string BoldKeyword(string cardText, string keyword, string color)
+    {
+        MatchCollection matches = Regex.Matches(cardText, keyword);
+        foreach (Match match in matches)
+        {
+            string replacement = $"<color=#{color}><b>{match.Value}</b><color=#000000>";
+            cardText = cardText.Replace(match.Value, replacement);
+        }
+
+        return cardText;
     }
 
     #endregion
@@ -345,14 +383,14 @@ public class Card : MonoBehaviour, IPointerClickHandler
     public void EnableCard()
     {
         enableBorder = true;
-        image.color = Color.white;
+        image.color = UnityEngine.Color.white;
         button.interactable = true;
     }
 
     public void DisableCard()
     {
         enableBorder = false;
-        image.color = Color.gray;
+        image.color = UnityEngine.Color.gray;
         button.interactable = false;
     }
 
