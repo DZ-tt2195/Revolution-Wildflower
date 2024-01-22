@@ -704,6 +704,8 @@ public class NewManager : MonoBehaviour
         selectedTile = currentPlayer.currentTile;
         UpdateInstructions("Choose a character to move / play a card.");
 
+        yield return Wait(0.2f);
+
         List<TileData> possibleTiles = CalculateReachableGrids(currentTile, currentPlayer.movementLeft, true);
         WaitForDecision(possibleTiles);
 

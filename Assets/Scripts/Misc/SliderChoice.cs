@@ -37,9 +37,10 @@ public class SliderChoice : MonoBehaviour
 
         minimumText.text = min.ToString();
      	slider.value = min;
-   	slider.minValue = min;
+   	    slider.minValue = min;
         maximumText.text = max.ToString();
         slider.maxValue = max;
+        UpdateText(slider.minValue);
     }
 
     void UpdateText(float value)
