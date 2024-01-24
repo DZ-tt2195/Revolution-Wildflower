@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 1328cc37eb0d18344bea8ec564199c92
+guid: 6e4ca21e4fe14ef45af6d282ec73f40e
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -94,19 +94,6 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
-    buildTarget: Windows Store Apps
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
     buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -123,43 +110,64 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ChoiPort_6
+      name: portrait_spritesheet_0
       rect:
         serializedVersion: 2
-        x: 326
+        x: 0
         y: 0
-        width: 746
-        height: 1517
+        width: 743.6667
+        height: 797
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7194e11bcbad9464a9bb1b37840e1153
-      internalID: -1973519947
+      spriteID: a89599a71113f7646880da02e2a80f12
+      internalID: -361035117
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ChoiPort_0
+      name: portrait_spritesheet_1
       rect:
         serializedVersion: 2
-        x: 504
-        y: 1060
-        width: 420
-        height: 420
+        x: 743
+        y: 0
+        width: 743.6667
+        height: 797
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6941cd6bc2a7b094499f09b8b8906d2f
-      internalID: -1970516595
+      spriteID: e58506b9cb044a348aa1ea40d2e0e735
+      internalID: -139282177
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: portrait_spritesheet_2
+      rect:
+        serializedVersion: 2
+        x: 1486
+        y: 0
+        width: 743.6667
+        height: 797
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ff4dad9b1a1eefa458e6fde6744499ca
+      internalID: -573899356
       vertices: []
       indices: 
       edges: []
@@ -175,15 +183,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      ChoiPort_0: -1970516595
-      ChoiPort_1: -1115810146
-      ChoiPort_2: -1993520372
-      ChoiPort_3: 1744512682
-      ChoiPort_4: -351512174
-      ChoiPort_5: 80155681
-      ChoiPort_6: -1973519947
-      ChoiPort_7: -154211358
-      ChoiPort_8: 361166762
+      portrait_spritesheet_0: -361035117
+      portrait_spritesheet_1: -139282177
+      portrait_spritesheet_2: -573899356
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

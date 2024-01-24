@@ -6,6 +6,8 @@ using UnityEngine.UI;
 using TMPro;
 using MyBox;
 using UnityEngine.SceneManagement;
+using UnityEditor.U2D;
+using Unity.VisualScripting;
 
 public class AStarNode
 {
@@ -45,14 +47,17 @@ public class NewManager : MonoBehaviour
         [Tooltip("How much time the turn banner appears")][SerializeField] float turnHangDuration = 0.5f;
         [Tooltip("pop up alerting player of turn")][SerializeField] private CanvasGroup turnAlertBar;
         [Tooltip("text on turn banner")][SerializeField] private TMP_Text turnText;
+        [Tooltip("Spritesheet of player character faces")][SerializeField] private Sprite [] facesSpritesheet;
+        [Tooltip("Blank character face")][SerializeField] private Sprite emptyFace;
         [Tooltip("Your hand in the canvas")] [ReadOnly] public Transform handContainer;
         [Tooltip("The bar in the bottom center of the screen")] Transform playerStats;
-        [Tooltip("The bar in the bottom center of the screen")] Transform informationImage;
+        [Tooltip("Image section containing objective, actions, and debug popups")] Transform informationImage;
         [Tooltip("All the player's stats in text form")] TMP_Text stats;
         [Tooltip("Current player selected")] TMP_Text currentCharacter;
         [Tooltip("Selected player's health")] TMP_Text health;
         [Tooltip("Selected player's moves left")] TMP_Text moves;
-        [Tooltip("Selected player's energy")] TMP_Text energy; 
+        [Tooltip("Selected player's energy")] TMP_Text energy;
+        [Tooltip("Face of selected character")] Image characterFace;
         [Tooltip("Instructions for what the player is allowed to do right now")] TMP_Text instructions;
         [Tooltip("End the turn")] Button endTurnButton;
         [Tooltip("Complete an objective you're next to")] [ReadOnly] public Button objectiveButton;
@@ -112,6 +117,10 @@ public class NewManager : MonoBehaviour
         health = playerStats.GetChild(1).GetComponent<TMP_Text>();
         moves = playerStats.GetChild(2).GetComponent<TMP_Text>();
         energy = playerStats.GetChild(3).GetComponent<TMP_Text>();
+        characterFace = playerStats.GetChild(4).GetComponentInChildren<Image>();
+
+        facesSpritesheet = Resources.LoadAll<Sprite>("Sprites/portrait_spritesheet");
+        emptyFace = Resources.Load<Sprite>("Sprites/characterSill");
 
         informationImage = GameObject.Find("Information Image").transform;
         stats = informationImage.GetChild(0).GetComponent<TMP_Text>();
@@ -175,7 +184,7 @@ public class NewManager : MonoBehaviour
                     {
 
                         case 1: //create player
-                            print("player");
+                            //print("player");
                             thisTileEntity = Instantiate(playerPrefab, nextTile.transform);
                             PlayerEntity player = thisTileEntity.GetComponent<PlayerEntity>();
                             player.myPosition = listOfPlayers.Count;
@@ -186,7 +195,7 @@ public class NewManager : MonoBehaviour
                             break;
 
                         case 2: //create exit
-                            print("exit");
+                            //print("exit");
                             thisTileEntity = Instantiate(exitPrefab, nextTile.transform);
                             thisTileEntity.name = "Exit";
                             ObjectiveEntity exitObjective = thisTileEntity.GetComponent<ExitEntity>();
@@ -194,15 +203,16 @@ public class NewManager : MonoBehaviour
                             break;
 
                         case 3: //create objective
-                            print("objective");
+                            //print("objective");
                             thisTileEntity = Instantiate(objectivePrefab, nextTile.transform);
                             thisTileEntity.name = numberPlusAddition[1];
                             ObjectiveEntity defaultObjective = thisTileEntity.GetComponent<ObjectiveEntity>();
+                            defaultObjective.objective = numberPlusAddition[2];
                             listOfObjectives.Add(defaultObjective);
                             break;
 
                         case 10: //create wall
-                            print("wall");
+                            //print("wall");
                             thisTileEntity = Instantiate(wallPrefab, nextTile.transform);
                             thisTileEntity.name = "Wall";
                             WallEntity wall = thisTileEntity.GetComponent<WallEntity>();
@@ -257,9 +267,7 @@ public class NewManager : MonoBehaviour
                                     theGuard.PatrolPoints.Add(new Vector2Int(curX, curY));
                                 }
                             }
-                            catch (IndexOutOfRangeException)
-                            {
-                            }
+                            catch (IndexOutOfRangeException){ continue; }
                             break;
                     }
 
@@ -340,7 +348,7 @@ public class NewManager : MonoBehaviour
         player.health += n;
         UpdateStats(player);
         if (player.health <= 0)
-            GameOver($"{player.name} lost all their HP.");
+            GameOver($"{player.name} lost all their HP.", false);
     }
 
     public void SetMovement(PlayerEntity player, int n) //if you want to set movement to 2, type SetMovement(2);
@@ -366,6 +374,8 @@ public class NewManager : MonoBehaviour
 
     public void UpdateStats(PlayerEntity player)
     {
+        int facesIndex = 0;
+
         if (player != null)
         {
             stats.text = $"{player.name} | <color=#ffc73b>{player.health} Health <color=#ffffff>" +
@@ -376,6 +386,20 @@ public class NewManager : MonoBehaviour
             health.text = $"Health: {player.health}";
             moves.text = $"Moves: {player.movementLeft}";
             energy.text = $"Energy: {player.myEnergy}";
+            
+            if(player.name == "Gail")
+            {
+                facesIndex = 2;
+            }
+            else if (player.name == "Frankie")
+            {
+                facesIndex = 0;
+            }
+            else if (player.name == "WK")
+            {
+                facesIndex = 1;
+            }
+            characterFace.sprite = facesSpritesheet[facesIndex];
 
             deckTracker.text = $"<color=#70f5ff>Draw Pile <color=#ffffff>/ <color=#ff9670>Discard Pile " +
                 $"\n\n<color=#70f5ff>{player.myDrawPile.Count} <color=#ffffff>/ <color=#ff9670>{player.myDiscardPile.Count}" +
@@ -394,6 +418,7 @@ public class NewManager : MonoBehaviour
             health.text = "Health:";
             moves.text = "Moves:";
             energy.text = "Energy:";
+            characterFace.sprite = emptyFace;
 
             deckTracker.text = "";
             handContainer.transform.localPosition = new Vector3(10000, 10000, 0);
@@ -421,7 +446,7 @@ public class NewManager : MonoBehaviour
     {
         endTurnButton.gameObject.SetActive(currentTurn == TurnSystem.You);
         if (Input.GetKeyDown(KeyCode.Escape))
-            GameOver("You quit.");
+            GameOver("You quit.", false);
     }
 
     private void FixedUpdate()
@@ -462,11 +487,12 @@ public class NewManager : MonoBehaviour
         }
     }
 
-    public void GameOver(string cause)
+    public void GameOver(string cause, bool won)
     {
         gameOverText.text = cause;
         gameOverText.transform.parent.gameObject.SetActive(true);
         StopAllCoroutines();
+        GameObject.Find("Debrief Button").SetActive(won);
     }
 
     public TileData FindTile(Vector2 vector) //find a tile based off Vector2
@@ -546,7 +572,7 @@ public class NewManager : MonoBehaviour
     IEnumerator StartPlayerTurn()
     {
         UpdateStats(null);
-        yield return Wait(0.5f);
+        //yield return Wait(0.5f);
 
         foreach(Card card in futureEffects)
             yield return card.NextRoundEffect();
@@ -557,7 +583,7 @@ public class NewManager : MonoBehaviour
         BackToStart(true);
     }
 
-    public IEnumerator FadeTurnBar(string message)
+    IEnumerator FadeTurnBar(string message)
     {
         turnAlertBar.alpha = 0;
         turnText.text = message;
@@ -575,6 +601,7 @@ public class NewManager : MonoBehaviour
         }
 
         turnAlertBar.alpha = 0;
+        /*
         EnablePlayers();
         if (lastSelectedPlayer != null)
         {
@@ -582,6 +609,7 @@ public class NewManager : MonoBehaviour
             selectedTile = lastSelectedPlayer.currentTile;
             StartCoroutine(ChooseMovePlayer(lastSelectedPlayer));
         }
+        */
     }
 
     public void EnablePlayers()
@@ -593,15 +621,17 @@ public class NewManager : MonoBehaviour
         }
     }
 
-    void BackToStart(bool startTurn)
+    public void BackToStart(bool startTurn)
     {
         currentTurn = TurnSystem.You;
+        //Debug.Log("back to start");
 
         DisableAllTiles();
         DisableAllCards();
 
         UpdateStats(lastSelectedPlayer);
         StopAllCoroutines();
+        EnablePlayers();
 
         if (startTurn)
         {
@@ -609,7 +639,6 @@ public class NewManager : MonoBehaviour
         }
         else
         {
-            EnablePlayers();
             if (lastSelectedPlayer != null)
             {
                 Debug.Log($"{lastSelectedPlayer.name} was last selected");
@@ -641,7 +670,7 @@ public class NewManager : MonoBehaviour
         {
             if (selectedTile != currentTile || currentTurn != TurnSystem.You)
             {
-                Debug.Log("switched off");
+                //Debug.Log("switched off");
                 yield break;
             }
             else{yield return null;}
@@ -653,10 +682,11 @@ public class NewManager : MonoBehaviour
     void MovePlayer(PlayerEntity currentPlayer)
     { 
         currentTurn = TurnSystem.Resolving;
-        int distanceTraveled = GetDistance(currentPlayer.currentTile.gridPosition, NewManager.instance.chosenTile.gridPosition);
+        int distanceTraveled = GetDistance(currentPlayer.currentTile.gridPosition, chosenTile.gridPosition);
         ChangeMovement(currentPlayer, -distanceTraveled);
-        if (distanceTraveled != 0) footsteps.Post(currentPlayer.gameObject);
-        currentPlayer.MoveTile(NewManager.instance.chosenTile);
+        if (distanceTraveled != 0)
+            footsteps.Post(currentPlayer.gameObject);
+        currentPlayer.MoveTile(chosenTile);
         StopAllCoroutines();
         BackToStart(false);
     }
@@ -739,7 +769,7 @@ public class NewManager : MonoBehaviour
         turnCount--;
         if (turnCount == 0)
         {
-            GameOver("You ran out of time.");
+            GameOver("You ran out of time.", false);
         }
         else
         {

@@ -16,7 +16,6 @@ public class ExitEntity : ObjectiveEntity
 
     public override IEnumerator ObjectiveComplete(PlayerEntity player)
     {
-        NewManager.instance.listOfPlayers.Remove(player);
         for (int i = 0; i < NewManager.instance.listOfGuards.Count; i++)
         {
             if (NewManager.instance.listOfGuards[i].CurrentTarget == player)
@@ -24,13 +23,20 @@ public class ExitEntity : ObjectiveEntity
                 NewManager.instance.listOfGuards[i].resetAlert();
             }
         }
+
+        NewManager.instance.listOfPlayers.Remove(player);
+        NewManager.instance.lastSelectedPlayer = null;
         Destroy(player.myBar.gameObject);
         Destroy(player.gameObject);
 
         if (NewManager.instance.listOfPlayers.Count == 0)
         {
-            NewManager.instance.GameOver("You won!");
+            NewManager.instance.GameOver("You won!", true);
             yield return base.ObjectiveComplete(player);
+        }
+        else
+        {
+            NewManager.instance.BackToStart(false);
         }
     }
 }

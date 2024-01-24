@@ -91,7 +91,7 @@ public class TileData : MonoBehaviour
 
     private void OnMouseOver()
     {
-        if (clickable && Input.GetKeyDown(KeyCode.Mouse0) && Input.mousePosition.y > 335)
+        if (clickable && Input.GetKeyDown(KeyCode.Mouse0) && Input.mousePosition.y > 450)
         {
             NewManager.instance.selectedTile = this;
             if (choosable)
