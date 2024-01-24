@@ -107,7 +107,7 @@ public class PlayerEntity : MovingEntity
             if (tile.myEntity != null && tile.myEntity.CompareTag("Objective"))
             {
                 this.adjacentObjective = tile.myEntity.GetComponent<ObjectiveEntity>();
-                return adjacentObjective.CanInteract();
+                return this.adjacentObjective.CanInteract();
             }
         }
 
