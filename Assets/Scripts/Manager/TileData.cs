@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using MyBox;
+using UnityEngine.EventSystems;
 //using UnityEditor.Experimental.GraphView;
 
 public class TileData : MonoBehaviour
@@ -26,7 +27,7 @@ public class TileData : MonoBehaviour
         [Tooltip("Tile's materal")] [SerializeField] Renderer renderer3d;
         [Tooltip("Glowing border's sprite renderer")] SpriteRenderer border;
         [Tooltip("color used for unselected moused over tiles")][SerializeField] Color mouseOverColor = new Color(0.9f,0.9f,0.9f,1);
-        [Tooltip("color used for selected tiles")][SerializeField] Color SelectedColor;
+        [Tooltip("color used for selected tiles")][SerializeField] Color SelectedColor = new Color(0.6f, 0.6f, 0.6f, 1);
         [Tooltip("color used for unselected moused over tiles")][SerializeField] Color MoveableColor = new Color(0.9f, 0.9f, 0.9f, 1);
         [Tooltip("color used for unselected moused over tiles")] [SerializeField] Color AlertColor = new Color(0.9f, 0.7f, 0.1f, 1);
         [Tooltip("Time for noise indecator to show")] [SerializeField] float AlertDelay = 0.2f;
@@ -53,11 +54,13 @@ public class TileData : MonoBehaviour
         }
         else if (NewManager.instance.selectedTile == this)
         {
-            border.color = new Color(SelectedColor.r, SelectedColor.g, SelectedColor.b, NewManager.instance.opacity);
+            border.color = SelectedColor;
+            border.SetAlpha(NewManager.instance.opacity);
         }
         else if (moveable)
         {
-            border.color = new Color(MoveableColor.r, MoveableColor.g, MoveableColor.b, NewManager.instance.opacity);
+            border.color = MoveableColor;
+            border.SetAlpha(NewManager.instance.opacity);
         }
         else if (moused)
         {
@@ -91,7 +94,7 @@ public class TileData : MonoBehaviour
 
     private void OnMouseOver()
     {
-        if (clickable && Input.GetKeyDown(KeyCode.Mouse0) && Input.mousePosition.y > 450)
+        if (clickable && Input.GetKeyDown(KeyCode.Mouse0) && !EventSystem.current.IsPointerOverGameObject())
         {
             NewManager.instance.selectedTile = this;
             if (choosable)

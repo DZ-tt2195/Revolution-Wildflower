@@ -4,17 +4,21 @@ using UnityEngine;
 using MyBox;
 using System;
 using System.Linq;
+using TMPro;
 
 public class PlayerEntity : MovingEntity
 {
+
+#region Variables
+
     [Foldout("Player Entity", true)]
-        [Tooltip("The bar on screen")][ReadOnly] public PlayerBar myBar;
-        [Tooltip("Where this player's located in the list")][ReadOnly] public int myPosition;
-        [Tooltip("turns where you can't be caught")][ReadOnly] public int health = 3;
+        [Tooltip("The bar on screen")] [ReadOnly] public PlayerBar myBar;
+        [Tooltip("Where this player's located in the list")] [ReadOnly] public int myPosition;
+        [Tooltip("turns where you can't be caught")] [ReadOnly] public int health = 3;
         [Tooltip("turns where you can't be caught")] [ReadOnly] public int hidden = 0;
         //[Tooltip("normal player appearance")] [SerializeField] Material DefaultPlayerMaterial;
         //[Tooltip("appearance when hidden")] [SerializeField] Material HiddenPlayerMaterial;
-        [Tooltip("adjacent objective")][ReadOnly] public ObjectiveEntity adjacentObjective;
+        [Tooltip("adjacent objective")] [ReadOnly] public ObjectiveEntity adjacentObjective;
 
     [Foldout("Sprites", true)]
         [Tooltip("Gail's sprite")][SerializeField] Sprite gailSprite;
@@ -32,6 +36,8 @@ public class PlayerEntity : MovingEntity
         [Tooltip("list of cards that're exhausted")][ReadOnly] public List<Card> myExhaust;
         [Tooltip("list of cards played this turn")][ReadOnly] public List<Card> cardsPlayed;
         [Tooltip("list of cost reduction effects")][ReadOnly] public List<Card> costChange;
+
+    #endregion
 
 #region Entity stuff
 
@@ -61,7 +67,7 @@ public class PlayerEntity : MovingEntity
         }
 
         PlayerEntity me = this;
-        myBar.button.onClick.AddListener(() => NewManager.instance.FocusOnPlayer(me));
+        myBar.button.onClick.AddListener(() => NewManager.instance.FocusOnTile(me.currentTile));
     }
 
     void GetCards(int n)
@@ -91,24 +97,21 @@ public class PlayerEntity : MovingEntity
     {
         base.MoveTile(newTile);
         foreach (GuardEntity guard in NewManager.instance.listOfGuards)
-        {
             guard.CheckForPlayer();
-        }
-        NewManager.instance.objectiveButton.gameObject.SetActive(CheckForObjectives());
     }
 
     public bool CheckForObjectives()
     {
-        for (int i = 0; i < this.currentTile.adjacentTiles.Count; i++)
+        foreach (TileData tile in currentTile.adjacentTiles)
         {
-            TileData nextTile = this.currentTile.adjacentTiles[i];
-            if (nextTile.myEntity != null && nextTile.myEntity.CompareTag("Objective"))
+            if (tile.myEntity != null && tile.myEntity.CompareTag("Objective"))
             {
-                this.adjacentObjective = nextTile.myEntity.GetComponent<ObjectiveEntity>();
+                this.adjacentObjective = tile.myEntity.GetComponent<ObjectiveEntity>();
                 return adjacentObjective.CanInteract();
             }
         }
 
+        adjacentObjective = null;
         return false;
     }
 
@@ -137,6 +140,7 @@ public class PlayerEntity : MovingEntity
 
         //meshRenderer.material = (hidden > 0) ? HiddenPlayerMaterial : DefaultPlayerMaterial;
     }
+
 #endregion
 
 #region Card Stuff
@@ -158,7 +162,7 @@ public class PlayerEntity : MovingEntity
             StartCoroutine(card.RevealCard(PlayerPrefs.GetFloat("Animation Speed")));
     }
 
-    public void PlusCards(int num)
+    internal void PlusCards(int num)
     {
         for (int i = 0; i < num; i++)
         {
@@ -173,7 +177,7 @@ public class PlayerEntity : MovingEntity
         SortHand();
     }
 
-    public Card GetTopCard()
+    internal Card GetTopCard()
     {
         if (myDrawPile.Count == 0)
         {
@@ -209,7 +213,7 @@ public class PlayerEntity : MovingEntity
         }
     }
 
-    public IEnumerator DiscardFromHand(Card discardMe)
+    internal IEnumerator DiscardFromHand(Card discardMe)
     {
         if (!myDiscardPile.Contains(discardMe))
         {
@@ -225,7 +229,7 @@ public class PlayerEntity : MovingEntity
         }
     }
 
-    public IEnumerator ExhaustFromHand(Card exhaustMe)
+    internal IEnumerator ExhaustFromHand(Card exhaustMe)
     {
         myHand.Remove(exhaustMe);
         myDrawPile.Remove(exhaustMe);
@@ -242,7 +246,7 @@ public class PlayerEntity : MovingEntity
         exhaustMe.transform.SetParent(null);
     }
 
-    public IEnumerator PlayCard(Card playMe, bool payEnergy)
+    internal IEnumerator PlayCard(Card playMe, bool payEnergy)
     {
         NewManager.instance.DisableAllCards();
         playMe.cardPlay.Post(playMe.gameObject);
@@ -261,7 +265,7 @@ public class PlayerEntity : MovingEntity
         this.cardsPlayed.Add(playMe);
     }
 
-    public void MyTurn()
+    internal void MyTurn()
     {
         foreach (Card card in myHand)
         {
@@ -272,4 +276,5 @@ public class PlayerEntity : MovingEntity
     }
 
     #endregion
+
 }

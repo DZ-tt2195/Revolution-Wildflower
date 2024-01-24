@@ -6,19 +6,17 @@ using UnityEngine.UI;
 using TMPro;
 using MyBox;
 using UnityEngine.SceneManagement;
-using UnityEditor.U2D;
-using Unity.VisualScripting;
+//using UnityEditor.U2D;
+//using Unity.VisualScripting;
 
 public class AStarNode
 {
     public TileData ATileData;
     public AStarNode Parent;
-    //travel distance from node to start node
-    public int GCost;
-    //travel distance from node to target node
-    public int HCost;
-    //Astar value of this tile, the lower it is, the better for the pathfinder.
-    public int FCost => GCost + HCost;
+
+    public int GCost; //travel distance from node to start node
+    public int HCost; //travel distance from node to target node
+    public int FCost => GCost + HCost; //Astar value of this tile, the lower it is, the better for the pathfinder.
 }
 
 public class NewManager : MonoBehaviour
@@ -40,6 +38,7 @@ public class NewManager : MonoBehaviour
         [Tooltip("A acard that the player chose")][ReadOnly] public Card chosenCard;
         [Tooltip("Current Selected Tile")][ReadOnly] public TileData selectedTile;
         [Tooltip("Quick reference to current movable tile")][ReadOnly] public TileData CurrentAvailableMoveTarget;
+        [Tooltip("Confirm your decisions")] public Collector confirmationCollector;
 
     [Foldout("UI Elements", true)]
         [Tooltip("Hazardbox to give to players")][SerializeField] public CanvasGroup ManagerHazardBox;
@@ -79,6 +78,7 @@ public class NewManager : MonoBehaviour
         [Tooltip("Wall Plus prefab")][SerializeField] WallEntity wallPlusPrefab;
         [Tooltip("Guard prefab")][SerializeField] GuardEntity guardPrefab;
         [Tooltip("Objective prefab")][SerializeField] ObjectiveEntity objectivePrefab;
+        [Tooltip("Toggle prefab")][SerializeField] ToggleEntity togglePrefab;
         [Tooltip("Guard prefab")][SerializeField] ExitEntity exitPrefab;
         [Tooltip("Environmental prefab")][SerializeField] EnvironmentalEntity environmentPrefab;
 
@@ -182,7 +182,6 @@ public class NewManager : MonoBehaviour
 
                     switch (int.Parse(numberPlusAddition[0]))
                     {
-
                         case 1: //create player
                             //print("player");
                             thisTileEntity = Instantiate(playerPrefab, nextTile.transform);
@@ -199,6 +198,7 @@ public class NewManager : MonoBehaviour
                             thisTileEntity = Instantiate(exitPrefab, nextTile.transform);
                             thisTileEntity.name = "Exit";
                             ObjectiveEntity exitObjective = thisTileEntity.GetComponent<ExitEntity>();
+                            exitObjective.objective = "Exit";
                             listOfObjectives.Add(exitObjective);
                             break;
 
@@ -209,6 +209,36 @@ public class NewManager : MonoBehaviour
                             ObjectiveEntity defaultObjective = thisTileEntity.GetComponent<ObjectiveEntity>();
                             defaultObjective.objective = numberPlusAddition[2];
                             listOfObjectives.Add(defaultObjective);
+                            break;
+
+                        case 4: //create toggle
+                            //print("toggle");
+                            thisTileEntity = Instantiate(togglePrefab, nextTile.transform);
+                            thisTileEntity.name = numberPlusAddition[2];
+                            ToggleEntity defaultToggle = thisTileEntity.GetComponent<ToggleEntity>();
+                            defaultToggle.interactCondition = numberPlusAddition[1].ToUpper();
+                            defaultToggle.interactInstructions = numberPlusAddition[2].ToUpper();
+                            defaultToggle.toggledOn = (numberPlusAddition[3] != "true");
+
+                            try
+                            {
+                                string[] pointList = numberPlusAddition[4].Split('|');
+                                foreach (string patrol in pointList)
+                                {
+                                    string[] points = patrol.Split(",");
+                                    int.TryParse(points[0], out int curX);
+                                    int.TryParse(points[1], out int curY);
+                                    defaultToggle.targetPoints.Add(new Vector2Int(curX, curY));
+                                }
+                            }
+                            catch (IndexOutOfRangeException)
+                            {
+                                Debug.Log("failed to get target points");
+                                continue;
+                            }
+
+                            StartCoroutine(defaultToggle.ObjectiveComplete(null));
+
                             break;
 
                         case 10: //create wall
@@ -362,16 +392,6 @@ public class NewManager : MonoBehaviour
         UpdateStats(player);
     }
 
-    public void ResolveObjective()
-    {
-        for (int i = listOfPlayers.Count - 1; i >= 0; i--)
-        {
-            PlayerEntity player = listOfPlayers[i];
-            try { StartCoroutine(player.adjacentObjective.ObjectiveComplete(player)); }
-            catch (NullReferenceException) { continue; }
-        }
-    }
-
     public void UpdateStats(PlayerEntity player)
     {
         int facesIndex = 0;
@@ -459,34 +479,6 @@ public class NewManager : MonoBehaviour
             decrease = !decrease;
     }
 
-    public void DisableAllTiles()
-    {
-        for (int i = 0; i < listOfTiles.GetLength(0); i++)
-        {
-            for (int j = 0; j < listOfTiles.GetLength(1); j++)
-            {
-                try
-                {
-                    listOfTiles[i, j].clickable = false;
-                    listOfTiles[i, j].moveable = false;
-                    listOfTiles[i, j].choosable = false;
-                }
-                catch (NullReferenceException)
-                {
-                    continue;
-                }
-            }
-        }
-    }
-
-    public void DisableAllCards()
-    {
-        foreach (Card card in SaveManager.instance.allCards)
-        {
-            card.DisableCard();
-        }
-    }
-
     public void GameOver(string cause, bool won)
     {
         gameOverText.text = cause;
@@ -516,11 +508,52 @@ public class NewManager : MonoBehaviour
         }
     }
 
-    public void FocusOnPlayer(PlayerEntity player)
+    public void FocusOnTile(TileData tile)
     {
-        Camera.main.transform.position = new Vector3(player.transform.position.x, Camera.main.transform.position.y, player.transform.position.z);
-        if (currentTurn == TurnSystem.You)
-            StartCoroutine(ChooseMovePlayer(player));
+        if (tile != null)
+        {
+            Camera.main.transform.position = new Vector3(tile.transform.position.x, Camera.main.transform.position.y, tile.transform.position.z);
+            if (currentTurn == TurnSystem.You)
+                StartCoroutine(ChooseMovePlayer(tile.myEntity.GetComponent<PlayerEntity>()));
+        }
+    }
+
+    public EnvironmentalEntity CreateEnvironmental()
+    {
+        EnvironmentalEntity newEnviro = Instantiate(environmentPrefab);
+        return newEnviro;
+    }
+
+#endregion
+
+#region Decision-making
+
+    public void DisableAllTiles()
+    {
+        for (int i = 0; i < listOfTiles.GetLength(0); i++)
+        {
+            for (int j = 0; j < listOfTiles.GetLength(1); j++)
+            {
+                try
+                {
+                    listOfTiles[i, j].clickable = false;
+                    listOfTiles[i, j].moveable = false;
+                    listOfTiles[i, j].choosable = false;
+                }
+                catch (NullReferenceException)
+                {
+                    continue;
+                }
+            }
+        }
+    }
+
+    public void DisableAllCards()
+    {
+        foreach (Card card in SaveManager.instance.allCards)
+        {
+            card.DisableCard();
+        }
     }
 
     public void ReceiveChoice(Card card)
@@ -551,7 +584,7 @@ public class NewManager : MonoBehaviour
         chosenCard = null;
         DisableAllTiles();
 
-        foreach(TileData tile in canBeChosen)
+        foreach (TileData tile in canBeChosen)
         {
             tile.moveable = true;
             tile.clickable = true;
@@ -559,10 +592,24 @@ public class NewManager : MonoBehaviour
         }
     }
 
-    public EnvironmentalEntity CreateEnvironmental()
+    public Collector ConfirmDecision(string header, Vector3 position)
     {
-        EnvironmentalEntity newEnviro = Instantiate(environmentPrefab);
-        return newEnviro;
+        if (PlayerPrefs.GetInt("Confirm Choices") == 1)
+        {
+            DisableAllCards();
+            DisableAllTiles();
+
+            Collector collector = Instantiate(confirmationCollector);
+            collector.StatsSetup(header, position);
+
+            collector.AddTextButton("Confirm");
+            collector.AddTextButton("Rechoose");
+            return collector;
+        }
+        else
+        {
+            return null;
+        }
     }
 
 #endregion
@@ -572,7 +619,6 @@ public class NewManager : MonoBehaviour
     IEnumerator StartPlayerTurn()
     {
         UpdateStats(null);
-        //yield return Wait(0.5f);
 
         foreach(Card card in futureEffects)
             yield return card.NextRoundEffect();
@@ -624,14 +670,13 @@ public class NewManager : MonoBehaviour
     public void BackToStart(bool startTurn)
     {
         currentTurn = TurnSystem.You;
-        //Debug.Log("back to start");
 
         DisableAllTiles();
         DisableAllCards();
 
         UpdateStats(lastSelectedPlayer);
-        StopAllCoroutines();
         EnablePlayers();
+        objectiveButton.gameObject.SetActive(false);
 
         if (startTurn)
         {
@@ -641,7 +686,6 @@ public class NewManager : MonoBehaviour
         {
             if (lastSelectedPlayer != null)
             {
-                Debug.Log($"{lastSelectedPlayer.name} was last selected");
                 selectedTile = lastSelectedPlayer.currentTile;
                 StartCoroutine(ChooseMovePlayer(lastSelectedPlayer));
             }
@@ -657,7 +701,10 @@ public class NewManager : MonoBehaviour
         AkSoundEngine.SetState("Character", currentPlayer.name);
 
         TileData currentTile = currentPlayer.currentTile;
+        selectedTile = currentPlayer.currentTile;
         UpdateInstructions("Choose a character to move / play a card.");
+
+        yield return Wait(0.2f);
 
         List<TileData> possibleTiles = CalculateReachableGrids(currentTile, currentPlayer.movementLeft, true);
         WaitForDecision(possibleTiles);
@@ -666,14 +713,35 @@ public class NewManager : MonoBehaviour
         StartCoroutine(ChooseCardPlay(currentPlayer));
         EnablePlayers();
 
+        objectiveButton.gameObject.SetActive(currentPlayer.CheckForObjectives());
+        if (currentPlayer.adjacentObjective != null)
+            objectiveButton.transform.GetChild(0).GetComponent<TMP_Text>().text = currentPlayer.adjacentObjective.name;
+
         while (chosenTile == null)
         {
             if (selectedTile != currentTile || currentTurn != TurnSystem.You)
             {
-                //Debug.Log("switched off");
                 yield break;
             }
-            else{yield return null;}
+            else
+            {
+                yield return null;
+            }
+        }
+
+        Collector confirmDecision = ConfirmDecision("Confirm movement?", new Vector2(0, 200));
+        if (confirmDecision != null)
+        {
+            selectedTile = chosenTile;
+            yield return confirmDecision.WaitForChoice();
+            int decision = confirmDecision.chosenButton;
+            Destroy(confirmDecision.gameObject);
+
+            if (decision == 1)
+            {
+                StartCoroutine(ChooseMovePlayer(currentPlayer));
+                yield break;
+            }
         }
 
         MovePlayer(currentPlayer);
@@ -691,31 +759,58 @@ public class NewManager : MonoBehaviour
         BackToStart(false);
     }
 
-    IEnumerator ChooseCardPlay(PlayerEntity player) //choose a card to play
+    IEnumerator ChooseCardPlay(PlayerEntity currentPlayer) //choose a card to play
     {
-        if (player != null)
+        if (currentPlayer != null)
         {
             List<Card> canBePlayed = new List<Card>();
-            foreach (Card card in player.myHand)
+            foreach (Card card in currentPlayer.myHand)
             {
-                if (card.CanPlay(player))
+                if (card.CanPlay(currentPlayer))
                     canBePlayed.Add(card);
             }
             WaitForDecision(canBePlayed);
 
             while (chosenCard == null)
             {
-                if (currentTurn != TurnSystem.You){yield break;}
-                else{yield return null;}
+                if (currentTurn != TurnSystem.You)
+                    yield break;
+                else
+                    yield return null;
+            }
+
+            Collector confirmDecision = ConfirmDecision($"Play {chosenCard.name}?", new Vector2(0, -85));
+            if (confirmDecision != null)
+            {
+                yield return confirmDecision.WaitForChoice();
+                int decision = confirmDecision.chosenButton;
+                Destroy(confirmDecision.gameObject);
+
+                if (decision == 1)
+                {
+                    StartCoroutine(ChooseCardPlay(currentPlayer));
+                    yield break;
+                }
             }
 
             currentTurn = TurnSystem.Resolving;
-            yield return player.PlayCard(chosenCard, true);
+            yield return currentPlayer.PlayCard(chosenCard, true);
             BackToStart(false);
         }
     }
 
-    public void Regain()
+    void ResolveObjective()
+    {
+        if (currentTurn == TurnSystem.You)
+        {
+            currentTurn = TurnSystem.Resolving;
+            if (lastSelectedPlayer != null && lastSelectedPlayer.adjacentObjective != null)
+                StartCoroutine(lastSelectedPlayer.adjacentObjective.ObjectiveComplete(lastSelectedPlayer));
+            BackToStart(false);
+        }
+    }
+
+    void Regain()
     {
         StopAllCoroutines();
         UpdateInstructions("");
@@ -777,7 +872,7 @@ public class NewManager : MonoBehaviour
         }
     }
 
-    #endregion
+#endregion
 
 #region Pathfinding
 

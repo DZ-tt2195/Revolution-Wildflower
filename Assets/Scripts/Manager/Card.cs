@@ -5,6 +5,8 @@ using UnityEngine.UI;
 using TMPro;
 using MyBox;
 using UnityEngine.EventSystems;
+using System.Text.RegularExpressions;
+using System.Drawing;
 
 public class Card : MonoBehaviour, IPointerClickHandler
 {
@@ -16,7 +18,8 @@ public class Card : MonoBehaviour, IPointerClickHandler
         bool enableBorder;
         [ReadOnly] public Image border;
         [ReadOnly] public Button button;
-        [SerializeField] Collector collector;
+        [SerializeField] Collector buttonCollector;
+        [SerializeField] SliderChoice sliderChoice;
         [Tooltip("the front of a card")][SerializeField] Sprite cardFront;
         [Tooltip("the back of a card")][SerializeField] Sprite cardBack;
 
@@ -53,6 +56,8 @@ public class Card : MonoBehaviour, IPointerClickHandler
         [ReadOnly] public string nextRoundEffectsInOrder { get; private set; }
         [ReadOnly] public string costChangeCondition{ get; private set; }
 
+    [Foldout("Saved information", true)]
+        [ReadOnly] int sliderData;
         [ReadOnly] PlayerEntity currentPlayer;
         [ReadOnly] TileData currentTarget;
         [ReadOnly] List<TileData> adjacentTilesWithPlayers = new();
@@ -93,7 +98,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
     public void CardSetup(CardData data)
     {
         textName.text = data.name;
-        textDescr.text = data.desc;
+        textDescr.text = BoldAllKeywords(data.desc);
 
         typeOne = ConvertToType(data.cat1);
         typeTwo = ConvertToType(data.cat2);
@@ -135,6 +140,42 @@ public class Card : MonoBehaviour, IPointerClickHandler
             "misc" => CardType.Misc,
             _ => CardType.None,
         };
+    }
+
+    string BoldAllKeywords(string cardText)
+    {
+        cardText = $"<color=#000000>{cardText}";
+        cardText = BoldKeyword(cardText, @"[-+]\d+ Cards", "000000");
+        cardText = BoldKeyword(cardText, @"[-+]\d+ Card", "000000");
+
+        cardText = BoldKeyword(cardText, @"[-+]\d+ Movement", "d6bd00");
+        cardText = BoldKeyword(cardText, @"\d+ MP", "d6bd00");
+
+        cardText = BoldKeyword(cardText, @"[-+]\d+ Energy", "ADD8E6");
+        cardText = BoldKeyword(cardText, @"\d+ EP", "ADD8E6");
+
+        cardText = BoldKeyword(cardText, @"[-+]\d+ Health", "FFC0CB");
+        cardText = BoldKeyword(cardText, @"\d+ HP", "FFC0CB");
+        cardText = BoldKeyword(cardText, @"\d+ Damage", "8B0000");
+
+        cardText = BoldKeyword(cardText, @"Intensity \d+", "FFA500");
+        cardText = BoldKeyword(cardText, @"Range \d+", "0000FF");
+        cardText = BoldKeyword(cardText, @"Stun \d+", "800080");
+        cardText = BoldKeyword(cardText, @"Delay \d+", "00FFFF");
+
+        return cardText;
+    }
+
+    string BoldKeyword(string cardText, string keyword, string color)
+    {
+        MatchCollection matches = Regex.Matches(cardText, keyword);
+        foreach (Match match in matches)
+        {
+            string replacement = $"<color=#{color}><b>{match.Value}</b><color=#000000>";
+            cardText = cardText.Replace(match.Value, replacement);
+        }
+
+        return cardText;
     }
 
     #endregion
@@ -342,14 +383,14 @@ public class Card : MonoBehaviour, IPointerClickHandler
     public void EnableCard()
     {
         enableBorder = true;
-        image.color = Color.white;
+        image.color = UnityEngine.Color.white;
         button.interactable = true;
     }
 
     public void DisableCard()
     {
         enableBorder = false;
-        image.color = Color.gray;
+        image.color = UnityEngine.Color.gray;
         button.interactable = false;
     }
 
@@ -409,6 +450,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         {
             NewManager.instance.DisableAllTiles();
             NewManager.instance.DisableAllCards();
+            NewManager.instance.UpdateStats(currentPlayer);
 
             if (nextMethod == "" || nextMethod == "NONE")
             {
@@ -420,7 +462,10 @@ public class Card : MonoBehaviour, IPointerClickHandler
                 NewManager.instance.UpdateStats(currentPlayer);
             }
         }
+
         NewManager.instance.selectedTile = currentPlayer.currentTile;
+        if (distractionIntensity > 0)
+            StartCoroutine(CalculateDistraction(currentTarget));
     }
 
     IEnumerator ResolveMethod(string methodName)
@@ -469,6 +514,13 @@ public class Card : MonoBehaviour, IPointerClickHandler
                 case "ZEROENERGY":
                     yield return ZeroEnergy(currentPlayer);
                     break;
+                case "CONVERTMOVEMENTTOENERGY":
+                    yield return ChooseFromSlider("Pay how much movement?", 0, currentPlayer.movementLeft);
+                    changeInMP = -1 * sliderData;
+                    yield return ChangeMovement(currentPlayer);
+                    changeInEP = sliderData;
+                    yield return ChangeEnergy(currentPlayer);
+                    break;
 
                 case "CHANGEMP":
                     yield return ChangeMovement(currentPlayer);
@@ -516,42 +568,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
                     yield return null;
                     break;
             }
-            if (distractionIntensity > 0)
-            {
-                StartCoroutine(CalculateDistraction(currentTarget));
-            }
         }
-    }
-
-    IEnumerator ChooseOptions(string[] choices)
-    {
-        Collector newCollector = Instantiate(collector);
-        newCollector.StatsSetup("Make a choice.", 0);
-
-        foreach (string choice in choices)
-        {
-            switch (choice)
-            {
-                case "DRAWCARDS":
-                    newCollector.AddTextButton($"Draw {changeInDraw}");
-                    break;
-                case "CHANGEMP":
-                    newCollector.AddTextButton($"+{changeInMP} Movement");
-                    break;
-                case "CHANGEEP":
-                    newCollector.AddTextButton($"+{changeInEP} Energy");
-                    break;
-                case "CHANGEHP":
-                    newCollector.AddTextButton($"+{changeInHP} Health");
-                    break;
-            }
-        }
-
-        while (newCollector.chosenButton == -1)
-            yield return null;
-
-        yield return ResolveMethod(choices[newCollector.chosenButton]);
-        Destroy(newCollector.gameObject);
     }
 
     public IEnumerator CalculateDistraction(TileData source)
@@ -606,6 +623,21 @@ public class Card : MonoBehaviour, IPointerClickHandler
             while (NewManager.instance.chosenTile == null)
                 yield return null;
 
+            Collector confirmDecision = NewManager.instance.ConfirmDecision("Confirm guard?", new Vector2(0, 200));
+            if (confirmDecision != null)
+            {
+                NewManager.instance.selectedTile = NewManager.instance.chosenTile;
+                yield return confirmDecision.WaitForChoice();
+                int decision = confirmDecision.chosenButton;
+                Destroy(confirmDecision.gameObject);
+
+                if (decision == 1)
+                {
+                    StartCoroutine(ChooseGuard());
+                    yield break;
+                }
+            }
+
             adjacentTilesWithGuards.Clear();
             adjacentTilesWithGuards.Add(NewManager.instance.chosenTile);
         }
@@ -622,6 +654,21 @@ public class Card : MonoBehaviour, IPointerClickHandler
             while (NewManager.instance.chosenTile == null)
                 yield return null;
 
+            Collector confirmDecision = NewManager.instance.ConfirmDecision("Confirm player?", new Vector2(0, 200));
+            if (confirmDecision != null)
+            {
+                NewManager.instance.selectedTile = NewManager.instance.chosenTile;
+                yield return confirmDecision.WaitForChoice();
+                int decision = confirmDecision.chosenButton;
+                Destroy(confirmDecision.gameObject);
+
+                if (decision == 1)
+                {
+                    StartCoroutine(ChoosePlayer());
+                    yield break;
+                }
+            }
+
             adjacentTilesWithPlayers.Clear();
             adjacentTilesWithPlayers.Add(NewManager.instance.chosenTile);
         }
@@ -636,6 +683,21 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
             while (NewManager.instance.chosenTile == null)
                 yield return null;
+
+            Collector confirmDecision = NewManager.instance.ConfirmDecision("Confirm wall?", new Vector2(0, 200));
+            if (confirmDecision != null)
+            {
+                NewManager.instance.selectedTile = NewManager.instance.chosenTile;
+                yield return confirmDecision.WaitForChoice();
+                int decision = confirmDecision.chosenButton;
+                Destroy(confirmDecision.gameObject);
+
+                if (decision == 1)
+                {
+                    StartCoroutine(ChooseWall());
+                    yield break;
+                }
+            }
 
             adjacentTilesWithWalls.Clear();
             adjacentTilesWithWalls.Add(NewManager.instance.chosenTile);
@@ -681,8 +743,25 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
         NewManager.instance.UpdateInstructions("Choose a tile in range.");
         NewManager.instance.WaitForDecision(tilesToSelect);
+
         while (NewManager.instance.chosenTile == null)
             yield return null;
+
+        Collector confirmDecision = NewManager.instance.ConfirmDecision("Confirm tile?", new Vector2(0, 200));
+        if (confirmDecision != null)
+        {
+            NewManager.instance.selectedTile = NewManager.instance.chosenTile;
+            yield return confirmDecision.WaitForChoice();
+            int decision = confirmDecision.chosenButton;
+            Destroy(confirmDecision.gameObject);
+
+            if (decision == 1)
+            {
+                StartCoroutine(ChooseTileLOS());
+                yield break;
+            }
+        }
+
         currentTarget = NewManager.instance.chosenTile;
     }
 
@@ -691,28 +770,67 @@ public class Card : MonoBehaviour, IPointerClickHandler
         List<TileData> tilesInRange = NewManager.instance.CalculateReachableGrids(currentPlayer.currentTile, range, false);
         NewManager.instance.UpdateInstructions("Choose a tile in range.");
         NewManager.instance.WaitForDecision(tilesInRange);
+
         while (NewManager.instance.chosenTile == null)
             yield return null;
+
+        Collector confirmDecision = NewManager.instance.ConfirmDecision("Confirm tile?", new Vector2(0, 200));
+        if (confirmDecision != null)
+        {
+            NewManager.instance.selectedTile = NewManager.instance.chosenTile;
+            yield return confirmDecision.WaitForChoice();
+            int decision = confirmDecision.chosenButton;
+            Destroy(confirmDecision.gameObject);
+
+            if (decision == 1)
+            {
+                StartCoroutine(ChooseTile());
+                yield break;
+            }
+        }
+
         currentTarget = NewManager.instance.chosenTile;
     }
 
-#endregion
-
-#region Interacts With Cards
-
-    internal IEnumerator DrawCards(PlayerEntity player)
+    IEnumerator ChooseFromSlider(string header, int min, int max)
     {
-        player.PlusCards(changeInDraw);      
-        yield return null;
+        SliderChoice newCollector = Instantiate(sliderChoice);
+        newCollector.StatsSetup(header, min, max, new Vector3(0, 0, 0));
+
+        while (newCollector.makingDecision)
+            yield return null;
+
+        sliderData = newCollector.currentSliderValue;
+        Destroy(newCollector.gameObject);
     }
 
-    internal IEnumerator AllDrawCards(List<PlayerEntity> listOfPlayers)
+    IEnumerator ChooseOptions(string[] choices)
     {
-        foreach (PlayerEntity player in listOfPlayers)
+        Collector newCollector = Instantiate(buttonCollector);
+        newCollector.StatsSetup("Make a choice.", new Vector2(0, 0));
+
+        foreach (string choice in choices)
         {
-            player.PlusCards(changeInDraw);
+            switch (choice)
+            {
+                case "DRAWCARDS":
+                    newCollector.AddTextButton($"Draw {changeInDraw}");
+                    break;
+                case "CHANGEMP":
+                    newCollector.AddTextButton($"+{changeInMP} Movement");
+                    break;
+                case "CHANGEEP":
+                    newCollector.AddTextButton($"+{changeInEP} Energy");
+                    break;
+                case "CHANGEHP":
+                    newCollector.AddTextButton($"+{changeInHP} Health");
+                    break;
+            }
         }
-        yield return null;
+
+        yield return newCollector.WaitForChoice();
+        yield return ResolveMethod(choices[newCollector.chosenButton]);
+        Destroy(newCollector.gameObject);
     }
 
     internal IEnumerator ChooseDiscard(PlayerEntity player)
@@ -725,6 +843,21 @@ public class Card : MonoBehaviour, IPointerClickHandler
                 NewManager.instance.WaitForDecision(player.myHand);
                 while (NewManager.instance.chosenCard == null)
                     yield return null;
+
+                Collector confirmDecision = NewManager.instance.ConfirmDecision($"Discard {NewManager.instance.chosenCard.name}?", new Vector2(0, -85));
+                if (confirmDecision != null)
+                {
+                    yield return confirmDecision.WaitForChoice();
+                    int decision = confirmDecision.chosenButton;
+                    Destroy(confirmDecision.gameObject);
+
+                    if (decision == 1)
+                    {
+                        i--;
+                        continue;
+                    }
+                }
+
                 yield return player.DiscardFromHand(NewManager.instance.chosenCard);
             }
             else if (player.myHand.Count == 1)
@@ -745,6 +878,21 @@ public class Card : MonoBehaviour, IPointerClickHandler
                 NewManager.instance.WaitForDecision(player.myHand);
                 while (NewManager.instance.chosenCard == null)
                     yield return null;
+
+                Collector confirmDecision = NewManager.instance.ConfirmDecision($"Exhaust {NewManager.instance.chosenCard.name}?", new Vector2(0, -85));
+                if (confirmDecision != null)
+                {
+                    yield return confirmDecision.WaitForChoice();
+                    int decision = confirmDecision.chosenButton;
+                    Destroy(confirmDecision.gameObject);
+
+                    if (decision == 1)
+                    {
+                        i--;
+                        continue;
+                    }
+                }
+
                 yield return player.ExhaustFromHand(NewManager.instance.chosenCard);
             }
             else if (player.myHand.Count == 1)
@@ -753,6 +901,25 @@ public class Card : MonoBehaviour, IPointerClickHandler
             }
             NewManager.instance.UpdateStats(currentPlayer);
         }
+    }
+
+#endregion
+
+#region Interacts With Cards
+
+    internal IEnumerator DrawCards(PlayerEntity player)
+    {
+        player.PlusCards(changeInDraw);      
+        yield return null;
+    }
+
+    internal IEnumerator AllDrawCards(List<PlayerEntity> listOfPlayers)
+    {
+        foreach (PlayerEntity player in listOfPlayers)
+        {
+            player.PlusCards(changeInDraw);
+        }
+        yield return null;
     }
 
     internal IEnumerator DiscardHand(PlayerEntity player)
@@ -810,7 +977,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         yield return null;
     }
 
-    #endregion
+#endregion
 
 #region Interacts With Entities
 

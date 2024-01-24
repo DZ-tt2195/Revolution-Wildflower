@@ -18,8 +18,8 @@
       "Delay #",
       "HP Walls",
       "Burn #",
-      "intensity",
-      "any extra condition needed to select a tile",
+      "Intensity",
+      "any extra condition needed to select a card",
       "the function to call when card is played",
       "the function to call when using the environmental",
       "the function to call at start of next round"
@@ -40,7 +40,7 @@
       "stun",
       "range",
       "aoe",
-      "delay",
+      "Delay",
       "wHP",
       "burn",
       "intn",
@@ -120,7 +120,7 @@
     ],
     [
       "Hammer",
-      "Deal 2 damage to a wall that's up to 2 tiles away, intensity 3.",
+      "Deal 2 Damage to a wall that's up to 2 tiles away, Intensity 3.",
       "atk",
       "",
       "2",
@@ -166,7 +166,7 @@
     ],
     [
       "Brass Knuckles",
-      "Stun 5 on an adjacent guard, intensity 8",
+      "Stun 5 on an adjacent guard, Intensity 8",
       "atk",
       "",
       "2",

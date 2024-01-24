@@ -16,12 +16,10 @@ public class ExitEntity : ObjectiveEntity
 
     public override IEnumerator ObjectiveComplete(PlayerEntity player)
     {
-        for (int i = 0; i < NewManager.instance.listOfGuards.Count; i++)
+        foreach (GuardEntity guard in NewManager.instance.listOfGuards)
         {
-            if (NewManager.instance.listOfGuards[i].CurrentTarget == player)
-            {
-                NewManager.instance.listOfGuards[i].resetAlert();
-            }
+            if (guard.CurrentTarget == player)
+                guard.resetAlert();
         }
 
         NewManager.instance.listOfPlayers.Remove(player);
