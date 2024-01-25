@@ -28,13 +28,14 @@ public class DialogueVariables
     public void StartListening(Story story)
     {
         VariablesToStory(story);
-        story.variablesState.variableChangedEvent += VariableChanged;
+        globalVariablesStory.variablesState.variableChangedEvent += VariableChanged;
     }
 
     public void StopListening(Story story)
     {
-        story.variablesState.variableChangedEvent -= VariableChanged;
+        globalVariablesStory.variablesState.variableChangedEvent -= VariableChanged;
     }
+
 
     private void VariableChanged(string name, Ink.Runtime.Object value)
     {
@@ -46,7 +47,7 @@ public class DialogueVariables
         }
     } 
 
-    private void VariablesToStory(Story story)
+    public void VariablesToStory(Story story)
     {
         foreach(KeyValuePair<string, Ink.Runtime.Object> variable in variables)
         {

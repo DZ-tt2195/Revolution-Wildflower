@@ -21,11 +21,13 @@ public class ObjectiveEntity : Entity
 
         if (!DialogueManager.GetInstance().dialogueIsPlaying)
         {
-             DialogueManager.GetInstance().dialogueVariables.globalVariablesStory.variablesState["current_player"] = player.name;
-             DialogueManager.GetInstance().dialogueVariables.globalVariablesStory.variablesState["current_objective"] = objective;
-             DialogueManager.GetInstance().EnterDialogueMode(inkJSON);
+            DialogueManager.GetInstance().StartStory(inkJSON);
+            DialogueManager.dialogueVariables.globalVariablesStory.variablesState["current_player"] = player.name;
+            DialogueManager.dialogueVariables.globalVariablesStory.variablesState["current_objective"] = objective;
+            DialogueManager.GetInstance().EnterDialogueMode();
+
         }
-        
+
         NewManager.instance.listOfObjectives.Remove(this);
         NewManager.instance.objectiveButton.gameObject.SetActive(false);
         currentTile.myEntity = null;
