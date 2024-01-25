@@ -670,6 +670,8 @@ public class NewManager : MonoBehaviour
     public void BackToStart(bool startTurn)
     {
         currentTurn = TurnSystem.You;
+        StopCoroutine(ChooseMovePlayer(null));
+        StopCoroutine(ChooseCardPlay(null));
 
         DisableAllTiles();
         DisableAllCards();
@@ -729,6 +731,7 @@ public class NewManager : MonoBehaviour
             }
         }
 
+        currentTurn = TurnSystem.Resolving;
         Collector confirmDecision = ConfirmDecision("Confirm movement?", new Vector2(0, 200));
         if (confirmDecision != null)
         {
@@ -739,7 +742,7 @@ public class NewManager : MonoBehaviour
 
             if (decision == 1)
             {
-                StartCoroutine(ChooseMovePlayer(currentPlayer));
+                BackToStart(false);
                 yield break;
             }
         }
@@ -788,7 +791,7 @@ public class NewManager : MonoBehaviour
 
                 if (decision == 1)
                 {
-                    StartCoroutine(ChooseCardPlay(currentPlayer));
+                    BackToStart(false);
                     yield break;
                 }
             }
@@ -858,6 +861,7 @@ public class NewManager : MonoBehaviour
         yield return FadeTurnBar("Company Turn");
         foreach (GuardEntity guard in listOfGuards)
         {
+            FocusOnTile(guard.currentTile);
             yield return (guard.EndOfTurn());
         }
 
