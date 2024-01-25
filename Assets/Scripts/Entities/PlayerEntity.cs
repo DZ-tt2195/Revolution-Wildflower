@@ -54,20 +54,23 @@ public class PlayerEntity : MovingEntity
         {
             case "Gail":
                 spriteRenderer.sprite = gailSprite;
+                tileOffset = new Vector3(0, 0.75f, 0);
                 GetCards(0);
                 break;
             case "Frankie":
                 spriteRenderer.sprite = frankieSprite;
+                tileOffset = new Vector3(-1, 0.75f, 0.8f);
                 GetCards(1);
                 break;
             case "WK":
                 spriteRenderer.sprite = wkSprite;
+                tileOffset = new Vector3(0, 0.75f, 0);
                 GetCards(2);
                 break;
         }
 
         PlayerEntity me = this;
-        myBar.button.onClick.AddListener(() => NewManager.instance.FocusOnTile(me.currentTile));
+        myBar.button.onClick.AddListener(() => NewManager.instance.FocusOnTile(me.currentTile, true));
     }
 
     void GetCards(int n)
@@ -255,14 +258,14 @@ public class PlayerEntity : MovingEntity
         StartCoroutine(this.DiscardFromHand(playMe));
 
         if (payEnergy)
-            NewManager.instance.ChangeEnergy(this, -playMe.energyCost);
+            NewManager.instance.ChangeEnergy(this, int.Parse(playMe.textCost.text)*-1);
 
         NewManager.instance.UpdateStats(this);
         yield return playMe.OnPlayEffect();
 
+        this.cardsPlayed.Add(playMe);
         if (playMe.nextRoundEffectsInOrder != "")
             NewManager.instance.futureEffects.Add(playMe);
-        this.cardsPlayed.Add(playMe);
     }
 
     internal void MyTurn()

@@ -173,7 +173,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentTile: {fileID: 0}
-  tileOffset: {x: 0, y: 0, z: 0}
+  tileOffset: {x: 0, y: 1, z: 0}
   spriteRenderer: {fileID: 0}
   lineRenderer: {fileID: 0}
   MoveCost: 999
@@ -182,9 +182,9 @@ MonoBehaviour:
   direction: {x: 0, y: 0}
   movementLeft: 0
   movesPerTurn: 4
+  stunned: 0
   attacksPerTurn: 1
   CurrentTarget: {fileID: 0}
-  stunned: 0
   DetectionRangePatrol: 4
   DetectionAngle: 30
   PatrolPoints: []
@@ -266,7 +266,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 200
   m_Sprite: {fileID: 21300000, guid: 30eb33774938e4dc29258930e925f207, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

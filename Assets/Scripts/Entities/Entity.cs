@@ -23,7 +23,7 @@ public class Entity : MonoBehaviour
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer != null)
-            spriteRenderer.sortingOrder = 1;
+            spriteRenderer.sortingOrder = 200;
         lineRenderer = GetComponent<LineRenderer>();
     }
 

@@ -191,8 +191,11 @@ public class Card : MonoBehaviour, IPointerClickHandler
             changedEnergyCost += nextEffect.CostChanger(energyCost);
         }
 
+        if (changedEnergyCost < 0)
+            changedEnergyCost = 0;
+
         textCost.text = $"{changedEnergyCost}";
-        return changedEnergyCost < 0 ? 0 : changedEnergyCost;
+        return changedEnergyCost;
     }
 
     public bool CanPlay(PlayerEntity player)

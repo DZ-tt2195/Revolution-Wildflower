@@ -77,6 +77,7 @@ MonoBehaviour:
   Occlusion: 1
   direction: {x: 0, y: 0}
   inkJSON: {fileID: 4900000, guid: 375a5b4b4a5b87b4ba1366b8c92d935b, type: 3}
+  objective: 
 --- !u!212 &3483894866841137460
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -117,7 +118,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 200
   m_Sprite: {fileID: 21300000, guid: 2875f611d694943598ade937b615a945, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
