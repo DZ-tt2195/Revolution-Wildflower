@@ -663,7 +663,7 @@ public class NewManager : MonoBehaviour
         foreach (PlayerEntity player in listOfPlayers)
         {
             player.currentTile.clickable = true;
-            player.currentTile.moveable = true;
+            //player.currentTile.moveable = true;
         }
     }
 
@@ -742,12 +742,14 @@ public class NewManager : MonoBehaviour
 
             if (decision == 1)
             {
+                StopCoroutine(ChooseMovePlayer(currentPlayer));
                 BackToStart(false);
                 yield break;
             }
         }
 
         MovePlayer(currentPlayer);
+
     }
 
     void MovePlayer(PlayerEntity currentPlayer)

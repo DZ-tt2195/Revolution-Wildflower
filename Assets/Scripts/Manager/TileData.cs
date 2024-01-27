@@ -10,6 +10,8 @@ using UnityEngine.EventSystems;
 public class TileData : MonoBehaviour
 {
     [Foldout("Tile information", true)]
+        [Tooltip("Attached arrow")] public SpriteRenderer directionIndicator;
+        [Tooltip("arrow sprites")] public List<Sprite> arrowSprites = new();
         [Tooltip("All adjacent tiles")] [ReadOnly] public List<TileData> adjacentTiles;
         [Tooltip("Position in the grid")] [ReadOnly] public Vector2Int gridPosition;
         [Tooltip("The entity on this tile")] [ReadOnly] public Entity myEntity;
@@ -28,7 +30,8 @@ public class TileData : MonoBehaviour
         [Tooltip("Glowing border's sprite renderer")] SpriteRenderer border;
         [Tooltip("color used for unselected moused over tiles")][SerializeField] Color mouseOverColor = new Color(0.9f,0.9f,0.9f,1);
         [Tooltip("color used for selected tiles")][SerializeField] Color SelectedColor = new Color(0.6f, 0.6f, 0.6f, 1);
-        [Tooltip("color used for unselected moused over tiles")][SerializeField] Color MoveableColor = new Color(0.9f, 0.9f, 0.9f, 1);
+        [Tooltip("color used for unselected moused over tiles (general)")][SerializeField] Color ClickableColor = new Color(0.9f, 0.9f, 0.9f, 1);
+        [Tooltip("color used for unselected moused over tiles you can move onto")][SerializeField] Color MoveableColor = new Color(0.9f, 0.9f, 0.9f, 1);
         [Tooltip("color used for unselected moused over tiles")] [SerializeField] Color AlertColor = new Color(0.9f, 0.7f, 0.1f, 1);
         [Tooltip("Time for noise indecator to show")] [SerializeField] float AlertDelay = 0.2f;
         [Tooltip("Base delay noise indecator")] [SerializeField] float BaseAlertDelay = 0.2f;
@@ -40,6 +43,7 @@ public class TileData : MonoBehaviour
         myRenderer.sortingOrder = 0;
         border = this.transform.GetChild(0).GetComponent<SpriteRenderer>();
         border.color = new Color(1f, 1f, 1f, 0);
+        directionIndicator.enabled = false;
     }
 
     void FixedUpdate()
@@ -60,6 +64,11 @@ public class TileData : MonoBehaviour
         else if (moveable)
         {
             border.color = MoveableColor;
+            border.SetAlpha(NewManager.instance.opacity);
+        }
+        else if (clickable)
+        {
+            border.color = ClickableColor;
             border.SetAlpha(NewManager.instance.opacity);
         }
         else if (moused)
