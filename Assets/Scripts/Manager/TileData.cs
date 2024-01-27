@@ -61,6 +61,10 @@ public class TileData : MonoBehaviour
             border.color = SelectedColor;
             border.SetAlpha(NewManager.instance.opacity);
         }
+        else if (moused)
+        {
+            border.color = mouseOverColor;
+        }
         else if (moveable)
         {
             border.color = MoveableColor;
@@ -70,10 +74,6 @@ public class TileData : MonoBehaviour
         {
             border.color = ClickableColor;
             border.SetAlpha(NewManager.instance.opacity);
-        }
-        else if (moused)
-        {
-            border.color = mouseOverColor;
         }
         else
         {
@@ -94,17 +94,49 @@ public class TileData : MonoBehaviour
     private void OnMouseEnter()
     {
         moused = true;
+        //generates a visible path the player is going to take to get to the space (clearing the last list and ignoring the first and last tile)
+        if (moveable)
+        {
+            for (int i = 0; i < NewManager.instance.FullPath.Count; i++)
+            {
+                NewManager.instance.FullPath[i].directionIndicator.enabled = false;
+            }
+
+            NewManager.instance.CalculatePathfinding(NewManager.instance.lastSelectedPlayer.currentTile,this, NewManager.instance.lastSelectedPlayer.movementLeft,false,false);
+            for (int i = 0; i < NewManager.instance.FullPath.Count; i++) 
+            {
+                if (i != NewManager.instance.FullPath.Count - 1)
+                {
+                    NewManager.instance.FullPath[i].directionIndicator.enabled = true;
+                }
+            }
+        }
     }
 
     private void OnMouseExit() 
     {
         moused = false;
+        if (moveable)
+        {
+            for (int i = 0; i < NewManager.instance.FullPath.Count; i++)
+            {
+                NewManager.instance.FullPath[i].directionIndicator.enabled = false;
+            }
+        }
+
     }
 
     private void OnMouseOver()
     {
         if (clickable && Input.GetKeyDown(KeyCode.Mouse0) && !EventSystem.current.IsPointerOverGameObject())
         {
+            if (moveable)
+            {
+                for (int i = 0; i < NewManager.instance.FullPath.Count; i++)
+                {
+                    NewManager.instance.FullPath[i].directionIndicator.enabled = false;
+                }
+            }
             NewManager.instance.selectedTile = this;
             if (choosable)
             {

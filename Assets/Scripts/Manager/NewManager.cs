@@ -38,6 +38,7 @@ public class NewManager : MonoBehaviour
         [Tooltip("A acard that the player chose")][ReadOnly] public Card chosenCard;
         [Tooltip("Current Selected Tile")][ReadOnly] public TileData selectedTile;
         [Tooltip("Quick reference to current movable tile")][ReadOnly] public TileData CurrentAvailableMoveTarget;
+        [Tooltip("The last path traced. This only is filled if (singleMovement) is disabled")][ReadOnly] public List<TileData> FullPath = new();
         [Tooltip("Confirm your decisions")] public Collector confirmationCollector;
 
     [Foldout("UI Elements", true)]
@@ -1167,6 +1168,7 @@ public class NewManager : MonoBehaviour
 
     public void RetracePath(AStarNode startNode, AStarNode endNode, int actionPoint, bool singleMovement)
     {
+        FullPath.Clear();
         List<AStarNode> path = new List<AStarNode>();
         AStarNode currentNode = endNode;
         while (currentNode != startNode)
@@ -1196,10 +1198,12 @@ public class NewManager : MonoBehaviour
                 if (pathCost > actionPoint)
                 {
                     CurrentAvailableMoveTarget = CurrentTile.ATileData;
+                    FullPath.Add(CurrentTile.ATileData);
                     continue;
                 }
                 // Update the current available move target and display the pathfinding visualization with the path cost
                 CurrentAvailableMoveTarget = CurrentTile.ATileData;
+                FullPath.Add(CurrentTile.ATileData);
             }
         }
         else
