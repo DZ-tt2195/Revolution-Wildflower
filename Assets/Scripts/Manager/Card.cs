@@ -467,6 +467,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         }
 
         NewManager.instance.selectedTile = currentPlayer.currentTile;
+        NewManager.instance.violentCards += (violent) ? 1 : 0;
         if (distractionIntensity > 0)
             StartCoroutine(CalculateDistraction(currentTarget));
     }
