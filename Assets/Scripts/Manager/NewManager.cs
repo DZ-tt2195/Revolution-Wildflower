@@ -97,6 +97,7 @@ public class NewManager : MonoBehaviour
         [Tooltip("last selected player")] [ReadOnly] public PlayerEntity lastSelectedPlayer;
         [Tooltip("What's happening in the game")][ReadOnly] public TurnSystem currentTurn;
         [Tooltip("Effects to do on future turns")][ReadOnly] public List<Card> futureEffects = new List<Card>();
+        [Tooltip("Num violent cards used")][ReadOnly] public int violentCards;
 
     [Foldout("Sound Effects", true)]
         [SerializeField] AK.Wwise.Event buttonSound;
@@ -487,6 +488,10 @@ public class NewManager : MonoBehaviour
     {
         gameOverText.text = cause;
         gameOverText.transform.parent.gameObject.SetActive(true);
+
+        TMP_Text endStats = GameObject.Find("End Stats").GetComponent<TMP_Text>();
+        endStats.text = $"Violent Cards Used: {violentCards}";
+
         StopAllCoroutines();
         GameObject.Find("Debrief Button").SetActive(won);
     }
