@@ -127,7 +127,7 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     - _metallic: 0
-    - _overlay_intensity: 0.71
+    - _overlay_intensity: 1.08
     - _smoothness: 0
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
