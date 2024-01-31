@@ -791,11 +791,11 @@ public class NewManager : MonoBehaviour
             }
         }
 
-        MovePlayer(currentPlayer);
+        yield return MovePlayer(currentPlayer);
 
     }
 
-    void MovePlayer(PlayerEntity currentPlayer)
+    IEnumerator MovePlayer(PlayerEntity currentPlayer)
     { 
         currentTurn = TurnSystem.Resolving;
         int distanceTraveled = GetDistance(currentPlayer.currentTile.gridPosition, chosenTile.gridPosition);
@@ -803,9 +803,9 @@ public class NewManager : MonoBehaviour
 
         if (distanceTraveled != 0)
             footsteps.Post(currentPlayer.gameObject);
-        currentPlayer.MoveTile(chosenTile);
+        yield return (currentPlayer.movePlayer(FullPath));
+        //currentPlayer.MoveTile(chosenTile);
 
-        StopAllCoroutines();
         BackToStart(false);
     }
 

@@ -5,6 +5,7 @@ using MyBox;
 using System;
 using System.Linq;
 using TMPro;
+using System.Threading;
 
 public class PlayerEntity : MovingEntity
 {
@@ -19,6 +20,7 @@ public class PlayerEntity : MovingEntity
         //[Tooltip("normal player appearance")] [SerializeField] Material DefaultPlayerMaterial;
         //[Tooltip("appearance when hidden")] [SerializeField] Material HiddenPlayerMaterial;
         [Tooltip("adjacent objective")] [ReadOnly] public ObjectiveEntity adjacentObjective;
+        [Tooltip("delay inbetween each movement")][SerializeField] public float moveDelay = 0.75f;
 
     [Foldout("Sprites", true)]
         [Tooltip("Gail's sprite")][SerializeField] Sprite gailSprite;
@@ -96,6 +98,20 @@ public class PlayerEntity : MovingEntity
         return answer;
     }
 
+    public IEnumerator movePlayer(List<TileData> path)
+    {
+        float timer = 0;
+        for (int i = 0; i < path.Count; i++)
+        {
+            MoveTile(path[i]);
+            while (timer < moveDelay)
+            {
+                timer += Time.deltaTime;
+                yield return null;
+            }
+            timer = 0;
+        } 
+    }
     public override void MoveTile(TileData newTile)
     {
         base.MoveTile(newTile);
