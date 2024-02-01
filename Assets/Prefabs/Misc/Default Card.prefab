@@ -326,7 +326,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: +2 <sprite="Arrows" index=0>, -2 <sprite="Arrows" index=1>.
+  m_text: '<sprite="Symbols" name="Health">
+
+    <sprite="Arrows" index=0>
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 39a7efb7eb0b83547bd07f81adaea8e4, type: 2}
   m_sharedMaterial: {fileID: 9156730800055192786, guid: 39a7efb7eb0b83547bd07f81adaea8e4, type: 2}
