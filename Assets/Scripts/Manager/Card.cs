@@ -6,7 +6,6 @@ using TMPro;
 using MyBox;
 using UnityEngine.EventSystems;
 using System.Text.RegularExpressions;
-using System.Drawing;
 
 public class Card : MonoBehaviour, IPointerClickHandler
 {
@@ -103,6 +102,17 @@ public class Card : MonoBehaviour, IPointerClickHandler
         typeOne = ConvertToType(data.cat1);
         typeTwo = ConvertToType(data.cat2);
 
+        image.color = typeOne switch
+        {
+            CardType.Attack => Color.red,
+            CardType.Draw => Color.green,
+            CardType.Distraction => Color.blue,
+            CardType.Energy => Color.cyan,
+            CardType.Movement => Color.yellow,
+            CardType.Misc => Color.gray,
+            _ => Color.black,
+        };
+
         energyCost = data.epCost;
         textCost.text = $"{data.epCost}";
         violent = data.isViolent;
@@ -178,7 +188,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         return cardText;
     }
 
-    #endregion
+#endregion
 
 #region Play Condition
 
@@ -386,14 +396,12 @@ public class Card : MonoBehaviour, IPointerClickHandler
     public void EnableCard()
     {
         enableBorder = true;
-        image.color = UnityEngine.Color.white;
         button.interactable = true;
     }
 
     public void DisableCard()
     {
         enableBorder = false;
-        image.color = UnityEngine.Color.gray;
         button.interactable = false;
     }
 

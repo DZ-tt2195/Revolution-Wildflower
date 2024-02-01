@@ -171,10 +171,11 @@ public class PlayerEntity : MovingEntity
         for (int i = 0; i < myHand.Count; i++)
         {
             Card nextCard = myHand[i];
-            float startingX = (myHand.Count >= 8) ? -900 : (myHand.Count - 1) * -150;
-            float difference = (myHand.Count >= 8) ? 1800f / (myHand.Count - 1) : 300;
-            Vector2 newPosition = new(startingX + difference * i, -500);
-            StartCoroutine(nextCard.MoveCard(newPosition, newPosition, new Vector3(0, 0, 0), PlayerPrefs.GetFloat("Animation Speed")));
+            float startingX = (myHand.Count-1)*-50;
+            float difference = 100;
+            Vector2 newPosition = new(startingX + difference * i, -485);
+            nextCard.transform.SetSiblingIndex(i);
+            StartCoroutine(nextCard.MoveCard(newPosition, newPosition, Vector3.zero, PlayerPrefs.GetFloat("Animation Speed")));
         }
 
         foreach (Card card in myHand)
