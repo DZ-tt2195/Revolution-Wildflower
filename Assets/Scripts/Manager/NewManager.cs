@@ -736,7 +736,6 @@ public class NewManager : MonoBehaviour
 
     public IEnumerator ChooseMovePlayer(PlayerEntity currentPlayer)
     {
-        Debug.LogError($"move {currentPlayer.name}");
         if (lastSelectedPlayer != currentPlayer)
         {
             characterSelectSound.Post(currentPlayer.gameObject);
@@ -801,9 +800,12 @@ public class NewManager : MonoBehaviour
         int distanceTraveled = GetDistance(currentPlayer.currentTile.gridPosition, chosenTile.gridPosition);
         ChangeMovement(currentPlayer, -distanceTraveled);
 
+        DisableAllTiles();
+        DisableAllCards();
+
         if (distanceTraveled != 0)
             footsteps.Post(currentPlayer.gameObject);
-        yield return (currentPlayer.movePlayer(FullPath));
+        yield return (currentPlayer.MovePlayer(FullPath));
         //currentPlayer.MoveTile(chosenTile);
 
         BackToStart(false);
@@ -825,7 +827,6 @@ public class NewManager : MonoBehaviour
             {
                 if (currentTurn != TurnSystem.You)
                 {
-                    Debug.LogError("switched off playing");
                     yield break;
                 }
                 else

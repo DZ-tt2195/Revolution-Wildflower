@@ -433,13 +433,13 @@ public class Card : MonoBehaviour, IPointerClickHandler
         this.image.SetAlpha(0);
         this.canvasgroup.alpha = 0;
 
-        StartCoroutine(Unfade());
+        StartCoroutine(Unfade(3f));
     }
 
-    IEnumerator Unfade()
+    public IEnumerator Unfade(float time)
     {
-        yield return NewManager.Wait(5f);
-        image.SetAlpha(0);
+        yield return NewManager.Wait(time);
+        this.image.SetAlpha(1);
         canvasgroup.alpha = 1;
     }
 
