@@ -34,7 +34,8 @@ public class RightClick : MonoBehaviour
     public void ChangeCard(Card newCard)
     {
         this.transform.GetChild(0).gameObject.SetActive(true);
-        bigImage = newCard.image;
+        bigImage.sprite = newCard.image.sprite;
+        bigImage.color = newCard.image.color;
 
         this.cardName.text = newCard.textName.text;
         this.cardCost.text = newCard.textCost.text;

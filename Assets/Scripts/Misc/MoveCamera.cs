@@ -43,7 +43,7 @@ public class MoveCamera : MonoBehaviour
 
     private void Awake()
     {
-        currentCamera = Camera.main;
+        currentCamera = GetComponent<Camera>();
 
         minDragSpeed = dragSpeed / 2;
         maxDragSpeed = dragSpeed * 2;

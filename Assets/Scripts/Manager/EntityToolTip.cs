@@ -28,6 +28,6 @@ public class EntityToolTip : MonoBehaviour
         {
             isActive = false;
         }
-        transform.position = Input.mousePosition;
+        transform.position = Input.mousePosition + new Vector3(2, 2, 0);
     }
 }

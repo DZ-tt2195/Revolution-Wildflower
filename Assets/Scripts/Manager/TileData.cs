@@ -10,11 +10,14 @@ using UnityEngine.EventSystems;
 public class TileData : MonoBehaviour
 {
     [Foldout("Tile information", true)]
+        [Tooltip("Attached arrow")] public SpriteRenderer directionIndicator;
+        [Tooltip("arrow sprites")] public List<Sprite> arrowSprites = new();
         [Tooltip("All adjacent tiles")] [ReadOnly] public List<TileData> adjacentTiles;
         [Tooltip("Position in the grid")] [ReadOnly] public Vector2Int gridPosition;
         [Tooltip("The entity on this tile")] [ReadOnly] public Entity myEntity;
 
     [Foldout("Mouse", true)]
+        [Tooltip("Layer mask that mouse raycasts ignore")] [SerializeField] LayerMask mask;
         [Tooltip("timer that controls how long until a tool tip appears on hover")] float timeTillToolTip = 0.5f;
         [Tooltip("timer that controls how long until a tool tip appears on hover")] float toolTipHoverTimer = 0;
         [Tooltip("Defines whether you can choose this tile")][ReadOnly] public bool choosable = false;
@@ -28,7 +31,8 @@ public class TileData : MonoBehaviour
         [Tooltip("Glowing border's sprite renderer")] SpriteRenderer border;
         [Tooltip("color used for unselected moused over tiles")][SerializeField] Color mouseOverColor = new Color(0.9f,0.9f,0.9f,1);
         [Tooltip("color used for selected tiles")][SerializeField] Color SelectedColor = new Color(0.6f, 0.6f, 0.6f, 1);
-        [Tooltip("color used for unselected moused over tiles")][SerializeField] Color MoveableColor = new Color(0.9f, 0.9f, 0.9f, 1);
+        [Tooltip("color used for unselected moused over tiles (general)")][SerializeField] Color ClickableColor = new Color(0.9f, 0.9f, 0.9f, 1);
+        [Tooltip("color used for unselected moused over tiles you can move onto")][SerializeField] Color MoveableColor = new Color(0.9f, 0.9f, 0.9f, 1);
         [Tooltip("color used for unselected moused over tiles")] [SerializeField] Color AlertColor = new Color(0.9f, 0.7f, 0.1f, 1);
         [Tooltip("Time for noise indecator to show")] [SerializeField] float AlertDelay = 0.2f;
         [Tooltip("Base delay noise indecator")] [SerializeField] float BaseAlertDelay = 0.2f;
@@ -40,6 +44,7 @@ public class TileData : MonoBehaviour
         myRenderer.sortingOrder = 0;
         border = this.transform.GetChild(0).GetComponent<SpriteRenderer>();
         border.color = new Color(1f, 1f, 1f, 0);
+        directionIndicator.enabled = false;
     }
 
     void FixedUpdate()
@@ -57,14 +62,19 @@ public class TileData : MonoBehaviour
             border.color = SelectedColor;
             border.SetAlpha(NewManager.instance.opacity);
         }
+        else if (moused)
+        {
+            border.color = mouseOverColor;
+        }
         else if (moveable)
         {
             border.color = MoveableColor;
             border.SetAlpha(NewManager.instance.opacity);
         }
-        else if (moused)
+        else if (clickable)
         {
-            border.color = mouseOverColor;
+            border.color = ClickableColor;
+            border.SetAlpha(NewManager.instance.opacity);
         }
         else
         {
@@ -82,20 +92,52 @@ public class TileData : MonoBehaviour
         noiseThrough = false;
     }
 
-    private void OnMouseEnter()
+    private void MouseEnter()
     {
         moused = true;
+        //generates a visible path the player is going to take to get to the space (clearing the last list and ignoring the first and last tile)
+        if (moveable)
+        {
+            for (int i = 0; i < NewManager.instance.FullPath.Count; i++)
+            {
+                NewManager.instance.FullPath[i].directionIndicator.enabled = false;
+            }
+
+            NewManager.instance.CalculatePathfinding(NewManager.instance.lastSelectedPlayer.currentTile,this, NewManager.instance.lastSelectedPlayer.movementLeft,false,false);
+            for (int i = 0; i < NewManager.instance.FullPath.Count; i++) 
+            {
+                if (i != NewManager.instance.FullPath.Count - 1)
+                {
+                    NewManager.instance.FullPath[i].directionIndicator.enabled = true;
+                }
+            }
+        }
     }
 
-    private void OnMouseExit() 
+    private void MouseExit() 
     {
         moused = false;
+        if (moveable)
+        {
+            for (int i = 0; i < NewManager.instance.FullPath.Count; i++)
+            {
+                NewManager.instance.FullPath[i].directionIndicator.enabled = false;
+            }
+        }
+
     }
 
-    private void OnMouseOver()
+    private void MouseOver()
     {
         if (clickable && Input.GetKeyDown(KeyCode.Mouse0) && !EventSystem.current.IsPointerOverGameObject())
         {
+            if (moveable)
+            {
+                for (int i = 0; i < NewManager.instance.FullPath.Count; i++)
+                {
+                    NewManager.instance.FullPath[i].directionIndicator.enabled = false;
+                }
+            }
             NewManager.instance.selectedTile = this;
             if (choosable)
             {
@@ -135,6 +177,15 @@ public class TileData : MonoBehaviour
 
     private void Update()
     {
+        Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(mouseRay, out hit, Mathf.Infinity, mask) && hit.collider.gameObject == gameObject)
+        {
+            if (!moused) MouseEnter();
+            MouseOver();
+        }
+        else if (moused) MouseExit();
+        
         if (!moused)
         {
             toolTipHoverTimer = 0;
