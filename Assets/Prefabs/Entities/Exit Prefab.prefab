@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: -7563352408502380383}
   - component: {fileID: 1531062187631064881}
   - component: {fileID: 5518907647546662769}
-  m_Layer: 2
+  m_Layer: 3
   m_Name: Exit Prefab
   m_TagString: Objective
   m_Icon: {fileID: 0}
@@ -77,6 +77,7 @@ MonoBehaviour:
   Occlusion: 1
   direction: {x: 0, y: 0}
   inkJSON: {fileID: 0}
+  objective: 
 --- !u!212 &1531062187631064881
 SpriteRenderer:
   m_ObjectHideFlags: 0

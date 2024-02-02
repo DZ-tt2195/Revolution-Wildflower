@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 127779131077801882}
   - component: {fileID: 5545540189652443486}
   - component: {fileID: 4807401668742603254}
-  m_Layer: 2
+  m_Layer: 3
   m_Name: Guard Prefab
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -182,9 +182,9 @@ MonoBehaviour:
   direction: {x: 0, y: 0}
   movementLeft: 0
   movesPerTurn: 4
+  stunned: 0
   attacksPerTurn: 1
   CurrentTarget: {fileID: 0}
-  stunned: 0
   DetectionRangePatrol: 4
   DetectionAngle: 30
   PatrolPoints: []

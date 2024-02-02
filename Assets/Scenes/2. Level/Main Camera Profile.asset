@@ -55,7 +55,7 @@ MonoBehaviour:
   active: 1
   threshold:
     m_OverrideState: 1
-    m_Value: 0.58
+    m_Value: 0.59
   intensity:
     m_OverrideState: 1
     m_Value: 1
@@ -83,7 +83,7 @@ MonoBehaviour:
     m_Value: 2.69
   bloomPower:
     m_OverrideState: 1
-    m_Value: 30.52
+    m_Value: 15.4
 --- !u!114 &-5039203406402942240
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -367,7 +367,7 @@ MonoBehaviour:
   active: 1
   postExposure:
     m_OverrideState: 1
-    m_Value: 0.46
+    m_Value: 0.14
   contrast:
     m_OverrideState: 1
     m_Value: -5
@@ -457,13 +457,13 @@ MonoBehaviour:
     m_Value: 0
   focusDistance:
     m_OverrideState: 1
-    m_Value: 366
+    m_Value: 360.33
   aperture:
     m_OverrideState: 1
     m_Value: 1
   focalLength:
     m_OverrideState: 1
-    m_Value: 214
+    m_Value: 144
   bladeCount:
     m_OverrideState: 0
     m_Value: 6
@@ -528,10 +528,10 @@ MonoBehaviour:
     m_Value: {x: 0.5, y: 0.5}
   intensity:
     m_OverrideState: 1
-    m_Value: 0.359
+    m_Value: 0.31
   smoothness:
     m_OverrideState: 1
-    m_Value: 0.317
+    m_Value: 0.75
   rounded:
     m_OverrideState: 0
     m_Value: 0

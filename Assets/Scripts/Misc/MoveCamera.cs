@@ -11,7 +11,7 @@ public class MoveCamera : MonoBehaviour
 
     private void Awake()
     {
-        currentCamera = Camera.main;
+        currentCamera = GetComponent<Camera>();
     }
 
     private void Update()
