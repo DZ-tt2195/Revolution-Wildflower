@@ -129,6 +129,7 @@ public class TileData : MonoBehaviour
 
     private void MouseOver()
     {
+        if (!EventSystem.current.IsPointerOverGameObject()) print("yay");
         if (clickable && Input.GetKeyDown(KeyCode.Mouse0) && !EventSystem.current.IsPointerOverGameObject())
         {
             if (moveable)
@@ -183,7 +184,6 @@ public class TileData : MonoBehaviour
         {
             if (!moused) MouseEnter();
             MouseOver();
-            //Debug.Log("mouseover");
         }
         else if (moused) MouseExit();
         
