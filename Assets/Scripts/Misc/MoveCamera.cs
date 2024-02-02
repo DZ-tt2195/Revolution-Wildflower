@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.Windows;
+using static UnityEditor.Searcher.SearcherWindow.Alignment;
 using Input = UnityEngine.Input;
 
 public class MoveCamera : MonoBehaviour
@@ -14,7 +15,7 @@ public class MoveCamera : MonoBehaviour
     private float minDragSpeed;
     private float maxDragSpeed;
 
-    Camera currentCamera;
+    private List<Camera> cameras = new();
     Vector2 mousePositionOnClick;
 
     private float leftLimit;
@@ -43,7 +44,16 @@ public class MoveCamera : MonoBehaviour
 
     private void Awake()
     {
-        currentCamera = GetComponent<Camera>();
+        cameras.Add(GetComponent<Camera>());
+        
+        for (var i = 0; i < transform.childCount; i++)
+        {
+            transform.GetChild(i).gameObject.TryGetComponent(out Camera camera);
+            if (camera != null)
+            {
+                cameras.Add(camera);
+            }
+        }
 
         minDragSpeed = dragSpeed / 2;
         maxDragSpeed = dragSpeed * 2;
@@ -66,19 +76,21 @@ public class MoveCamera : MonoBehaviour
 
         if (Input.GetMouseButton(0))
         {
-            var input = new Vector3();
+            foreach (Camera camera in cameras)
+            {
+                var input = new Vector3();
 
-            float currentDragSpeed = Mathf.Clamp(dragSpeed * (zoomMin / currentCamera.orthographicSize), minDragSpeed, maxDragSpeed);
+                float currentDragSpeed = Mathf.Clamp(dragSpeed * (zoomMin / camera.orthographicSize), minDragSpeed, maxDragSpeed);
 
-            input.x = Input.GetAxis("Mouse X") * currentDragSpeed * Time.deltaTime;
-            input.z = Input.GetAxis("Mouse Y") * currentDragSpeed * Time.deltaTime;
+                input.x = Input.GetAxis("Mouse X") * currentDragSpeed * Time.deltaTime;
+                input.z = Input.GetAxis("Mouse Y") * currentDragSpeed * Time.deltaTime;
 
-            //  The camera's x/z axes are aligned with the isometric grid, not actual up/down, so some we need some conversion to make it work. 
-            float vertical = (input.x - input.z);
-            float horizontal = (input.x + input.z);
+                //  The camera's x/z axes are aligned with the isometric grid, not actual up/down, so some we need some conversion to make it work. 
+                float vertical = (input.x - input.z);
+                float horizontal = (input.x + input.z);
 
-
-            transform.position = new Vector3(transform.position.x + vertical, transform.position.y, transform.position.z + horizontal);
+                camera.transform.position = new Vector3(transform.position.x + vertical, transform.position.y, transform.position.z + horizontal);
+            }
         }
 
         CalculateScroll();
@@ -90,7 +102,10 @@ public class MoveCamera : MonoBehaviour
         if (scrollInput != 0)
         {
             Debug.Log(scrollInput * zoomSpeed);
-            currentCamera.orthographicSize = Mathf.Clamp(currentCamera.orthographicSize + (scrollInput * zoomSpeed * Time.deltaTime), zoomMin, zoomMax);
+            foreach (Camera camera in cameras)
+            {
+                camera.orthographicSize = Mathf.Clamp(camera.orthographicSize + (scrollInput * zoomSpeed * Time.deltaTime), zoomMin, zoomMax);
+            }
         }
     }
 
