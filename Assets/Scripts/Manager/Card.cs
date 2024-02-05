@@ -559,7 +559,6 @@ public class Card : MonoBehaviour, IPointerClickHandler
                     yield return StunGuard(adjacentTilesWithGuards[0].myEntity.GetComponent<GuardEntity>());
                     break;
                 case "SWAPADJACENTGUARD":
-                    Debug.Log("swapping adjacent guards");
                     yield return ChooseGuard();
                     yield return SwapGuard(adjacentTilesWithGuards[0].myEntity.GetComponent<GuardEntity>());
                     break;
@@ -1067,6 +1066,12 @@ public class Card : MonoBehaviour, IPointerClickHandler
         newEnviro.delay = delay;
         NewManager.instance.listOfEnvironmentals.Add(newEnviro);
         yield return null;
+    }
+
+    internal IEnumerator AffectGuardMovement(GuardEntity guard)
+    {
+        yield return null;
+        guard.movementLeft += changeInMP;
     }
 
 #endregion

@@ -212,7 +212,7 @@ public class GuardEntity : MovingEntity
         else
         {
             DetectionRangePatrol = DetectionRangeMax;
-            movementLeft = movesPerTurn;
+            //movementLeft = movesPerTurn;
             attacksLeft = attacksPerTurn;
             alertStatus = Alert.Patrol;
             CheckForPlayer();
