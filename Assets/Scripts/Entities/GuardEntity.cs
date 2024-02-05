@@ -67,6 +67,7 @@ public class GuardEntity : MovingEntity
     {
         if (alertStatus == Alert.Attack && stunned == 0)
         {
+            
             AttackLine.enabled = true;
             AttackLine.SetPositions(new Vector3[] { transform.position, CurrentTarget.transform.position });
             if (attackEffect)
@@ -213,8 +214,8 @@ public class GuardEntity : MovingEntity
             DetectionRangePatrol = DetectionRangeMax;
             movementLeft = movesPerTurn;
             attacksLeft = attacksPerTurn;
+            alertStatus = Alert.Patrol;
             CheckForPlayer();
-            print(DistractionPoints.Count);
             if (DistractionPoints.Count > 0)
                 alertStatus = Alert.Persue;
             if (alertStatus == Alert.Patrol)
@@ -222,6 +223,11 @@ public class GuardEntity : MovingEntity
             else if (alertStatus == Alert.Attack)
                 yield return Attack(CurrentTarget);
             else if (alertStatus == Alert.Persue)
+                if (DistractionPoints.Count > 0)
+                {
+                    NewManager.instance.FindTile(DistractionPoints[DistractionPoints.Count - 1]).currentGuardTarget = true;
+                }
+            print("End of Turn persue");
                 yield return persue();
         }
     }
@@ -232,6 +238,11 @@ public class GuardEntity : MovingEntity
         {
             alertStatus = Alert.Attack;
             alertedSound.Post(gameObject);
+            foreach (Vector2Int pos in DistractionPoints)
+            {
+                TileData tile = NewManager.instance.FindTile(pos);
+                tile.currentGuardTarget = false;
+            }
         }
         CurrentTarget = target;
         //print("New target, player at " + target.currentTile.gridPosition);
@@ -239,7 +250,13 @@ public class GuardEntity : MovingEntity
 
     IEnumerator persue()
     {
+        print(DistractionPoints.Count);
         print(currentTile.gridPosition + "checking distraction");
+        if (DistractionPoints.Count == 0)
+        {
+            newAction();
+            yield break;
+        }
         if (currentTile.gridPosition == DistractionPoints[DistractionPoints.Count - 1])
         {
             print("on distraction point");
@@ -278,7 +295,7 @@ public class GuardEntity : MovingEntity
         {
             //print(movementLeft);
             TileData nextTile;
-            NewManager.instance.CalculatePathfinding(currentTile, NewManager.instance.FindTile(DistractionPoints[DistractionPoints.Count - 1]), movementLeft, true,true);
+            NewManager.instance.CalculatePathfinding(currentTile, NewManager.instance.FindTile(DistractionPoints[DistractionPoints.Count - 1]), movementLeft, true, true);
             nextTile = NewManager.instance.CurrentAvailableMoveTarget;  //moves towards the next patrol point
             Vector2Int nextDirection = nextTile.gridPosition - currentTile.gridPosition;
 
@@ -299,37 +316,41 @@ public class GuardEntity : MovingEntity
             }
 
             yield return NewManager.Wait(movePauseTime);
-            alertStatus = Alert.Patrol;
-            if(DistractionPoints.Count > 0)
+            yield return newAction();
+        }
+    }
+
+    IEnumerator newAction()
+    {
+        alertStatus = Alert.Patrol;
+        if (DistractionPoints.Count > 0)
+        {
+            alertStatus = Alert.Persue;
+            NewManager.instance.FindTile(DistractionPoints[DistractionPoints.Count - 1]).currentGuardTarget = true;
+        }
+        CheckForPlayer();
+        if (alertStatus == Alert.Attack)
+        {
+            if (movementLeft > 0 || attacksLeft > 0)
             {
-                alertStatus = Alert.Persue;
-            }
-            CheckForPlayer();
-            if (alertStatus == Alert.Attack)
-            {
-                if (movementLeft > 0 || attacksLeft > 0)
-                {
-                    yield return Attack(CurrentTarget);
-                }
-            }
-            else if (alertStatus == Alert.Persue)
-            {
-                if (movementLeft > 0)
-                {
-                    yield return persue();
-                }
-            }
-            else if (alertStatus == Alert.Patrol)
-            {
-                if (movementLeft > 0)
-                {
-                    yield return Patrol();
-                }
+                yield return Attack(CurrentTarget);
             }
         }
-        else
-            yield break;
-        
+        else if (alertStatus == Alert.Persue)
+        {
+            if (movementLeft > 0)
+            {
+                print("New Action starting persue");
+                yield return persue();
+            }
+        }
+        else if (alertStatus == Alert.Patrol)
+        {
+            if (movementLeft > 0)
+            {
+                yield return Patrol();
+            }
+        }
     }
 
     IEnumerator Attack(PlayerEntity detectedPlayer)
@@ -427,8 +448,10 @@ public class GuardEntity : MovingEntity
             print("moving to distraction persuit");
             DistractionPoints.Add(detectedPlayer.currentTile.gridPosition);
             alertStatus = Alert.Persue;
+            NewManager.instance.FindTile(DistractionPoints[DistractionPoints.Count - 1]).currentGuardTarget = true;
             if (movementLeft > 0)
             {
+                print("Persuing from attack");
                 yield return persue();
             }
         }
@@ -467,21 +490,8 @@ public class GuardEntity : MovingEntity
         }
 
 
-
-
-        CheckForPlayer();
         yield return NewManager.Wait(movePauseTime);
-        if (movementLeft > 0)
-        {
-            if (alertStatus == Alert.Attack)
-            {
-                yield return Attack(CurrentTarget);
-            }
-            if (alertStatus == Alert.Patrol)
-            {
-                yield return Patrol();
-
-            }
-        }
+        print("Checking New Action");
+        yield return newAction();
     }
 }

@@ -303,7 +303,7 @@
       "7",
       "",
       "ThrowEnvironmental",
-      "StunAll"
+      "End/StunAll"
     ]
   ]
 }

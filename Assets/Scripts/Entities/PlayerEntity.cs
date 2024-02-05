@@ -20,7 +20,7 @@ public class PlayerEntity : MovingEntity
         //[Tooltip("normal player appearance")] [SerializeField] Material DefaultPlayerMaterial;
         //[Tooltip("appearance when hidden")] [SerializeField] Material HiddenPlayerMaterial;
         [Tooltip("adjacent objective")] [ReadOnly] public ObjectiveEntity adjacentObjective;
-        //[Tooltip("delay inbetween each movement")][SerializeField] public float moveDelay = 0.75f;
+        [Tooltip("delay inbetween each movement")][SerializeField] public float moveDelay = 0.75f;
 
     [Foldout("Sprites", true)]
         [Tooltip("Gail's sprite")][SerializeField] Sprite gailSprite;
@@ -102,7 +102,7 @@ public class PlayerEntity : MovingEntity
     {
         foreach(TileData tile in path)
         {
-            yield return NewManager.Wait(PlayerPrefs.GetFloat("Animation Speed"));
+            yield return NewManager.Wait(moveDelay);
             MoveTile(tile);
         }
         /*
