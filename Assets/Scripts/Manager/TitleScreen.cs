@@ -18,12 +18,8 @@ public class TitleScreen : MonoBehaviour
     Button loadFile;
 
     TMP_Text errorText;
-
     TMP_InputField newName;
     TMP_Dropdown fileChoose;
-
-    TMP_Dropdown animationSpeed;
-    Toggle confirmationToggle;
 
     private void Awake()
     {
@@ -42,12 +38,6 @@ public class TitleScreen : MonoBehaviour
 
         fileChoose = GameObject.Find("Save File Dropdown").GetComponent<TMP_Dropdown>();
         fileChoose.onValueChanged.AddListener(delegate { LoadCheck(); });
-
-        animationSpeed = GameObject.Find("Card Animation Dropdown").GetComponent<TMP_Dropdown>();
-        animationSpeed.onValueChanged.AddListener(delegate { SetAnimationSpeed(); });
-
-        confirmationToggle = GameObject.Find("Confirmation Toggle").GetComponent<Toggle>();
-        confirmationToggle.onValueChanged.AddListener(delegate { SetConfirmationStatus(); });
     }
 
     private void Start()
@@ -60,26 +50,6 @@ public class TitleScreen : MonoBehaviour
                 fileChoose.options.Add(new TMP_Dropdown.OptionData(name[..^4]));
                 fileChoose.RefreshShownValue();
             }
-        }
-
-        if (!PlayerPrefs.HasKey("Confirm Choices")) //0 doesn't ask for confirmation, 1 does
-            PlayerPrefs.SetInt("Confirm Choices", 1);
-        confirmationToggle.isOn = (PlayerPrefs.GetInt("Confirm Choices") == 1);
-
-        if (!PlayerPrefs.HasKey("Animation Speed"))
-            PlayerPrefs.SetFloat("Animation Speed", 0.4f);
-
-        switch (PlayerPrefs.GetFloat("Animation Speed"))
-        {
-            case 0f:
-                animationSpeed.value = 2;
-                break;
-            case 0.25f:
-                animationSpeed.value = 1;
-                break;
-            case 0.4f:
-                animationSpeed.value = 0;
-                break;
         }
     }
 
@@ -145,27 +115,6 @@ public class TitleScreen : MonoBehaviour
             SaveManager.instance.DeleteData(fileChoose.options[fileChoose.value].text);
             fileChoose.options.RemoveAt(fileChoose.value);
             fileChoose.RefreshShownValue();
-        }
-    }
-
-    void SetConfirmationStatus()
-    {
-        PlayerPrefs.SetInt("Confirm Choices", confirmationToggle.isOn ? 1 : 0);
-    }
-
-    void SetAnimationSpeed()
-    {
-        switch (animationSpeed.options[animationSpeed.value].text)
-        {
-            case "Slow":
-                PlayerPrefs.SetFloat("Animation Speed", 0.4f);
-                break;
-            case "Fast":
-                PlayerPrefs.SetFloat("Animation Speed", 0.25f);
-                break;
-            case "None":
-                PlayerPrefs.SetFloat("Animation Speed", 0f);
-                break;
         }
     }
 }

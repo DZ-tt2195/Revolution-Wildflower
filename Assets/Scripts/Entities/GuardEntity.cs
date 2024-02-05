@@ -211,7 +211,7 @@ public class GuardEntity : MovingEntity
         else
         {
             DetectionRangePatrol = DetectionRangeMax;
-            movementLeft = movesPerTurn;
+            //movementLeft = movesPerTurn;
             attacksLeft = attacksPerTurn;
             CheckForPlayer();
             print(DistractionPoints.Count);

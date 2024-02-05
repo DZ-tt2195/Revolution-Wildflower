@@ -24,6 +24,9 @@ public class SaveData
 
 public class SaveManager : MonoBehaviour
 {
+
+#region Variables
+
     public static SaveManager instance;
     Transform canvas;
     [ReadOnly] public SaveData currentSaveData;
@@ -33,6 +36,10 @@ public class SaveManager : MonoBehaviour
     [Tooltip("Put names of the card TSVs in here")] public List<string> playerDecks;
     [Tooltip("Put names of the level TSVs (in order)")] public List<string> levelSheets;
     [ReadOnly] public List<Card> allCards = new List<Card>();
+
+    #endregion
+
+#region Setup
 
     private void Awake()
     {
@@ -49,7 +56,7 @@ public class SaveManager : MonoBehaviour
 
     private void Start()
     {
-    #if UNITY_EDITOR
+        #if UNITY_EDITOR
         foreach (string deck in playerDecks)
         {
             StartCoroutine(DownloadSheet.instance.DownloadCardSheet(deck));
@@ -59,8 +66,12 @@ public class SaveManager : MonoBehaviour
         {
             StartCoroutine(DownloadSheet.instance.DownloadLevelSheet(level));
         }
-    #endif
+        #endif
     }
+
+    #endregion
+
+#region Files
 
     public void LoadFile(string fileName)
     {
@@ -98,6 +109,10 @@ public class SaveManager : MonoBehaviour
         ES3.DeleteFile($"{Application.persistentDataPath}/{fileName}.es3");
     }
 
+    #endregion
+
+#region Switching Scenes
+
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -110,7 +125,7 @@ public class SaveManager : MonoBehaviour
 
     public List<Card> GenerateCards(string deck)
     {
-        List<Card> characterCards = new List<Card>();
+        List<Card> characterCards = new();
         List<CardData> data = CardDataLoader.ReadCardData(deck);
 
         for (int i = 0; i < data.Count; i++)
@@ -132,17 +147,22 @@ public class SaveManager : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         canvas = GameObject.Find("Canvas").transform;
+
         RightClick.instance.transform.SetParent(canvas);
         RightClick.instance.transform.localPosition = new Vector3(0, 0);
 
         FPS.instance.transform.SetParent(canvas);
         FPS.instance.transform.localPosition = new Vector3(-850, -500);
+
+        GameSettings.instance.transform.SetParent(canvas);
+        GameSettings.instance.transform.localPosition = new Vector3(0, 0);
     }
 
     public void UnloadObjects()
     {
         Preserve(RightClick.instance.gameObject);
         Preserve(FPS.instance.gameObject);
+        Preserve(GameSettings.instance.gameObject);
         allCards.Clear();
     }
 
@@ -151,4 +171,7 @@ public class SaveManager : MonoBehaviour
         next.transform.SetParent(null);
         DontDestroyOnLoad(next);
     }
+
+#endregion
+
 }
