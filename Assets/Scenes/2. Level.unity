@@ -15964,7 +15964,6 @@ GameObject:
   - component: {fileID: 1257958666}
   - component: {fileID: 1257958669}
   - component: {fileID: 1257958667}
-  - component: {fileID: 1257958670}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -16082,20 +16081,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!114 &1257958670
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1257958665}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9001204e548a44c92ace82db5eae670e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  scrollSpeed: 50
-  movementSpeed: 0
 --- !u!1 &1302209867
 GameObject:
   m_ObjectHideFlags: 0
@@ -22352,10 +22337,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9001204e548a44c92ace82db5eae670e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dragSpeed: 65
-  zoomSpeed: 100
-  zoomMin: 10
-  zoomMax: 50
 --- !u!20 &1688208630
 Camera:
   m_ObjectHideFlags: 0
@@ -32879,7 +32860,7 @@ Transform:
   m_GameObject: {fileID: 1785836720}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 54.667492, y: -44.9, z: 18.749239}
+  m_LocalPosition: {x: 56.8, y: -44.9, z: 18.749239}
   m_LocalScale: {x: 0.732051, y: 0.8497401, z: 0.84974}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -33197,7 +33178,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 874926083}
   m_HandleRect: {fileID: 874926082}
   m_Direction: 0
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:

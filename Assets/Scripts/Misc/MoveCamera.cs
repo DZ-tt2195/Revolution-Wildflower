@@ -11,11 +11,11 @@ public class MoveCamera : MonoBehaviour
 {
     [Header("Dragging")]
     [SerializeField]
-    private float dragSpeed = 300;
-    private float minDragSpeed;
-    private float maxDragSpeed;
+    private static float dragSpeed = 300;
+    private static float minDragSpeed;
+    private static float maxDragSpeed;
 
-    private List<Camera> cameras = new();
+    private static List<Camera> cameras = new();
     Vector2 mousePositionOnClick;
 
     private float leftLimit;
@@ -25,11 +25,11 @@ public class MoveCamera : MonoBehaviour
 
     [Header("Zooming")]
     [SerializeField]
-    private float zoomSpeed = 100;
+    private static float zoomSpeed = 100;
     [SerializeField]
-    private float zoomMin = 15;
+    private static float zoomMin = 15;
     [SerializeField]
-    private float zoomMax = 50;
+    private static float zoomMax = 50;
 
     private bool focused = false;
     private float focusDefualtZoom;
@@ -40,10 +40,16 @@ public class MoveCamera : MonoBehaviour
     private float focusTime = 15f;
     private float focusZoom;
 
-    private List<string> locks = new();
+    private static List<string> locks = new();
 
-    private void Awake()
+    private static MoveCamera instance;
+
+    private Camera camera;
+
+    private void Start()
     {
+        instance = this;
+        camera = GetComponent<Camera>();
         cameras.Add(GetComponent<Camera>());
         
         for (var i = 0; i < transform.childCount; i++)
@@ -52,11 +58,12 @@ public class MoveCamera : MonoBehaviour
             if (camera != null)
             {
                 cameras.Add(camera);
+                Debug.Log(camera.gameObject.name);
             }
         }
 
-        minDragSpeed = dragSpeed / 2;
-        maxDragSpeed = dragSpeed * 2;
+        minDragSpeed = dragSpeed / 8f;
+        maxDragSpeed = dragSpeed / 4f;
     }
 
     private void Update()
@@ -67,7 +74,7 @@ public class MoveCamera : MonoBehaviour
         }
     }
 
-    private void UpdateFreeCamera()
+    private static void UpdateFreeCamera()
     {
         if (locks.Count > 0)
         {
@@ -76,11 +83,9 @@ public class MoveCamera : MonoBehaviour
 
         if (Input.GetMouseButton(0))
         {
-            foreach (Camera camera in cameras)
-            {
                 var input = new Vector3();
 
-                float currentDragSpeed = Mathf.Clamp(dragSpeed * (zoomMin / camera.orthographicSize), minDragSpeed, maxDragSpeed);
+                float currentDragSpeed = Mathf.Clamp(dragSpeed * (zoomMin / instance.camera.orthographicSize), minDragSpeed, maxDragSpeed);
 
                 input.x = Input.GetAxis("Mouse X") * currentDragSpeed * Time.deltaTime;
                 input.z = Input.GetAxis("Mouse Y") * currentDragSpeed * Time.deltaTime;
@@ -89,19 +94,17 @@ public class MoveCamera : MonoBehaviour
                 float vertical = (input.x - input.z);
                 float horizontal = (input.x + input.z);
 
-                camera.transform.position = new Vector3(transform.position.x + vertical, transform.position.y, transform.position.z + horizontal);
-            }
+                instance.transform.position = new Vector3(instance.transform.position.x + vertical, instance.transform.position.y, instance.transform.position.z + horizontal);
         }
 
         CalculateScroll();
     }
 
-    private void CalculateScroll()
+    private static void CalculateScroll()
     {
         float scrollInput = Input.GetAxis("Mouse ScrollWheel");
         if (scrollInput != 0)
         {
-            Debug.Log(scrollInput * zoomSpeed);
             foreach (Camera camera in cameras)
             {
                 camera.orthographicSize = Mathf.Clamp(camera.orthographicSize + (scrollInput * zoomSpeed * Time.deltaTime), zoomMin, zoomMax);
@@ -164,22 +167,22 @@ public class MoveCamera : MonoBehaviour
         }
     }
 
-    public void AddLock(string lockName)
+    public static void AddLock(string lockName)
     {
         if (locks.Contains(lockName))
         {
-            Debug.LogWarning(GetType().Name + ": locklist already contains lock called " + lockName);
+            Debug.LogWarning(instance.GetType().Name + ": locklist already contains lock called " + lockName);
             return;
         }
 
         locks.Add(lockName);
     }
 
-    public void RemoveLock(string lockName)
+    public static void RemoveLock(string lockName)
     {
         if (!locks.Contains(lockName))
         {
-            Debug.LogWarning(GetType().Name + ": locklist does not contain lock called " + lockName);
+            Debug.LogWarning(instance.GetType().Name + ": locklist does not contain lock called " + lockName);
             return;
         }
 
