@@ -183,7 +183,8 @@ public class TileData : MonoBehaviour
 
     public void SurveillanceState(bool underSurveillance)
     {
-        renderer3d.material.color = (underSurveillance) ? Color.red : Color.gray;
+        //renderer3d.material.color = (underSurveillance) ? Color.red : Color.gray;
+        renderer3d.material.SetColor("_palette_color", underSurveillance ? Color.red : new Color(0, 0.3686275f, 0.2352941f));
     }
 
     private void Update()
