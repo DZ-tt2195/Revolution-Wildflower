@@ -16,13 +16,17 @@ public class TileData : MonoBehaviour
         [Tooltip("Position in the grid")] [ReadOnly] public Vector2Int gridPosition;
         [Tooltip("The entity on this tile")] [ReadOnly] public Entity myEntity;
 
+    [Foldout("Tile conditions", true)]
+    [Tooltip("Defines whether you can choose this tile")][ReadOnly] public bool choosable = false;
+    [Tooltip("Defines whether you can click this tile")][ReadOnly] public bool clickable = false;
+    [Tooltip("Defines whether you can move onto this tile")][ReadOnly] public bool moveable = false;
+    [Tooltip("Defines whether you can move onto this tile")][ReadOnly] public bool distractionPoint = false;
+    [Tooltip("If your mouse is over this")] private bool moused = false;
+
     [Foldout("Mouse", true)]
         [Tooltip("timer that controls how long until a tool tip appears on hover")] float timeTillToolTip = 0.5f;
         [Tooltip("timer that controls how long until a tool tip appears on hover")] float toolTipHoverTimer = 0;
-        [Tooltip("Defines whether you can choose this tile")][ReadOnly] public bool choosable = false;
-        [Tooltip("Defines whether you can click this tile")][ReadOnly] public bool clickable = false;
-        [Tooltip("Defines whether you can move onto this tile")][ReadOnly] public bool moveable = false;
-        [Tooltip("If your mouse is over this")] private bool moused = false;
+
 
     [Foldout("Colors", true)]
         [Tooltip("Tile's sprite renderer")] SpriteRenderer myRenderer;
@@ -60,6 +64,10 @@ public class TileData : MonoBehaviour
         {
             border.color = SelectedColor;
             border.SetAlpha(NewManager.instance.opacity);
+        }
+        else if (distractionPoint)
+        {
+            border.color = AlertColor;
         }
         else if (moused)
         {
