@@ -24,6 +24,7 @@ public class TileData : MonoBehaviour
     [Tooltip("If your mouse is over this")] private bool moused = false;
 
     [Foldout("Mouse", true)]
+        [Tooltip("Layer mask that mouse raycasts ignore")] [SerializeField] LayerMask mask;
         [Tooltip("timer that controls how long until a tool tip appears on hover")] float timeTillToolTip = 0.5f;
         [Tooltip("timer that controls how long until a tool tip appears on hover")] float toolTipHoverTimer = 0;
 
@@ -99,7 +100,7 @@ public class TileData : MonoBehaviour
         noiseThrough = false;
     }
 
-    private void OnMouseEnter()
+    private void MouseEnter()
     {
         moused = true;
         //generates a visible path the player is going to take to get to the space (clearing the last list and ignoring the first and last tile)
@@ -121,7 +122,7 @@ public class TileData : MonoBehaviour
         }
     }
 
-    private void OnMouseExit() 
+    private void MouseExit() 
     {
         moused = false;
         if (moveable)
@@ -134,7 +135,7 @@ public class TileData : MonoBehaviour
 
     }
 
-    private void OnMouseOver()
+    private void MouseOver()
     {
         if (clickable && Input.GetKeyDown(KeyCode.Mouse0) && !EventSystem.current.IsPointerOverGameObject())
         {
@@ -184,6 +185,15 @@ public class TileData : MonoBehaviour
 
     private void Update()
     {
+        Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(mouseRay, out hit, Mathf.Infinity, mask) && hit.collider.gameObject == gameObject)
+        {
+            if (!moused) MouseEnter();
+            MouseOver();
+        }
+        else if (moused) MouseExit();
+        
         if (!moused)
         {
             toolTipHoverTimer = 0;

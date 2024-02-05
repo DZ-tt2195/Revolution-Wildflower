@@ -6,7 +6,6 @@ using TMPro;
 using MyBox;
 using UnityEngine.EventSystems;
 using System.Text.RegularExpressions;
-using System.Drawing;
 
 public class Card : MonoBehaviour, IPointerClickHandler
 {
@@ -98,10 +97,21 @@ public class Card : MonoBehaviour, IPointerClickHandler
     public void CardSetup(CardData data)
     {
         textName.text = data.name;
-        textDescr.text = BoldAllKeywords(data.desc);
+        textDescr.text = ChangeAllKeywords(data.desc);
 
         typeOne = ConvertToType(data.cat1);
         typeTwo = ConvertToType(data.cat2);
+
+        image.color = typeOne switch
+        {
+            CardType.Attack => Color.red,
+            CardType.Draw => Color.green,
+            CardType.Distraction => Color.blue,
+            CardType.Energy => Color.cyan,
+            CardType.Movement => Color.yellow,
+            CardType.Misc => Color.gray,
+            _ => Color.black,
+        };
 
         energyCost = data.epCost;
         textCost.text = $"{data.epCost}";
@@ -142,28 +152,34 @@ public class Card : MonoBehaviour, IPointerClickHandler
         };
     }
 
-    string BoldAllKeywords(string cardText)
+    string ChangeAllKeywords(string cardText)
     {
         cardText = $"<color=#000000>{cardText}";
+
         cardText = BoldKeyword(cardText, @"[-+]\d+ Cards", "000000");
         cardText = BoldKeyword(cardText, @"[-+]\d+ Card", "000000");
 
-        cardText = BoldKeyword(cardText, @"[-+]\d+ Movement", "d6bd00");
-        cardText = BoldKeyword(cardText, @"\d+ MP", "d6bd00");
+        cardText = ChangeToSymbol(cardText, "Energy", $"\"Symbols\" name=\"Energy\"");
+        cardText = ChangeToSymbol(cardText, "EP", $"\"Symbols\" name=\"Energy\"");
 
-        cardText = BoldKeyword(cardText, @"[-+]\d+ Energy", "ADD8E6");
-        cardText = BoldKeyword(cardText, @"\d+ EP", "ADD8E6");
+        cardText = ChangeToSymbol(cardText, "Movement", $"\"Symbols\" name=\"Movement\"");
+        cardText = ChangeToSymbol(cardText, "MP", $"\"Symbols\" name=\"Movement\"");
 
-        cardText = BoldKeyword(cardText, @"[-+]\d+ Health", "FFC0CB");
-        cardText = BoldKeyword(cardText, @"\d+ HP", "FFC0CB");
+        cardText = ChangeToSymbol(cardText, "Health", $"\"Symbols\" name=\"Health\"");
+        cardText = ChangeToSymbol(cardText, "HP", $"\"Symbols\" name=\"Health\"");
+
         cardText = BoldKeyword(cardText, @"\d+ Damage", "8B0000");
-
         cardText = BoldKeyword(cardText, @"Intensity \d+", "FFA500");
         cardText = BoldKeyword(cardText, @"Range \d+", "0000FF");
         cardText = BoldKeyword(cardText, @"Stun \d+", "800080");
         cardText = BoldKeyword(cardText, @"Delay \d+", "00FFFF");
-
+        
         return cardText;
+    }
+
+    string ChangeToSymbol(string cardText, string keyword, string symbol)
+    {
+        return cardText.Replace(keyword, $"<sprite={symbol}>");
     }
 
     string BoldKeyword(string cardText, string keyword, string color)
@@ -178,7 +194,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         return cardText;
     }
 
-    #endregion
+#endregion
 
 #region Play Condition
 
@@ -386,14 +402,12 @@ public class Card : MonoBehaviour, IPointerClickHandler
     public void EnableCard()
     {
         enableBorder = true;
-        image.color = UnityEngine.Color.white;
         button.interactable = true;
     }
 
     public void DisableCard()
     {
         enableBorder = false;
-        image.color = UnityEngine.Color.gray;
         button.interactable = false;
     }
 
@@ -419,13 +433,13 @@ public class Card : MonoBehaviour, IPointerClickHandler
         this.image.SetAlpha(0);
         this.canvasgroup.alpha = 0;
 
-        StartCoroutine(Unfade());
+        StartCoroutine(Unfade(3f));
     }
 
-    IEnumerator Unfade()
+    public IEnumerator Unfade(float time)
     {
-        yield return NewManager.Wait(5f);
-        image.SetAlpha(0);
+        yield return NewManager.Wait(time);
+        this.image.SetAlpha(1);
         canvasgroup.alpha = 1;
     }
 

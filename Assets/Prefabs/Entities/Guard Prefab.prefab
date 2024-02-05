@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 127779131077801882}
   - component: {fileID: 5545540189652443486}
   - component: {fileID: 4807401668742603254}
-  m_Layer: 2
+  m_Layer: 3
   m_Name: Guard Prefab
   m_TagString: Enemy
   m_Icon: {fileID: 0}

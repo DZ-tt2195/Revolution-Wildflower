@@ -20,7 +20,7 @@ public class PlayerEntity : MovingEntity
         //[Tooltip("normal player appearance")] [SerializeField] Material DefaultPlayerMaterial;
         //[Tooltip("appearance when hidden")] [SerializeField] Material HiddenPlayerMaterial;
         [Tooltip("adjacent objective")] [ReadOnly] public ObjectiveEntity adjacentObjective;
-        [Tooltip("delay inbetween each movement")][SerializeField] public float moveDelay = 0.75f;
+        //[Tooltip("delay inbetween each movement")][SerializeField] public float moveDelay = 0.75f;
 
     [Foldout("Sprites", true)]
         [Tooltip("Gail's sprite")][SerializeField] Sprite gailSprite;
@@ -98,8 +98,14 @@ public class PlayerEntity : MovingEntity
         return answer;
     }
 
-    public IEnumerator movePlayer(List<TileData> path)
+    public IEnumerator MovePlayer(List<TileData> path)
     {
+        foreach(TileData tile in path)
+        {
+            yield return NewManager.Wait(PlayerPrefs.GetFloat("Animation Speed"));
+            MoveTile(tile);
+        }
+        /*
         float timer = 0;
         for (int i = 0; i < path.Count; i++)
         {
@@ -110,7 +116,8 @@ public class PlayerEntity : MovingEntity
                 yield return null;
             }
             timer = 0;
-        } 
+        }
+        */
     }
     public override void MoveTile(TileData newTile)
     {
@@ -171,10 +178,11 @@ public class PlayerEntity : MovingEntity
         for (int i = 0; i < myHand.Count; i++)
         {
             Card nextCard = myHand[i];
-            float startingX = (myHand.Count >= 8) ? -900 : (myHand.Count - 1) * -150;
-            float difference = (myHand.Count >= 8) ? 1800f / (myHand.Count - 1) : 300;
-            Vector2 newPosition = new(startingX + difference * i, -500);
-            StartCoroutine(nextCard.MoveCard(newPosition, newPosition, new Vector3(0, 0, 0), PlayerPrefs.GetFloat("Animation Speed")));
+            float startingX = (myHand.Count-1)*-50;
+            float difference = 100;
+            Vector2 newPosition = new(startingX + difference * i, -485);
+            nextCard.transform.SetSiblingIndex(i);
+            StartCoroutine(nextCard.MoveCard(newPosition, newPosition, Vector3.zero, PlayerPrefs.GetFloat("Animation Speed")));
         }
 
         foreach (Card card in myHand)
@@ -226,7 +234,7 @@ public class PlayerEntity : MovingEntity
         {
             myHand.Add(drawMe);
             drawMe.transform.SetParent(handTransform);
-            drawMe.transform.localScale = new Vector3(1, 1, 1);
+            drawMe.transform.localScale = Vector3.one;
             drawMe.transform.localPosition = new Vector3(0, -1000, 0);
             drawMe.cardMove.Post(drawMe.gameObject);
         }
@@ -238,7 +246,7 @@ public class PlayerEntity : MovingEntity
         {
             myHand.Remove(discardMe);
             discardMe.transform.SetAsLastSibling();
-            StartCoroutine(discardMe.MoveCard(new Vector2(1200, -440), new Vector2(0, -1000), new Vector3(0, 0, 0), PlayerPrefs.GetFloat("Animation Speed")));
+            StartCoroutine(discardMe.MoveCard(new Vector2(1200, -440), new Vector2(0, -1000), Vector3.zero, PlayerPrefs.GetFloat("Animation Speed")));
             SortHand();
             yield return NewManager.Wait(PlayerPrefs.GetFloat("Animation Speed"));
 
@@ -271,6 +279,8 @@ public class PlayerEntity : MovingEntity
         playMe.cardPlay.Post(playMe.gameObject);
         StartCoroutine(playMe.MoveCard(new Vector2(playMe.transform.localPosition.x, -200), new Vector2(playMe.transform.localPosition.x, -200), new Vector3(0, 0, 0), PlayerPrefs.GetFloat("Animation Speed")));
         yield return playMe.FadeAway(PlayerPrefs.GetFloat("Animation Speed"));
+
+        StartCoroutine(playMe.Unfade(0f));
         StartCoroutine(this.DiscardFromHand(playMe));
 
         if (payEnergy)
