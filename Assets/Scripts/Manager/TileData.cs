@@ -114,10 +114,13 @@ public class TileData : MonoBehaviour
             NewManager.instance.CalculatePathfinding(NewManager.instance.lastSelectedPlayer.currentTile,this, NewManager.instance.lastSelectedPlayer.movementLeft,false,false);
             for (int i = 0; i < NewManager.instance.FullPath.Count; i++) 
             {
+                NewManager.instance.FullPath[i].directionIndicator.enabled = true;
+                /*
                 if (i != NewManager.instance.FullPath.Count - 1)
                 {
                     NewManager.instance.FullPath[i].directionIndicator.enabled = true;
                 }
+                */
             }
         }
     }
@@ -129,7 +132,7 @@ public class TileData : MonoBehaviour
         {
             for (int i = 0; i < NewManager.instance.FullPath.Count; i++)
             {
-                NewManager.instance.FullPath[i].directionIndicator.enabled = false;
+                //NewManager.instance.FullPath[i].directionIndicator.enabled = false;
             }
         }
 

@@ -172,12 +172,13 @@ MonoBehaviour:
   adjacentTiles: []
   gridPosition: {x: 0, y: 0}
   myEntity: {fileID: 0}
-  mask:
-    serializedVersion: 2
-    m_Bits: 59
   choosable: 0
   clickable: 0
   moveable: 0
+  distractionPoint: 0
+  mask:
+    serializedVersion: 2
+    m_Bits: 59
   renderer3d: {fileID: 7738949998751105727}
   mouseOverColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   SelectedColor: {r: 0.6, g: 0.6, b: 0.6, a: 0}
@@ -263,13 +264,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2655006380957517680}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: -0.72, z: -0}
-  m_LocalScale: {x: 3, y: 3, z: 1}
+  m_LocalRotation: {x: 0.16042018, y: 0.6886694, z: -0.68866926, w: 0.16042005}
+  m_LocalPosition: {x: 0, y: -0.72, z: 0}
+  m_LocalScale: {x: 0.6554732, y: 0.6554732, z: 0.21849105}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2569417078657184244}
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: -153.774}
 --- !u!212 &7513741131586095412
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -311,7 +312,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 1128798287, guid: 4c520035698ce5c41915c3849bfa5e7a, type: 3}
+  m_Sprite: {fileID: 812334430, guid: ce522e91e072a4f0c9173d020ec48a17, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

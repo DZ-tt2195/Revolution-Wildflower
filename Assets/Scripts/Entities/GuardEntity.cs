@@ -71,7 +71,7 @@ public class GuardEntity : MovingEntity
             AttackLine.SetPositions(new Vector3[] { transform.position, CurrentTarget.transform.position });
             if (attackEffect)
             {
-                print("attack color");
+                //print("attack color");
                 AttackLine.material = attackColor;
             }
             else
@@ -177,7 +177,7 @@ public class GuardEntity : MovingEntity
                 {
                     if (inDetection[i].myEntity.GetComponent<PlayerEntity>().hidden == 0)
                     {
-                        print("found player");
+                        //print("found player");
                         newTargets.Add(inDetection[i].myEntity.GetComponent<PlayerEntity>());
                     }
                 }
@@ -234,7 +234,7 @@ public class GuardEntity : MovingEntity
             alertedSound.Post(gameObject);
         }
         CurrentTarget = target;
-        print("New target, player at " + target.currentTile.gridPosition);
+        //print("New target, player at " + target.currentTile.gridPosition);
     }
 
     IEnumerator persue()
@@ -243,7 +243,7 @@ public class GuardEntity : MovingEntity
         if (currentTile.gridPosition == DistractionPoints[DistractionPoints.Count - 1])
         {
             print("on distraction point");
-            NewManager.instance.FindTile(DistractionPoints[DistractionPoints.Count - 1]).distractionPoint = true;
+            NewManager.instance.FindTile(DistractionPoints[DistractionPoints.Count - 1]).distractionPoint = false;
             DistractionPoints.RemoveAt(DistractionPoints.Count - 1);
             if (DistractionPoints.Count == 0)
             {
@@ -276,7 +276,7 @@ public class GuardEntity : MovingEntity
         }
         if (movementLeft > 0)
         {
-            print(movementLeft);
+            //print(movementLeft);
             TileData nextTile;
             NewManager.instance.CalculatePathfinding(currentTile, NewManager.instance.FindTile(DistractionPoints[DistractionPoints.Count - 1]), movementLeft, true,true);
             nextTile = NewManager.instance.CurrentAvailableMoveTarget;  //moves towards the next patrol point

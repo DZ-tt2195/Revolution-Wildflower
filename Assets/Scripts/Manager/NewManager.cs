@@ -641,6 +641,8 @@ public class NewManager : MonoBehaviour
 
     IEnumerator FadeTurnBar(string message)
     {
+        DisableAllCards();
+        DisableAllTiles();
         turnAlertBar.alpha = 0;
         turnText.text = message;
 
@@ -657,8 +659,9 @@ public class NewManager : MonoBehaviour
         }
 
         turnAlertBar.alpha = 0;
-        /*
+        
         EnablePlayers();
+        /*
         if (lastSelectedPlayer != null)
         {
             Debug.Log($"{lastSelectedPlayer.name} was last selected");
@@ -746,7 +749,11 @@ public class NewManager : MonoBehaviour
 
         selectedTile = currentPlayer.currentTile;
         UpdateInstructions("Choose a character to move / play a card.");
-
+        //reset current traced path
+        for (int i = 0; i < FullPath.Count; i++)
+        {
+            FullPath[i].directionIndicator.enabled = false;
+        }
         yield return Wait(0.2f);
 
         List<TileData> possibleTiles = CalculateReachableGrids(currentPlayer.currentTile, currentPlayer.movementLeft, true);
@@ -876,6 +883,7 @@ public class NewManager : MonoBehaviour
 
     void Regain()
     {
+        print("Begin Regain");
         StopAllCoroutines();
         objectiveButton.gameObject.SetActive(false);
         UpdateInstructions("");
@@ -918,6 +926,11 @@ public class NewManager : MonoBehaviour
 
     IEnumerator EndTurn() //Starts Guard Phase
     {
+        //erases current visible path
+        for (int i = 0; i < FullPath.Count; i++)
+        {
+            FullPath[i].directionIndicator.enabled = false;
+        }
         endTurnSound.Post(gameObject);
         foreach (PlayerEntity player in listOfPlayers)
             yield return player.EndOfTurn();
