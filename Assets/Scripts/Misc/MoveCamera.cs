@@ -18,10 +18,10 @@ public class MoveCamera : MonoBehaviour
     private static List<Camera> cameras = new();
     Vector2 mousePositionOnClick;
 
-    private float leftLimit;
-    private float rightLimit;
-    private float upperLimit;
-    private float lowerLimit;
+    private static float leftLimit;
+    private static float rightLimit;
+    private static float upperLimit;
+    private static float lowerLimit;
 
     [Header("Zooming")]
     [SerializeField]
@@ -31,14 +31,14 @@ public class MoveCamera : MonoBehaviour
     [SerializeField]
     private static float zoomMax = 50;
 
-    private bool focused = false;
-    private float focusDefualtZoom;
-    private Vector3 startingPosition;
+    private static bool focused = false;
+    private static float focusDefualtZoom;
+    private static Vector3 startingPosition;
 
-    private Entity focusedEntity = null;
-    private Vector3 focusedPosition = Vector3.zero;
-    private float focusTime = 15f;
-    private float focusZoom;
+    private static Entity focusedEntity = null;
+    private static Vector3 focusedPosition = Vector3.zero;
+    private static float focusTime = 0.5f;
+    private static float focusZoom;
 
     private static List<string> locks = new();
 
@@ -112,54 +112,61 @@ public class MoveCamera : MonoBehaviour
         }
     }
 
-    private IEnumerator UpdateFocusedCamera()
+    private static IEnumerator UpdateFocusedCamera()
     {
         float currentFrame = 0;
         if (focusedEntity != null)
         {
             focusedPosition = focusedEntity.transform.position;
         }
+        Vector3 startPosition = instance.transform.position;
 
         while (currentFrame < focusTime)
         {
-            Vector3 target = new Vector3(focusedPosition.x, transform.position.y, focusedPosition.z);
-            transform.position = Vector3.Lerp(transform.position, target, (currentFrame / focusTime));
+            Vector3 target = new Vector3(focusedPosition.x, instance.transform.position.y, focusedPosition.z);
+            instance.transform.position = Vector3.Lerp(startPosition, target, (currentFrame / focusTime));
+            if (instance.transform.position == target)
+            {
+                yield return null;
+            }
             currentFrame += Time.deltaTime;
+            Debug.Log(instance.transform.position + " " + target);
             yield return null;
         }
-
         focused = false;
         focusedEntity = null;
         focusedPosition = Vector3.zero;
+
+        Unfocus(false);
     }
 
-    public void Focus(Entity entity, float targetZoom = -1)
+    public static void Focus(Entity entity, float targetZoom = -1)
     {
         focusedEntity = entity;
-        startingPosition = transform.position;
+        startingPosition = instance.transform.position;
         if (focused)
         {
-            StopCoroutine(UpdateFocusedCamera());
+            instance.StopCoroutine(UpdateFocusedCamera());
         }
 
         focused = true; 
-        StartCoroutine(UpdateFocusedCamera());
+        instance.StartCoroutine(UpdateFocusedCamera());
     }
 
-    public void Focus(Vector3 position, float targetZoom = -1)
+    public static void Focus(Vector3 position, float targetZoom = -1)
     {
         focusedPosition = position;
-        startingPosition = transform.position;
+        startingPosition = instance.transform.position;
         if (focused)
         {
-            StopCoroutine(UpdateFocusedCamera());
+            instance.StopCoroutine(UpdateFocusedCamera());
         }
 
         focused = true;
-        StartCoroutine(UpdateFocusedCamera());
+        instance.StartCoroutine(UpdateFocusedCamera());
     }
 
-    public void Unfocus(bool returnToCenter = false)
+    public static void Unfocus(bool returnToCenter = false)
     {
         if (returnToCenter)
         {

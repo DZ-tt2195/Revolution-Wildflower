@@ -521,7 +521,8 @@ public class NewManager : MonoBehaviour
     {
         if (tile != null)
         {
-            Camera.main.transform.position = new Vector3(tile.transform.position.x, Camera.main.transform.position.y, tile.transform.position.z);
+            MoveCamera.Focus(tile.transform.position);
+            //Camera.main.transform.position = new Vector3(tile.transform.position.x, Camera.main.transform.position.y, tile.transform.position.z);
             if (moveMe)
                 StartCoroutine(ChooseMovePlayer(tile.myEntity.GetComponent<PlayerEntity>()));
         }
