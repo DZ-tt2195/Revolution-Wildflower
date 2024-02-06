@@ -20,7 +20,7 @@ public class TileData : MonoBehaviour
     [Tooltip("Defines whether you can choose this tile")][ReadOnly] public bool choosable = false;
     [Tooltip("Defines whether you can click this tile")][ReadOnly] public bool clickable = false;
     [Tooltip("Defines whether you can move onto this tile")][ReadOnly] public bool moveable = false;
-    [Tooltip("Defines whether you can move onto this tile")][ReadOnly] public bool distractionPoint = false;
+    [Tooltip("Defines whether you can move onto this tile")][ReadOnly] public bool currentGuardTarget = false;
     [Tooltip("If your mouse is over this")] private bool moused = false;
 
     [Foldout("Mouse", true)]
@@ -66,7 +66,7 @@ public class TileData : MonoBehaviour
             border.color = SelectedColor;
             border.SetAlpha(NewManager.instance.opacity);
         }
-        else if (distractionPoint)
+        else if (currentGuardTarget)
         {
             border.color = AlertColor;
         }
@@ -183,7 +183,8 @@ public class TileData : MonoBehaviour
 
     public void SurveillanceState(bool underSurveillance)
     {
-        renderer3d.material.color = (underSurveillance) ? Color.red : Color.gray;
+        //renderer3d.material.color = (underSurveillance) ? Color.red : Color.gray;
+        renderer3d.material.SetColor("_palette_color", underSurveillance ? Color.red : new Color(0, 0.3686275f, 0.2352941f));
     }
 
     private void Update()

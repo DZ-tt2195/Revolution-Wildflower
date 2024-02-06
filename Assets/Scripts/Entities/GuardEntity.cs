@@ -160,9 +160,9 @@ public class GuardEntity : MovingEntity
         notification.transform.position = new Vector3(transform.position.x, transform.position.y + NotifOffset, transform.position.z);
         for (int i = 0; i < DistractionPoints.Count; i++)
         {
-            NewManager.instance.FindTile(DistractionPoints[i]).distractionPoint = false;
+            NewManager.instance.FindTile(DistractionPoints[i]).currentGuardTarget = false;
         }
-        NewManager.instance.FindTile(DistractionPoints[DistractionPoints.Count - 1]).distractionPoint = true;
+        NewManager.instance.FindTile(DistractionPoints[DistractionPoints.Count - 1]).currentGuardTarget = true;
     }
 
     public void CheckForPlayer()
@@ -243,7 +243,7 @@ public class GuardEntity : MovingEntity
         if (currentTile.gridPosition == DistractionPoints[DistractionPoints.Count - 1])
         {
             print("on distraction point");
-            NewManager.instance.FindTile(DistractionPoints[DistractionPoints.Count - 1]).distractionPoint = false;
+            NewManager.instance.FindTile(DistractionPoints[DistractionPoints.Count - 1]).currentGuardTarget = false;
             DistractionPoints.RemoveAt(DistractionPoints.Count - 1);
             if (DistractionPoints.Count == 0)
             {
