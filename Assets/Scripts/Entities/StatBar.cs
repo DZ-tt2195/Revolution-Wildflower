@@ -30,8 +30,7 @@ public class StatBar : MonoBehaviour
     private void SetSegments()
     {
         //segmentMaterial = new Material(segmentMaterial);
-        segmentMaterial.SetFloat("_Frequency", (maxValue - 1) + 0.4f);
-        Debug.Log(maxValue);
+        segmentMaterial.SetFloat("_Frequency", maxValue);
     }
 
     public void ChangeValue(float value)

@@ -95,13 +95,13 @@ Material:
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
-    - _Frequency: 2.4
+    - _Frequency: 3
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
     - _Metallic: 0
     - _OcclusionStrength: 1
-    - _Offset: 5.8
+    - _Offset: 5.51
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1

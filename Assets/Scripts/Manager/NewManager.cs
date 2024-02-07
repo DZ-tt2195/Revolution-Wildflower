@@ -440,12 +440,6 @@ public class NewManager : MonoBehaviour
                     break;
             }
 
-            healthBar.SetValue(player.health);
-            Debug.Log(player.health);
-            movementBar.SetValue(player.movementLeft);
-            Debug.Log(player.movementLeft);
-            energyBar.SetValue(player.myEnergy);
-
             //  TO-DO: change this stuff so it isn't all text -Noah
             deckTracker.text = $"<color=#70f5ff>Draw Pile <color=#ffffff>/ <color=#ff9670>Discard Pile " +
             $"\n\n<color=#70f5ff>{player.myDrawPile.Count} <color=#ffffff>/ <color=#ff9670>{player.myDiscardPile.Count}" +
@@ -457,13 +451,16 @@ public class NewManager : MonoBehaviour
                 handContainer.transform.localPosition = new Vector3(player.myPosition * -2000, 0, 0);
             }
 
-            stats.text += $"\n<color=#75ff59>{listOfObjectives.Count} Objectives Left" +
-            $"| {turnCount} Turns Left";
+            healthBar.SetValue(player.health);
+            movementBar.SetValue(player.movementLeft);
+            energyBar.SetValue(player.myEnergy);
+        }
 
-            foreach (PlayerEntity nextPlayer in listOfPlayers)
-            {
-                nextPlayer.myBar.ChangeText($"{nextPlayer.myHand.Count} Cards; {nextPlayer.health} HP; \n{nextPlayer.movementLeft} Moves; {nextPlayer.myEnergy} Energy");
-            }
+        stats.text = $"\n<color=#75ff59>{listOfObjectives.Count} Objectives Left" + $"| {turnCount} Turns Left";
+
+        foreach (PlayerEntity nextPlayer in listOfPlayers)
+        {
+            nextPlayer.myBar.ChangeText($"{nextPlayer.myHand.Count} Cards; {nextPlayer.health} HP; \n{nextPlayer.movementLeft} Moves; {nextPlayer.myEnergy} Energy");
         }
 
         /*int facesIndex = 0;
