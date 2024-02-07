@@ -50,14 +50,14 @@ public class NewManager : MonoBehaviour
         [Tooltip("Spritesheet of player character faces")][SerializeField] private Sprite [] facesSpritesheet;
         [Tooltip("Blank character face")][SerializeField] private Sprite emptyFace;
         [Tooltip("Your hand in the canvas")] [ReadOnly] public Transform handContainer;
-        [Tooltip("The bar in the bottom center of the screen")] Transform playerStats;
+        [Tooltip("GameObject holding all selected player in top left corner")] Transform selectedPlayerInfo;
         [Tooltip("Image section containing objective, actions, and debug popups")] Transform informationImage;
         [Tooltip("All the player's stats in text form")] TMP_Text stats;
         [Tooltip("Current player selected")] TMP_Text currentCharacter;
         [Tooltip("Selected player's health")] TMP_Text health;
         [Tooltip("Selected player's moves left")] TMP_Text moves;
         [Tooltip("Selected player's energy")] TMP_Text energy;
-        [Tooltip("Face of selected character")] Image characterFace;
+        [Tooltip("Face of selected character")] Image selected_characterFace;
         [Tooltip("Instructions for what the player is allowed to do right now")] TMP_Text instructions;
         [Tooltip("End the turn")] Button endTurnButton;
         [Tooltip("End turn button's image")] Image endTurnImage;
@@ -115,15 +115,15 @@ public class NewManager : MonoBehaviour
         instance = this;
 
         turnAlertBar.alpha = 0;
-        playerStats = GameObject.Find("Player Stats").transform;
-        currentCharacter = playerStats.GetChild(0).GetComponent<TMP_Text>();
-        health = playerStats.GetChild(1).GetComponent<TMP_Text>();
-        moves = playerStats.GetChild(2).GetComponent<TMP_Text>();
-        energy = playerStats.GetChild(3).GetComponent<TMP_Text>();
-        characterFace = playerStats.GetChild(4).GetComponentInChildren<Image>();
+        selectedPlayerInfo = GameObject.Find("SelectedPlayer_Stats").transform;
+        currentCharacter = selectedPlayerInfo.GetChild(0).GetComponent<TMP_Text>();
+        selected_characterFace = selectedPlayerInfo.GetChild(1).GetComponentInChildren<Image>();
+        energy = selectedPlayerInfo.GetChild(2).GetChild(0).GetChild(0).GetComponent<TMP_Text>();
+        moves = selectedPlayerInfo.GetChild(2).GetChild(1).GetChild(0).GetComponent<TMP_Text>();
+        health = selectedPlayerInfo.GetChild(2).GetChild(2).GetChild(0).GetComponent<TMP_Text>();
 
         facesSpritesheet = Resources.LoadAll<Sprite>("Sprites/portrait_spritesheet");
-        emptyFace = Resources.Load<Sprite>("Sprites/characterSill");
+        emptyFace = Resources.Load<Sprite>("Sprites/noCharacter");
 
         informationImage = GameObject.Find("Information Image").transform;
         stats = informationImage.GetChild(0).GetComponent<TMP_Text>();
@@ -423,7 +423,7 @@ public class NewManager : MonoBehaviour
             {
                 facesIndex = 1;
             }
-            characterFace.sprite = facesSpritesheet[facesIndex];
+            selected_characterFace.sprite = facesSpritesheet[facesIndex];
 
             deckTracker.text = $"<color=#70f5ff>Draw Pile <color=#ffffff>/ <color=#ff9670>Discard Pile " +
                 $"\n\n<color=#70f5ff>{player.myDrawPile.Count} <color=#ffffff>/ <color=#ff9670>{player.myDiscardPile.Count}" +
@@ -442,7 +442,7 @@ public class NewManager : MonoBehaviour
             health.text = "Health:";
             moves.text = "Moves:";
             energy.text = "Energy:";
-            characterFace.sprite = emptyFace;
+            selected_characterFace.sprite = emptyFace;
 
             deckTracker.text = "";
             handContainer.transform.localPosition = new Vector3(10000, 10000, 0);
@@ -472,6 +472,7 @@ public class NewManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
             GameOver("You quit.", false);
+        Debug.Log(health);
     }
 
     private void FixedUpdate()
