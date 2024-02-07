@@ -548,6 +548,8 @@ public class NewManager : MonoBehaviour
                     listOfTiles[i, j].clickable = false;
                     listOfTiles[i, j].moveable = false;
                     listOfTiles[i, j].choosable = false;
+                    listOfTiles[i, j].CardSelectable = false;
+                    listOfTiles[i, j].directionIndicator.enabled = false;
                 }
                 catch (NullReferenceException)
                 {
@@ -588,6 +590,20 @@ public class NewManager : MonoBehaviour
     }
 
     public void WaitForDecision(List<TileData> canBeChosen)
+    {
+        chosenTile = null;
+        chosenCard = null;
+        DisableAllTiles();
+
+        foreach (TileData tile in canBeChosen)
+        {
+            tile.CardSelectable = true;
+            tile.clickable = true;
+            tile.choosable = true;
+        }
+    }
+
+    public void WaitForDecisionMove(List<TileData> canBeChosen)
     {
         chosenTile = null;
         chosenCard = null;
@@ -757,7 +773,7 @@ public class NewManager : MonoBehaviour
         yield return Wait(0.2f);
 
         List<TileData> possibleTiles = CalculateReachableGrids(currentPlayer.currentTile, currentPlayer.movementLeft, true);
-        WaitForDecision(possibleTiles);
+        WaitForDecisionMove(possibleTiles);
 
         UpdateStats(currentPlayer);
         StartCoroutine(ChooseCardPlay(currentPlayer));
