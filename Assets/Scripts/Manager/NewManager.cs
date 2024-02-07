@@ -65,6 +65,9 @@ public class NewManager : MonoBehaviour
         [Tooltip("Info on entities")] [ReadOnly] public EntityToolTip toolTip;
         [Tooltip("Text that gets displayed when you game over")] TMP_Text gameOverText;
         [Tooltip("Tracks number of cards in deck and discard pile")] TMP_Text deckTracker;
+        [Tooltip("GameObject holding tracker for deck piles")] Transform pilesTracker;
+        [Tooltip("Tracks number of cards in draw pile")] TMP_Text drawPile;
+        [Tooltip("Tracks number of cards in discard pile")] TMP_Text discardPile;
 
     [Foldout("Grid", true)]
         [Tooltip("Tiles in the inspector")] Transform gridContainer;
@@ -119,6 +122,7 @@ public class NewManager : MonoBehaviour
         currentCharacter = selectedPlayerInfo.GetChild(0).GetComponent<TMP_Text>();
         selected_characterFace = selectedPlayerInfo.GetChild(1).GetComponentInChildren<Image>();
         energy = selectedPlayerInfo.GetChild(2).GetChild(0).GetChild(0).GetComponent<TMP_Text>();
+        energy = selectedPlayerInfo.GetChild(2).GetChild(0).GetChild(0).GetComponent<TMP_Text>();
         moves = selectedPlayerInfo.GetChild(2).GetChild(1).GetChild(0).GetComponent<TMP_Text>();
         health = selectedPlayerInfo.GetChild(2).GetChild(2).GetChild(0).GetComponent<TMP_Text>();
 
@@ -129,6 +133,9 @@ public class NewManager : MonoBehaviour
         stats = informationImage.GetChild(0).GetComponent<TMP_Text>();
         instructions = informationImage.GetChild(1).GetComponent<TMP_Text>();
         deckTracker = GameObject.Find("Deck Tracker").GetComponent<TMP_Text>();
+        pilesTracker = GameObject.Find("Draw&Discard").transform;
+        drawPile = pilesTracker.GetChild(0).GetChild(0).GetComponent<TMP_Text>();
+        discardPile = pilesTracker.GetChild(1).GetChild(0).GetComponent<TMP_Text>();
 
         endTurnButton = GameObject.Find("End Turn Button").GetComponent<Button>();
         endTurnButton.onClick.AddListener(Regain);
@@ -424,10 +431,14 @@ public class NewManager : MonoBehaviour
                 facesIndex = 1;
             }
             selected_characterFace.sprite = facesSpritesheet[facesIndex];
-
+            
             deckTracker.text = $"<color=#70f5ff>Draw Pile <color=#ffffff>/ <color=#ff9670>Discard Pile " +
                 $"\n\n<color=#70f5ff>{player.myDrawPile.Count} <color=#ffffff>/ <color=#ff9670>{player.myDiscardPile.Count}" +
                 $"\n({player.myExhaust.Count} exhausted)";
+            
+            // idk why the words arent coming up
+            drawPile.text = "Draw" + $"\n\n{player.myDrawPile.Count}";
+            discardPile.text = "Discard" + $"\n\n{player.myDiscardPile.Count}";
 
             if (player.myPosition * -2000 != handContainer.transform.localPosition.x)
             {
@@ -444,7 +455,9 @@ public class NewManager : MonoBehaviour
             energy.text = "Energy:";
             selected_characterFace.sprite = emptyFace;
 
-            deckTracker.text = "";
+            //deckTracker.text = "";
+            drawPile.text = "Draw";
+            discardPile.text = "Discard";
             handContainer.transform.localPosition = new Vector3(10000, 10000, 0);
         }
 
