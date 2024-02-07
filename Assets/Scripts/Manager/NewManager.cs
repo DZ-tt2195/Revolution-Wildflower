@@ -163,8 +163,14 @@ public class NewManager : MonoBehaviour
         {
             for (int j = 0; j < listOfTiles.GetLength(1); j++)
             {
-                try{newGrid[i, j] = newGrid[i, j].Trim().Replace("\"", "").Replace("]","");}
-                catch (NullReferenceException){continue;}
+                try
+                {
+                    newGrid[i, j] = newGrid[i, j].Trim().Replace("\"", "").Replace("]","");
+                }
+                catch (NullReferenceException)
+                {
+                    continue;
+                }
 
                 if (newGrid[i,j] != "")
                 {
@@ -299,8 +305,14 @@ public class NewManager : MonoBehaviour
                             break;
                     }
 
-                    try{thisTileEntity.MoveTile(nextTile);}
-                    catch (NullReferenceException){continue;}
+                    try
+                    {
+                        thisTileEntity.MoveTile(nextTile);
+                    }
+                    catch (NullReferenceException)
+                    {
+                        continue;
+                    }
                 }
             }
         }
@@ -309,8 +321,14 @@ public class NewManager : MonoBehaviour
         {
             for (int j = 0; j < listOfTiles.GetLength(1); j++)
             {
-                try{FindAdjacent(listOfTiles[i, j]);}
-                catch (NullReferenceException){continue;}
+                try
+                {
+                    FindAdjacent(listOfTiles[i, j]);
+                }
+                catch (NullReferenceException)
+                {
+                    continue;
+                }
             }
         }
     }
@@ -362,11 +380,9 @@ public class NewManager : MonoBehaviour
     public void ChangeHealth(PlayerEntity player, int n) //if you want to subtract 3 health, type ChangeHealth(-3);
     {
         player.health += n;
-        if (player.health >= 4)
-            player.health = 4;
+        UpdateStats(player);
         if (player.health <= 0)
             GameOver($"{player.name} lost all their HP.", false);
-        UpdateStats(player);
     }
 
     public void SetMovement(PlayerEntity player, int n) //if you want to set movement to 2, type SetMovement(2);

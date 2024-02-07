@@ -204,6 +204,7 @@ public class GuardEntity : MovingEntity
 
     public override IEnumerator EndOfTurn()
     {
+        print("start of turn");
         if (stunned > 0)
         {
             stunned--;
@@ -217,18 +218,30 @@ public class GuardEntity : MovingEntity
             alertStatus = Alert.Patrol;
             CheckForPlayer();
             if (DistractionPoints.Count > 0)
+            {
+                print("End turn setting to persue");
                 alertStatus = Alert.Persue;
+            }
             if (alertStatus == Alert.Patrol)
+            {
+                print("starting Patrol");
                 yield return Patrol();
+            }
             else if (alertStatus == Alert.Attack)
+            {
+                print("Starting attack");
                 yield return Attack(CurrentTarget);
+            }
             else if (alertStatus == Alert.Persue)
+            {
                 if (DistractionPoints.Count > 0)
                 {
                     NewManager.instance.FindTile(DistractionPoints[DistractionPoints.Count - 1]).currentGuardTarget = true;
                 }
-            print("End of Turn persue");
+                print("End of Turn persue");
                 yield return persue();
+            }
+
         }
     }
 
@@ -254,7 +267,8 @@ public class GuardEntity : MovingEntity
         print(currentTile.gridPosition + "checking distraction");
         if (DistractionPoints.Count == 0)
         {
-            newAction();
+            print("False Distraction");
+            yield return (newAction());
             yield break;
         }
         if (currentTile.gridPosition == DistractionPoints[DistractionPoints.Count - 1])
@@ -288,6 +302,7 @@ public class GuardEntity : MovingEntity
             }
             else if (currentTile.gridPosition == DistractionPoints[DistractionPoints.Count - 1])
             {
+                print("restarting persuit");
                 yield return persue();
             }
         }
