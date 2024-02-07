@@ -21,7 +21,8 @@ public class DialogueTrigger : MonoBehaviour
     {
         if (!DialogueManager.GetInstance().dialogueIsPlaying)
         {
-            DialogueManager.GetInstance().EnterDialogueMode(inkJSON);
+            DialogueManager.GetInstance().StartStory(inkJSON);
+            DialogueManager.GetInstance().EnterDialogueMode();
         }
        
     }
