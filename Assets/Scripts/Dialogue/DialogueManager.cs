@@ -26,7 +26,7 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] AK.Wwise.Event textCrawlSound;
     [SerializeField] AK.Wwise.Event textboxStopSound;
 
-    private Story currentStory;
+    public Story currentStory;
 
     public bool dialogueIsPlaying { get; private set; }
 
@@ -40,7 +40,7 @@ public class DialogueManager : MonoBehaviour
     private const string PORTRAIT_TAG = "portrait";
     private const string LAYOUT_TAG  = "layout";
 
-    [HideInInspector] public DialogueVariables dialogueVariables;
+    [HideInInspector] public static DialogueVariables dialogueVariables;
    
     private void Awake()
     {
@@ -50,7 +50,10 @@ public class DialogueManager : MonoBehaviour
         }
         instance = this;
 
-        dialogueVariables = new DialogueVariables(loadGlobalsJSON);
+        if (dialogueVariables == null)
+        {
+            dialogueVariables = new DialogueVariables(loadGlobalsJSON);
+        }
     }
 
     public static DialogueManager GetInstance()
@@ -83,21 +86,24 @@ public class DialogueManager : MonoBehaviour
        }
     }
 
-
-    public void EnterDialogueMode(TextAsset inkJSON)
+    public void StartStory(TextAsset inkJSON)
     {
         currentStory = new Story(inkJSON.text);
+        dialogueVariables.StartListening(currentStory);
+    }
+    public void EnterDialogueMode()
+    {
+        dialogueVariables.VariablesToStory(currentStory);
         dialogueIsPlaying = true;
         dialoguePanel.SetActive(true);
-
-        dialogueVariables.StartListening(currentStory);
 
         // reset portrait, layout, and speaker
         displayNameText.text = "???";
         portraitAnimator.Play("default");
         layoutAnimator.Play("right");
 
-       ContinueStory();
+        ContinueStory();
+
     }
 
     private IEnumerator ExitDialogueMode()

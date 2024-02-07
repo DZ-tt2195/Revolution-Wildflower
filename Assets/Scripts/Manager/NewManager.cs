@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using TMPro;
 using MyBox;
 using UnityEngine.SceneManagement;
+using UnityEngine.Rendering.Universal;
 //using UnityEditor.U2D;
 //using Unity.VisualScripting;
 
@@ -54,9 +55,9 @@ public class NewManager : MonoBehaviour
         [Tooltip("Image section containing objective, actions, and debug popups")] Transform informationImage;
         [Tooltip("All the player's stats in text form")] TMP_Text stats;
         [Tooltip("Current player selected")] TMP_Text currentCharacter;
-        [Tooltip("Selected player's health")] TMP_Text health;
-        [Tooltip("Selected player's moves left")] TMP_Text moves;
-        [Tooltip("Selected player's energy")] TMP_Text energy;
+        [Tooltip("Selected player's health")] StatBar healthBar;
+        [Tooltip("Selected player's moves left")] StatBar movementBar;
+        [Tooltip("Selected player's energy")] StatBar energyBar;
         [Tooltip("Face of selected character")] Image characterFace;
         [Tooltip("Instructions for what the player is allowed to do right now")] TMP_Text instructions;
         [Tooltip("End the turn")] Button endTurnButton;
@@ -115,12 +116,13 @@ public class NewManager : MonoBehaviour
         instance = this;
 
         turnAlertBar.alpha = 0;
-        playerStats = GameObject.Find("Player Stats").transform;
-        currentCharacter = playerStats.GetChild(0).GetComponent<TMP_Text>();
-        health = playerStats.GetChild(1).GetComponent<TMP_Text>();
-        moves = playerStats.GetChild(2).GetComponent<TMP_Text>();
-        energy = playerStats.GetChild(3).GetComponent<TMP_Text>();
-        characterFace = playerStats.GetChild(4).GetComponentInChildren<Image>();
+
+        playerStats = GameObject.Find("SelectedPlayerStats").transform;
+        currentCharacter = playerStats.Find("PlayerName").GetComponent<TMP_Text>();
+        healthBar = playerStats.Find("Health").GetComponentInChildren<StatBar>();
+        movementBar = playerStats.Find("Movement").GetComponentInChildren<StatBar>();
+        energyBar = playerStats.Find("Energy").GetComponentInChildren<StatBar>();
+        characterFace = playerStats.Find("CharacterFace").GetComponent<Image>();
 
         facesSpritesheet = Resources.LoadAll<Sprite>("Sprites/portrait_spritesheet");
         emptyFace = Resources.Load<Sprite>("Sprites/characterSill");
@@ -144,6 +146,12 @@ public class NewManager : MonoBehaviour
     {
         if (turnCount <= 0)
             throw new Exception("Didn't set turn count in NewManager (has to be > 0");
+
+        //TO-DO: Set up some kind of basic system for passing the starting stat values at game start. -Noah
+        PlayerEntity defaultPlayer = playerPrefab.GetComponent<PlayerEntity>();
+        healthBar.SetMaximumValue(defaultPlayer.health);
+        movementBar.SetMaximumValue(defaultPlayer.movesPerTurn);
+        energyBar.SetMaximumValue(3);
 
         gameOverText = GameObject.Find("Game Over").transform.GetChild(0).GetComponent<TMP_Text>();
         gameOverText.transform.parent.gameObject.SetActive(false);
@@ -398,7 +406,67 @@ public class NewManager : MonoBehaviour
 
     public void UpdateStats(PlayerEntity player)
     {
-        int facesIndex = 0;
+        if (player == null)
+        {
+            stats.text = "";
+
+            currentCharacter.text = "";
+            characterFace.sprite = emptyFace;
+
+            healthBar.SetValue(0);
+            movementBar.SetValue(0);
+            energyBar.SetValue(0);
+
+            deckTracker.text = "";
+            handContainer.transform.localPosition = new Vector3(10000, 10000, 0);
+        }
+        
+        else
+        {
+            currentCharacter.text = $"{player.name}";
+            switch(player.name)
+            {
+                case "Frankie":
+                    characterFace.sprite = facesSpritesheet[0];
+                    break;
+                case "WK":
+                    characterFace.sprite = facesSpritesheet[1];
+                    break;
+                case "Gail":
+                    characterFace.sprite = facesSpritesheet[2];
+                    break;
+                default:
+                    characterFace.sprite = emptyFace;
+                    break;
+            }
+
+            healthBar.SetValue(player.health);
+            Debug.Log(player.health);
+            movementBar.SetValue(player.movementLeft);
+            Debug.Log(player.movementLeft);
+            energyBar.SetValue(player.myEnergy);
+
+            //  TO-DO: change this stuff so it isn't all text -Noah
+            deckTracker.text = $"<color=#70f5ff>Draw Pile <color=#ffffff>/ <color=#ff9670>Discard Pile " +
+            $"\n\n<color=#70f5ff>{player.myDrawPile.Count} <color=#ffffff>/ <color=#ff9670>{player.myDiscardPile.Count}" +
+            $"\n({player.myExhaust.Count} exhausted)";
+
+            if (player.myPosition * -2000 != handContainer.transform.localPosition.x)
+            {
+                player.MyTurn();
+                handContainer.transform.localPosition = new Vector3(player.myPosition * -2000, 0, 0);
+            }
+
+            stats.text += $"\n<color=#75ff59>{listOfObjectives.Count} Objectives Left" +
+            $"| {turnCount} Turns Left";
+
+            foreach (PlayerEntity nextPlayer in listOfPlayers)
+            {
+                nextPlayer.myBar.ChangeText($"{nextPlayer.myHand.Count} Cards; {nextPlayer.health} HP; \n{nextPlayer.movementLeft} Moves; {nextPlayer.myEnergy} Energy");
+            }
+        }
+
+        /*int facesIndex = 0;
 
         if (player != null)
         {
@@ -454,7 +522,7 @@ public class NewManager : MonoBehaviour
         foreach (PlayerEntity nextPlayer in listOfPlayers)
         {
             nextPlayer.myBar.ChangeText($"{nextPlayer.myHand.Count} Cards; {nextPlayer.health} HP; \n{nextPlayer.movementLeft} Moves; {nextPlayer.myEnergy} Energy");
-        }
+        }*/
     }
 
     public void UpdateInstructions(string instructions)
@@ -521,7 +589,8 @@ public class NewManager : MonoBehaviour
     {
         if (tile != null)
         {
-            Camera.main.transform.position = new Vector3(tile.transform.position.x, Camera.main.transform.position.y, tile.transform.position.z);
+            MoveCamera.Focus(tile.transform.position);
+            //Camera.main.transform.position = new Vector3(tile.transform.position.x, Camera.main.transform.position.y, tile.transform.position.z);
             if (moveMe)
                 StartCoroutine(ChooseMovePlayer(tile.myEntity.GetComponent<PlayerEntity>()));
         }
