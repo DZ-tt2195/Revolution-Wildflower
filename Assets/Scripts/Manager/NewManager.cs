@@ -440,12 +440,6 @@ public class NewManager : MonoBehaviour
                     break;
             }
 
-            healthBar.SetValue(player.health);
-            Debug.Log(player.health);
-            movementBar.SetValue(player.movementLeft);
-            Debug.Log(player.movementLeft);
-            energyBar.SetValue(player.myEnergy);
-
             //  TO-DO: change this stuff so it isn't all text -Noah
             deckTracker.text = $"<color=#70f5ff>Draw Pile <color=#ffffff>/ <color=#ff9670>Discard Pile " +
             $"\n\n<color=#70f5ff>{player.myDrawPile.Count} <color=#ffffff>/ <color=#ff9670>{player.myDiscardPile.Count}" +
@@ -457,13 +451,16 @@ public class NewManager : MonoBehaviour
                 handContainer.transform.localPosition = new Vector3(player.myPosition * -2000, 0, 0);
             }
 
-            stats.text += $"\n<color=#75ff59>{listOfObjectives.Count} Objectives Left" +
-            $"| {turnCount} Turns Left";
+            healthBar.SetValue(player.health);
+            movementBar.SetValue(player.movementLeft);
+            energyBar.SetValue(player.myEnergy);
+        }
 
-            foreach (PlayerEntity nextPlayer in listOfPlayers)
-            {
-                nextPlayer.myBar.ChangeText($"{nextPlayer.myHand.Count} Cards; {nextPlayer.health} HP; \n{nextPlayer.movementLeft} Moves; {nextPlayer.myEnergy} Energy");
-            }
+        stats.text = $"\n<color=#75ff59>{listOfObjectives.Count} Objectives Left" + $"| {turnCount} Turns Left";
+
+        foreach (PlayerEntity nextPlayer in listOfPlayers)
+        {
+            nextPlayer.myBar.ChangeText($"{nextPlayer.myHand.Count} Cards; {nextPlayer.health} HP; \n{nextPlayer.movementLeft} Moves; {nextPlayer.myEnergy} Energy");
         }
 
         /*int facesIndex = 0;
@@ -617,6 +614,8 @@ public class NewManager : MonoBehaviour
                     listOfTiles[i, j].clickable = false;
                     listOfTiles[i, j].moveable = false;
                     listOfTiles[i, j].choosable = false;
+                    listOfTiles[i, j].CardSelectable = false;
+                    listOfTiles[i, j].directionIndicator.enabled = false;
                 }
                 catch (NullReferenceException)
                 {
@@ -657,6 +656,20 @@ public class NewManager : MonoBehaviour
     }
 
     public void WaitForDecision(List<TileData> canBeChosen)
+    {
+        chosenTile = null;
+        chosenCard = null;
+        DisableAllTiles();
+
+        foreach (TileData tile in canBeChosen)
+        {
+            tile.CardSelectable = true;
+            tile.clickable = true;
+            tile.choosable = true;
+        }
+    }
+
+    public void WaitForDecisionMove(List<TileData> canBeChosen)
     {
         chosenTile = null;
         chosenCard = null;
@@ -826,7 +839,7 @@ public class NewManager : MonoBehaviour
         yield return Wait(0.2f);
 
         List<TileData> possibleTiles = CalculateReachableGrids(currentPlayer.currentTile, currentPlayer.movementLeft, true);
-        WaitForDecision(possibleTiles);
+        WaitForDecisionMove(possibleTiles);
 
         UpdateStats(currentPlayer);
         StartCoroutine(ChooseCardPlay(currentPlayer));
@@ -1010,6 +1023,7 @@ public class NewManager : MonoBehaviour
         {
             FocusOnTile(guard.currentTile, false);
             yield return (guard.EndOfTurn());
+            guard.movementLeft = guard.movesPerTurn;
         }
 
         turnCount--;

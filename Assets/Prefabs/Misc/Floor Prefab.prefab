@@ -175,7 +175,8 @@ MonoBehaviour:
   choosable: 0
   clickable: 0
   moveable: 0
-  distractionPoint: 0
+  currentGuardTarget: 0
+  CardSelectable: 0
   mask:
     serializedVersion: 2
     m_Bits: 59
@@ -183,8 +184,9 @@ MonoBehaviour:
   mouseOverColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   SelectedColor: {r: 0.6, g: 0.6, b: 0.6, a: 0}
   ClickableColor: {r: 0.9, g: 0.9, b: 0.9, a: 1}
-  MoveableColor: {r: 0.21273875, g: 0.6539132, b: 0.6698113, a: 1}
-  AlertColor: {r: 0.9019608, g: 0.4309494, b: 0.10196079, a: 1}
+  MoveableColor: {r: 0.8490566, g: 0.8220592, b: 0.2616589, a: 1}
+  AlertColor: {r: 0.9056604, g: 0.27640623, b: 0.065503664, a: 1}
+  CardSelectableColor: {r: 0.2064791, g: 0.8207547, b: 0.76090276, a: 1}
   AlertDelay: 0.1
   BaseAlertDelay: 0
 --- !u!212 &6299431183525030124

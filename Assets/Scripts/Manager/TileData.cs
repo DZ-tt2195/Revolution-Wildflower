@@ -21,6 +21,7 @@ public class TileData : MonoBehaviour
     [Tooltip("Defines whether you can click this tile")][ReadOnly] public bool clickable = false;
     [Tooltip("Defines whether you can move onto this tile")][ReadOnly] public bool moveable = false;
     [Tooltip("Defines whether you can move onto this tile")][ReadOnly] public bool currentGuardTarget = false;
+    [Tooltip("Defines whether you can select this tile for a card action")][ReadOnly] public bool CardSelectable = false;
     [Tooltip("If your mouse is over this")] private bool moused = false;
 
     [Foldout("Mouse", true)]
@@ -37,8 +38,9 @@ public class TileData : MonoBehaviour
         [Tooltip("color used for selected tiles")][SerializeField] Color SelectedColor = new Color(0.6f, 0.6f, 0.6f, 1);
         [Tooltip("color used for unselected moused over tiles (general)")][SerializeField] Color ClickableColor = new Color(0.9f, 0.9f, 0.9f, 1);
         [Tooltip("color used for unselected moused over tiles you can move onto")][SerializeField] Color MoveableColor = new Color(0.9f, 0.9f, 0.9f, 1);
-        [Tooltip("color used for unselected moused over tiles")] [SerializeField] Color AlertColor = new Color(0.9f, 0.7f, 0.1f, 1);
-        [Tooltip("Time for noise indecator to show")] [SerializeField] float AlertDelay = 0.2f;
+        [Tooltip("color used for guard's distraction target tiles")] [SerializeField] Color AlertColor = new Color(0.9f, 0.7f, 0.1f, 1);
+        [Tooltip("color used for unselected moused over tiles you can select for a card action")][SerializeField] Color CardSelectableColor = new Color(0.9f, 0.7f, 0.1f, 1);     
+    [   Tooltip("Time for noise indecator to show")] [SerializeField] float AlertDelay = 0.2f;
         [Tooltip("Base delay noise indecator")] [SerializeField] float BaseAlertDelay = 0.2f;
         [Tooltip("Variable indicating when tile should highlight for noise")][ReadOnly] bool noiseThrough = false;
 
@@ -77,6 +79,11 @@ public class TileData : MonoBehaviour
         else if (moveable)
         {
             border.color = MoveableColor;
+            border.SetAlpha(NewManager.instance.opacity);
+        }
+        else if (CardSelectable)
+        {
+            border.color = CardSelectableColor;
             border.SetAlpha(NewManager.instance.opacity);
         }
         else if (clickable)

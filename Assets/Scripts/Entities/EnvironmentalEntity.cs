@@ -14,37 +14,43 @@ public class EnvironmentalEntity : MovingEntity
 
     public override IEnumerator EndOfTurn()
     {
+        if (delay > 0)
+        {
+            yield return ResolveList("CONTINUOUS");
+        }
         delay--;
         if (delay == 0)
         {
-            Debug.Log(this.name + " went off");
-            yield return ResolveList();
+            yield return ResolveList("END");
             Destroy(this.gameObject);
         }
     }
 
-    #endregion
+#endregion
 
 #region Activation 
 
-    IEnumerator ResolveList()
+    IEnumerator ResolveList(string condition)
     {
         string divide = card.enviroEffect.Replace(" ", "");
         divide = divide.ToUpper().Trim();
         string[] methodsInStrings = divide.Split('/');
 
-        foreach (string nextMethod in methodsInStrings)
+        if (condition == methodsInStrings[0])
         {
-            NewManager.instance.DisableAllTiles();
-            NewManager.instance.DisableAllCards();
+            foreach (string nextMethod in methodsInStrings)
+            {
+                NewManager.instance.DisableAllTiles();
+                NewManager.instance.DisableAllCards();
 
-            if (nextMethod == "" || nextMethod == "NONE")
-            {
-                continue;
-            }
-            else
-            {
-                yield return ResolveMethod(nextMethod);
+                if (nextMethod == "" || nextMethod == "NONE" || nextMethod == condition)
+                {
+                    continue;
+                }
+                else
+                {
+                    yield return ResolveMethod(nextMethod);
+                }
             }
         }
     }
@@ -55,6 +61,9 @@ public class EnvironmentalEntity : MovingEntity
 
         switch (methodName)
         {
+            case "GUARDMOVEMENT":
+                yield return GuardMovement(FindGuardsInRange());
+                break;
             case "STUNALL":
                 yield return StunAll(FindEntitiesInRange());
                 break;
@@ -83,6 +92,21 @@ public class EnvironmentalEntity : MovingEntity
         return entitiesInRange;
     }
 
+    List<GuardEntity> FindGuardsInRange()
+    {
+        List<TileData> tilesInRange = NewManager.instance.CalculateReachableGrids(this.currentTile, card.areaOfEffect, false);
+        List<GuardEntity> entitiesInRange = new();
+
+        foreach (TileData tile in tilesInRange)
+        {
+            try { entitiesInRange.Add(tile.myEntity.GetComponent<GuardEntity>()); }
+            catch (NullReferenceException) { continue; }
+        }
+
+        entitiesInRange.RemoveAll(item => item == null);
+        return entitiesInRange;
+    }
+
     List<MovingEntity> FindEntitiesInRange()
     {
         List<TileData> tilesInRange = NewManager.instance.CalculateReachableGrids(this.currentTile, card.areaOfEffect, false);
@@ -94,11 +118,11 @@ public class EnvironmentalEntity : MovingEntity
             catch (NullReferenceException) { continue; }
         }
 
-        entitiesInRange.RemoveAll(item => item == null); //delete all tiles that are null
+        entitiesInRange.RemoveAll(item => item == null);
         return entitiesInRange;
     }
 
-    #endregion
+#endregion
 
 #region Effects 
 
@@ -123,6 +147,13 @@ public class EnvironmentalEntity : MovingEntity
         yield return null;
     }
 
-    #endregion
+    IEnumerator GuardMovement(List<GuardEntity> allGuards)
+    {
+        foreach (GuardEntity guard in allGuards)
+            yield return card.AffectGuardMovement(guard);
+        yield return null;
+    }
+
+#endregion
 
 }
