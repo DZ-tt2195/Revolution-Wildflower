@@ -1,14 +1,15 @@
 INCLUDE globals.ink
 
 {
-- current_objective == "real info" && current_player == "Gail":
-    -> Mis1_Obj1_Gail
+
+- current_objective == "real info" && current_player == "WK":
+    -> Mis1_Obj1_WK
 
 - current_objective == "real info" && current_player == "Frankie":
     -> Mis1_Obj1_Frankie
 
-- current_objective == "real info" && current_player == "WK":
-    -> Mis1_Obj1_WK
+- current_objective == "real info" && current_player == "Gail":
+        -> Mis1_Obj1_Gail
 
 - current_objective == "false lead" && current_player == "Gail":
     -> Mis1_Obj2_Gail
@@ -18,7 +19,7 @@ INCLUDE globals.ink
 
 - current_objective == "false lead" && current_player == "WK":
     -> Mis1_Obj2_WK
-    
+
 }
 
 === Mis1_Obj1_WK ===
@@ -33,7 +34,7 @@ Reorganization effort! There we go… seems to be encrypted, hopefully Clover ca
 === Mis1_Obj1_Frankie ===
 Finally! #speaker: Frankie #portrait: Frankie
 ...
-I can't open it. I realy hope I didn't break it. I'll save it for now so Clover can look over it. 
+I can't open it. I realy hope I didn't break it. I'll save it for now so Clover can look over it.
 
 -> DONE
 
@@ -46,9 +47,9 @@ Doesn't seem like the files we wanted but could be interesting to look in to.
 
 === Mis1_Obj2_Gail ===
 Not it. #speaker: Gail #portrait: Gail
-Wait, the file name is familiar. 
-I think my parents worked on this project. 
-I'll save it for now so we can look at it later 
+Wait, the file name is familiar.
+I think my parents worked on this project.
+I'll save it for now so we can look at it later
 
 -> DONE
 
