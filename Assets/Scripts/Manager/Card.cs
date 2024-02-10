@@ -934,21 +934,20 @@ public class Card : MonoBehaviour, IPointerClickHandler
     {
         foreach (PlayerEntity player in listOfPlayers)
         {
-            player.PlusCards(changeInDraw);
+            yield return DrawCards(player);
         }
-        yield return null;
     }
 
     internal IEnumerator DiscardHand(PlayerEntity player)
     {
         while (player.myHand.Count > 0)
         {
-            yield return NewManager.Wait(0.05f);
             StartCoroutine(player.DiscardFromHand(player.myHand[0]));
         }
+        yield return NewManager.Wait(PlayerPrefs.GetFloat("Animation Speed"));
     }
 
-#endregion
+    #endregion
 
 #region Interacts With Stats
 
