@@ -18,7 +18,7 @@
       "Delay #",
       "HP Walls",
       "Burn #",
-      "Intensity",
+      "Volume",
       "any extra condition needed to select a card",
       "the function to call when card is played",
       "the function to call when using the environmental",

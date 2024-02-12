@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEditor.Rendering;
+//using System.Linq;
+//using UnityEditor.Rendering;
 using UnityEngine;
-using UnityEngine.Windows;
-using static UnityEditor.Searcher.SearcherWindow.Alignment;
+//using UnityEngine.Windows;
+//using static UnityEditor.Searcher.SearcherWindow.Alignment; | <- you make me so angry
 using Input = UnityEngine.Input;
 
 public class MoveCamera : MonoBehaviour

@@ -18,7 +18,7 @@
       "Delay #",
       "HP Walls",
       "Burn #",
-      "Intensity",
+      "Volume",
       "any extra condition needed to select a card",
       "the function to call when card is played",
       "the function to call when using the environmental",
@@ -120,7 +120,7 @@
     ],
     [
       "Hammer",
-      "Deal 2 Damage to a wall that's up to 2 tiles away, Intensity 3.",
+      "Deal 2 Damage to a wall that's up to 2 tiles away, Volume 3.",
       "atk",
       "",
       "2",
@@ -143,7 +143,7 @@
     ],
     [
       "Stun",
-      "Stun 2 on a guard that's up to 2 tiles away, Intensity 8.",
+      "Stun 2 on a guard that's up to 2 tiles away, Volume 8.",
       "atk",
       "",
       "2",
@@ -166,7 +166,7 @@
     ],
     [
       "Brass Knuckles",
-      "Stun 5 on an adjacent guard, Intensity 8",
+      "Stun 5 on an adjacent guard, Volume 8",
       "atk",
       "",
       "2",
@@ -237,7 +237,7 @@
     ],
     [
       "Whistle",
-      "Create a distraction with Intensity 12 on your current location.",
+      "Create a distraction with Volume 12 on your current location.",
       "dist",
       "",
       "2",
@@ -260,7 +260,7 @@
     ],
     [
       "Thrown Bottle",
-      "Range 10. If the target tile is unoccupied, create a distraction (Intensity 8). If it is occupied by a guard, Stun 2 on that guard.",
+      "Range 10. If the target tile is unoccupied, create a distraction (Volume 8). If it is occupied by a guard, Stun 2 on that guard.",
       "dist",
       "atk",
       "2",
@@ -283,7 +283,7 @@
     ],
     [
       "Flashbang",
-      "Range 3, With Delay 1, Stun 1 to everyone within 3 tiles. Intensity 7",
+      "Range 3, With Delay 1, Stun 1 to everyone within 3 tiles. Volume 7",
       "atk",
       "",
       "2",
