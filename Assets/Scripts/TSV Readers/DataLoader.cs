@@ -30,7 +30,6 @@ public class CardData
     public int aoe;        //area of action effect
     public int delay;      //number of turns to delay
     public int wHP;        //change in wall HP
-    public int burn;       //amount to burn
     public int intn;       //distraction intensity
 
     public string select;  //any extra condition needed to select a tile
@@ -56,36 +55,44 @@ public class CardDataLoader
                 //Debug.Log(line[j]);
             }
 
-            CardData newCard = new CardData();
-            cardData.Add(newCard);
+            if (line.Length >= 20 && line[19].Trim() != "")
+            {
+                CardData newCard = new CardData();
+                cardData.Add(newCard);
 
-            newCard.name = line[0];
-            newCard.desc = line[1];
-            newCard.cat1 = line[2];
-            newCard.cat2 = line[3];
-            newCard.maxInv = StringToInt(line[4]);
-            newCard.epCost = StringToInt(line[5]);
-            newCard.isViolent = (line[6] == "v");
-            newCard.chHP = StringToInt(line[7]);
-            newCard.chMP = StringToInt(line[8]);
-            newCard.chEP = StringToInt(line[9]);
-            newCard.draw = StringToInt(line[10]);
-            newCard.chooseHand = StringToInt(line[11]);
-            newCard.stun = StringToInt(line[12]);
-            newCard.range = StringToInt(line[13]);
-            newCard.aoe = StringToInt(line[14]);
-            newCard.delay = StringToInt(line[15]);
-            newCard.wHP = StringToInt(line[16]);
-            newCard.burn = StringToInt(line[17]);
+                newCard.name = line[0];
+                newCard.desc = line[1];
+                newCard.cat1 = line[2];
+                newCard.cat2 = line[3];
 
-            try { newCard.intn = StringToInt(line[18]); }
-            catch (IndexOutOfRangeException) { Debug.Log(newCard.name); }
+                newCard.maxInv = StringToInt(line[4]);
+                newCard.epCost = StringToInt(line[5]);
+                newCard.isViolent = (line[6] == "v");
 
-            newCard.select = line[19];
-            newCard.action = line[20];
-            try { newCard.enviroaction = line[21]; } catch (IndexOutOfRangeException) { newCard.nextAct = ""; }
-            try { newCard.nextAct = line[22]; } catch (IndexOutOfRangeException) { newCard.nextAct = ""; }
+                newCard.chHP = StringToInt(line[7]);
+                newCard.chMP = StringToInt(line[8]);
+                newCard.chEP = StringToInt(line[9]);
+                newCard.draw = StringToInt(line[10]);
+                newCard.chooseHand = StringToInt(line[11]);
+                newCard.stun = StringToInt(line[12]);
+                newCard.range = StringToInt(line[13]);
+                newCard.aoe = StringToInt(line[14]);
+                newCard.delay = StringToInt(line[15]);
+                newCard.wHP = StringToInt(line[16]);
+
+                try { newCard.intn = StringToInt(line[17]); } catch (IndexOutOfRangeException) { Debug.Log(newCard.name); }
+
+                newCard.select = line[18];
+                newCard.action = line[19];
+                try { newCard.enviroaction = line[20]; } catch (IndexOutOfRangeException) { newCard.nextAct = ""; }
+                try { newCard.nextAct = line[21]; } catch (IndexOutOfRangeException) { newCard.nextAct = ""; }
+            }
+            else
+            {
+                //Debug.Log($"{line[0]} failed");
+            }
         }
+        Debug.Log(cardData.Count);
         return cardData;
     }
 

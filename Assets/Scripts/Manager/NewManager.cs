@@ -222,7 +222,7 @@ public class NewManager : MonoBehaviour
                             thisTileEntity.name = numberPlusAddition[1];
                             ObjectiveEntity defaultObjective = thisTileEntity.GetComponent<ObjectiveEntity>();
                             defaultObjective.objective = numberPlusAddition[2];
-                            defaultObjective.instructionsWhenCompleted = numberPlusAddition[3].ToUpper().Trim();
+                            try{defaultObjective.instructionsWhenCompleted = numberPlusAddition[3].ToUpper().Trim();}catch (IndexOutOfRangeException){/*do nothing*/}
                             listOfObjectives.Add(defaultObjective);
                             break;
 
@@ -972,7 +972,7 @@ public class NewManager : MonoBehaviour
 
         foreach (PlayerEntity player in listOfPlayers)
         {
-            SetEnergy(player, 3);
+            SetEnergy(player, 4);
             SetMovement(player, player.movesPerTurn);
             //player.PlusCards(5 - player.myHand.Count);
             player.cardsPlayed.Clear();

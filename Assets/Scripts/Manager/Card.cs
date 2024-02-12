@@ -47,7 +47,6 @@ public class Card : MonoBehaviour, IPointerClickHandler
         [ReadOnly] public int areaOfEffect { get; private set; }
         [ReadOnly] public int delay { get; private set; }
         [ReadOnly] public int changeInWall { get; private set; }
-        [ReadOnly] int burnDuration;
         [ReadOnly] int distractionIntensity;
 
         [ReadOnly] string selectCondition;
@@ -130,7 +129,6 @@ public class Card : MonoBehaviour, IPointerClickHandler
         delay = data.delay;
         changeInWall = data.wHP;
 
-        burnDuration = data.burn;
         distractionIntensity = data.intn;
 
         selectCondition = data.select;

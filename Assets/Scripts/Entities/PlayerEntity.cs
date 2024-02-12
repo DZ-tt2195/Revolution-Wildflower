@@ -86,7 +86,7 @@ public class PlayerEntity : MovingEntity
         }
 
         this.myDrawPile.Shuffle(); //shuffle your deck
-        this.PlusCards(5);
+        this.PlusCards(3);
     }
 
     public override string HoverBoxText()
