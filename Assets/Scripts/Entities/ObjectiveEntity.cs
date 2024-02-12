@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using MyBox;
+using TMPro;
 
 public class ObjectiveEntity : Entity
 {
     [Header("Ink JSON")]
     [SerializeField] private TextAsset inkJSON;
     [ReadOnly] public string objective;
+    [ReadOnly] public string instructionsWhenCompleted;
 
     public virtual bool CanInteract()
     {
@@ -25,7 +27,18 @@ public class ObjectiveEntity : Entity
             DialogueManager.dialogueVariables.globalVariablesStory.variablesState["current_player"] = player.name;
             DialogueManager.dialogueVariables.globalVariablesStory.variablesState["current_objective"] = objective;
             DialogueManager.GetInstance().EnterDialogueMode();
+        }
 
+        string[] pointList = instructionsWhenCompleted.Split('|');
+        foreach (string nextInstruction in pointList)
+        {
+            switch (nextInstruction)
+            {
+                case "ALLDRAW":
+                    foreach (PlayerEntity nextPlayer in NewManager.instance.listOfPlayers)
+                        nextPlayer.PlusCards(2);
+                    break;
+            }
         }
 
         NewManager.instance.listOfObjectives.Remove(this);
@@ -33,8 +46,7 @@ public class ObjectiveEntity : Entity
         currentTile.myEntity = null;
         player.adjacentObjective = null;
 
-        Destroy(this.gameObject);
         yield return null;
+        Destroy(this.gameObject);
     }
 }
-

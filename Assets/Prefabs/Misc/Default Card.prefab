@@ -272,6 +272,7 @@ GameObject:
   - component: {fileID: 5277886169616128097}
   - component: {fileID: 7937688880329316072}
   - component: {fileID: 2203845270279031739}
+  - component: {fileID: 7720712929365272483}
   m_Layer: 5
   m_Name: Description
   m_TagString: Untagged
@@ -326,11 +327,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '<sprite="Symbols" name="Health">
-
-    <sprite="Arrows" index=0>
-
-'
+  m_text: Hi
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 39a7efb7eb0b83547bd07f81adaea8e4, type: 2}
   m_sharedMaterial: {fileID: 9156730800055192786, guid: 39a7efb7eb0b83547bd07f81adaea8e4, type: 2}
@@ -399,6 +396,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &7720712929365272483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5811844082270886199}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd447db666c474fceaf9cfb6b4bdb9ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5933497273186232708
 GameObject:
   m_ObjectHideFlags: 0

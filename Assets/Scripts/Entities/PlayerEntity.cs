@@ -5,7 +5,6 @@ using MyBox;
 using System;
 using System.Linq;
 using TMPro;
-using System.Threading;
 
 public class PlayerEntity : MovingEntity
 {
@@ -35,7 +34,7 @@ public class PlayerEntity : MovingEntity
         [Tooltip("list of cards in hand")][ReadOnly] public List<Card> myHand;
         [Tooltip("list of cards in draw pile")][ReadOnly] public List<Card> myDrawPile;
         [Tooltip("list of cards in discard pile")][ReadOnly] public List<Card> myDiscardPile;
-        [Tooltip("list of cards that're exhausted")][ReadOnly] public List<Card> myExhaust;
+        //[Tooltip("list of cards that're exhausted")][ReadOnly] public List<Card> myExhaust;
         [Tooltip("list of cards played this turn")][ReadOnly] public List<Card> cardsPlayed;
         [Tooltip("list of cost reduction effects")][ReadOnly] public List<Card> costChange;
 
@@ -193,19 +192,23 @@ public class PlayerEntity : MovingEntity
     {
         for (int i = 0; i < num; i++)
         {
-            try
+            if (myHand.Count < 5)
             {
-                Card nextCard = GetTopCard();
-                nextCard.HideCard();
-                PutIntoHand(nextCard);
+                try
+                {
+                    Card nextCard = GetTopCard();
+                    nextCard.HideCard();
+                    PutIntoHand(nextCard);
+                }
+                catch (NullReferenceException) { break; }
             }
-            catch (NullReferenceException){break;}
         }
         SortHand();
     }
 
     internal Card GetTopCard()
     {
+        /*
         if (myDrawPile.Count == 0)
         {
             myDiscardPile.Shuffle();
@@ -215,7 +218,7 @@ public class PlayerEntity : MovingEntity
                 myDiscardPile.RemoveAt(0);
             }
         }
-
+        */
         if (myDrawPile.Count > 0) //get the top card of the deck if there is one
         {
             Card card = myDrawPile[0];
@@ -256,6 +259,7 @@ public class PlayerEntity : MovingEntity
         }
     }
 
+    /*
     internal IEnumerator ExhaustFromHand(Card exhaustMe)
     {
         myHand.Remove(exhaustMe);
@@ -272,6 +276,7 @@ public class PlayerEntity : MovingEntity
         myExhaust.Add(exhaustMe);
         exhaustMe.transform.SetParent(null);
     }
+    */
 
     internal IEnumerator PlayCard(Card playMe, bool payEnergy)
     {

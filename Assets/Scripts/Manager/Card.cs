@@ -6,6 +6,7 @@ using TMPro;
 using MyBox;
 using UnityEngine.EventSystems;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 public class Card : MonoBehaviour, IPointerClickHandler
 {
@@ -185,7 +186,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
     string BoldKeyword(string cardText, string keyword, string color)
     {
         MatchCollection matches = Regex.Matches(cardText, keyword);
-        foreach (Match match in matches)
+        foreach (Match match in matches.Cast<Match>())
         {
             string replacement = $"<color=#{color}><b>{match.Value}</b><color=#000000>";
             cardText = cardText.Replace(match.Value, replacement);
@@ -509,9 +510,9 @@ public class Card : MonoBehaviour, IPointerClickHandler
                 case "CHOOSEDISCARD":
                     yield return ChooseDiscard(currentPlayer);
                     break;
-                case "CHOOSEEXHAUST":
+                /*case "CHOOSEEXHAUST":
                     yield return ChooseExhaust(currentPlayer);
-                    break;
+                    break;*/
                 case "DISCARDHAND":
                     yield return DiscardHand(currentPlayer);
                     break;
@@ -885,6 +886,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         }
     }
 
+    /*
     internal IEnumerator ChooseExhaust(PlayerEntity player)
     {
         for (int i = 0; i < chooseHand; i++)
@@ -919,6 +921,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
             NewManager.instance.UpdateStats(currentPlayer);
         }
     }
+    */
 
 #endregion
 

@@ -156,6 +156,9 @@ public class SaveManager : MonoBehaviour
 
         GameSettings.instance.transform.SetParent(canvas);
         GameSettings.instance.transform.localPosition = new Vector3(0, 0);
+
+        KeywordTooltip.instance.transform.SetParent(canvas);
+        KeywordTooltip.instance.transform.localPosition = new Vector3(0, 0);
     }
 
     public void UnloadObjects()
@@ -163,6 +166,7 @@ public class SaveManager : MonoBehaviour
         Preserve(RightClick.instance.gameObject);
         Preserve(FPS.instance.gameObject);
         Preserve(GameSettings.instance.gameObject);
+        Preserve(KeywordTooltip.instance.gameObject);
         allCards.Clear();
     }
 
