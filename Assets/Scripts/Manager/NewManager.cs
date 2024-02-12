@@ -58,13 +58,12 @@ public class NewManager : MonoBehaviour
         [Tooltip("Selected player's health")] StatBar healthBar;
         [Tooltip("Selected player's moves left")] StatBar movementBar;
         [Tooltip("Selected player's energy")] StatBar energyBar;
-        [Tooltip("Face of selected character")] Image characterFace;
+        [Tooltip("Face of selected character")] Image selected_characterFace;
         /*
         // for player stats without bars
         [Tooltip("Selected player's health")] TMP_Text health;
         [Tooltip("Selected player's moves left")] TMP_Text moves;
         [Tooltip("Selected player's energy")] TMP_Text energy;
-        [Tooltip("Face of selected character")] Image selected_characterFace;
         */
         [Tooltip("Instructions for what the player is allowed to do right now")] TMP_Text instructions;
         [Tooltip("End the turn")] Button endTurnButton;
@@ -127,18 +126,18 @@ public class NewManager : MonoBehaviour
 
         turnAlertBar.alpha = 0;
 
-        playerStats = GameObject.Find("SelectedPlayerStats").transform;
-        currentCharacter = playerStats.Find("PlayerName").GetComponent<TMP_Text>();
-        healthBar = playerStats.Find("Health").GetComponentInChildren<StatBar>();
-        movementBar = playerStats.Find("Movement").GetComponentInChildren<StatBar>();
-        energyBar = playerStats.Find("Energy").GetComponentInChildren<StatBar>();
-        characterFace = playerStats.Find("CharacterFace").GetComponent<Image>();
+        selectedPlayerInfo = GameObject.Find("SelectedPlayer_Stats").transform;
+        currentCharacter = selectedPlayerInfo.Find("PlayerName").GetComponent<TMP_Text>();
+        healthBar = selectedPlayerInfo.Find("Health").GetComponentInChildren<StatBar>();
+        movementBar = selectedPlayerInfo.Find("Movement").GetComponentInChildren<StatBar>();
+        energyBar = selectedPlayerInfo.Find("Energy").GetComponentInChildren<StatBar>();
+        selected_characterFace = selectedPlayerInfo.Find("selected_characterFace").GetComponent<Image>();
 
         /*
         // finding game objects with children
         selectedPlayerInfo = GameObject.Find("SelectedPlayer_Stats").transform;
         currentCharacter = selectedPlayerInfo.GetChild(0).GetComponent<TMP_Text>();
-        selected_characterFace = selectedPlayerInfo.GetChild(1).GetComponentInChildren<Image>();
+        selected_selected_characterFace = selectedPlayerInfo.GetChild(1).GetComponentInChildren<Image>();
         energy = selectedPlayerInfo.GetChild(2).GetChild(0).GetChild(0).GetComponent<TMP_Text>();
         energy = selectedPlayerInfo.GetChild(2).GetChild(0).GetChild(0).GetComponent<TMP_Text>();
         moves = selectedPlayerInfo.GetChild(2).GetChild(1).GetChild(0).GetComponent<TMP_Text>();
@@ -434,13 +433,15 @@ public class NewManager : MonoBehaviour
             stats.text = "";
 
             currentCharacter.text = "";
-            characterFace.sprite = emptyFace;
+            selected_characterFace.sprite = emptyFace;
 
             healthBar.SetValue(0);
             movementBar.SetValue(0);
             energyBar.SetValue(0);
 
             deckTracker.text = "";
+            drawPile.text = "Draw";
+            discardPile.text = "Discard";
             handContainer.transform.localPosition = new Vector3(10000, 10000, 0);
         }
         
@@ -450,16 +451,16 @@ public class NewManager : MonoBehaviour
             switch(player.name)
             {
                 case "Frankie":
-                    characterFace.sprite = facesSpritesheet[0];
+                    selected_characterFace.sprite = facesSpritesheet[0];
                     break;
                 case "WK":
-                    characterFace.sprite = facesSpritesheet[1];
+                    selected_characterFace.sprite = facesSpritesheet[1];
                     break;
                 case "Gail":
-                    characterFace.sprite = facesSpritesheet[2];
+                    selected_characterFace.sprite = facesSpritesheet[2];
                     break;
                 default:
-                    characterFace.sprite = emptyFace;
+                    selected_characterFace.sprite = emptyFace;
                     break;
             }
 
@@ -467,6 +468,10 @@ public class NewManager : MonoBehaviour
             deckTracker.text = $"<color=#70f5ff>Draw Pile <color=#ffffff>/ <color=#ff9670>Discard Pile " +
             $"\n\n<color=#70f5ff>{player.myDrawPile.Count} <color=#ffffff>/ <color=#ff9670>{player.myDiscardPile.Count}" +
             $"\n({player.myExhaust.Count} exhausted)";
+
+            // idk why the words arent coming up
+            drawPile.text = "Draw" + $"\n\n{player.myDrawPile.Count}";
+            discardPile.text = "Discard" + $"\n\n{player.myDiscardPile.Count}";
 
             if (player.myPosition * -2000 != handContainer.transform.localPosition.x)
             {
@@ -511,7 +516,7 @@ public class NewManager : MonoBehaviour
             {
                 facesIndex = 1;
             }
-            selected_characterFace.sprite = facesSpritesheet[facesIndex];
+            selected_selected_characterFace.sprite = facesSpritesheet[facesIndex];
             
             deckTracker.text = $"<color=#70f5ff>Draw Pile <color=#ffffff>/ <color=#ff9670>Discard Pile " +
                 $"\n\n<color=#70f5ff>{player.myDrawPile.Count} <color=#ffffff>/ <color=#ff9670>{player.myDiscardPile.Count}" +
@@ -534,14 +539,14 @@ public class NewManager : MonoBehaviour
             health.text = "Health:";
             moves.text = "Moves:";
             energy.text = "Energy:";
-            selected_characterFace.sprite = emptyFace;
+            selected_selected_characterFace.sprite = emptyFace;
 
             //deckTracker.text = "";
             drawPile.text = "Draw";
             discardPile.text = "Discard";
             handContainer.transform.localPosition = new Vector3(10000, 10000, 0);
         }
-
+/*
         stats.text += $"\n<color=#75ff59>{listOfObjectives.Count} Objectives Left" +
             $"| {turnCount} Turns Left";
 
@@ -566,7 +571,6 @@ public class NewManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
             GameOver("You quit.", false);
-        Debug.Log(health);
     }
 
     private void FixedUpdate()

@@ -238,7 +238,7 @@ GameObject:
   - component: {fileID: 4303758282959630239}
   - component: {fileID: 3885226276459662513}
   m_Layer: 5
-  m_Name: SelectedPlayerStats
+  m_Name: PlayerStatsWithBars
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
