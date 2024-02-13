@@ -414,21 +414,13 @@ public class NewManager : MonoBehaviour
         else
         {
             currentCharacter.text = $"{player.name}";
-            switch(player.name)
+            characterFace.sprite = player.name switch
             {
-                case "Frankie":
-                    characterFace.sprite = facesSpritesheet[0];
-                    break;
-                case "WK":
-                    characterFace.sprite = facesSpritesheet[1];
-                    break;
-                case "Gail":
-                    characterFace.sprite = facesSpritesheet[2];
-                    break;
-                default:
-                    characterFace.sprite = emptyFace;
-                    break;
-            }
+                "Frankie" => facesSpritesheet[0],
+                "WK" => facesSpritesheet[1],
+                "Gail" => facesSpritesheet[2],
+                _ => emptyFace,
+            };
 
             //  TO-DO: change this stuff so it isn't all text -Noah
             deckTracker.text = $"<color=#70f5ff>Draw Pile <color=#ffffff>/ <color=#ff9670>Discard Pile " +
@@ -523,6 +515,7 @@ public class NewManager : MonoBehaviour
     private void Update()
     {
         endTurnButton.gameObject.SetActive(currentTurn == TurnSystem.You);
+        spendToDrawButton.gameObject.SetActive(currentTurn == TurnSystem.You);
 
         if (Input.GetKeyDown(KeyCode.Escape))
             GameOver("You quit.", false);
@@ -530,10 +523,7 @@ public class NewManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (decrease)
-            opacity -= 0.05f;
-        else
-            opacity += 0.05f;
+        opacity += (decrease) ? 0.05f : -0.05f;
         if (opacity < 0 || opacity > 1)
             decrease = !decrease;
     }
@@ -676,7 +666,7 @@ public class NewManager : MonoBehaviour
     {
         if (PlayerPrefs.GetInt("Confirm Choices") == 1)
         {
-            Debug.LogError($"confirm decision");
+            //Debug.LogError($"confirm decision");
             DisableAllCards();
             DisableAllTiles();
 

@@ -243,7 +243,9 @@ public class Card : MonoBehaviour, IPointerClickHandler
     {
         return nextMethod switch
         {
-            "ISPLAYER" => SearchAdjacentPlayers(currentPlayer.currentTile).Count > 0,
+            "INDISCARD" => (currentPlayer.myDiscardPile.Count > 0),
+            "ISPLAYER" => SearchAdjacentPlayers(currentPlayer.currentTile, true).Count > 0,
+            "ISDIFFERENTPLAYER" => SearchAdjacentPlayers(currentPlayer.currentTile, false).Count > 0,
             "ISGUARD" => SearchAdjacentGuard(currentPlayer.currentTile).Count > 0,
             "ISWALL" => SearchAdjacentWall(currentPlayer.currentTile).Count > 0,
             "ISUNOCCUPIED" => UnoccupiedAdjacent(currentPlayer.currentTile).Count > 0,
@@ -294,7 +296,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     }
 
-    List<TileData> SearchAdjacentPlayers(TileData playerTile)
+    List<TileData> SearchAdjacentPlayers(TileData playerTile, bool includeSelf)
     {
         List<TileData> tilesInRange = NewManager.instance.CalculateReachableGrids(playerTile, range, false);
         List<TileData> playersInRange = new();
@@ -302,8 +304,14 @@ public class Card : MonoBehaviour, IPointerClickHandler
         foreach (TileData tile in tilesInRange)
         {
             if (tile.myEntity != null && tile.myEntity.CompareTag("Player"))
+            {
+                Debug.Log(tile.myEntity.name);
                 playersInRange.Add(tile);
+            }
         }
+
+        if (!includeSelf)
+            playersInRange.Remove(currentPlayer.currentTile);
 
         adjacentTilesWithPlayers = playersInRange;
         return playersInRange;
@@ -501,6 +509,9 @@ public class Card : MonoBehaviour, IPointerClickHandler
                 case "DRAWCARDS":
                     yield return DrawCards(currentPlayer);
                     break;
+                case "PICKUPCARD":
+                    yield return PickupCard(currentPlayer);
+                    break;
                 case "ALLDRAWCARDS":
                     yield return AllDrawCards(NewManager.instance.listOfPlayers);
                     break;
@@ -508,9 +519,14 @@ public class Card : MonoBehaviour, IPointerClickHandler
                 case "CHOOSEDISCARD":
                     yield return ChooseDiscard(currentPlayer);
                     break;
+                case "PASSTOPLAYER":
+                    yield return ChoosePlayer();
+                    yield return PassCard(currentPlayer, adjacentTilesWithPlayers[0].myEntity.GetComponent<PlayerEntity>());
+                    currentTarget = currentPlayer.currentTile;
+                    break;
                 /*case "CHOOSEEXHAUST":
-                    yield return ChooseExhaust(currentPlayer);
-                    break;*/
+                               yield return ChooseExhaust(currentPlayer);
+                               break;*/
                 case "DISCARDHAND":
                     yield return DiscardHand(currentPlayer);
                     break;
@@ -521,7 +537,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
                 case "CHANGEADJACENTHP":
                     yield return ChoosePlayer();
                     PlayerEntity player = adjacentTilesWithPlayers[0].myEntity.GetComponent<PlayerEntity>();
-                    currentTarget = player.currentTile;
+                    currentTarget = currentPlayer.currentTile;
                     yield return ChangeHealth(player);
                     break;
 
@@ -550,7 +566,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
                     yield return ChangeCost(currentPlayer);
                     break;
                 case "CHANGECOSTTWOPLUS":
-                    yield return ChangeCostTwoPlus(currentPlayer);
+                    yield return ChangeCostTwoPlus();
                     break;
 
                 case "STUNADJACENTGUARD":
@@ -649,7 +665,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
                 if (decision == 1)
                 {
-                    StartCoroutine(ChooseGuard());
+                    yield return (ChooseGuard());
                     yield break;
                 }
             }
@@ -680,7 +696,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
                 if (decision == 1)
                 {
-                    StartCoroutine(ChoosePlayer());
+                    yield return (ChoosePlayer());
                     yield break;
                 }
             }
@@ -710,7 +726,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
                 if (decision == 1)
                 {
-                    StartCoroutine(ChooseWall());
+                    yield return (ChooseWall());
                     yield break;
                 }
             }
@@ -773,7 +789,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
             if (decision == 1)
             {
-                StartCoroutine(ChooseTileLOS());
+                yield return (ChooseTileLOS());
                 yield break;
             }
         }
@@ -800,7 +816,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
             if (decision == 1)
             {
-                StartCoroutine(ChooseTile());
+                yield return (ChooseTile());
                 yield break;
             }
         }
@@ -884,6 +900,42 @@ public class Card : MonoBehaviour, IPointerClickHandler
         }
     }
 
+    internal IEnumerator PassCard(PlayerEntity thisPlayer, PlayerEntity otherPlayer)
+    {
+        for (int i = 0; i < chooseHand; i++)
+        {
+            NewManager.instance.UpdateInstructions($"Give {otherPlayer.name} a card from your hand.");
+            if (thisPlayer.myHand.Count >= 2)
+            {
+                NewManager.instance.WaitForDecision(thisPlayer.myHand);
+                while (NewManager.instance.chosenCard == null)
+                    yield return null;
+
+                Collector confirmDecision = NewManager.instance.ConfirmDecision($"Pass {NewManager.instance.chosenCard.name}?", new Vector2(0, -85));
+                if (confirmDecision != null)
+                {
+                    yield return confirmDecision.WaitForChoice();
+                    int decision = confirmDecision.chosenButton;
+                    Destroy(confirmDecision.gameObject);
+
+                    if (decision == 1)
+                    {
+                        i--;
+                        continue;
+                    }
+                }
+
+                otherPlayer.PlusCards(NewManager.instance.chosenCard);
+            }
+            else if (thisPlayer.myHand.Count == 1)
+            {
+                otherPlayer.PlusCards(thisPlayer.myHand[0]);
+            }
+            thisPlayer.SortHand();
+            NewManager.instance.UpdateStats(currentPlayer);
+        }
+    }
+
     /*
     internal IEnumerator ChooseExhaust(PlayerEntity player)
     {
@@ -931,6 +983,12 @@ public class Card : MonoBehaviour, IPointerClickHandler
         yield return null;
     }
 
+    internal IEnumerator PickupCard(PlayerEntity player)
+    {
+        player.PlusCards(player.myDiscardPile[^2]);
+        yield return null;
+    }
+
     internal IEnumerator AllDrawCards(List<PlayerEntity> listOfPlayers)
     {
         foreach (PlayerEntity player in listOfPlayers)
@@ -948,7 +1006,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         yield return NewManager.Wait(PlayerPrefs.GetFloat("Animation Speed"));
     }
 
-    #endregion
+#endregion
 
 #region Interacts With Stats
 
@@ -958,10 +1016,11 @@ public class Card : MonoBehaviour, IPointerClickHandler
         yield return null;
     }
 
-    internal IEnumerator ChangeCostTwoPlus(PlayerEntity player)
+    internal IEnumerator ChangeCostTwoPlus()
     {
         costChangeCondition = "COSTS 2+";
-        yield return ChangeCost(player);
+        foreach (PlayerEntity player in NewManager.instance.listOfPlayers)
+            yield return ChangeCost(player);
     }
 
     internal IEnumerator ChangeHealth(PlayerEntity player)

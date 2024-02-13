@@ -244,11 +244,25 @@
     ],
     [
       "Hand-off",
-      "Place one card from your hand into the hand of an adjacent character.",
+      "Pass a card from your hand to an adjacent player.",
       "draw",
       "",
       "1",
-      "0"
+      "0",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "1",
+      "",
+      "1",
+      "",
+      "",
+      "",
+      "",
+      "IsDifferentPlayer/CardsInHand",
+      "PassToPlayer"
     ],
     [
       "Emergency Fund",
@@ -308,7 +322,21 @@
       "draw",
       "",
       "1",
-      "0"
+      "0",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "InDiscard",
+      "PickupCard"
     ],
     [
       "Overexert",
@@ -383,7 +411,9 @@
       "",
       "",
       "",
-      "0"
+      "0",
+      "",
+      "ChangeCostTwoPlus"
     ],
     [
       "Infinite Energy",

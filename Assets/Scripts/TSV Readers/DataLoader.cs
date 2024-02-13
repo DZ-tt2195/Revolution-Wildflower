@@ -92,7 +92,6 @@ public class CardDataLoader
                 //Debug.Log($"{line[0]} failed");
             }
         }
-        Debug.Log(cardData.Count);
         return cardData;
     }
 

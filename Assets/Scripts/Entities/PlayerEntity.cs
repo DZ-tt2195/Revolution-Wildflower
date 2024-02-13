@@ -170,7 +170,7 @@ public class PlayerEntity : MovingEntity
 
 #region Card Stuff
 
-    void SortHand()
+    public void SortHand()
     {
         myHand = myHand.OrderBy(o => o.energyCost).ToList();
 
@@ -186,6 +186,14 @@ public class PlayerEntity : MovingEntity
 
         foreach (Card card in myHand)
             StartCoroutine(card.RevealCard(PlayerPrefs.GetFloat("Animation Speed")));
+    }
+
+    internal void PlusCards(Card card)
+    {
+        card.transform.SetParent(this.transform);
+        card.HideCard();
+        PutIntoHand(card);
+        SortHand();
     }
 
     internal void PlusCards(int num)
