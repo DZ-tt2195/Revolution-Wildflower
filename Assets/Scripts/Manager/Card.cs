@@ -29,6 +29,17 @@ public class Card : MonoBehaviour, IPointerClickHandler
         public TMP_Text textCost;
         public TMP_Text textDescr;
 
+    [Foldout("Card Presentation", true)]
+        public Color AttackColor = Color.red;
+        public Color DrawColor = Color.green;
+        public Color DistractionColor = Color.blue;
+        public Color EnergyColor = Color.cyan;
+        public Color MovementColor = Color.yellow;
+        public Color MiscColor = Color.gray;
+        public Color FallbackColor = Color.white;
+        private Material material;
+        private MaterialPropertyBlock materialPropertyBlock;
+
     [Foldout("Card stats", true)]
         [ReadOnly] public int energyCost;
         public enum CardType { Attack, Draw, Distraction, Energy, Movement, Misc, None };
@@ -75,7 +86,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
     private void Awake()
     {
         image = GetComponent<Image>();
-        border = this.transform.GetChild(0).GetComponent<Image>();
+        border = transform.GetChild(0).GetComponent<Image>();
         button = this.GetComponent<Button>();
         button.onClick.AddListener(SendMe);
     }
@@ -102,7 +113,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         typeOne = ConvertToType(data.cat1);
         typeTwo = ConvertToType(data.cat2);
 
-        image.color = typeOne switch
+        Color topColor = typeOne switch
         {
             CardType.Attack => Color.red,
             CardType.Draw => Color.green,
@@ -112,6 +123,22 @@ public class Card : MonoBehaviour, IPointerClickHandler
             CardType.Misc => Color.gray,
             _ => Color.black,
         };
+
+        Color bottomColor = typeTwo switch
+        {
+            CardType.Attack => Color.red,
+            CardType.Draw => Color.green,
+            CardType.Distraction => Color.blue,
+            CardType.Energy => Color.cyan,
+            CardType.Movement => Color.yellow,
+            CardType.Misc => Color.gray,
+            _ => topColor,
+        };
+
+        Material mat = new Material(image.material);
+        mat.SetColor("_GradientColorTop", topColor);
+        mat.SetColor("_GradientColorBottom", bottomColor);
+        image.material = mat;
 
         energyCost = data.epCost;
         textCost.text = $"{data.epCost}";
@@ -354,56 +381,58 @@ public class Card : MonoBehaviour, IPointerClickHandler
     public void HideCard()
     {
         image.sprite = cardBack;
-        canvasgroup.alpha = 0;
+        //canvasgroup.alpha = 0;
     }
 
     public IEnumerator RevealCard(float totalTime)
     {
-        if (image.sprite != cardFront)
+        image.sprite = cardFront;
+        yield return null;
+        /*if (image.sprite != cardFront)
         {
             transform.localEulerAngles = new Vector3(0, 0, 0);
             float elapsedTime = 0f;
 
-            Vector3 originalRot = this.transform.localEulerAngles;
+            Vector3 originalRot = transform.localEulerAngles;
             Vector3 newRot = new(0, 90, 0);
 
             while (elapsedTime < totalTime)
             {
-                this.transform.localEulerAngles = Vector3.Lerp(originalRot, newRot, elapsedTime / totalTime);
+                transform.localEulerAngles = Vector3.Lerp(originalRot, newRot, elapsedTime / totalTime);
                 elapsedTime += Time.deltaTime;
                 yield return null;
             }
 
             image.sprite = cardFront;
-            canvasgroup.alpha = 1;
+            //canvasgroup.alpha = 1;
             elapsedTime = 0f;
 
             while (elapsedTime < totalTime)
             {
-                this.transform.localEulerAngles = Vector3.Lerp(newRot, originalRot, elapsedTime / totalTime);
+                transform.localEulerAngles = Vector3.Lerp(newRot, originalRot, elapsedTime / totalTime);
                 elapsedTime += Time.deltaTime;
                 yield return null;
             }
 
-            this.transform.localEulerAngles = originalRot;
-        }
+            transform.localEulerAngles = originalRot;
+        }*/
     }
 
-    public IEnumerator MoveCard(Vector2 newPos, Vector2 finalPos, Vector3 newRot, float waitTime)
+    public IEnumerator MoveCard(Vector3 newPos, Vector3 finalPos, Vector3 newRot, float waitTime)
     {
         float elapsedTime = 0;
-        Vector2 originalPos = this.transform.localPosition;
-        Vector3 originalRot = this.transform.localEulerAngles;
+        Vector3 originalPos = transform.localPosition;
+        Vector3 originalRot = transform.localEulerAngles;
 
         while (elapsedTime < waitTime)
         {
-            this.transform.localPosition = Vector2.Lerp(originalPos, newPos, elapsedTime / waitTime);
-            this.transform.localEulerAngles = Vector3.Lerp(originalRot, newRot, elapsedTime / waitTime);
+            transform.localPosition = Vector3.Lerp(originalPos, newPos, elapsedTime / waitTime);
+            transform.localEulerAngles = Vector3.Lerp(originalRot, newRot, elapsedTime / waitTime);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
-        this.transform.localPosition = finalPos;
+        transform.localPosition = finalPos;
     }
 
     public void EnableCard()
