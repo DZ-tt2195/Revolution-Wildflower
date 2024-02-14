@@ -207,7 +207,7 @@ public class GuardEntity : MovingEntity
         print("start of turn");
         if (stunned > 0)
         {
-            stunned--;
+            stunChange(-1);
             CurrentTarget = null;
         }
         else

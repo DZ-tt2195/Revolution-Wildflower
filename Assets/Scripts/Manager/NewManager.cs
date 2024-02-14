@@ -1025,7 +1025,7 @@ public class NewManager : MonoBehaviour
         foreach (PlayerEntity player in listOfPlayers)
         {
             if (player.stunned > 0)
-                player.stunned--;
+                player.stunChange(-1);
         }
 
         foreach (EnvironmentalEntity environment in listOfEnvironmentals)

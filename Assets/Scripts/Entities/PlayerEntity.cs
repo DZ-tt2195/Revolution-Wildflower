@@ -6,6 +6,7 @@ using System;
 using System.Linq;
 using TMPro;
 using System.Threading;
+using Unity.VisualScripting;
 
 public class PlayerEntity : MovingEntity
 {
@@ -100,6 +101,18 @@ public class PlayerEntity : MovingEntity
 
     public IEnumerator MovePlayer(List<TileData> path)
     {
+        //UNCLEAN FIX FOR OVERLAPPING PLAYERS
+        bool pathOccupied = false;
+        foreach (TileData tile in path)
+        {
+            if (tile.myEntity != null)
+            {
+                pathOccupied = true;
+            }
+        }
+        if (pathOccupied) yield break;
+
+
         foreach(TileData tile in path)
         {
             yield return NewManager.Wait(moveDelay);

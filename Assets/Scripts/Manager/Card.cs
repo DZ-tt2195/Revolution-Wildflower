@@ -1068,7 +1068,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         yield return null;
         //guard.stunSound.Post(guard.gameObject);
         //guard.DetectionRangePatrol = 0;
-        player.stunned += stunDuration;
+        player.stunChange(stunDuration);
         //guard.CalculateTiles();
         //currentTarget = guard.currentTile;
     }
