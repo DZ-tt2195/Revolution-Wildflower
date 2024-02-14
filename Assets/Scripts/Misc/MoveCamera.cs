@@ -25,7 +25,7 @@ public class MoveCamera : MonoBehaviour
 
     [Header("Zooming")]
     [SerializeField]
-    private static float zoomSpeed = 100;
+    private static float zoomSpeed = 500;
     [SerializeField]
     private static float zoomMin = 15;
     [SerializeField]
@@ -105,9 +105,25 @@ public class MoveCamera : MonoBehaviour
         float scrollInput = Input.GetAxis("Mouse ScrollWheel");
         if (scrollInput != 0)
         {
+            Vector3 newPosition = new Vector3();
+            if (instance.camera.orthographicSize > zoomMin && instance.camera.orthographicSize < zoomMax)
+            {
+                if (scrollInput > 0)
+                {
+                    newPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                }
+
+                else
+                {
+                    newPosition = new Vector3(NewManager.instance.listOfTiles.GetLength(0) * -2, 0, NewManager.instance.listOfTiles.GetLength(1) * -2);
+                }
+
+                instance.transform.position = Vector3.Lerp(instance.transform.position, new Vector3(newPosition.x, 0, newPosition.z), Time.deltaTime * 3);
+            }
+
             foreach (Camera camera in cameras)
             {
-                camera.orthographicSize = Mathf.Clamp(camera.orthographicSize + (scrollInput * zoomSpeed * Time.deltaTime), zoomMin, zoomMax);
+                camera.orthographicSize = Mathf.Clamp(camera.orthographicSize + (-scrollInput * zoomSpeed * Time.deltaTime), zoomMin, zoomMax);
             }
         }
     }

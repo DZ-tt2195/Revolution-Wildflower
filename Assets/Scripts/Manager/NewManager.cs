@@ -128,9 +128,9 @@ public class NewManager : MonoBehaviour
 
         selectedPlayerInfo = GameObject.Find("SelectedPlayer_Stats").transform;
         currentCharacter = selectedPlayerInfo.Find("PlayerName").GetComponent<TMP_Text>();
-        healthBar = selectedPlayerInfo.Find("PlayerStats").Find("Health").GetComponentInChildren<StatBar>();
-        movementBar = selectedPlayerInfo.Find("PlayerStats").Find("Moves").GetComponentInChildren<StatBar>();
-        energyBar = selectedPlayerInfo.Find("PlayerStats").Find("Energy").GetComponentInChildren<StatBar>();
+        healthBar = selectedPlayerInfo.Find("Health").GetComponentInChildren<StatBar>();
+        movementBar = selectedPlayerInfo.Find("Movement").GetComponentInChildren<StatBar>();
+        energyBar = selectedPlayerInfo.Find("Energy").GetComponentInChildren<StatBar>();
         selected_characterFace = selectedPlayerInfo.Find("CharacterFace").GetComponent<Image>();
 
         /*
