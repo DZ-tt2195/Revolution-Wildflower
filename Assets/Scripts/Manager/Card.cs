@@ -579,6 +579,9 @@ public class Card : MonoBehaviour, IPointerClickHandler
                 case "CHANGEEP":
                     yield return ChangeEnergy(currentPlayer);
                     break;
+                case "MAXENERGY":
+                    yield return MaxEnergy(currentPlayer);
+                    break;
                 case "ZEROENERGY":
                     yield return ZeroEnergy(currentPlayer);
                     break;
@@ -592,6 +595,9 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
                 case "CHANGEMP":
                     yield return ChangeMovement(currentPlayer);
+                    break;
+                case "MAXMOVEMENT":
+                    yield return MaxMovement(currentPlayer);
                     break;
                 case "ZEROMOVEMENT":
                     yield return ZeroMovement(currentPlayer);
@@ -1095,6 +1101,13 @@ public class Card : MonoBehaviour, IPointerClickHandler
         yield return null;
     }
 
+    internal IEnumerator MaxEnergy(PlayerEntity player)
+    {
+        player.maxEnergy += changeInEP;
+        NewManager.instance.UpdateStats(player);
+        yield return null;
+    }
+
     internal IEnumerator ZeroEnergy(PlayerEntity player)
     {
         NewManager.instance.SetEnergy(player, 0);
@@ -1104,6 +1117,13 @@ public class Card : MonoBehaviour, IPointerClickHandler
     internal IEnumerator ChangeMovement(PlayerEntity player)
     {
         NewManager.instance.ChangeMovement(player, changeInMP);
+        yield return null;
+    }
+
+    internal IEnumerator MaxMovement(PlayerEntity player)
+    {
+        player.movesPerTurn += changeInMP;
+        NewManager.instance.UpdateStats(player);
         yield return null;
     }
 

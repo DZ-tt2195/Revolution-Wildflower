@@ -120,10 +120,10 @@ public class NewManager : MonoBehaviour
         playerStats = GameObject.Find("SelectedPlayer_Stats").transform;
         currentCharacter = playerStats.Find("PlayerName").GetComponent<TMP_Text>();
 
-        healthBar = playerStats.GetChild(2).Find("Health").GetComponentInChildren<StatBar>();
-        movementBar = playerStats.GetChild(2).Find("Moves").GetComponentInChildren<StatBar>();
-        energyBar = playerStats.GetChild(2).Find("Energy").GetComponentInChildren<StatBar>();
-        characterFace = playerStats.Find("CharacterFace").GetComponent<Image>();
+        healthBar = playerStats.Find("Health").GetComponentInChildren<StatBar>();
+        movementBar = playerStats.Find("Movement").GetComponentInChildren<StatBar>();
+        energyBar = playerStats.Find("Energy").GetComponentInChildren<StatBar>();
+        characterFace = playerStats.Find("selected_characterFace").GetComponent<Image>();
 
         facesSpritesheet = Resources.LoadAll<Sprite>("Sprites/portrait_spritesheet");
         emptyFace = Resources.Load<Sprite>("Sprites/characterSill");
@@ -159,7 +159,7 @@ public class NewManager : MonoBehaviour
         PlayerEntity defaultPlayer = playerPrefab;
         healthBar.SetMaximumValue(defaultPlayer.health);
         movementBar.SetMaximumValue(defaultPlayer.movesPerTurn);
-        energyBar.SetMaximumValue(5);
+        energyBar.SetMaximumValue(defaultPlayer.maxEnergy);
 
         gameOverText = GameObject.Find("Game Over").transform.GetChild(0).GetComponent<TMP_Text>();
         gameOverText.transform.parent.gameObject.SetActive(false);
@@ -367,7 +367,8 @@ public class NewManager : MonoBehaviour
 
     public void ChangeEnergy(PlayerEntity player, int n) //if you want to subtract 3 energy, type ChangeEnergy(-3);
     {
-        player.myEnergy += n;
+        //player.myEnergy += n;
+        player.myEnergy = Math.Clamp(player.myEnergy + n, 0, player.maxEnergy);
         UpdateStats(player);
     }
 
@@ -378,7 +379,9 @@ public class NewManager : MonoBehaviour
 
     public void ChangeHealth(PlayerEntity player, int n) //if you want to subtract 3 health, type ChangeHealth(-3);
     {
-        player.health += n;
+        //player.health += n;
+        player.myEnergy = Math.Clamp(player.health + n, 0, 3);
+
         UpdateStats(player);
         if (player.health <= 0)
             GameOver($"{player.name} lost all their HP.", false);
@@ -391,7 +394,7 @@ public class NewManager : MonoBehaviour
 
     public void ChangeMovement(PlayerEntity player, int n) //if you want to subtract 3 movement, type ChangeMovement(-3);
     {
-        player.movementLeft += n;
+        player.movementLeft = Math.Clamp(player.health + n, 0, player.movesPerTurn);
         UpdateStats(player);
     }
 
@@ -516,7 +519,8 @@ public class NewManager : MonoBehaviour
     private void Update()
     {
         endTurnButton.gameObject.SetActive(currentTurn == TurnSystem.You);
-        spendToDrawButton.gameObject.SetActive(currentTurn == TurnSystem.You && lastSelectedPlayer != null);
+        if (currentTurn != TurnSystem.You)
+            spendToDrawButton.gameObject.SetActive(false);
 
         if (Input.GetKeyDown(KeyCode.Escape))
             GameOver("You quit.", false);
