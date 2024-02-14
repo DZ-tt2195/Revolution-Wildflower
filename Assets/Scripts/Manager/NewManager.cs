@@ -134,8 +134,7 @@ public class NewManager : MonoBehaviour
         selected_characterFace = selectedPlayerInfo.Find("selected_characterFace").GetComponent<Image>();
 
         /*
-        // finding game objects with children
-        selectedPlayerInfo = GameObject.Find("SelectedPlayer_Stats").transform;
+        // finding game objects with children in case game gets too slow
         currentCharacter = selectedPlayerInfo.GetChild(0).GetComponent<TMP_Text>();
         selected_selected_characterFace = selectedPlayerInfo.GetChild(1).GetComponentInChildren<Image>();
         energy = selectedPlayerInfo.GetChild(2).GetChild(0).GetChild(0).GetComponent<TMP_Text>();
