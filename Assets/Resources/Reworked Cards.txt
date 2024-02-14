@@ -521,15 +521,29 @@
     ],
     [
       "Looking for a Fight",
-      "Find the first Attack type card in your deck. If there are no cards of this type left, draw a card.",
+      "Find the first Attack type card in your deck. If you can't, +1 Card",
       "draw",
       "",
       "1",
-      "1"
+      "1",
+      "",
+      "",
+      "",
+      "",
+      "1",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "FindAttack"
     ],
     [
       "Sync",
-      "Find the first card with the same EP cost as ____? in your deck. If there are no cards of that EP cost left, draw a card.",
+      "Find the first card with the same EP cost as ____? in your deck. If you can't, +1 Card.",
       "draw",
       "",
       "1",
@@ -537,11 +551,25 @@
     ],
     [
       "Trackstar",
-      "Find the first Movement type card in your deck. If there are no cards of this type left, regain EP cost and discard this card.",
+      "Find the first Movement type card in your deck. If you can't, +1 Card.",
       "draw",
       "",
       "1",
-      "1"
+      "1",
+      "",
+      "",
+      "",
+      "",
+      "1",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "FindMovement"
     ]
   ]
 }

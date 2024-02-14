@@ -55,6 +55,7 @@ MonoBehaviour:
   chosenCard: {fileID: 0}
   selectedTile: {fileID: 0}
   CurrentAvailableMoveTarget: {fileID: 0}
+  FullPath: []
   confirmationCollector: {fileID: 7928303491963949573, guid: 0ce383b7ea8ca488c810cadf3b089e7e, type: 3}
   ManagerHazardBox: {fileID: 0}
   turnFadeSpeed: 0.05
@@ -78,13 +79,14 @@ MonoBehaviour:
   togglePrefab: {fileID: 3963698012422812062, guid: 2dab8cd78bfe849379ed2eaa4bf76ddc, type: 3}
   exitPrefab: {fileID: -7563352408502380383, guid: 118fc5b90705644c59316bccbf8dfa3b, type: 3}
   environmentPrefab: {fileID: 3367193512638715697, guid: 8725941e61b5240d9a7bf521fdb08eea, type: 3}
-  turnCount: 30
+  turnCount: 10
   levelToLoad: 0
   opacity: 1
   decrease: 1
   lastSelectedPlayer: {fileID: 0}
   currentTurn: 0
   futureEffects: []
+  violentCards: 0
   buttonSound:
     idInternal: 0
     valueGuidInternal: 

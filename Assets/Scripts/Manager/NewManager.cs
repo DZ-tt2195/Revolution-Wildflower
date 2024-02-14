@@ -115,14 +115,14 @@ public class NewManager : MonoBehaviour
     void Awake()
     {
         instance = this;
-
         turnAlertBar.alpha = 0;
 
-        playerStats = GameObject.Find("SelectedPlayerStats").transform;
+        playerStats = GameObject.Find("SelectedPlayer_Stats").transform;
         currentCharacter = playerStats.Find("PlayerName").GetComponent<TMP_Text>();
-        healthBar = playerStats.Find("Health").GetComponentInChildren<StatBar>();
-        movementBar = playerStats.Find("Movement").GetComponentInChildren<StatBar>();
-        energyBar = playerStats.Find("Energy").GetComponentInChildren<StatBar>();
+
+        healthBar = playerStats.GetChild(2).Find("Health").GetComponentInChildren<StatBar>();
+        movementBar = playerStats.GetChild(2).Find("Moves").GetComponentInChildren<StatBar>();
+        energyBar = playerStats.GetChild(2).Find("Energy").GetComponentInChildren<StatBar>();
         characterFace = playerStats.Find("CharacterFace").GetComponent<Image>();
 
         facesSpritesheet = Resources.LoadAll<Sprite>("Sprites/portrait_spritesheet");
@@ -156,10 +156,10 @@ public class NewManager : MonoBehaviour
             throw new Exception("Didn't set turn count in NewManager (has to be > 0");
 
         //TO-DO: Set up some kind of basic system for passing the starting stat values at game start. -Noah
-        PlayerEntity defaultPlayer = playerPrefab.GetComponent<PlayerEntity>();
+        PlayerEntity defaultPlayer = playerPrefab;
         healthBar.SetMaximumValue(defaultPlayer.health);
         movementBar.SetMaximumValue(defaultPlayer.movesPerTurn);
-        energyBar.SetMaximumValue(3);
+        energyBar.SetMaximumValue(5);
 
         gameOverText = GameObject.Find("Game Over").transform.GetChild(0).GetComponent<TMP_Text>();
         gameOverText.transform.parent.gameObject.SetActive(false);
@@ -202,7 +202,8 @@ public class NewManager : MonoBehaviour
                             PlayerEntity player = thisTileEntity.GetComponent<PlayerEntity>();
                             player.myPosition = listOfPlayers.Count;
                             player.myBar = playerBars.GetChild(listOfPlayers.Count).GetComponent<PlayerBar>();
-                            SetEnergy(player, 3);
+                            SetEnergy(player, player.maxEnergy);
+                            SetMovement(player, player.movesPerTurn);
                             listOfPlayers.Add(player);
                             player.PlayerSetup(numberPlusAddition[1], handContainer.GetChild(player.myPosition).GetChild(0));
                             break;
@@ -433,8 +434,8 @@ public class NewManager : MonoBehaviour
             }
 
             healthBar.SetValue(player.health);
-            movementBar.SetValue(player.movementLeft);
-            energyBar.SetValue(player.myEnergy);
+            movementBar.SetValue(player.movementLeft); movementBar.SetMaximumValue(player.movesPerTurn);
+            energyBar.SetValue(player.myEnergy); energyBar.SetMaximumValue(player.maxEnergy);
         }
 
         stats.text = $"\n<color=#75ff59>{listOfObjectives.Count} Objectives Left" + $"| {turnCount} Turns Left";
@@ -515,7 +516,7 @@ public class NewManager : MonoBehaviour
     private void Update()
     {
         endTurnButton.gameObject.SetActive(currentTurn == TurnSystem.You);
-        spendToDrawButton.gameObject.SetActive(currentTurn == TurnSystem.You);
+        spendToDrawButton.gameObject.SetActive(currentTurn == TurnSystem.You && lastSelectedPlayer != null);
 
         if (Input.GetKeyDown(KeyCode.Escape))
             GameOver("You quit.", false);
@@ -962,7 +963,7 @@ public class NewManager : MonoBehaviour
 
         foreach (PlayerEntity player in listOfPlayers)
         {
-            SetEnergy(player, 4);
+            SetEnergy(player, player.maxEnergy);
             SetMovement(player, player.movesPerTurn);
             //player.PlusCards(5 - player.myHand.Count);
             player.cardsPlayed.Clear();

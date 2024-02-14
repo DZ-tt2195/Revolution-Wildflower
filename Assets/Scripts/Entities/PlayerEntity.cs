@@ -14,11 +14,13 @@ public class PlayerEntity : MovingEntity
     [Foldout("Player Entity", true)]
         [Tooltip("The bar on screen")] [ReadOnly] public PlayerBar myBar;
         [Tooltip("Where this player's located in the list")] [ReadOnly] public int myPosition;
-        [Tooltip("turns where you can't be caught")] [ReadOnly] public int health = 3;
+        [Tooltip("amount of health before dying")] [ReadOnly] public int health = 3;
         [Tooltip("turns where you can't be caught")] [ReadOnly] public int hidden = 0;
-        //[Tooltip("normal player appearance")] [SerializeField] Material DefaultPlayerMaterial;
-        //[Tooltip("appearance when hidden")] [SerializeField] Material HiddenPlayerMaterial;
-        [Tooltip("adjacent objective")] [ReadOnly] public ObjectiveEntity adjacentObjective;
+        [Tooltip("highest energy you can have")][ReadOnly] public int maxEnergy = 5;
+
+    //[Tooltip("normal player appearance")] [SerializeField] Material DefaultPlayerMaterial;
+    //[Tooltip("appearance when hidden")] [SerializeField] Material HiddenPlayerMaterial;
+    [Tooltip("adjacent objective")] [ReadOnly] public ObjectiveEntity adjacentObjective;
         //[Tooltip("delay inbetween each movement")][SerializeField] public float moveDelay = 0.75f;
 
     [Foldout("Sprites", true)]
@@ -179,7 +181,7 @@ public class PlayerEntity : MovingEntity
             Card nextCard = myHand[i];
             float startingX = (myHand.Count-1)*-50;
             float difference = 100;
-            Vector3 newPosition = new(startingX + difference * i, -485, 0);
+            Vector2 newPosition = new(startingX + difference * i, -485);
             nextCard.transform.SetSiblingIndex(i);
             StartCoroutine(nextCard.MoveCard(newPosition, newPosition, Vector3.zero, PlayerPrefs.GetFloat("Animation Speed")));
         }
@@ -192,6 +194,8 @@ public class PlayerEntity : MovingEntity
     {
         card.transform.SetParent(this.transform);
         card.HideCard();
+        myDrawPile.Remove(card);
+        myDiscardPile.Remove(card);
         PutIntoHand(card);
         SortHand();
     }

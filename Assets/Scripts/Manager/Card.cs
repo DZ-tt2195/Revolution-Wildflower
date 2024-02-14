@@ -544,6 +544,12 @@ public class Card : MonoBehaviour, IPointerClickHandler
                 case "ALLDRAWCARDS":
                     yield return AllDrawCards(NewManager.instance.listOfPlayers);
                     break;
+                case "FINDATTACK":
+                    yield return FindCard(currentPlayer, CardType.Attack);
+                    break;
+                case "FINDMOVEMENT":
+                    yield return FindCard(currentPlayer, CardType.Movement);
+                    break;
 
                 case "CHOOSEDISCARD":
                     yield return ChooseDiscard(currentPlayer);
@@ -1035,7 +1041,32 @@ public class Card : MonoBehaviour, IPointerClickHandler
         yield return NewManager.Wait(PlayerPrefs.GetFloat("Animation Speed"));
     }
 
-#endregion
+    internal IEnumerator FindCard(PlayerEntity player, CardType targetType)
+    {
+        yield return null;
+        List<Card> shuffledBack = new();
+        Card foundCard = null;
+        foreach (Card card in player.myDrawPile)
+        {
+            if (card.typeOne == targetType || card.typeTwo == targetType)
+            {
+                foundCard = card;
+                break;
+            }
+            else
+            {
+                shuffledBack.Add(card);
+            }
+        }
+
+        if (foundCard == null)
+            player.PlusCards(changeInDraw);
+        else
+            player.PlusCards(foundCard);
+        player.myDrawPile.Shuffle();
+    }
+
+    #endregion
 
 #region Interacts With Stats
 
