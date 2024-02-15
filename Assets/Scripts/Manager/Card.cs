@@ -100,7 +100,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
     {
         if (eventData.button == PointerEventData.InputButton.Right)
         {
-            RightClick.instance.ChangeCard(this);
+            CardDisplay.instance.ChangeCard(this);
             cardMove.Post(gameObject);
         }
     }
@@ -113,31 +113,9 @@ public class Card : MonoBehaviour, IPointerClickHandler
         typeOne = ConvertToType(data.cat1);
         typeTwo = ConvertToType(data.cat2);
 
-        Color topColor = typeOne switch
-        {
-            CardType.Attack => Color.red,
-            CardType.Draw => Color.green,
-            CardType.Distraction => Color.blue,
-            CardType.Energy => Color.cyan,
-            CardType.Movement => Color.yellow,
-            CardType.Misc => Color.gray,
-            _ => Color.black,
-        };
-
-        Color bottomColor = typeTwo switch
-        {
-            CardType.Attack => Color.red,
-            CardType.Draw => Color.green,
-            CardType.Distraction => Color.blue,
-            CardType.Energy => Color.cyan,
-            CardType.Movement => Color.yellow,
-            CardType.Misc => Color.gray,
-            _ => topColor,
-        };
-
         Material mat = new Material(image.material);
-        mat.SetColor("_GradientColorTop", topColor);
-        mat.SetColor("_GradientColorBottom", bottomColor);
+        mat.SetColor("_GradientColorTop", ConvertToColor(typeOne));
+        mat.SetColor("_GradientColorBottom", ConvertToColor(typeTwo));
         image.material = mat;
 
         energyCost = data.epCost;
@@ -176,6 +154,21 @@ public class Card : MonoBehaviour, IPointerClickHandler
             "mvmt" => CardType.Movement,
             "misc" => CardType.Misc,
             _ => CardType.None,
+        };
+    }
+
+    public Color ConvertToColor(CardType cardType)
+    {
+        return cardType switch
+        {
+            CardType.Attack => Color.red,
+            CardType.Draw => Color.green,
+            CardType.Distraction => Color.blue,
+            CardType.Energy => Color.cyan,
+            CardType.Movement => Color.yellow,
+            CardType.Misc => Color.gray,
+            CardType.None => ConvertToColor(typeOne),
+            _ => Color.black,
         };
     }
 

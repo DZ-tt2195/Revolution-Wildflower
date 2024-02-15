@@ -46,7 +46,7 @@ public class TurnManager : MonoBehaviour
         gameOverText.transform.parent.gameObject.SetActive(false);
 
         //since the right click script is under dontdestroyonload, we have to bring it back to the canvas
-        RightClick.instance.transform.SetParent(this.transform.parent);
+        CardDisplay.instance.transform.SetParent(this.transform.parent);
 
         for (int i = 0; i < SaveManager.instance.allCards.Count; i++)
         {

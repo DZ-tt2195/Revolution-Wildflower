@@ -817,7 +817,6 @@ public class NewManager : MonoBehaviour
 
     public void BackToStart(bool startTurn)
     {
-        Debug.Log("backtostart");
         if (listOfPlayers.Count > 0)
         {
             currentTurn = TurnSystem.You;

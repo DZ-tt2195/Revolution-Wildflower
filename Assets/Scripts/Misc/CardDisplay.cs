@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
-public class RightClick : MonoBehaviour
+public class CardDisplay : MonoBehaviour
 {
-    public static RightClick instance;
+    public static CardDisplay instance;
     [SerializeField] Image bigImage;
     [SerializeField] TMP_Text cardName;
     [SerializeField] TMP_Text cardCost;
@@ -40,5 +41,10 @@ public class RightClick : MonoBehaviour
         this.cardName.text = newCard.textName.text;
         this.cardCost.text = newCard.textCost.text;
         this.cardDescr.text = newCard.textDescr.text;
+
+        Material mat = new Material(bigImage.material);
+        mat.SetColor("_GradientColorTop", newCard.ConvertToColor(newCard.typeOne));
+        mat.SetColor("_GradientColorBottom", newCard.ConvertToColor(newCard.typeTwo));
+        bigImage.material = mat;
     }
 }

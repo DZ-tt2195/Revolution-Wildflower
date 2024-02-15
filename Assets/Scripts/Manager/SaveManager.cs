@@ -148,8 +148,8 @@ public class SaveManager : MonoBehaviour
     {
         canvas = GameObject.Find("Canvas").transform;
 
-        RightClick.instance.transform.SetParent(canvas);
-        RightClick.instance.transform.localPosition = new Vector3(0, 0);
+        CardDisplay.instance.transform.SetParent(canvas);
+        CardDisplay.instance.transform.localPosition = new Vector3(0, 0);
 
         FPS.instance.transform.SetParent(canvas);
         FPS.instance.transform.localPosition = new Vector3(-850, -500);
@@ -160,7 +160,7 @@ public class SaveManager : MonoBehaviour
 
     public void UnloadObjects()
     {
-        Preserve(RightClick.instance.gameObject);
+        Preserve(CardDisplay.instance.gameObject);
         Preserve(FPS.instance.gameObject);
         Preserve(GameSettings.instance.gameObject);
         allCards.Clear();
