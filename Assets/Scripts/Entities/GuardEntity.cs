@@ -7,7 +7,7 @@ using Unity.VisualScripting;
 
 public class GuardEntity : MovingEntity
 {
-    enum Alert { Patrol, Attack, Persue };
+    public enum Alert { Patrol, Attack, Persue };
 
     [Foldout("Guard Entity",true)]
     [Header("Attacking")]
@@ -22,11 +22,11 @@ public class GuardEntity : MovingEntity
         [Tooltip("How far this can see")] [SerializeField] public int DetectionRangePatrol = 3;
         int DetectionRangeMax = 3;
         [Tooltip("half their field of view for detection (MUST BE A MULTIPLE OF 5)")] [SerializeField] int DetectionAngle = 30;
-        [Tooltip("State of a guard's alert")] Alert alertStatus = 0;
+        [Tooltip("State of a guard's alert")] public Alert alertStatus;
 
     [Header("Patrol")]
         [Tooltip("list of patrol positions")] public List<Vector2Int> PatrolPoints = new List<Vector2Int>();
-        [Tooltip("current patrol target")] private int PatrolTarget = 0;
+        [Tooltip("current patrol target")] public int PatrolTarget = 1;
 
 
     [Header("Distraction")]
@@ -52,6 +52,8 @@ public class GuardEntity : MovingEntity
     {
         AttackLine = GetComponent<LineRenderer>();
         DetectionRangeMax = DetectionRangePatrol;
+        alertStatus = Alert.Patrol;
+        PatrolTarget = 1;
     }
 
     public override string HoverBoxText()

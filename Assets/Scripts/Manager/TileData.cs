@@ -184,6 +184,40 @@ public class TileData : MonoBehaviour
                 NewManager.instance.toolTip.EntityInfo.text = myEntity.HoverBoxText();
                 NewManager.instance.toolTip.gameObject.SetActive(true);
                 NewManager.instance.toolTip.isActive = true;
+                
+                //if the tile entity is a guard, show their path to their current target
+                if (myEntity.CompareTag("Enemy"))
+                {
+                    for (int i = 0; i < NewManager.instance.FullPath.Count; i++)
+                    {
+                        NewManager.instance.FullPath[i].directionIndicator.enabled = false;
+                    }
+                    GuardEntity currentGuard = myEntity.gameObject.GetComponent<GuardEntity>();
+                    if (currentGuard.alertStatus == GuardEntity.Alert.Patrol)
+                    {
+                        NewManager.instance.CalculatePathfinding(this, NewManager.instance.listOfTiles[currentGuard.PatrolPoints[currentGuard.PatrolTarget].x, currentGuard.PatrolPoints[currentGuard.PatrolTarget].y],99,false,false);
+                        for (int i = 0; i < NewManager.instance.FullPath.Count; i++)
+                        {
+                            NewManager.instance.FullPath[i].directionIndicator.enabled = true;
+                        }
+                    }
+                    else if (currentGuard.alertStatus == GuardEntity.Alert.Attack)
+                    {
+                        NewManager.instance.CalculatePathfinding(this, currentGuard.CurrentTarget.currentTile, 99, false, false);
+                        for (int i = 0; i < NewManager.instance.FullPath.Count; i++)
+                        {
+                            NewManager.instance.FullPath[i].directionIndicator.enabled = true;
+                        }
+                    }
+                    else if (currentGuard.alertStatus == GuardEntity.Alert.Persue)
+                    {
+                        NewManager.instance.CalculatePathfinding(this, NewManager.instance.listOfTiles[currentGuard.DistractionPoints[0].x,currentGuard.DistractionPoints[0].y], 99, false, false);
+                        for (int i = 0; i < NewManager.instance.FullPath.Count; i++)
+                        {
+                            NewManager.instance.FullPath[i].directionIndicator.enabled = true;
+                        }
+                    }
+                }
             }
         }
     }
@@ -207,7 +241,17 @@ public class TileData : MonoBehaviour
         
         if (!moused)
         {
-            toolTipHoverTimer = 0;
+            if (toolTipHoverTimer > 0)
+            {
+                toolTipHoverTimer = 0;
+                for (int i = 0; i < NewManager.instance.FullPath.Count; i++)
+                {
+                    NewManager.instance.FullPath[i].directionIndicator.enabled = false;
+                }
+
+            }
+
+
         }
     }
 }
