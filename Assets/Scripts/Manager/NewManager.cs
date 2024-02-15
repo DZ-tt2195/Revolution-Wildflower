@@ -59,12 +59,7 @@ public class NewManager : MonoBehaviour
         [Tooltip("Selected player's moves left")] StatBar movementBar;
         [Tooltip("Selected player's energy")] StatBar energyBar;
         [Tooltip("Face of selected character")] Image selected_characterFace;
-        /*
-        // for player stats without bars
-        [Tooltip("Selected player's health")] TMP_Text health;
-        [Tooltip("Selected player's moves left")] TMP_Text moves;
-        [Tooltip("Selected player's energy")] TMP_Text energy;
-        */
+
         [Tooltip("Instructions for what the player is allowed to do right now")] TMP_Text instructions;
         [Tooltip("End the turn")] Button endTurnButton;
         [Tooltip("End turn button's image")] Image endTurnImage;
@@ -126,6 +121,7 @@ public class NewManager : MonoBehaviour
 
         turnAlertBar.alpha = 0;
 
+        //  Finding and assigning character info, including the current characters' name, stats, and portrait.
         selectedPlayerInfo = GameObject.Find("SelectedPlayer_Stats").transform;
         currentCharacter = selectedPlayerInfo.Find("PlayerName").GetComponent<TMP_Text>();
         healthBar = selectedPlayerInfo.Find("Health").GetComponentInChildren<StatBar>();
@@ -133,25 +129,20 @@ public class NewManager : MonoBehaviour
         energyBar = selectedPlayerInfo.Find("Energy").GetComponentInChildren<StatBar>();
         selected_characterFace = selectedPlayerInfo.Find("CharacterFace").GetComponent<Image>();
 
-        /*
-        // finding game objects with children in case game gets too slow
-        currentCharacter = selectedPlayerInfo.GetChild(0).GetComponent<TMP_Text>();
-        selected_selected_characterFace = selectedPlayerInfo.GetChild(1).GetComponentInChildren<Image>();
-        energy = selectedPlayerInfo.GetChild(2).GetChild(0).GetChild(0).GetComponent<TMP_Text>();
-        energy = selectedPlayerInfo.GetChild(2).GetChild(0).GetChild(0).GetComponent<TMP_Text>();
-        moves = selectedPlayerInfo.GetChild(2).GetChild(1).GetChild(0).GetComponent<TMP_Text>();
-        health = selectedPlayerInfo.GetChild(2).GetChild(2).GetChild(0).GetComponent<TMP_Text>();*/
-
+        //  Loading sprite resources for character portrait. 
         facesSpritesheet = Resources.LoadAll<Sprite>("Sprites/portrait_spritesheet");
         emptyFace = Resources.Load<Sprite>("Sprites/noCharacter");
 
-        informationImage = GameObject.Find("Information Image").transform;
-        stats = informationImage.GetChild(0).GetComponent<TMP_Text>();
-        instructions = informationImage.GetChild(1).GetComponent<TMP_Text>();
-        deckTracker = GameObject.Find("Deck Tracker").GetComponent<TMP_Text>();
-        pilesTracker = GameObject.Find("Draw&Discard").transform;
-        drawPile = pilesTracker.GetChild(0).GetChild(0).GetComponent<TMP_Text>();
-        discardPile = pilesTracker.GetChild(1).GetChild(0).GetComponent<TMP_Text>();
+        //  
+        //informationImage = GameObject.Find("Information Image").transform;
+        //stats = informationImage.GetChild(0).GetComponent<TMP_Text>();
+        //instructions = informationImage.GetChild(1).GetComponent<TMP_Text>();
+
+
+        //deckTracker = GameObject.Find("Deck Tracker").GetComponent<TMP_Text>();
+        //pilesTracker = GameObject.Find("Draw&Discard").transform;
+        drawPile = GameObject.Find("Draw Pile").transform.Find("RemainingText").GetComponent<TMP_Text>();  
+        //discardPile = pilesTracker.GetChild(1).GetChild(0).GetComponent<TMP_Text>();
 
         endTurnButton = GameObject.Find("End Turn Button").GetComponent<Button>();
         endTurnButton.onClick.AddListener(Regain);
@@ -429,7 +420,7 @@ public class NewManager : MonoBehaviour
     {
         if (player == null)
         {
-            stats.text = "";
+            // stats.text = "";
 
             currentCharacter.text = "";
             selected_characterFace.sprite = emptyFace;
@@ -438,9 +429,10 @@ public class NewManager : MonoBehaviour
             movementBar.SetValue(0);
             energyBar.SetValue(0);
 
-            deckTracker.text = "";
-            drawPile.text = "Draw";
-            discardPile.text = "Discard";
+            //deckTracker.text = "";
+            //  TO-DO: Lerp the draw pile out of the scene. 
+            //drawPile.text = "Draw";
+            //discardPile.text = "Discard";
             handContainer.transform.localPosition = new Vector3(10000, 10000, 0);
         }
         
@@ -464,13 +456,21 @@ public class NewManager : MonoBehaviour
             }
 
             //  TO-DO: change this stuff so it isn't all text -Noah
-            deckTracker.text = $"<color=#70f5ff>Draw Pile <color=#ffffff>/ <color=#ff9670>Discard Pile " +
-            $"\n\n<color=#70f5ff>{player.myDrawPile.Count} <color=#ffffff>/ <color=#ff9670>{player.myDiscardPile.Count}" +
-            $"\n({player.myExhaust.Count} exhausted)";
+            //deckTracker.text = $"<color=#70f5ff>Draw Pile <color=#ffffff>/ <color=#ff9670>Discard Pile " +
+            //$"\n\n<color=#70f5ff>{player.myDrawPile.Count} <color=#ffffff>/ <color=#ff9670>{player.myDiscardPile.Count}" +
+            //$"\n({player.myExhaust.Count} exhausted)";
 
             // idk why the words arent coming up
-            drawPile.text = "Draw" + $"\n\n{player.myDrawPile.Count}";
-            discardPile.text = "Discard" + $"\n\n{player.myDiscardPile.Count}";
+            drawPile.text = player.myDrawPile.Count.ToString();
+            if (player.myDrawPile.Count <= 5)
+            {
+                drawPile.color = Color.red;
+            }
+
+            else
+            {
+                drawPile.color = Color.black; 
+            }
 
             if (player.myPosition * -2000 != handContainer.transform.localPosition.x)
             {
@@ -483,7 +483,7 @@ public class NewManager : MonoBehaviour
             energyBar.SetValue(player.myEnergy);
         }
 
-        stats.text = $"\n<color=#75ff59>{listOfObjectives.Count} Objectives Left" + $"| {turnCount} Turns Left";
+        //stats.text = $"\n<color=#75ff59>{listOfObjectives.Count} Objectives Left" + $"| {turnCount} Turns Left";
 
         foreach (PlayerEntity nextPlayer in listOfPlayers)
         {
@@ -557,7 +557,8 @@ public class NewManager : MonoBehaviour
 
     public void UpdateInstructions(string instructions)
     {
-        this.instructions.text = instructions;
+        //return;
+        //this.instructions.text = instructions;
     }
 
 #endregion
@@ -816,6 +817,7 @@ public class NewManager : MonoBehaviour
 
     public void BackToStart(bool startTurn)
     {
+        Debug.Log("backtostart");
         if (listOfPlayers.Count > 0)
         {
             currentTurn = TurnSystem.You;

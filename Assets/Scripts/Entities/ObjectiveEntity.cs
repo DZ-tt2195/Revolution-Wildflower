@@ -19,6 +19,9 @@ public class ObjectiveEntity : Entity
         NewManager.instance.listOfObjectives.Remove(this);
         NewManager.instance.objectiveButton.gameObject.SetActive(false);
 
+        currentTile.myEntity = null;
+        player.adjacentObjective = null;
+
         if (!DialogueManager.GetInstance().dialogueIsPlaying)
         {
             DialogueManager.GetInstance().StartStory(inkJSON);
@@ -27,11 +30,6 @@ public class ObjectiveEntity : Entity
             DialogueManager.GetInstance().EnterDialogueMode();
 
         }
-
-        NewManager.instance.listOfObjectives.Remove(this);
-        NewManager.instance.objectiveButton.gameObject.SetActive(false);
-        currentTile.myEntity = null;
-        player.adjacentObjective = null;
 
         Destroy(this.gameObject);
         yield return null;
