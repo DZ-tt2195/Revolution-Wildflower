@@ -18,6 +18,7 @@
       "Delay #",
       "HP Walls",
       "Volume",
+      "Vision",
       "any extra condition needed to select a card",
       "the function to call when card is played",
       "the function to call when using the environmental",
@@ -42,6 +43,7 @@
       "Delay",
       "wHP",
       "intn",
+      "vision",
       "selectable",
       "act",
       "enviroAct",
@@ -66,8 +68,9 @@
       "",
       "-2",
       "3",
+      "",
       "IsWall",
-      "AttackAdjacentWall"
+      "AttackAdjacentWall/TargetDistraction"
     ],
     [
       "Time Bomb",
@@ -75,7 +78,23 @@
       "atk",
       "",
       "1",
-      "5"
+      "5",
+      "v",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "2",
+      "",
+      "3",
+      "3",
+      "4",
+      "5",
+      "",
+      "",
+      "ThrowEnvironmental/TargetDistraction",
+      "End/DamageWalls/StunPlayers/StunGuards"
     ],
     [
       "Demolitions",
@@ -96,8 +115,9 @@
       "",
       "-4",
       "5",
+      "",
       "IsWall",
-      "AttackAdjacentWall"
+      "AttackAdjacentWall/TargetDistraction"
     ],
     [
       "Collateral",
@@ -119,7 +139,8 @@
       "-4",
       "7",
       "",
-      "ThrowEnvironmental",
+      "",
+      "ThrowEnvironmental/TargetDistraction",
       "End/DamageWalls"
     ],
     [
@@ -141,8 +162,9 @@
       "",
       "",
       "8",
+      "",
       "IsGuard",
-      "StunAdjacentGuard"
+      "StunAdjacentGuard/TargetDistraction"
     ],
     [
       "Flashbang",
@@ -153,7 +175,7 @@
       "2",
       "nv",
       "",
-      "",
+      "-3",
       "",
       "",
       "",
@@ -162,7 +184,11 @@
       "3",
       "1",
       "",
-      "7"
+      "7",
+      "",
+      "",
+      "ThrowEnvironmental",
+      "End/SlowPlayerMovement/SlowGuardMovement"
     ],
     [
       "Whistle",
@@ -184,16 +210,31 @@
       "",
       "12",
       "",
+      "",
       "CenterDistraction"
     ],
     [
       "Stone",
-      "Range 5. If the target tile is unoccupied, create an Volume 3 distraction on that tile. If it is occupied by a guard, they will begin to Chase you.",
+      "Range 4. If the target tile is unoccupied, create an Volume 4 distraction on that tile. If it is occupied by a guard, create a Volume 4 distraction on you.",
       "dist",
       "",
       "1",
       "3",
-      "nv"
+      "nv",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "4",
+      "4",
+      "",
+      "",
+      "4",
+      "",
+      "",
+      "ThrownBottle"
     ],
     [
       "S.U.D.S. ",
@@ -211,7 +252,7 @@
       "atk",
       "1",
       "4",
-      "v",
+      "nv",
       "",
       "",
       "",
@@ -222,7 +263,10 @@
       "",
       "",
       "",
-      "8"
+      "8",
+      "",
+      "",
+      "ChooseDistraction"
     ],
     [
       "Nosferatu",
@@ -240,7 +284,13 @@
       "",
       "5",
       "5",
-      "2"
+      "2",
+      "",
+      "",
+      "",
+      "",
+      "ThrowEnvironmental",
+      "Continuous/SetVision"
     ],
     [
       "Hand-off",
@@ -257,6 +307,7 @@
       "1",
       "",
       "1",
+      "",
       "",
       "",
       "",
@@ -283,6 +334,7 @@
       "",
       "",
       "0",
+      "",
       "EmptyHand",
       "DrawCards"
     ],
@@ -292,7 +344,22 @@
       "draw",
       "",
       "1",
-      "2"
+      "2",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "DamageDraw"
     ],
     [
       "Filter",
@@ -314,6 +381,7 @@
       "",
       "0",
       "",
+      "",
       "DrawCards/ChooseDiscard"
     ],
     [
@@ -323,6 +391,7 @@
       "",
       "1",
       "0",
+      "",
       "",
       "",
       "",
@@ -358,6 +427,7 @@
       "",
       "0",
       "",
+      "",
       "DrawCards/ChangeEP",
       "",
       "ZeroEnergy/ZeroMovement"
@@ -372,6 +442,7 @@
       "nv",
       "",
       "1",
+      "",
       "",
       "",
       "",
@@ -404,6 +475,7 @@
       "",
       "0",
       "",
+      "",
       "ChangeMP/ChangeHP"
     ],
     [
@@ -426,6 +498,7 @@
       "",
       "0",
       "",
+      "",
       "ChangeCostTwoPlus"
     ],
     [
@@ -439,6 +512,7 @@
       "",
       "",
       "1",
+      "",
       "",
       "",
       "",
@@ -469,6 +543,7 @@
       "",
       "",
       "0",
+      "",
       "IsPlayer",
       "ChangeAdjacentHP"
     ],
@@ -492,6 +567,7 @@
       "",
       "0",
       "",
+      "",
       "DrawCards/ChooseButton(ChangeMP|ChangeEP)"
     ],
     [
@@ -513,6 +589,7 @@
       "",
       "",
       "0",
+      "",
       "Targetted",
       "ChangeMP"
     ],
@@ -535,6 +612,7 @@
       "",
       "",
       "0",
+      "",
       "CardsInHand",
       "ChangeMP"
     ],
@@ -566,6 +644,7 @@
       "",
       "",
       "",
+      "",
       "FindAttack"
     ],
     [
@@ -588,6 +667,7 @@
       "",
       "",
       "1",
+      "",
       "",
       "",
       "",

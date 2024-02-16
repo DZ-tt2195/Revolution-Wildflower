@@ -17,6 +17,7 @@ public class PlayerEntity : MovingEntity
         [Tooltip("amount of health before dying")] [ReadOnly] public int health = 3;
         [Tooltip("turns where you can't be caught")] [ReadOnly] public int hidden = 0;
         [Tooltip("highest energy you can have")][ReadOnly] public int maxEnergy = 5;
+        [Tooltip("damage taken during guard turn")][ReadOnly] public int damageTaken = 0;
 
     //[Tooltip("normal player appearance")] [SerializeField] Material DefaultPlayerMaterial;
     //[Tooltip("appearance when hidden")] [SerializeField] Material HiddenPlayerMaterial;
@@ -144,6 +145,7 @@ public class PlayerEntity : MovingEntity
 
     public IEnumerator TakeDamage(int damage)
     {
+        damageTaken += damage;
         HazardBox.alpha = 0;
         while (HazardBox.alpha < 1)
         {

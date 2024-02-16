@@ -30,7 +30,7 @@
       "0",
       "10/4/r",
       "0",
-      "3/STEAL/false lead",
+      "3/STEAL/false lead/AllDraw",
       "0"
     ],
     [

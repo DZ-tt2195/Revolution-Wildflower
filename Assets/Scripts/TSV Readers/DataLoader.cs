@@ -30,7 +30,8 @@ public class CardData
     public int aoe;        //area of action effect
     public int delay;      //number of turns to delay
     public int wHP;        //change in wall HP
-    public int intn;       //distraction intensity
+    public int volume;       //volume intensity
+    public int vision;       //vision
 
     public string select;  //any extra condition needed to select a tile
     public string action;  //action to do
@@ -76,16 +77,17 @@ public class CardDataLoader
                 newCard.chooseHand = StringToInt(line[11]);
                 newCard.stun = StringToInt(line[12]);
                 newCard.range = StringToInt(line[13]);
+
                 newCard.aoe = StringToInt(line[14]);
                 newCard.delay = StringToInt(line[15]);
                 newCard.wHP = StringToInt(line[16]);
+                newCard.volume = StringToInt(line[17]);
+                newCard.vision = StringToInt(line[18]);
 
-                try { newCard.intn = StringToInt(line[17]); } catch (IndexOutOfRangeException) { Debug.Log(newCard.name); }
-
-                newCard.select = line[18];
-                newCard.action = line[19];
-                try { newCard.enviroaction = line[20]; } catch (IndexOutOfRangeException) { newCard.nextAct = ""; }
-                try { newCard.nextAct = line[21]; } catch (IndexOutOfRangeException) { newCard.nextAct = ""; }
+                newCard.select = line[19];
+                newCard.action = line[20];
+                try { newCard.enviroaction = line[21]; } catch (IndexOutOfRangeException) { newCard.nextAct = ""; }
+                try { newCard.nextAct = line[22]; } catch (IndexOutOfRangeException) { newCard.nextAct = ""; }
             }
             else
             {

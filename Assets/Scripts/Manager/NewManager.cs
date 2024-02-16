@@ -969,7 +969,7 @@ public class NewManager : MonoBehaviour
         {
             SetEnergy(player, player.maxEnergy);
             SetMovement(player, player.movesPerTurn);
-            //player.PlusCards(5 - player.myHand.Count);
+            player.damageTaken = 0;
             player.cardsPlayed.Clear();
             UpdateStats(null);
         }
@@ -1018,7 +1018,9 @@ public class NewManager : MonoBehaviour
         {
             FocusOnTile(guard.currentTile, false);
             yield return (guard.EndOfTurn());
+
             guard.movementLeft = guard.movesPerTurn;
+            guard.DetectionRangePatrol = guard.DetectionRangeMax;
         }
 
         turnCount--;

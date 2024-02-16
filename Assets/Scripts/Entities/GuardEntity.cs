@@ -20,14 +20,13 @@ public class GuardEntity : MovingEntity
         [Tooltip("Tiles this is searching")] List<TileData> inDetection = new List<TileData>();
         //[Tooltip("Pauses between movement")] float movePauseTime = 0.25f;
         [Tooltip("How far this can see")] [SerializeField] public int DetectionRangePatrol = 3;
-        int DetectionRangeMax = 3;
+        public int DetectionRangeMax = 3;
         [Tooltip("half their field of view for detection (MUST BE A MULTIPLE OF 5)")] [SerializeField] int DetectionAngle = 30;
         [Tooltip("State of a guard's alert")] Alert alertStatus = 0;
 
     [Header("Patrol")]
         [Tooltip("list of patrol positions")] public List<Vector2Int> PatrolPoints = new List<Vector2Int>();
         [Tooltip("current patrol target")] private int PatrolTarget = 0;
-
 
     [Header("Distraction")]
         [Tooltip("List of distraction positions")] public List<Vector2Int> DistractionPoints = new List<Vector2Int>();

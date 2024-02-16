@@ -58,7 +58,8 @@ public class Card : MonoBehaviour, IPointerClickHandler
         [ReadOnly] public int areaOfEffect { get; private set; }
         [ReadOnly] public int delay { get; private set; }
         [ReadOnly] public int changeInWall { get; private set; }
-        [ReadOnly] int distractionIntensity;
+        [ReadOnly] public int volumeIntensity { get; private set; }
+        [ReadOnly] public int vision { get; private set; }
 
         [ReadOnly] string selectCondition;
         [ReadOnly] public string effectsInOrder{ get; private set; }
@@ -155,8 +156,8 @@ public class Card : MonoBehaviour, IPointerClickHandler
         areaOfEffect = data.aoe;
         delay = data.delay;
         changeInWall = data.wHP;
-
-        distractionIntensity = data.intn;
+        volumeIntensity = data.volume;
+        vision = data.vision;
 
         selectCondition = data.select;
         enviroEffect = data.enviroaction;
@@ -518,8 +519,6 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
         NewManager.instance.selectedTile = currentPlayer.currentTile;
         NewManager.instance.violentCards += (violent) ? 1 : 0;
-        if (distractionIntensity > 0)
-            StartCoroutine(CalculateDistraction(currentTarget));
     }
 
     IEnumerator ResolveMethod(string methodName)
@@ -535,6 +534,13 @@ public class Card : MonoBehaviour, IPointerClickHandler
         {
             switch (methodName)
             {
+                case "DAMAGEDRAW":
+                    foreach (PlayerEntity nextPlayer in NewManager.instance.listOfPlayers)
+                    {
+                        if (nextPlayer.damageTaken > 0)
+                            yield return DrawCards(nextPlayer);
+                    }
+                    break;
                 case "DRAWCARDS":
                     yield return DrawCards(currentPlayer);
                     break;
@@ -614,23 +620,34 @@ public class Card : MonoBehaviour, IPointerClickHandler
                     yield return ChooseGuard();
                     yield return StunGuard(adjacentTilesWithGuards[0].myEntity.GetComponent<GuardEntity>());
                     break;
-                case "SWAPADJACENTGUARD":
-                    yield return ChooseGuard();
-                    yield return SwapGuard(adjacentTilesWithGuards[0].myEntity.GetComponent<GuardEntity>());
-                    break;
 
                 case "ATTACKADJACENTWALL":
                     yield return ChooseWall();
                     yield return AttackWall(adjacentTilesWithWalls[0].myEntity.GetComponent<WallEntity>());
                     break;
+
+                case "THROWNBOTTLE":
+                    yield return ChooseTileLOS();
+                    if (currentTarget.myEntity.CompareTag("Guard"))
+                        yield return CalculateDistraction(currentPlayer.currentTile);
+                    else
+                        yield return CalculateDistraction(currentTarget);
+                    break;
+                case "CHOOSEDISTRACTION":
+                    yield return ChooseTileLOS();
+                    yield return CalculateDistraction(currentTarget);
+                    break;
+                case "TARGETDISTRACTION":
+                    yield return CalculateDistraction(currentTarget);
+                    break;
                 case "CENTERDISTRACTION":
                     yield return CalculateDistraction(currentPlayer.currentTile);
                     break;
 
-                case "TARGETDISTRACTION&DAMAGE":
+                /*case "TARGETDISTRACTION&DAMAGE":
                     yield return ChooseTileLOS();
                     yield return AttackOrDistraction(currentTarget);
-                    break;
+                    break;*/
                 case "THROWENVIRONMENTAL":
                     yield return ChooseTile();
                     yield return CreateEnvironmental();
@@ -648,7 +665,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
     {
         //print("distracting for " + textDescr.text);
         //print("Intensity:" + distractionIntensity);
-        List<TileData> affectedTiles = NewManager.instance.CalculateIntensity(source, distractionIntensity, true);
+        List<TileData> affectedTiles = NewManager.instance.CalculateIntensity(source, volumeIntensity, true);
         //print(affectedTiles.Count);
         if (affectedTiles.Count > 0) addDistractionSound.Post(source.gameObject);
         for (int i = 0; i < affectedTiles.Count; i++)
@@ -1137,6 +1154,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
 #region Interacts With Entities
 
+    /*
     internal IEnumerator AttackOrDistraction(TileData target)
     {
         if (target.myEntity != null)
@@ -1152,7 +1170,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
             yield return CalculateDistraction(target);
         }
     }
-
+    */
     internal IEnumerator AttackWall(WallEntity wall)
     {
         if (wall != null)
@@ -1163,7 +1181,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         yield return null;
     }
 
-    internal IEnumerator SwapGuard(GuardEntity guard)
+    /*internal IEnumerator SwapGuard(GuardEntity guard)
     {
         TileData guardsOriginalTile = guard.currentTile;
         TileData playersOriginalTile = currentPlayer.currentTile;
@@ -1171,7 +1189,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         currentPlayer.MoveTile(guardsOriginalTile);
         guard.MoveTile(playersOriginalTile);
         yield return NewManager.Wait(0.2f);
-    }
+    }*/
 
     internal IEnumerator StunPlayer(PlayerEntity player)
     {
