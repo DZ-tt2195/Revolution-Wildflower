@@ -14,6 +14,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     [Foldout("Choices", true)]
         [ReadOnly] public Image image;
+        [ReadOnly] public Image background;
         bool enableBorder;
         [ReadOnly] public Image border;
         [ReadOnly] public Button button;
@@ -86,6 +87,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
     private void Awake()
     {
         image = GetComponent<Image>();
+        background = transform.Find("Canvas Group").Find("Background").GetComponent<Image>();
         border = transform.GetChild(0).GetComponent<Image>();
         button = this.GetComponent<Button>();
         button.onClick.AddListener(SendMe);
@@ -116,6 +118,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         Material mat = new Material(image.material);
         mat.SetColor("_GradientColorTop", ConvertToColor(typeOne));
         mat.SetColor("_GradientColorBottom", ConvertToColor(typeTwo));
+        mat.SetTexture("_MainTex", image.mainTexture);
         image.material = mat;
 
         energyCost = data.epCost;
@@ -372,9 +375,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     public IEnumerator RevealCard(float totalTime)
     {
-        image.sprite = cardFront;
-        yield return null;
-        /*if (image.sprite != cardFront)
+        if (image.sprite != cardFront)
         {
             transform.localEulerAngles = new Vector3(0, 0, 0);
             float elapsedTime = 0f;
@@ -401,7 +402,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
             }
 
             transform.localEulerAngles = originalRot;
-        }*/
+        }
     }
 
     public IEnumerator MoveCard(Vector3 newPos, Vector3 finalPos, Vector3 newRot, float waitTime)
@@ -413,7 +414,8 @@ public class Card : MonoBehaviour, IPointerClickHandler
         while (elapsedTime < waitTime)
         {
             transform.localPosition = Vector3.Lerp(originalPos, newPos, elapsedTime / waitTime);
-            transform.localEulerAngles = Vector3.Lerp(originalRot, newRot, elapsedTime / waitTime);
+            transform.localEulerAngles = Vector3.zero;
+            transform.localEulerAngles = Vector3.Lerp(originalRot, new Vector3(0, 0, newRot.z), elapsedTime / waitTime);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
@@ -423,12 +425,16 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     public void EnableCard()
     {
+        image.color = Color.white;
+        background.color = Color.white;
         enableBorder = true;
         button.interactable = true;
     }
 
     public void DisableCard()
     {
+        image.color = Color.gray;
+        background.color = Color.gray;
         enableBorder = false;
         button.interactable = false;
     }
