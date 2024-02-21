@@ -37,6 +37,9 @@ public class CardDisplay : MonoBehaviour
         this.transform.GetChild(0).gameObject.SetActive(true);
         bigImage.sprite = newCard.image.sprite;
         bigImage.color = newCard.image.color;
+        Canvas canvas = GetComponentInParent<Canvas>();
+        transform.localScale = Vector3.one;
+        transform.rotation = canvas.transform.rotation;
 
         this.cardName.text = newCard.textName.text;
         this.cardCost.text = newCard.textCost.text;
