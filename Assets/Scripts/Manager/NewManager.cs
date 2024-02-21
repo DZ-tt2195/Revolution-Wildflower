@@ -151,6 +151,8 @@ public class NewManager : MonoBehaviour
 
         handContainer = GameObject.Find("Hand Container").transform;
         gridContainer = GameObject.Find("Grid Container").transform;
+
+        spendToDrawButton = GameObject.Find("Spend Energy Button").GetComponent<Button>();
     }
 
     void Start()
