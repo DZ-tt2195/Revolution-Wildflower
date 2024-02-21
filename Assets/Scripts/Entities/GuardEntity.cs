@@ -100,10 +100,23 @@ public class GuardEntity : MovingEntity
         attackEffect = false;
     }
 
+    //calculates the tiles this guard is looking at
     public override void CalculateTiles()
     {
-        for (int i = 0; i<inDetection.Count; i++)
-            inDetection[i].SurveillanceState(false);
+
+        //clears the last list of visible tiles. Turns off the "surveillanceState" tag if no other guard is looking at that tile (stops it from looking red)
+        for (int i = 0; i < inDetection.Count; i++)
+        {
+            bool Overlap = false;
+            for (int j = 0; j < NewManager.instance.listOfGuards.Count; j++)
+            {
+                if (NewManager.instance.listOfGuards[j] != this && NewManager.instance.listOfGuards[j].inDetection.Contains(inDetection[i]))
+                {
+                    Overlap = true;
+                }
+            }
+            if(!Overlap) inDetection[i].SurveillanceState(false);
+        }
         inDetection.Clear();
 
         List<HashSet<Vector2Int>> DetectLines = new List<HashSet<Vector2Int>>();
@@ -319,7 +332,10 @@ public class GuardEntity : MovingEntity
             if (nextDirection != direction)
             {
                 direction = nextDirection;
-                CalculateTiles();
+                for (int i = 0; i < NewManager.instance.listOfGuards.Count; i++)
+                {
+                    NewManager.instance.listOfGuards[i].CalculateTiles();
+                }
             }
             else
             {
@@ -345,7 +361,10 @@ public class GuardEntity : MovingEntity
             alertStatus = Alert.Persue;
             NewManager.instance.FindTile(DistractionPoints[DistractionPoints.Count - 1]).currentGuardTarget = true;
         }
-        CheckForPlayer();
+        for (int i = 0; i < NewManager.instance.listOfGuards.Count; i++)
+        {
+            NewManager.instance.listOfGuards[i].CheckForPlayer();
+        }
         if (alertStatus == Alert.Attack)
         {
             if (movementLeft > 0 || attacksLeft > 0)
