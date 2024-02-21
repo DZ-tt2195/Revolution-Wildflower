@@ -66,6 +66,7 @@ public class NewManager : MonoBehaviour
         [Tooltip("Complete an objective you're next to")] [ReadOnly] public Button objectiveButton;
         [Tooltip("Info on entities")] [ReadOnly] public EntityToolTip toolTip;
         [Tooltip("Text that gets displayed when you game over")] TMP_Text gameOverText;
+        TMP_Text drawPile;
         [Tooltip("Tracks number of cards in deck and discard pile")] TMP_Text deckTracker;
 
     [Foldout("Grid", true)]
@@ -123,7 +124,7 @@ public class NewManager : MonoBehaviour
         healthBar = playerStats.Find("Health").GetComponentInChildren<StatBar>();
         movementBar = playerStats.Find("Movement").GetComponentInChildren<StatBar>();
         energyBar = playerStats.Find("Energy").GetComponentInChildren<StatBar>();
-        characterFace = playerStats.Find("selected_characterFace").GetComponent<Image>();
+        characterFace = playerStats.Find("CharacterFace").GetComponent<Image>();
 
         facesSpritesheet = Resources.LoadAll<Sprite>("Sprites/portrait_spritesheet");
         emptyFace = Resources.Load<Sprite>("Sprites/characterSill");
