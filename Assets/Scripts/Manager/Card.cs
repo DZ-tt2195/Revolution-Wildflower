@@ -116,11 +116,11 @@ public class Card : MonoBehaviour, IPointerClickHandler
         typeOne = ConvertToType(data.cat1);
         typeTwo = ConvertToType(data.cat2);
 
-        Material mat = new Material(image.material);
-        mat.SetColor("_GradientColorTop", ConvertToColor(typeOne));
-        mat.SetColor("_GradientColorBottom", ConvertToColor(typeTwo));
-        mat.SetTexture("_MainTex", image.mainTexture);
-        image.material = mat;
+        //Material mat = new Material(image.material);
+        //mat.SetColor("_GradientColorTop", ConvertToColor(typeOne));
+        //mat.SetColor("_GradientColorBottom", ConvertToColor(typeTwo));
+        //mat.SetTexture("_MainTex", image.mainTexture);
+        //image.material = mat;
 
         energyCost = data.epCost;
         textCost.text = $"{data.epCost}";
