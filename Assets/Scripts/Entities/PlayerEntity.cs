@@ -5,7 +5,6 @@ using MyBox;
 using System;
 using System.Linq;
 using TMPro;
-using System.Threading;
 
 public class PlayerEntity : MovingEntity
 {
@@ -15,12 +14,15 @@ public class PlayerEntity : MovingEntity
     [Foldout("Player Entity", true)]
         [Tooltip("The bar on screen")] [ReadOnly] public PlayerBar myBar;
         [Tooltip("Where this player's located in the list")] [ReadOnly] public int myPosition;
-        [Tooltip("turns where you can't be caught")] [ReadOnly] public int health = 3;
+        [Tooltip("amount of health before dying")] [ReadOnly] public int health = 3;
         [Tooltip("turns where you can't be caught")] [ReadOnly] public int hidden = 0;
-        //[Tooltip("normal player appearance")] [SerializeField] Material DefaultPlayerMaterial;
-        //[Tooltip("appearance when hidden")] [SerializeField] Material HiddenPlayerMaterial;
-        [Tooltip("adjacent objective")] [ReadOnly] public ObjectiveEntity adjacentObjective;
-        [Tooltip("delay inbetween each movement")][SerializeField] public float moveDelay = 0.75f;
+        [Tooltip("highest energy you can have")][ReadOnly] public int maxEnergy = 5;
+        [Tooltip("damage taken during guard turn")][ReadOnly] public int damageTaken = 0;
+
+    //[Tooltip("normal player appearance")] [SerializeField] Material DefaultPlayerMaterial;
+    //[Tooltip("appearance when hidden")] [SerializeField] Material HiddenPlayerMaterial;
+    [Tooltip("adjacent objective")] [ReadOnly] public ObjectiveEntity adjacentObjective;
+        //[Tooltip("delay inbetween each movement")][SerializeField] public float moveDelay = 0.75f;
 
     [Foldout("Sprites", true)]
         [Tooltip("Gail's sprite")][SerializeField] Sprite gailSprite;
@@ -35,7 +37,7 @@ public class PlayerEntity : MovingEntity
         [Tooltip("list of cards in hand")][ReadOnly] public List<Card> myHand;
         [Tooltip("list of cards in draw pile")][ReadOnly] public List<Card> myDrawPile;
         [Tooltip("list of cards in discard pile")][ReadOnly] public List<Card> myDiscardPile;
-        [Tooltip("list of cards that're exhausted")][ReadOnly] public List<Card> myExhaust;
+        //[Tooltip("list of cards that're exhausted")][ReadOnly] public List<Card> myExhaust;
         [Tooltip("list of cards played this turn")][ReadOnly] public List<Card> cardsPlayed;
         [Tooltip("list of cost reduction effects")][ReadOnly] public List<Card> costChange;
 
@@ -87,7 +89,7 @@ public class PlayerEntity : MovingEntity
         }
 
         this.myDrawPile.Shuffle(); //shuffle your deck
-        this.PlusCards(5);
+        this.PlusCards(3);
     }
 
     public override string HoverBoxText()
@@ -102,7 +104,7 @@ public class PlayerEntity : MovingEntity
     {
         foreach(TileData tile in path)
         {
-            yield return NewManager.Wait(moveDelay);
+            yield return NewManager.Wait(PlayerPrefs.GetFloat("Animation Speed"));
             MoveTile(tile);
         }
         /*
@@ -143,6 +145,7 @@ public class PlayerEntity : MovingEntity
 
     public IEnumerator TakeDamage(int damage)
     {
+        damageTaken += damage;
         HazardBox.alpha = 0;
         while (HazardBox.alpha < 1)
         {
@@ -171,7 +174,7 @@ public class PlayerEntity : MovingEntity
 
 #region Card Stuff
 
-    void SortHand()
+    public void SortHand()
     {
         myHand = myHand.OrderBy(o => o.energyCost).ToList();
 
@@ -189,23 +192,37 @@ public class PlayerEntity : MovingEntity
             StartCoroutine(card.RevealCard(PlayerPrefs.GetFloat("Animation Speed")));
     }
 
+    internal void PlusCards(Card card)
+    {
+        card.transform.SetParent(this.transform);
+        card.HideCard();
+        myDrawPile.Remove(card);
+        myDiscardPile.Remove(card);
+        PutIntoHand(card);
+        SortHand();
+    }
+
     internal void PlusCards(int num)
     {
         for (int i = 0; i < num; i++)
         {
-            try
+            if (myHand.Count < 5)
             {
-                Card nextCard = GetTopCard();
-                nextCard.HideCard();
-                PutIntoHand(nextCard);
+                try
+                {
+                    Card nextCard = GetTopCard();
+                    nextCard.HideCard();
+                    PutIntoHand(nextCard);
+                }
+                catch (NullReferenceException) { break; }
             }
-            catch (NullReferenceException){break;}
         }
         SortHand();
     }
 
     internal Card GetTopCard()
     {
+        /*
         if (myDrawPile.Count == 0)
         {
             myDiscardPile.Shuffle();
@@ -215,7 +232,7 @@ public class PlayerEntity : MovingEntity
                 myDiscardPile.RemoveAt(0);
             }
         }
-
+        */
         if (myDrawPile.Count > 0) //get the top card of the deck if there is one
         {
             Card card = myDrawPile[0];
@@ -256,6 +273,7 @@ public class PlayerEntity : MovingEntity
         }
     }
 
+    /*
     internal IEnumerator ExhaustFromHand(Card exhaustMe)
     {
         myHand.Remove(exhaustMe);
@@ -272,6 +290,7 @@ public class PlayerEntity : MovingEntity
         myExhaust.Add(exhaustMe);
         exhaustMe.transform.SetParent(null);
     }
+    */
 
     internal IEnumerator PlayCard(Card playMe, bool payEnergy)
     {
