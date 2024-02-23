@@ -394,7 +394,8 @@ public class NewManager : MonoBehaviour
 
     public void ChangeMovement(PlayerEntity player, int n) //if you want to subtract 3 movement, type ChangeMovement(-3);
     {
-        player.movementLeft = Math.Clamp(player.health + n, 0, player.movesPerTurn);
+        Debug.Log($"change movement by {n}");
+        player.movementLeft = Math.Clamp(player.movementLeft + n, 0, player.movesPerTurn);
         UpdateStats(player);
     }
 

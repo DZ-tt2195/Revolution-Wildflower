@@ -333,7 +333,6 @@ public class Card : MonoBehaviour, IPointerClickHandler
         {
             if (tile.myEntity != null && tile.myEntity.CompareTag("Player"))
             {
-                Debug.Log(tile.myEntity.name);
                 playersInRange.Add(tile);
             }
         }
@@ -555,6 +554,9 @@ public class Card : MonoBehaviour, IPointerClickHandler
                     break;
                 case "FINDMOVEMENT":
                     yield return FindCard(currentPlayer, CardType.Movement);
+                    break;
+                case "FINDCOST":
+                    yield return FindCard(currentPlayer, changeInEP);
                     break;
 
                 case "CHOOSEDISCARD":
@@ -1043,7 +1045,8 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     internal IEnumerator PickupCard(PlayerEntity player)
     {
-        player.PlusCards(player.myDiscardPile[^2]);
+        Debug.Log(player.myDiscardPile[^1].name);
+        player.PlusCards(player.myDiscardPile[^1]);
         yield return null;
     }
 
@@ -1087,6 +1090,32 @@ public class Card : MonoBehaviour, IPointerClickHandler
         else
             player.PlusCards(foundCard);
         player.myDrawPile.Shuffle();
+    }
+
+    internal IEnumerator FindCard(PlayerEntity player, int costToFind)
+    {
+        yield return null;
+        List<Card> shuffledBack = new();
+        Card foundCard = null;
+        foreach (Card card in player.myDrawPile)
+        {
+            if (card.energyCost == costToFind)
+            {
+                foundCard = card;
+                break;
+            }
+            else
+            {
+                shuffledBack.Add(card);
+            }
+        }
+
+        if (foundCard == null)
+            player.PlusCards(changeInDraw);
+        else
+            player.PlusCards(foundCard);
+        player.myDrawPile.Shuffle();
+
     }
 
     #endregion

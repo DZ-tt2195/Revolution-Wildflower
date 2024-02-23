@@ -503,7 +503,7 @@
     ],
     [
       "Infinite Energy",
-      "Increase your EP limit by 1. +1 Energy this turn and for the rest of the game.",
+      "Increase your EP limit by 1. +1 Energy this turn and for the rest of the level.",
       "eng",
       "",
       "1",
