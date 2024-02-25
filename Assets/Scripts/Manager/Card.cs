@@ -109,7 +109,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
     public void CardSetup(CardData data)
     {
         textName.text = data.name;
-        textDescr.text = ChangeAllKeywords(data.desc);
+        textDescr.text = KeywordTooltip.instance.EditText(data.desc);
 
         typeOne = ConvertToType(data.cat1);
         typeTwo = ConvertToType(data.cat2);
@@ -179,6 +179,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         };
     }
 
+    /*
     string ChangeAllKeywords(string cardText)
     {
         cardText = $"<color=#000000>{cardText}";
@@ -196,7 +197,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         cardText = ChangeToSymbol(cardText, "HP", $"\"Symbols\" name=\"Health\"");
 
         cardText = BoldKeyword(cardText, @"\d+ Damage", "8B0000");
-        cardText = BoldKeyword(cardText, @"Intensity \d+", "FFA500");
+        cardText = BoldKeyword(cardText, @"Volume \d+", "FFA500");
         cardText = BoldKeyword(cardText, @"Range \d+", "0000FF");
         cardText = BoldKeyword(cardText, @"Stun \d+", "800080");
         cardText = BoldKeyword(cardText, @"Delay \d+", "00FFFF");
@@ -220,6 +221,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
         return cardText;
     }
+    */
 
 #endregion
 

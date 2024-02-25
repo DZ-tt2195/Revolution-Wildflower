@@ -272,7 +272,6 @@ GameObject:
   - component: {fileID: 5277886169616128097}
   - component: {fileID: 7937688880329316072}
   - component: {fileID: 2203845270279031739}
-  - component: {fileID: 7720712929365272483}
   m_Layer: 5
   m_Name: Description
   m_TagString: Untagged
@@ -396,18 +395,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &7720712929365272483
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5811844082270886199}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd447db666c474fceaf9cfb6b4bdb9ad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &5933497273186232708
 GameObject:
   m_ObjectHideFlags: 0
@@ -510,6 +497,13 @@ MonoBehaviour:
   textName: {fileID: 8937948668977631688}
   textCost: {fileID: 3914607992710294470}
   textDescr: {fileID: 2203845270279031739}
+  AttackColor: {r: 1, g: 0, b: 0, a: 1}
+  DrawColor: {r: 0, g: 1, b: 0, a: 1}
+  DistractionColor: {r: 0, g: 0, b: 1, a: 1}
+  EnergyColor: {r: 0, g: 1, b: 1, a: 1}
+  MovementColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  MiscColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  FallbackColor: {r: 1, g: 1, b: 1, a: 1}
   energyCost: 0
   cardMove:
     idInternal: 0
