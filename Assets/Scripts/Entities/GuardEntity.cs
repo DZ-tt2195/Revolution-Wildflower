@@ -493,7 +493,7 @@ public class GuardEntity : MovingEntity
         }
     }
 
-    IEnumerator Patrol()
+    public virtual IEnumerator Patrol()
     {
         //print(currentTile.gridPosition + "Patrolling");
         TileData nextTile;

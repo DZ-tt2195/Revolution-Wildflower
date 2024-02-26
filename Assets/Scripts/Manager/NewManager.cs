@@ -178,6 +178,11 @@ public class NewManager : MonoBehaviour
         gameOverText.transform.parent.gameObject.SetActive(false);
 
         GetTiles();
+        foreach (GuardEntity curGuard in listOfGuards)
+        {
+            curGuard.CalculateTiles();
+            curGuard.CheckForPlayer();
+        }
         StartCoroutine(StartPlayerTurn());
     }
 
