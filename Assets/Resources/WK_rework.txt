@@ -97,7 +97,7 @@
     ],
     [
       "Flashbang",
-      "Range 3, with Delay 1, Movement -3 on everyone within 3 tiles. Volume 7.",
+      "Range 3, with Delay 1, -3 Movement on everyone within 3 tiles. Volume 7.",
       "atk",
       "",
       "2",

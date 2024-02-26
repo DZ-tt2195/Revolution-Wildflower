@@ -4,20 +4,20 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using MyBox;
+using UnityEngine.SceneManagement;
 
 public class GameSettings : MonoBehaviour
 {
     public static GameSettings instance;
     [SerializeField] GameObject background;
-    [SerializeField] Button settingsButton;
     [SerializeField] Slider animationSlider;
     [SerializeField] TMP_Text animationText;
     [SerializeField] Toggle confirmationToggle;
+    [SerializeField] Button quitButton;
 
     private void Awake()
     {
         instance = this;
-        settingsButton.onClick.AddListener(SettingsScreen);
         animationSlider.onValueChanged.AddListener(SetAnimationSpeed);
         confirmationToggle.onValueChanged.AddListener(delegate { SetConfirmationStatus(); });
     }
@@ -34,9 +34,16 @@ public class GameSettings : MonoBehaviour
             SetAnimationSpeed(1f);
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+            SettingsScreen();
+    }
+
     void SettingsScreen()
     {
         background.SetActive(!background.activeSelf);
+        quitButton.gameObject.SetActive(SceneManager.GetActiveScene().name == "2. Level");
     }
 
     void SetConfirmationStatus()

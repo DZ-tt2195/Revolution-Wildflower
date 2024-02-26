@@ -394,7 +394,6 @@ public class NewManager : MonoBehaviour
 
     public void ChangeMovement(PlayerEntity player, int n) //if you want to subtract 3 movement, type ChangeMovement(-3);
     {
-        Debug.Log($"change movement by {n}");
         player.movementLeft = Math.Clamp(player.movementLeft + n, 0, player.movesPerTurn);
         UpdateStats(player);
     }
@@ -522,9 +521,6 @@ public class NewManager : MonoBehaviour
         endTurnButton.gameObject.SetActive(currentTurn == TurnSystem.You);
         if (currentTurn != TurnSystem.You)
             spendToDrawButton.gameObject.SetActive(false);
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-            GameOver("You quit.", false);
     }
 
     private void FixedUpdate()

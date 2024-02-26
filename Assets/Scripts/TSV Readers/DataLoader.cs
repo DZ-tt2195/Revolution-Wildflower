@@ -60,7 +60,7 @@ public class CardDataLoader
             cardData.Add(newCard);
 
             newCard.name = line[0];
-            Debug.Log(newCard.name);
+            //Debug.Log(newCard.name);
             newCard.desc = line[1];
             newCard.cat1 = line[2];
             newCard.cat2 = line[3];
