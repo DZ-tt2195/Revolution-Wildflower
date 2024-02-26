@@ -33,6 +33,8 @@ public class StaticGuard : GuardEntity
             }
             movementLeft--;
         }
-        //return base.Patrol();
+        yield return NewManager.Wait(movePauseTime);
+        print("Checking New Action");
+        yield return newAction();
     }
 }

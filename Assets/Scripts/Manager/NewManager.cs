@@ -337,6 +337,28 @@ public class NewManager : MonoBehaviour
                             }
                             catch (IndexOutOfRangeException){ continue; }
                             break;
+
+                        case 21: //create static guard
+                            thisTileEntity = Instantiate(guardPrefab, nextTile.transform);
+                            thisTileEntity.name = "Guard";
+                            GuardEntity theGuard = thisTileEntity.GetComponent<GuardEntity>();
+                            theGuard.movementLeft = theGuard.movesPerTurn;
+                            theGuard.direction = StringToDirection(numberPlusAddition[1]);
+                            listOfGuards.Add(theGuard);
+
+                            try
+                            {
+                                string[] patrolList = numberPlusAddition[2].Split('|');
+                                foreach (string patrol in patrolList)
+                                {
+                                    string[] points = patrol.Split(",");
+                                    int.TryParse(points[0], out int curX);
+                                    int.TryParse(points[1], out int curY);
+                                    theGuard.PatrolPoints.Add(new Vector2Int(curX, curY));
+                                }
+                            }
+                            catch (IndexOutOfRangeException) { continue; }
+                            break;
                     }
 
                     try
