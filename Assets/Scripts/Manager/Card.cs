@@ -1117,7 +1117,6 @@ public class Card : MonoBehaviour, IPointerClickHandler
         else
             player.PlusCards(foundCard);
         player.myDrawPile.Shuffle();
-
     }
 
     #endregion
