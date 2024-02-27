@@ -13346,6 +13346,10 @@ PrefabInstance:
       propertyPath: wallTSplitPrefab
       value: 
       objectReference: {fileID: 22534131588069659, guid: 20dc37b4e68cb3042a1d5f3b3465b897, type: 3}
+    - target: {fileID: 5914281999929805311, guid: 4d80205612fbb450097423700f1424c9, type: 3}
+      propertyPath: staticGuardPrefab
+      value: 
+      objectReference: {fileID: 896374143579019613, guid: 11c148f9222d619469850a2568a477e3, type: 3}
     - target: {fileID: 6312952286243973944, guid: 4d80205612fbb450097423700f1424c9, type: 3}
       propertyPath: m_LocalPosition.x
       value: -904.627
@@ -22728,7 +22732,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1488315173}
   m_HandleRect: {fileID: 1488315172}
   m_Direction: 0
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
