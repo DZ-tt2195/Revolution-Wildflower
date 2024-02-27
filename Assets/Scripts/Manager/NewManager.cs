@@ -89,6 +89,7 @@ public class NewManager : MonoBehaviour
         [Tooltip("Wall Corner prefab")][SerializeField] WallEntity wallCornerPrefab;
         [Tooltip("Wall Plus prefab")][SerializeField] WallEntity wallPlusPrefab;
         [Tooltip("Guard prefab")][SerializeField] GuardEntity guardPrefab;
+        [Tooltip("static guard prefab")][SerializeField] StaticGuard staticGuardPrefab; 
         [Tooltip("Objective prefab")][SerializeField] ObjectiveEntity objectivePrefab;
         [Tooltip("Toggle prefab")][SerializeField] ToggleEntity togglePrefab;
         [Tooltip("Guard prefab")][SerializeField] ExitEntity exitPrefab;
@@ -339,12 +340,12 @@ public class NewManager : MonoBehaviour
                             break;
 
                         case 21: //create static guard
-                            thisTileEntity = Instantiate(guardPrefab, nextTile.transform);
+                            thisTileEntity = Instantiate(staticGuardPrefab, nextTile.transform);
                             thisTileEntity.name = "Guard";
-                            GuardEntity theGuard = thisTileEntity.GetComponent<GuardEntity>();
-                            theGuard.movementLeft = theGuard.movesPerTurn;
-                            theGuard.direction = StringToDirection(numberPlusAddition[1]);
-                            listOfGuards.Add(theGuard);
+                            GuardEntity theStaticGuard = thisTileEntity.GetComponent<GuardEntity>();
+                            theStaticGuard.movementLeft = theStaticGuard.movesPerTurn;
+                            theStaticGuard.direction = StringToDirection(numberPlusAddition[1]);
+                            listOfGuards.Add(theStaticGuard);
 
                             try
                             {
@@ -354,7 +355,7 @@ public class NewManager : MonoBehaviour
                                     string[] points = patrol.Split(",");
                                     int.TryParse(points[0], out int curX);
                                     int.TryParse(points[1], out int curY);
-                                    theGuard.PatrolPoints.Add(new Vector2Int(curX, curY));
+                                    theStaticGuard.PatrolPoints.Add(new Vector2Int(curX, curY));
                                 }
                             }
                             catch (IndexOutOfRangeException) { continue; }
