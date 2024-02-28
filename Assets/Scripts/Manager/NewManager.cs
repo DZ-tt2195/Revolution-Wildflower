@@ -104,6 +104,8 @@ public class NewManager : MonoBehaviour
         [Tooltip("What's happening in the game")][ReadOnly] public TurnSystem currentTurn;
         [Tooltip("Effects to do on future turns")][ReadOnly] public List<Card> futureEffects = new List<Card>();
         [Tooltip("Num violent cards used")][ReadOnly] public int violentCards;
+        [Tooltip("Mouse position")] Vector3 lastClickedMousePosition;
+        bool movingPlayer = false;
 
     [Foldout("Sound Effects", true)]
         [SerializeField] AK.Wwise.Event buttonSound;
@@ -112,7 +114,7 @@ public class NewManager : MonoBehaviour
         [SerializeField] AK.Wwise.Event characterSelectSound;
         [SerializeField] AK.Wwise.Event beginTurnSound;
 
-    #endregion
+#endregion
 
 #region Setup
 
@@ -578,6 +580,22 @@ player.myEnergy = Math.Clamp(player.health + n, 0, 3);
         endTurnButton.gameObject.SetActive(currentTurn == TurnSystem.You);
 if (currentTurn != TurnSystem.You)
             spendToDrawButton.gameObject.SetActive(false);
+
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            lastClickedMousePosition = Input.mousePosition;
+        }
+        else if (movingPlayer && Input.GetKeyUp(KeyCode.Mouse0))
+        {
+            if (Input.mousePosition.Equals(lastClickedMousePosition) && currentTurn == TurnSystem.You)
+            {
+                StopCoroutine(ChooseMovePlayer(lastSelectedPlayer));
+                StopCoroutine(ChooseCardPlay(lastSelectedPlayer));
+                lastSelectedPlayer = null;
+                movingPlayer = false;
+                BackToStart(false);
+            }
+        }
     }
 
     private void FixedUpdate()
@@ -836,6 +854,10 @@ if (currentTurn != TurnSystem.You)
 
             endTurnImage.color = AnythingLeftThisTurn() ? Color.gray : Color.white;
 
+            var foundCanvasObjects = FindObjectsOfType<Collector>();
+            foreach (Collector collector in foundCanvasObjects)
+                Destroy(collector.gameObject);
+
             if (startTurn)
             {
                 StartCoroutine(FadeTurnBar("Player Turn"));
@@ -862,9 +884,9 @@ if (currentTurn != TurnSystem.You)
         if (lastSelectedPlayer != currentPlayer)
         {
             characterSelectSound.Post(currentPlayer.gameObject);
-            lastSelectedPlayer = currentPlayer;
         }
 
+        lastSelectedPlayer = currentPlayer;
         AkSoundEngine.SetState("Character", currentPlayer.name);
 
         selectedTile = currentPlayer.currentTile;
@@ -890,9 +912,13 @@ spendToDrawButton.gameObject.SetActive(currentPlayer.myHand.Count < 5 && current
 
         while (chosenTile == null)
         {
+            movingPlayer = true;
+            lastSelectedPlayer = currentPlayer;
+
             if (selectedTile != currentPlayer.currentTile || currentTurn != TurnSystem.You)
             {
                 Debug.LogError("switched off movement");
+                StopCoroutine(ChooseCardPlay(currentPlayer));
                 yield break;
             }
             else
@@ -919,7 +945,6 @@ spendToDrawButton.gameObject.SetActive(currentPlayer.myHand.Count < 5 && current
         }
 
         yield return MovePlayer(currentPlayer);
-
     }
 
     IEnumerator MovePlayer(PlayerEntity currentPlayer)
