@@ -7,6 +7,8 @@ using MyBox;
 using UnityEngine.EventSystems;
 using System.Text.RegularExpressions;
 using System.Linq;
+using System;
+using System.Reflection;
 
 public class Card : MonoBehaviour, IPointerClickHandler
 {
@@ -80,6 +82,12 @@ public class Card : MonoBehaviour, IPointerClickHandler
         public AK.Wwise.Event cardMove;
         public AK.Wwise.Event cardPlay;
         [SerializeField] AK.Wwise.Event addDistractionSound;
+
+    private EventHandler[] events;
+
+
+    public event EventHandler OnCardResolved;
+    public event EventHandler OnChoiceMade; 
 
 #endregion
 
@@ -516,6 +524,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
             }
         }
 
+        OnCardResolved?.Invoke(this, EventArgs.Empty);
         NewManager.instance.selectedTile = currentPlayer.currentTile;
         NewManager.instance.violentCards += (violent) ? 1 : 0;
     }
@@ -706,7 +715,10 @@ public class Card : MonoBehaviour, IPointerClickHandler
     {
         if (adjacentTilesWithGuards.Count != 1)
         {
-            NewManager.instance.UpdateInstructions("Choose a guard in range.");
+            InstructionsManager.UpdateInstructions(this,
+                new string[] { "OnChoiceMade" },
+                new string[] { "Choose a guard in range." }
+            );
             NewManager.instance.WaitForDecision(adjacentTilesWithGuards);
 
             while (NewManager.instance.chosenTile == null)
@@ -727,6 +739,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
                 }
             }
 
+            OnChoiceMade?.Invoke(this, EventArgs.Empty);
             adjacentTilesWithGuards.Clear();
             adjacentTilesWithGuards.Add(NewManager.instance.chosenTile);
         }
@@ -737,7 +750,10 @@ public class Card : MonoBehaviour, IPointerClickHandler
     {
         if (adjacentTilesWithPlayers.Count != 1)
         {
-            NewManager.instance.UpdateInstructions("Choose a player in range.");
+            InstructionsManager.UpdateInstructions(this, 
+                new string[] {"OnChoiceMade", "OnCardResolved"}, 
+                new string[] { "Choose a player in range, ", "then resolve the card."}  
+                );
             NewManager.instance.WaitForDecision(adjacentTilesWithPlayers);
 
             while (NewManager.instance.chosenTile == null)
@@ -758,6 +774,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
                 }
             }
 
+            OnChoiceMade?.Invoke(this, EventArgs.Empty);
             adjacentTilesWithPlayers.Clear();
             adjacentTilesWithPlayers.Add(NewManager.instance.chosenTile);
         }
@@ -767,7 +784,10 @@ public class Card : MonoBehaviour, IPointerClickHandler
     {
         if (adjacentTilesWithWalls.Count != 1)
         {
-            NewManager.instance.UpdateInstructions("Choose a wall in range.");
+            InstructionsManager.UpdateInstructions(this,
+                new string[] { "OnChoiceMade" },
+                new string[] { "Choose a wall in range." }
+            );
             NewManager.instance.WaitForDecision(adjacentTilesWithWalls);
 
             while (NewManager.instance.chosenTile == null)
@@ -788,6 +808,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
                 }
             }
 
+            OnChoiceMade?.Invoke(this, EventArgs.Empty);
             adjacentTilesWithWalls.Clear();
             adjacentTilesWithWalls.Add(NewManager.instance.chosenTile);
         }
@@ -830,7 +851,10 @@ public class Card : MonoBehaviour, IPointerClickHandler
             tilesToSelect.Add(NewManager.instance.FindTile(point));
         }
 
-        NewManager.instance.UpdateInstructions("Choose a tile in range.");
+        InstructionsManager.UpdateInstructions(this,
+            new string[] { "OnChoiceMade" },
+            new string[] { "Choose a tile in range." }
+        );
         NewManager.instance.WaitForDecision(tilesToSelect);
 
         while (NewManager.instance.chosenTile == null)
@@ -851,13 +875,14 @@ public class Card : MonoBehaviour, IPointerClickHandler
             }
         }
 
+        OnChoiceMade?.Invoke(this, EventArgs.Empty);
         currentTarget = NewManager.instance.chosenTile;
     }
 
     IEnumerator ChooseTile()
     {
         List<TileData> tilesInRange = NewManager.instance.CalculateReachableGrids(currentPlayer.currentTile, range, false);
-        NewManager.instance.UpdateInstructions("Choose a tile in range.");
+        InstructionsManager.UpdateInstructions(this, new string[] { "OnChoiceMade" }, new string[] { "Choose a tile in range." });
         NewManager.instance.WaitForDecision(tilesInRange);
 
         while (NewManager.instance.chosenTile == null)
@@ -878,6 +903,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
             }
         }
 
+        OnChoiceMade?.Invoke(this, EventArgs.Empty);
         currentTarget = NewManager.instance.chosenTile;
     }
 
@@ -918,6 +944,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         }
 
         yield return newCollector.WaitForChoice();
+        OnChoiceMade?.Invoke(this, EventArgs.Empty);
         yield return ResolveMethod(choices[newCollector.chosenButton]);
         Destroy(newCollector.gameObject);
     }
@@ -926,7 +953,10 @@ public class Card : MonoBehaviour, IPointerClickHandler
     {
         for (int i = 0; i < chooseHand; i++)
         {
-            NewManager.instance.UpdateInstructions($"Discard a card from your hand ({chooseHand - i} more).");
+            InstructionsManager.UpdateInstructions(this,
+                new string[] { "OnChoiceMade" },
+                new string[] { $"Discard a card from your hand ({chooseHand - i} more)." }
+            );
             if (player.myHand.Count >= 2)
             {
                 NewManager.instance.WaitForDecision(player.myHand);
@@ -954,6 +984,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
                 yield return player.DiscardFromHand(player.myHand[0]);
             }
             NewManager.instance.UpdateStats(currentPlayer);
+            OnChoiceMade?.Invoke(this, EventArgs.Empty);
         }
     }
 
@@ -961,7 +992,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
     {
         for (int i = 0; i < chooseHand; i++)
         {
-            NewManager.instance.UpdateInstructions($"Give {otherPlayer.name} a card from your hand.");
+            InstructionsManager.UpdateInstructions(this, new string[] { "OnChoiceMade" }, new string[] { $"Give {otherPlayer.name} a card from your hand." });
             if (thisPlayer.myHand.Count >= 2)
             {
                 NewManager.instance.WaitForDecision(thisPlayer.myHand);
@@ -988,6 +1019,8 @@ public class Card : MonoBehaviour, IPointerClickHandler
             {
                 otherPlayer.PlusCards(thisPlayer.myHand[0]);
             }
+
+            OnChoiceMade?.Invoke(this, EventArgs.Empty);
             thisPlayer.SortHand();
             NewManager.instance.UpdateStats(currentPlayer);
         }

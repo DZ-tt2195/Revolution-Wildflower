@@ -10,7 +10,7 @@ public class MoveCamera : MonoBehaviour
 {
     [Header("Dragging")]
     [SerializeField]
-    private static float dragSpeed = 750;
+    private static float dragSpeed = 500;
     private static float minDragSpeed;
     private static float maxDragSpeed;
 
