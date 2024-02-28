@@ -80,6 +80,7 @@ public class DeckBuildManager : MonoBehaviour
                     if (SaveManager.instance.playerDecks[j] == SaveManager.instance.currentSaveData.chosenDecks[i])
                     {
                         listOfDropdowns[i].value = j;
+                        break;
                     }
                 }
             }

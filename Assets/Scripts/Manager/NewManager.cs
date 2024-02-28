@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using TMPro;
 using MyBox;
 using UnityEngine.SceneManagement;
-using UnityEngine.Rendering.Universal;
+//using UnityEngine.Rendering.Universal;
 //using UnityEditor.U2D;
 //using Unity.VisualScripting;
 
@@ -51,30 +51,22 @@ public class NewManager : MonoBehaviour
         [Tooltip("Spritesheet of player character faces")][SerializeField] private Sprite [] facesSpritesheet;
         [Tooltip("Blank character face")][SerializeField] private Sprite emptyFace;
         [Tooltip("Your hand in the canvas")] [ReadOnly] public Transform handContainer;
-        [Tooltip("GameObject holding all selected player in top left corner")] Transform selectedPlayerInfo;
+        [Tooltip("The bar in the bottom center of the screen")] Transform playerStats;
         [Tooltip("Image section containing objective, actions, and debug popups")] Transform informationImage;
         [Tooltip("All the player's stats in text form")] TMP_Text stats;
         [Tooltip("Current player selected")] TMP_Text currentCharacter;
         [Tooltip("Selected player's health")] StatBar healthBar;
         [Tooltip("Selected player's moves left")] StatBar movementBar;
         [Tooltip("Selected player's energy")] StatBar energyBar;
-        [Tooltip("Face of selected character")] Image selected_characterFace;
-        /*
-        // for player stats without bars
-        [Tooltip("Selected player's health")] TMP_Text health;
-        [Tooltip("Selected player's moves left")] TMP_Text moves;
-        [Tooltip("Selected player's energy")] TMP_Text energy;
-        */
+        [Tooltip("Face of selected character")] Image characterFace;
         [Tooltip("Instructions for what the player is allowed to do right now")] TMP_Text instructions;
+        [Tooltip("Spend 3 energy to draw a card")] Button spendToDrawButton;
         [Tooltip("End the turn")] Button endTurnButton;
         [Tooltip("End turn button's image")] Image endTurnImage;
         [Tooltip("Complete an objective you're next to")] [ReadOnly] public Button objectiveButton;
         [Tooltip("Info on entities")] [ReadOnly] public EntityToolTip toolTip;
         [Tooltip("Text that gets displayed when you game over")] TMP_Text gameOverText;
         [Tooltip("Tracks number of cards in deck and discard pile")] TMP_Text deckTracker;
-        [Tooltip("GameObject holding tracker for deck piles")] Transform pilesTracker;
-        [Tooltip("Tracks number of cards in draw pile")] TMP_Text drawPile;
-        [Tooltip("Tracks number of cards in discard pile")] TMP_Text discardPile;
 
     [Foldout("Grid", true)]
         [Tooltip("Tiles in the inspector")] Transform gridContainer;
@@ -124,41 +116,36 @@ public class NewManager : MonoBehaviour
     void Awake()
     {
         instance = this;
-
         turnAlertBar.alpha = 0;
 
-        selectedPlayerInfo = GameObject.Find("SelectedPlayer_Stats").transform;
-        currentCharacter = selectedPlayerInfo.Find("PlayerName").GetComponent<TMP_Text>();
-        healthBar = selectedPlayerInfo.Find("PlayerStats").Find("Health").GetComponentInChildren<StatBar>();
-        movementBar = selectedPlayerInfo.Find("PlayerStats").Find("Moves").GetComponentInChildren<StatBar>();
-        energyBar = selectedPlayerInfo.Find("PlayerStats").Find("Energy").GetComponentInChildren<StatBar>();
-        selected_characterFace = selectedPlayerInfo.Find("CharacterFace").GetComponent<Image>();
+        playerStats = GameObject.Find("SelectedPlayer_Stats").transform;
+        currentCharacter = playerStats.Find("PlayerName").GetComponent<TMP_Text>();
 
-        /*
-        // finding game objects with children in case game gets too slow
-        currentCharacter = selectedPlayerInfo.GetChild(0).GetComponent<TMP_Text>();
-        selected_selected_characterFace = selectedPlayerInfo.GetChild(1).GetComponentInChildren<Image>();
-        energy = selectedPlayerInfo.GetChild(2).GetChild(0).GetChild(0).GetComponent<TMP_Text>();
-        energy = selectedPlayerInfo.GetChild(2).GetChild(0).GetChild(0).GetComponent<TMP_Text>();
-        moves = selectedPlayerInfo.GetChild(2).GetChild(1).GetChild(0).GetComponent<TMP_Text>();
-        health = selectedPlayerInfo.GetChild(2).GetChild(2).GetChild(0).GetComponent<TMP_Text>();*/
+        healthBar = playerStats.Find("Health").GetComponentInChildren<StatBar>();
+        movementBar = playerStats.Find("Movement").GetComponentInChildren<StatBar>();
+        energyBar = playerStats.Find("Energy").GetComponentInChildren<StatBar>();
+        characterFace = playerStats.Find("selected_characterFace").GetComponent<Image>();
 
         facesSpritesheet = Resources.LoadAll<Sprite>("Sprites/portrait_spritesheet");
-        emptyFace = Resources.Load<Sprite>("Sprites/noCharacter");
+        emptyFace = Resources.Load<Sprite>("Sprites/characterSill");
 
         informationImage = GameObject.Find("Information Image").transform;
         stats = informationImage.GetChild(0).GetComponent<TMP_Text>();
         instructions = informationImage.GetChild(1).GetComponent<TMP_Text>();
         deckTracker = GameObject.Find("Deck Tracker").GetComponent<TMP_Text>();
-        pilesTracker = GameObject.Find("Draw&Discard").transform;
-        drawPile = pilesTracker.GetChild(0).GetChild(0).GetComponent<TMP_Text>();
-        discardPile = pilesTracker.GetChild(1).GetChild(0).GetComponent<TMP_Text>();
+
+        spendToDrawButton = GameObject.Find("Spend Energy Button").GetComponent<Button>();
+        spendToDrawButton.onClick.AddListener(SpendToDraw);
+        spendToDrawButton.gameObject.SetActive(false);
 
         endTurnButton = GameObject.Find("End Turn Button").GetComponent<Button>();
         endTurnButton.onClick.AddListener(Regain);
         endTurnImage = endTurnButton.GetComponent<Image>();
+        endTurnButton.gameObject.SetActive(false);
+
         objectiveButton = GameObject.Find("Objective Button").GetComponent<Button>();
         objectiveButton.onClick.AddListener(DoObjective);
+        objectiveButton.gameObject.SetActive(false);
 
         handContainer = GameObject.Find("Hand Container").transform;
         gridContainer = GameObject.Find("Grid Container").transform;
@@ -170,10 +157,10 @@ public class NewManager : MonoBehaviour
             throw new Exception("Didn't set turn count in NewManager (has to be > 0");
 
         //TO-DO: Set up some kind of basic system for passing the starting stat values at game start. -Noah
-        PlayerEntity defaultPlayer = playerPrefab.GetComponent<PlayerEntity>();
+        PlayerEntity defaultPlayer = playerPrefab;
         healthBar.SetMaximumValue(defaultPlayer.health);
         movementBar.SetMaximumValue(defaultPlayer.movesPerTurn);
-        energyBar.SetMaximumValue(3);
+        energyBar.SetMaximumValue(defaultPlayer.maxEnergy);
 
         gameOverText = GameObject.Find("Game Over").transform.GetChild(0).GetComponent<TMP_Text>();
         gameOverText.transform.parent.gameObject.SetActive(false);
@@ -198,14 +185,8 @@ public class NewManager : MonoBehaviour
         {
             for (int j = 0; j < listOfTiles.GetLength(1); j++)
             {
-                try
-                {
-                    newGrid[i, j] = newGrid[i, j].Trim().Replace("\"", "").Replace("]","");
-                }
-                catch (NullReferenceException)
-                {
-                    continue;
-                }
+                try{newGrid[i, j] = newGrid[i, j].Trim().Replace("\"", "").Replace("]","");}
+                catch (NullReferenceException){continue;}
 
                 if (newGrid[i,j] != "")
                 {
@@ -227,7 +208,8 @@ public class NewManager : MonoBehaviour
                             PlayerEntity player = thisTileEntity.GetComponent<PlayerEntity>();
                             player.myPosition = listOfPlayers.Count;
                             player.myBar = playerBars.GetChild(listOfPlayers.Count).GetComponent<PlayerBar>();
-                            SetEnergy(player, 3);
+                            SetEnergy(player, player.maxEnergy);
+                            SetMovement(player, player.movesPerTurn);
                             listOfPlayers.Add(player);
                             player.PlayerSetup(numberPlusAddition[1], handContainer.GetChild(player.myPosition).GetChild(0));
                             break;
@@ -247,6 +229,7 @@ public class NewManager : MonoBehaviour
                             thisTileEntity.name = numberPlusAddition[1];
                             ObjectiveEntity defaultObjective = thisTileEntity.GetComponent<ObjectiveEntity>();
                             defaultObjective.objective = numberPlusAddition[2];
+                            try{defaultObjective.instructionsWhenCompleted = numberPlusAddition[3].ToUpper().Trim();}catch (IndexOutOfRangeException){/*do nothing*/}
                             listOfObjectives.Add(defaultObjective);
                             break;
 
@@ -255,8 +238,8 @@ public class NewManager : MonoBehaviour
                             thisTileEntity = Instantiate(togglePrefab, nextTile.transform);
                             thisTileEntity.name = numberPlusAddition[2];
                             ToggleEntity defaultToggle = thisTileEntity.GetComponent<ToggleEntity>();
-                            defaultToggle.interactCondition = numberPlusAddition[1].ToUpper();
-                            defaultToggle.interactInstructions = numberPlusAddition[2].ToUpper();
+                            defaultToggle.interactCondition = numberPlusAddition[1].ToUpper().Trim();
+                            defaultToggle.interactInstructions = numberPlusAddition[2].ToUpper().Trim();
                             defaultToggle.toggledOn = (numberPlusAddition[3] != "true");
 
                             try
@@ -277,7 +260,6 @@ public class NewManager : MonoBehaviour
                             }
 
                             StartCoroutine(defaultToggle.ObjectiveComplete(null));
-
                             break;
 
                         case 10: //create wall
@@ -286,8 +268,7 @@ public class NewManager : MonoBehaviour
                             thisTileEntity.name = "Wall";
                             WallEntity wall = thisTileEntity.GetComponent<WallEntity>();
                             listOfWalls.Add(wall);
-                            wall.health = int.Parse(numberPlusAddition[1]);
-                            wall.WallDirection(numberPlusAddition[2]);
+                            wall.WallDirection(int.Parse(numberPlusAddition[1]), numberPlusAddition[2]);
                             break;
 
                         case 30: //create +
@@ -295,8 +276,7 @@ public class NewManager : MonoBehaviour
                             thisTileEntity.name = "PlusWall";
                             WallEntity PlusWall = thisTileEntity.GetComponent<WallEntity>();
                             listOfWalls.Add(PlusWall);
-                            PlusWall.health = int.Parse(numberPlusAddition[1]);
-                            PlusWall.WallDirection(numberPlusAddition[2]);
+                            PlusWall.WallDirection(int.Parse(numberPlusAddition[1]), numberPlusAddition[2]);
                             break;
 
                         case 40: //create T
@@ -304,8 +284,7 @@ public class NewManager : MonoBehaviour
                             thisTileEntity.name = "T-Wall";
                             WallEntity Twall = thisTileEntity.GetComponent<WallEntity>();
                             listOfWalls.Add(Twall);
-                            Twall.health = int.Parse(numberPlusAddition[1]);
-                            Twall.WallDirection(numberPlusAddition[2]);
+                            Twall.WallDirection(int.Parse(numberPlusAddition[1]), numberPlusAddition[2]);
                             break;
 
                         case 50: //create corner
@@ -313,8 +292,7 @@ public class NewManager : MonoBehaviour
                             thisTileEntity.name = "CornerWall";
                             WallEntity CornerWall = thisTileEntity.GetComponent<WallEntity>();
                             listOfWalls.Add(CornerWall);
-                            CornerWall.health = int.Parse(numberPlusAddition[1]);
-                            CornerWall.WallDirection(numberPlusAddition[2]);
+                            CornerWall.WallDirection(int.Parse(numberPlusAddition[1]), numberPlusAddition[2]);
                             break;
 
                         case 20: //create guard
@@ -362,14 +340,8 @@ public class NewManager : MonoBehaviour
                             break;
                     }
 
-                    try
-                    {
-                        thisTileEntity.MoveTile(nextTile);
-                    }
-                    catch (NullReferenceException)
-                    {
-                        continue;
-                    }
+                    try{thisTileEntity.MoveTile(nextTile);}
+                    catch (NullReferenceException){continue;}
                 }
             }
         }
@@ -378,14 +350,8 @@ public class NewManager : MonoBehaviour
         {
             for (int j = 0; j < listOfTiles.GetLength(1); j++)
             {
-                try
-                {
-                    FindAdjacent(listOfTiles[i, j]);
-                }
-                catch (NullReferenceException)
-                {
-                    continue;
-                }
+                try{FindAdjacent(listOfTiles[i, j]);}
+                catch (NullReferenceException){continue;}
             }
         }
     }
@@ -425,7 +391,8 @@ public class NewManager : MonoBehaviour
 
     public void ChangeEnergy(PlayerEntity player, int n) //if you want to subtract 3 energy, type ChangeEnergy(-3);
     {
-        player.myEnergy += n;
+        //player.myEnergy += n;
+        player.myEnergy = Math.Clamp(player.myEnergy + n, 0, player.maxEnergy);
         UpdateStats(player);
     }
 
@@ -436,7 +403,9 @@ public class NewManager : MonoBehaviour
 
     public void ChangeHealth(PlayerEntity player, int n) //if you want to subtract 3 health, type ChangeHealth(-3);
     {
-        player.health += n;
+        //player.health += n;
+        player.myEnergy = Math.Clamp(player.health + n, 0, 3);
+
         UpdateStats(player);
         if (player.health <= 0)
             GameOver($"{player.name} lost all their HP.", false);
@@ -449,7 +418,7 @@ public class NewManager : MonoBehaviour
 
     public void ChangeMovement(PlayerEntity player, int n) //if you want to subtract 3 movement, type ChangeMovement(-3);
     {
-        player.movementLeft += n;
+        player.movementLeft = Math.Clamp(player.movementLeft + n, 0, player.movesPerTurn);
         UpdateStats(player);
     }
 
@@ -460,45 +429,30 @@ public class NewManager : MonoBehaviour
             stats.text = "";
 
             currentCharacter.text = "";
-            selected_characterFace.sprite = emptyFace;
+            characterFace.sprite = emptyFace;
 
             healthBar.SetValue(0);
             movementBar.SetValue(0);
             energyBar.SetValue(0);
 
             deckTracker.text = "";
-            drawPile.text = "Draw";
-            discardPile.text = "Discard";
             handContainer.transform.localPosition = new Vector3(10000, 10000, 0);
         }
         
         else
         {
             currentCharacter.text = $"{player.name}";
-            switch(player.name)
+            characterFace.sprite = player.name switch
             {
-                case "Frankie":
-                    selected_characterFace.sprite = facesSpritesheet[0];
-                    break;
-                case "WK":
-                    selected_characterFace.sprite = facesSpritesheet[1];
-                    break;
-                case "Gail":
-                    selected_characterFace.sprite = facesSpritesheet[2];
-                    break;
-                default:
-                    selected_characterFace.sprite = emptyFace;
-                    break;
-            }
+                "Frankie" => facesSpritesheet[0],
+                "WK" => facesSpritesheet[1],
+                "Gail" => facesSpritesheet[2],
+                _ => emptyFace,
+            };
 
             //  TO-DO: change this stuff so it isn't all text -Noah
             deckTracker.text = $"<color=#70f5ff>Draw Pile <color=#ffffff>/ <color=#ff9670>Discard Pile " +
-            $"\n\n<color=#70f5ff>{player.myDrawPile.Count} <color=#ffffff>/ <color=#ff9670>{player.myDiscardPile.Count}" +
-            $"\n({player.myExhaust.Count} exhausted)";
-
-            // idk why the words arent coming up
-            drawPile.text = "Draw" + $"\n\n{player.myDrawPile.Count}";
-            discardPile.text = "Discard" + $"\n\n{player.myDiscardPile.Count}";
+            $"\n\n<color=#70f5ff>{player.myDrawPile.Count} <color=#ffffff>/ <color=#ff9670>{player.myDiscardPile.Count}";
 
             if (player.myPosition * -2000 != handContainer.transform.localPosition.x)
             {
@@ -507,8 +461,8 @@ public class NewManager : MonoBehaviour
             }
 
             healthBar.SetValue(player.health);
-            movementBar.SetValue(player.movementLeft);
-            energyBar.SetValue(player.myEnergy);
+            movementBar.SetValue(player.movementLeft); movementBar.SetMaximumValue(player.movesPerTurn);
+            energyBar.SetValue(player.myEnergy); energyBar.SetMaximumValue(player.maxEnergy);
         }
 
         stats.text = $"\n<color=#75ff59>{listOfObjectives.Count} Objectives Left" + $"| {turnCount} Turns Left";
@@ -543,15 +497,11 @@ public class NewManager : MonoBehaviour
             {
                 facesIndex = 1;
             }
-            selected_selected_characterFace.sprite = facesSpritesheet[facesIndex];
-            
+            characterFace.sprite = facesSpritesheet[facesIndex];
+
             deckTracker.text = $"<color=#70f5ff>Draw Pile <color=#ffffff>/ <color=#ff9670>Discard Pile " +
                 $"\n\n<color=#70f5ff>{player.myDrawPile.Count} <color=#ffffff>/ <color=#ff9670>{player.myDiscardPile.Count}" +
                 $"\n({player.myExhaust.Count} exhausted)";
-            
-            // idk why the words arent coming up
-            drawPile.text = "Draw" + $"\n\n{player.myDrawPile.Count}";
-            discardPile.text = "Discard" + $"\n\n{player.myDiscardPile.Count}";
 
             if (player.myPosition * -2000 != handContainer.transform.localPosition.x)
             {
@@ -566,14 +516,12 @@ public class NewManager : MonoBehaviour
             health.text = "Health:";
             moves.text = "Moves:";
             energy.text = "Energy:";
-            selected_selected_characterFace.sprite = emptyFace;
+            characterFace.sprite = emptyFace;
 
-            //deckTracker.text = "";
-            drawPile.text = "Draw";
-            discardPile.text = "Discard";
+            deckTracker.text = "";
             handContainer.transform.localPosition = new Vector3(10000, 10000, 0);
         }
-/*
+
         stats.text += $"\n<color=#75ff59>{listOfObjectives.Count} Objectives Left" +
             $"| {turnCount} Turns Left";
 
@@ -595,17 +543,13 @@ public class NewManager : MonoBehaviour
     private void Update()
     {
         endTurnButton.gameObject.SetActive(currentTurn == TurnSystem.You);
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-            GameOver("You quit.", false);
+        if (currentTurn != TurnSystem.You)
+            spendToDrawButton.gameObject.SetActive(false);
     }
 
     private void FixedUpdate()
     {
-        if (decrease)
-            opacity -= 0.05f;
-        else
-            opacity += 0.05f;
+        opacity += (decrease) ? 0.05f : -0.05f;
         if (opacity < 0 || opacity > 1)
             decrease = !decrease;
     }
@@ -748,7 +692,7 @@ public class NewManager : MonoBehaviour
     {
         if (PlayerPrefs.GetInt("Confirm Choices") == 1)
         {
-            Debug.LogError($"confirm decision");
+            //Debug.LogError($"confirm decision");
             DisableAllCards();
             DisableAllTiles();
 
@@ -856,7 +800,6 @@ public class NewManager : MonoBehaviour
             UpdateStats(lastSelectedPlayer);
             EnablePlayers();
             objectiveButton.gameObject.SetActive(false);
-
             endTurnImage.color = AnythingLeftThisTurn() ? Color.gray : Color.white;
 
             if (startTurn)
@@ -901,6 +844,7 @@ public class NewManager : MonoBehaviour
 
         List<TileData> possibleTiles = CalculateReachableGrids(currentPlayer.currentTile, currentPlayer.movementLeft, true);
         WaitForDecisionMove(possibleTiles);
+        spendToDrawButton.gameObject.SetActive(currentPlayer.myHand.Count < 5 && currentPlayer.myEnergy >= 3);
 
         UpdateStats(currentPlayer);
         StartCoroutine(ChooseCardPlay(currentPlayer));
@@ -934,7 +878,7 @@ public class NewManager : MonoBehaviour
 
             if (decision == 1)
             {
-                StopCoroutine(ChooseMovePlayer(currentPlayer));
+                StopCoroutine(ChooseCardPlay(currentPlayer));
                 BackToStart(false);
                 yield break;
             }
@@ -955,7 +899,7 @@ public class NewManager : MonoBehaviour
 
         if (distanceTraveled != 0)
             footsteps.Post(currentPlayer.gameObject);
-        yield return (currentPlayer.MovePlayer(FullPath));
+        yield return currentPlayer.MovePlayer(FullPath);
         //currentPlayer.MoveTile(chosenTile);
 
         BackToStart(false);
@@ -1006,6 +950,17 @@ public class NewManager : MonoBehaviour
         }
     }
 
+    void SpendToDraw()
+    {
+        if (currentTurn == TurnSystem.You)
+        {
+            currentTurn = TurnSystem.Resolving;
+            ChangeEnergy(lastSelectedPlayer, -3);
+            lastSelectedPlayer.PlusCards(1);
+            BackToStart(false);
+        }
+    }
+
     void DoObjective()
     {
         StartCoroutine(ResolveObjective());
@@ -1026,16 +981,16 @@ public class NewManager : MonoBehaviour
 
     void Regain()
     {
-        print("Begin Regain");
         StopAllCoroutines();
         objectiveButton.gameObject.SetActive(false);
+        spendToDrawButton.gameObject.SetActive(false);
         UpdateInstructions("");
 
         foreach (PlayerEntity player in listOfPlayers)
         {
-            SetEnergy(player, 3);
+            SetEnergy(player, player.maxEnergy);
             SetMovement(player, player.movesPerTurn);
-            player.PlusCards(5 - player.myHand.Count);
+            player.damageTaken = 0;
             player.cardsPlayed.Clear();
             UpdateStats(null);
         }
@@ -1084,7 +1039,9 @@ public class NewManager : MonoBehaviour
         {
             FocusOnTile(guard.currentTile, false);
             yield return (guard.EndOfTurn());
+
             guard.movementLeft = guard.movesPerTurn;
+            guard.DetectionRangePatrol = guard.DetectionRangeMax;
         }
 
         turnCount--;
