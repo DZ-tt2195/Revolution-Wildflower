@@ -262,8 +262,7 @@ public class NewManager : MonoBehaviour
                             thisTileEntity.name = "Wall";
                             WallEntity wall = thisTileEntity.GetComponent<WallEntity>();
                             listOfWalls.Add(wall);
-                            wall.health = int.Parse(numberPlusAddition[1]);
-                            wall.WallDirection(numberPlusAddition[2]);
+                            wall.WallDirection(int.Parse(numberPlusAddition[1]), numberPlusAddition[2]);
                             break;
 
                         case 30: //create +
@@ -271,8 +270,7 @@ public class NewManager : MonoBehaviour
                             thisTileEntity.name = "PlusWall";
                             WallEntity PlusWall = thisTileEntity.GetComponent<WallEntity>();
                             listOfWalls.Add(PlusWall);
-                            PlusWall.health = int.Parse(numberPlusAddition[1]);
-                            PlusWall.WallDirection(numberPlusAddition[2]);
+                            PlusWall.WallDirection(int.Parse(numberPlusAddition[1]), numberPlusAddition[2]);
                             break;
 
                         case 40: //create T
@@ -280,8 +278,7 @@ public class NewManager : MonoBehaviour
                             thisTileEntity.name = "T-Wall";
                             WallEntity Twall = thisTileEntity.GetComponent<WallEntity>();
                             listOfWalls.Add(Twall);
-                            Twall.health = int.Parse(numberPlusAddition[1]);
-                            Twall.WallDirection(numberPlusAddition[2]);
+                            Twall.WallDirection(int.Parse(numberPlusAddition[1]), numberPlusAddition[2]);
                             break;
 
                         case 50: //create corner
@@ -289,8 +286,7 @@ public class NewManager : MonoBehaviour
                             thisTileEntity.name = "CornerWall";
                             WallEntity CornerWall = thisTileEntity.GetComponent<WallEntity>();
                             listOfWalls.Add(CornerWall);
-                            CornerWall.health = int.Parse(numberPlusAddition[1]);
-                            CornerWall.WallDirection(numberPlusAddition[2]);
+                            CornerWall.WallDirection(int.Parse(numberPlusAddition[1]), numberPlusAddition[2]);
                             break;
 
                         case 20: //create guard
