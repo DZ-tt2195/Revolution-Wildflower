@@ -128,10 +128,10 @@ public class NewManager : MonoBehaviour
         healthBar = playerStats.Find("Health").GetComponentInChildren<StatBar>();
         movementBar = playerStats.Find("Movement").GetComponentInChildren<StatBar>();
         energyBar = playerStats.Find("Energy").GetComponentInChildren<StatBar>();
-        selected_characterFace = playerStats.Find("selected_characterFace").GetComponent<Image>();
-        
-        facesSpritesheet = Resources.LoadAll<Sprite>("Sprites/portrait_spritesheet");
-        emptyFace = Resources.Load<Sprite>("Sprites/characterSill");
+        characterFace = playerStats.Find("selected_characterFace").GetComponent<Image>();
+
+        facesSpritesheet = Resources.LoadAll<Sprite>("Sprites/selected_portrait_spritesheet");
+        emptyFace = Resources.Load<Sprite>("Sprites/noCharacter");
 
         informationImage = GameObject.Find("Information Image").transform;
         stats = informationImage.GetChild(0).GetComponent<TMP_Text>();
