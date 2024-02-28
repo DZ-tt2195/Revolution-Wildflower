@@ -1135,6 +1135,8 @@ spendToDrawButton.gameObject.SetActive(false);
             TileData SelectTile = current.Item1;
             int cost = current.Item2;
 
+            reachableGrids.Remove(startLocation);
+            
             if (cost <= movementSpeed)
             {
                 reachableGrids.Add(SelectTile);;
