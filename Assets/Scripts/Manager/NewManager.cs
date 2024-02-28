@@ -58,7 +58,7 @@ public class NewManager : MonoBehaviour
         [Tooltip("Selected player's health")] StatBar healthBar;
         [Tooltip("Selected player's moves left")] StatBar movementBar;
         [Tooltip("Selected player's energy")] StatBar energyBar;
-        [Tooltip("Face of selected character")] Image characterFace;
+        [Tooltip("Face of selected character")] Image selected_characterFace;
                 [Tooltip("Instructions for what the player is allowed to do right now")] TMP_Text instructions;
 [Tooltip("Spend 3 energy to draw a card")] Button spendToDrawButton;
         [Tooltip("End the turn")] Button endTurnButton;
@@ -128,7 +128,7 @@ public class NewManager : MonoBehaviour
         healthBar = playerStats.Find("Health").GetComponentInChildren<StatBar>();
         movementBar = playerStats.Find("Movement").GetComponentInChildren<StatBar>();
         energyBar = playerStats.Find("Energy").GetComponentInChildren<StatBar>();
-        characterFace = playerStats.Find("selected_characterFace").GetComponent<Image>();
+        selected_characterFace = playerStats.Find("selected_characterFace").GetComponent<Image>();
         
         facesSpritesheet = Resources.LoadAll<Sprite>("Sprites/portrait_spritesheet");
         emptyFace = Resources.Load<Sprite>("Sprites/characterSill");
@@ -452,9 +452,9 @@ player.myEnergy = Math.Clamp(player.health + n, 0, 3);
             movementBar.SetValue(0);
             energyBar.SetValue(0);
 
-            deckTracker.text = "";
-            drawPile.text = "Draw";
-            discardPile.text = "Discard";
+            //deckTracker.text = "";
+            //drawPile.text = "Draw";
+            //discardPile.text = "Discard";
             handContainer.transform.localPosition = new Vector3(10000, 10000, 0);
         }
         
@@ -1075,7 +1075,7 @@ spendToDrawButton.gameObject.SetActive(false);
             FocusOnTile(guard.currentTile, false);
             yield return (guard.EndOfTurn());
             guard.movementLeft = guard.movesPerTurn;
-guard.DetectionRangePatrol = guard.DetectionRangeMax;
+            guard.DetectionRangePatrol = guard.DetectionRangeMax;
         }
 
         turnCount--;
