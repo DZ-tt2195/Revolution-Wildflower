@@ -142,7 +142,7 @@ public class NewManager : MonoBehaviour
         moves = selectedPlayerInfo.GetChild(2).GetChild(1).GetChild(0).GetComponent<TMP_Text>();
         health = selectedPlayerInfo.GetChild(2).GetChild(2).GetChild(0).GetComponent<TMP_Text>();*/
 
-        facesSpritesheet = Resources.LoadAll<Sprite>("Sprites/portrait_spritesheet");
+        facesSpritesheet = Resources.LoadAll<Sprite>("Sprites/selected_portrait_spritesheet");
         emptyFace = Resources.Load<Sprite>("Sprites/noCharacter");
 
         informationImage = GameObject.Find("Information Image").transform;

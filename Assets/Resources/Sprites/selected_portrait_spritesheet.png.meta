@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 6e4ca21e4fe14ef45af6d282ec73f40e
+guid: 20c0900995c06a04da8d554dabdd67ef
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -81,6 +81,19 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
     buildTarget: Standalone
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -110,13 +123,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: portrait_spritesheet_0
+      name: selected_portrait_spritesheet_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 743.6667
-        height: 797
+        width: 3836
+        height: 4368
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -124,20 +137,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a89599a71113f7646880da02e2a80f12
-      internalID: -361035117
+      spriteID: 098ebfa0f0650ed4cb88ce4de62715ca
+      internalID: -1149757235
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: portrait_spritesheet_1
+      name: selected_portrait_spritesheet_1
       rect:
         serializedVersion: 2
-        x: 743
+        x: 3836
         y: 0
-        width: 743.6667
-        height: 797
+        width: 3836
+        height: 4368
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -145,20 +158,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e58506b9cb044a348aa1ea40d2e0e735
-      internalID: -139282177
+      spriteID: 65885b30ae2eacc439355c074eee5cc4
+      internalID: 1895267887
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: portrait_spritesheet_2
+      name: selected_portrait_spritesheet_2
       rect:
         serializedVersion: 2
-        x: 1486
+        x: 7672
         y: 0
-        width: 743.6667
-        height: 797
+        width: 3836
+        height: 4368
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -166,8 +179,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ff4dad9b1a1eefa458e6fde6744499ca
-      internalID: -573899356
+      spriteID: ec73125922ce6194ab37ac45cc78b29d
+      internalID: -923044054
       vertices: []
       indices: 
       edges: []
@@ -175,7 +188,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: a9645aa3758d51244894d95fa4492bca
     internalID: 0
     vertices: []
     indices: 
@@ -183,9 +196,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      portrait_spritesheet_0: -361035117
-      portrait_spritesheet_1: -139282177
-      portrait_spritesheet_2: -573899356
+      selected_portrait_spritesheet_0: -1149757235
+      selected_portrait_spritesheet_1: 1895267887
+      selected_portrait_spritesheet_2: -923044054
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
