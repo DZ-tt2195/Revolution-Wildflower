@@ -1134,6 +1134,13 @@ public class NewManager : MonoBehaviour
                 }
             }
         }
+        foreach (TileData tile in reachableGrids)
+        {
+            if (tile == startLocation)
+            {
+                reachableGrids.Remove(tile);
+            }
+        }
         return reachableGrids;
     }
 
