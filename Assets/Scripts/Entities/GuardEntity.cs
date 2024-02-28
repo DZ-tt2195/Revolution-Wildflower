@@ -334,7 +334,7 @@ public class GuardEntity : MovingEntity
         }
     }
 
-    IEnumerator newAction()
+    protected IEnumerator newAction()
     {
         alertStatus = Alert.Patrol;
         if (DistractionPoints.Count > 0)
@@ -471,7 +471,7 @@ public class GuardEntity : MovingEntity
         }
     }
 
-    IEnumerator Patrol()
+    protected IEnumerator Patrol()
     {
         //print(currentTile.gridPosition + "Patrolling");
         TileData nextTile;
