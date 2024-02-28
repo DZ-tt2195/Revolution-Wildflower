@@ -18,7 +18,7 @@ public class GuardEntity : MovingEntity
 
     [Header("Detection")]
         [Tooltip("Tiles this is searching")] List<TileData> inDetection = new List<TileData>();
-        //[Tooltip("Pauses between movement")] float movePauseTime = 0.25f;
+        [Tooltip("Pauses between movement")] public float movePauseTime = 0.25f;
         [Tooltip("How far this can see")] [SerializeField] public int DetectionRangePatrol = 3;
         public int DetectionRangeMax = 3;
         [Tooltip("half their field of view for detection (MUST BE A MULTIPLE OF 5)")] [SerializeField] int DetectionAngle = 30;
@@ -26,7 +26,7 @@ public class GuardEntity : MovingEntity
 
     [Header("Patrol")]
         [Tooltip("list of patrol positions")] public List<Vector2Int> PatrolPoints = new List<Vector2Int>();
-        [Tooltip("current patrol target")] private int PatrolTarget = 0;
+        [Tooltip("current patrol target")] public int PatrolTarget = 0;
 
     [Header("Distraction")]
         [Tooltip("List of distraction positions")] public List<Vector2Int> DistractionPoints = new List<Vector2Int>();
@@ -334,7 +334,7 @@ public class GuardEntity : MovingEntity
         }
     }
 
-    protected IEnumerator newAction()
+    public IEnumerator newAction()
     {
         alertStatus = Alert.Patrol;
         if (DistractionPoints.Count > 0)
@@ -471,7 +471,7 @@ public class GuardEntity : MovingEntity
         }
     }
 
-    protected IEnumerator Patrol()
+    protected virtual IEnumerator Patrol()
     {
         //print(currentTile.gridPosition + "Patrolling");
         TileData nextTile;
