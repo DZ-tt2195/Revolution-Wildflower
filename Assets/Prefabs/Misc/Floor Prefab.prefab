@@ -172,6 +172,7 @@ MonoBehaviour:
   adjacentTiles: []
   gridPosition: {x: 0, y: 0}
   myEntity: {fileID: 0}
+  myType: 0
   choosable: 0
   clickable: 0
   moveable: 0

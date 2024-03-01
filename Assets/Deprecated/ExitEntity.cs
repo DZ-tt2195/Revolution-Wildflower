@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ExitEntity : ObjectiveEntity
 {
+    /*
     public override bool CanInteract()
     {
         return NewManager.instance.listOfObjectives.Count == 1;
@@ -37,4 +38,5 @@ public class ExitEntity : ObjectiveEntity
             NewManager.instance.BackToStart(false);
         }
     }
+    */
 }

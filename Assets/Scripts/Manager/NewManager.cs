@@ -59,11 +59,12 @@ public class NewManager : MonoBehaviour
         [Tooltip("Selected player's moves left")] StatBar movementBar;
         [Tooltip("Selected player's energy")] StatBar energyBar;
         [Tooltip("Face of selected character")] Image selected_characterFace;
-                [Tooltip("Instructions for what the player is allowed to do right now")] TMP_Text instructions;
-[Tooltip("Spend 3 energy to draw a card")] Button spendToDrawButton;
+        [Tooltip("Instructions for what the player is allowed to do right now")] TMP_Text instructions;
+        [Tooltip("Spend 3 energy to draw a card")] Button spendToDrawButton;
         [Tooltip("End the turn")] Button endTurnButton;
         [Tooltip("End turn button's image")] Image endTurnImage;
-        [Tooltip("Complete an objective you're next to")] [ReadOnly] public Button objectiveButton;
+        [Tooltip("Complete an objective you're next to")][ReadOnly] public Button objectiveButton;
+        [Tooltip("Exit the level if you're on the right tile")] [ReadOnly] public Button exitButton;
         [Tooltip("Info on entities")] [ReadOnly] public EntityToolTip toolTip;
         [Tooltip("Text that gets displayed when you game over")] TMP_Text gameOverText;
         [Tooltip("Tracks number of cards in deck and discard pile")] TMP_Text deckTracker;
@@ -87,7 +88,7 @@ public class NewManager : MonoBehaviour
         [Tooltip("static guard prefab")][SerializeField] StaticGuard staticGuardPrefab; 
         [Tooltip("Objective prefab")][SerializeField] ObjectiveEntity objectivePrefab;
         [Tooltip("Toggle prefab")][SerializeField] ToggleEntity togglePrefab;
-        [Tooltip("Guard prefab")][SerializeField] ExitEntity exitPrefab;
+        //[Tooltip("Guard prefab")][SerializeField] ExitEntity exitPrefab;
         [Tooltip("Environmental prefab")][SerializeField] EnvironmentalEntity environmentPrefab;
 
     [Foldout("Setup", true)]
@@ -147,11 +148,15 @@ public class NewManager : MonoBehaviour
         endTurnButton = GameObject.Find("End Turn Button").GetComponent<Button>();
         endTurnButton.onClick.AddListener(Regain);
         endTurnImage = endTurnButton.GetComponent<Image>();
-endTurnButton.gameObject.SetActive(false);
+        endTurnButton.gameObject.SetActive(false);
 
         objectiveButton = GameObject.Find("Objective Button").GetComponent<Button>();
         objectiveButton.onClick.AddListener(DoObjective);
-objectiveButton.gameObject.SetActive(false);
+        objectiveButton.gameObject.SetActive(false);
+
+        exitButton = GameObject.Find("Exit Button").GetComponent<Button>();
+        exitButton.gameObject.SetActive(false);
+        exitButton.onClick.AddListener(ExitCharacter);
 
         handContainer = GameObject.Find("Hand Container").transform;
         gridContainer = GameObject.Find("Grid Container").transform;
@@ -221,12 +226,25 @@ objectiveButton.gameObject.SetActive(false);
                             break;
 
                         case 2: //create exit
-                            //print("exit");
+                            /*
                             thisTileEntity = Instantiate(exitPrefab, nextTile.transform);
                             thisTileEntity.name = "Exit";
                             ObjectiveEntity exitObjective = thisTileEntity.GetComponent<ExitEntity>();
                             exitObjective.objective = "Exit";
                             listOfObjectives.Add(exitObjective);
+                            */
+                            nextTile.myType = TileData.TileType.Exit;
+                            break;
+
+                        case 5: //create all exit
+                            /*
+                            thisTileEntity = Instantiate(exitPrefab, nextTile.transform);
+                            thisTileEntity.name = "Exit";
+                            ObjectiveEntity exitObjective = thisTileEntity.GetComponent<ExitEntity>();
+                            exitObjective.objective = "Exit";
+                            listOfObjectives.Add(exitObjective);
+                            */
+                            nextTile.myType = TileData.TileType.AllExit;
                             break;
 
                         case 3: //create objective
@@ -235,7 +253,7 @@ objectiveButton.gameObject.SetActive(false);
                             thisTileEntity.name = numberPlusAddition[1];
                             ObjectiveEntity defaultObjective = thisTileEntity.GetComponent<ObjectiveEntity>();
                             defaultObjective.objective = numberPlusAddition[2];
-try{defaultObjective.instructionsWhenCompleted = numberPlusAddition[3].ToUpper().Trim();}catch (IndexOutOfRangeException){/*do nothing*/}
+                            try{defaultObjective.instructionsWhenCompleted = numberPlusAddition[3].ToUpper().Trim();}catch (IndexOutOfRangeException){/*do nothing*/}
                             listOfObjectives.Add(defaultObjective);
                             break;
 
@@ -411,7 +429,7 @@ try{defaultObjective.instructionsWhenCompleted = numberPlusAddition[3].ToUpper()
     public void ChangeEnergy(PlayerEntity player, int n) //if you want to subtract 3 energy, type ChangeEnergy(-3);
     {
         //player.myEnergy += n;
-player.myEnergy = Math.Clamp(player.myEnergy + n, 0, player.maxEnergy);
+        player.myEnergy = Math.Clamp(player.myEnergy + n, 0, player.maxEnergy);
         UpdateStats(player);
     }
 
@@ -423,7 +441,7 @@ player.myEnergy = Math.Clamp(player.myEnergy + n, 0, player.maxEnergy);
     public void ChangeHealth(PlayerEntity player, int n) //if you want to subtract 3 health, type ChangeHealth(-3);
     {
         //player.health += n;
-player.myEnergy = Math.Clamp(player.health + n, 0, 3);
+        player.health = Math.Clamp(player.health + n, 0, 3);
 
         UpdateStats(player);
         if (player.health <= 0)
@@ -578,9 +596,10 @@ player.myEnergy = Math.Clamp(player.health + n, 0, 3);
     private void Update()
     {
         endTurnButton.gameObject.SetActive(currentTurn == TurnSystem.You);
-if (currentTurn != TurnSystem.You)
-            spendToDrawButton.gameObject.SetActive(false);
-
+        /*
+              spendToDrawButton.gameObject.SetActive(currentTurn == TurnSystem.You);
+              exitButton.gameObject.SetActive(currentTurn == TurnSystem.You);
+              */
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             lastClickedMousePosition = Input.mousePosition;
@@ -879,6 +898,32 @@ if (currentTurn != TurnSystem.You)
         }
     }
 
+    bool CanExit(TileData tile)
+    {
+        if (listOfObjectives.Count > 0 || tile.myType == TileData.TileType.Regular)
+            return false;
+
+        if (tile.myType == TileData.TileType.Exit)
+            return true;
+
+        if (tile.myType == TileData.TileType.AllExit)
+        {
+            foreach (PlayerEntity player in listOfPlayers)
+            {
+                if (player.currentTile.myType == TileData.TileType.Regular)
+                    return false;
+            }
+            foreach (GuardEntity guard in listOfGuards)
+            {
+                if (guard.currentTile.myType == TileData.TileType.Regular)
+                    return false;
+            }
+            return true;
+        }
+
+        return false;
+    }
+
     public IEnumerator ChooseMovePlayer(PlayerEntity currentPlayer)
     {
         if (lastSelectedPlayer != currentPlayer)
@@ -900,7 +945,9 @@ if (currentTurn != TurnSystem.You)
 
         List<TileData> possibleTiles = CalculateReachableGrids(currentPlayer.currentTile, currentPlayer.movementLeft, true);
         WaitForDecisionMove(possibleTiles);
-spendToDrawButton.gameObject.SetActive(currentPlayer.myHand.Count < 5 && currentPlayer.myEnergy >= 3);
+
+        spendToDrawButton.gameObject.SetActive(currentPlayer.myHand.Count < 5 && currentPlayer.myEnergy >= 3);
+        exitButton.gameObject.SetActive(CanExit(currentPlayer.currentTile));
 
         UpdateStats(currentPlayer);
         StartCoroutine(ChooseCardPlay(currentPlayer));
@@ -1009,6 +1056,36 @@ spendToDrawButton.gameObject.SetActive(currentPlayer.myHand.Count < 5 && current
         }
     }
 
+    void ExitCharacter()
+    {
+        foreach (GuardEntity guard in listOfGuards)
+        {
+            if (guard.CurrentTarget == lastSelectedPlayer)
+                guard.resetAlert();
+        }
+
+        if (lastSelectedPlayer.currentTile.myType == TileData.TileType.AllExit)
+        {
+            GameOver("You won!", true);
+        }
+        else
+        {
+            listOfPlayers.Remove(lastSelectedPlayer);
+            Destroy(lastSelectedPlayer.myBar.gameObject);
+            Destroy(lastSelectedPlayer.gameObject);
+
+            if (listOfPlayers.Count == 0)
+            {
+                GameOver("You won!", true);
+            }
+            else
+            {
+                lastSelectedPlayer = null;
+                BackToStart(false);
+            }
+        }
+    }
+
     void SpendToDraw()
     {
         if (currentTurn == TurnSystem.You)
@@ -1040,10 +1117,10 @@ spendToDrawButton.gameObject.SetActive(currentPlayer.myHand.Count < 5 && current
 
     void Regain()
     {
-        print("Begin Regain");
         StopAllCoroutines();
         objectiveButton.gameObject.SetActive(false);
-spendToDrawButton.gameObject.SetActive(false);
+        spendToDrawButton.gameObject.SetActive(false);
+        exitButton.gameObject.SetActive(false);
         UpdateInstructions("");
 
         foreach (PlayerEntity player in listOfPlayers)
