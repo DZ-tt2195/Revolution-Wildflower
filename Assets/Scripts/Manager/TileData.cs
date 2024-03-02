@@ -147,7 +147,6 @@ public class TileData : MonoBehaviour
                 //NewManager.instance.FullPath[i].directionIndicator.enabled = false;
             }
         }
-
     }
 
     private void MouseOver()
@@ -174,7 +173,7 @@ public class TileData : MonoBehaviour
                     if (player.stunned == 0)
                     {
                         NewManager.instance.StopAllCoroutines();
-                        StartCoroutine(NewManager.instance.ChooseMovePlayer(player));
+                        NewManager.instance.ControlCharacter(player);
                     }
                 }
             }

@@ -632,10 +632,8 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
                 case "THROWNBOTTLE":
                     yield return ChooseTileLOS();
-                    if (currentTarget.myEntity.CompareTag("Guard"))
-                        yield return CalculateDistraction(currentPlayer.currentTile);
-                    else
-                        yield return CalculateDistraction(currentTarget);
+                    if (currentTarget.myEntity.CompareTag("Guard")) yield return CalculateDistraction(currentPlayer.currentTile);
+                    else yield return CalculateDistraction(currentTarget);
                     break;
                 case "CHOOSEDISTRACTION":
                     yield return ChooseTileLOS();
@@ -709,6 +707,10 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     IEnumerator ChooseGuard()
     {
+        adjacentTilesWithGuards = SearchAdjacentGuard(currentPlayer.currentTile);
+        if (adjacentTilesWithGuards.Count == 0)
+            yield break;
+
         if (adjacentTilesWithGuards.Count != 1)
         {
             NewManager.instance.UpdateInstructions("Choose a guard in range.");
@@ -740,6 +742,10 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     IEnumerator ChoosePlayer()
     {
+        adjacentTilesWithPlayers = SearchAdjacentPlayers(currentPlayer.currentTile, true);
+        if (adjacentTilesWithPlayers.Count == 0)
+            yield break;
+
         if (adjacentTilesWithPlayers.Count != 1)
         {
             NewManager.instance.UpdateInstructions("Choose a player in range.");
@@ -770,6 +776,10 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     IEnumerator ChooseWall()
     {
+        adjacentTilesWithWalls = SearchAdjacentWall(currentPlayer.currentTile);
+        if (adjacentTilesWithWalls.Count == 0)
+            yield break;
+
         if (adjacentTilesWithWalls.Count != 1)
         {
             NewManager.instance.UpdateInstructions("Choose a wall in range.");
