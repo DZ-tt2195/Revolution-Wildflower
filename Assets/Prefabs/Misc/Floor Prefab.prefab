@@ -172,6 +172,7 @@ MonoBehaviour:
   adjacentTiles: []
   gridPosition: {x: 0, y: 0}
   myEntity: {fileID: 0}
+  myType: 0
   choosable: 0
   clickable: 0
   moveable: 0
@@ -187,7 +188,7 @@ MonoBehaviour:
   MoveableColor: {r: 0.8490566, g: 0.8220592, b: 0.2616589, a: 1}
   AlertColor: {r: 0.9056604, g: 0.27640623, b: 0.065503664, a: 1}
   CardSelectableColor: {r: 0.2064791, g: 0.8207547, b: 0.76090276, a: 1}
-  AlertDelay: 0.1
+  AlertDelay: 0.05
   BaseAlertDelay: 0
 --- !u!212 &6299431183525030124
 SpriteRenderer:

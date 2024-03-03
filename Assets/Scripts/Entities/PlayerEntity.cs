@@ -100,33 +100,14 @@ public class PlayerEntity : MovingEntity
         return answer;
     }
 
-    public IEnumerator MovePlayer(List<TileData> path)
-    {
-        foreach(TileData tile in path)
-        {
-            yield return NewManager.Wait(PlayerPrefs.GetFloat("Animation Speed"));
-            MoveTile(tile);
-        }
-        /*
-        float timer = 0;
-        for (int i = 0; i < path.Count; i++)
-        {
-            MoveTile(path[i]);
-            while (timer < moveDelay)
-            {
-                timer += Time.deltaTime;
-                yield return null;
-            }
-            timer = 0;
-        }
-        */
-    }
+    /*
     public override void MoveTile(TileData newTile)
     {
         base.MoveTile(newTile);
         foreach (GuardEntity guard in NewManager.instance.listOfGuards)
             guard.CheckForPlayer();
     }
+    */
 
     public bool CheckForObjectives()
     {

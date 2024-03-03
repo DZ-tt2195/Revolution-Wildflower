@@ -603,6 +603,9 @@ public class Card : MonoBehaviour, IPointerClickHandler
                     yield return ChangeEnergy(currentPlayer);
                     break;
 
+                case "FREEMOVE":
+                    yield return NewManager.instance.ChooseMovePlayer(currentPlayer, 3, true);
+                    break;
                 case "CHANGEMP":
                     yield return ChangeMovement(currentPlayer);
                     break;
@@ -632,10 +635,8 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
                 case "THROWNBOTTLE":
                     yield return ChooseTileLOS();
-                    if (currentTarget.myEntity.CompareTag("Guard"))
-                        yield return CalculateDistraction(currentPlayer.currentTile);
-                    else
-                        yield return CalculateDistraction(currentTarget);
+                    if (currentTarget.myEntity.CompareTag("Guard")) yield return CalculateDistraction(currentPlayer.currentTile);
+                    else yield return CalculateDistraction(currentTarget);
                     break;
                 case "CHOOSEDISTRACTION":
                     yield return ChooseTileLOS();
@@ -655,6 +656,12 @@ public class Card : MonoBehaviour, IPointerClickHandler
                 case "THROWENVIRONMENTAL":
                     yield return ChooseTile();
                     yield return CreateEnvironmental();
+                    break;
+                case "THROWMODIFIER":
+                    yield return ChooseTile();
+                    TileModifier newModifier = currentTarget.gameObject.AddComponent<TileModifier>();
+                    currentTarget.listOfModifiers.Add(newModifier);
+                    newModifier.card = this;
                     break;
 
                 default:
@@ -709,6 +716,10 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     IEnumerator ChooseGuard()
     {
+        adjacentTilesWithGuards = SearchAdjacentGuard(currentPlayer.currentTile);
+        if (adjacentTilesWithGuards.Count == 0)
+            yield break;
+
         if (adjacentTilesWithGuards.Count != 1)
         {
             NewManager.instance.UpdateInstructions("Choose a guard in range.");
@@ -740,6 +751,10 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     IEnumerator ChoosePlayer()
     {
+        adjacentTilesWithPlayers = SearchAdjacentPlayers(currentPlayer.currentTile, true);
+        if (adjacentTilesWithPlayers.Count == 0)
+            yield break;
+
         if (adjacentTilesWithPlayers.Count != 1)
         {
             NewManager.instance.UpdateInstructions("Choose a player in range.");
@@ -770,6 +785,10 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     IEnumerator ChooseWall()
     {
+        adjacentTilesWithWalls = SearchAdjacentWall(currentPlayer.currentTile);
+        if (adjacentTilesWithWalls.Count == 0)
+            yield break;
+
         if (adjacentTilesWithWalls.Count != 1)
         {
             NewManager.instance.UpdateInstructions("Choose a wall in range.");
@@ -1226,7 +1245,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         yield return null;
         //guard.stunSound.Post(guard.gameObject);
         //guard.DetectionRangePatrol = 0;
-        player.stunned += stunDuration;
+        player.stunChange(stunDuration);
         //guard.CalculateTiles();
         //currentTarget = guard.currentTile;
     }
@@ -1236,7 +1255,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         yield return null;
         guard.stunSound.Post(guard.gameObject);
         guard.DetectionRangePatrol = 0;
-        guard.stunned += stunDuration;
+        guard.stunChange(stunDuration);
         guard.CalculateTiles();
         currentTarget = guard.currentTile;
     }

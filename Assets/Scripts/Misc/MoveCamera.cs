@@ -129,7 +129,7 @@ public class MoveCamera : MonoBehaviour
                 yield return null;
             }
             currentFrame += Time.deltaTime;
-            Debug.Log(instance.transform.position + " " + target);
+            //Debug.Log(instance.transform.position + " " + target);
             yield return null;
         }
         focused = false;

@@ -7,7 +7,7 @@ using Unity.VisualScripting;
 
 public class GuardEntity : MovingEntity
 {
-    enum Alert { Patrol, Attack, Persue };
+    public enum Alert { Patrol, Attack, Persue };
 
     [Foldout("Guard Entity",true)]
     [Header("Attacking")]
@@ -18,15 +18,16 @@ public class GuardEntity : MovingEntity
 
     [Header("Detection")]
         [Tooltip("Tiles this is searching")] List<TileData> inDetection = new List<TileData>();
-        //[Tooltip("Pauses between movement")] float movePauseTime = 0.25f;
+        [Tooltip("Pauses between movement")] protected float movePauseTime = 0.25f;
         [Tooltip("How far this can see")] [SerializeField] public int DetectionRangePatrol = 3;
         public int DetectionRangeMax = 3;
         [Tooltip("half their field of view for detection (MUST BE A MULTIPLE OF 5)")] [SerializeField] int DetectionAngle = 30;
-        [Tooltip("State of a guard's alert")] Alert alertStatus = 0;
+        [Tooltip("State of a guard's alert")] public Alert alertStatus;
 
     [Header("Patrol")]
         [Tooltip("list of patrol positions")] public List<Vector2Int> PatrolPoints = new List<Vector2Int>();
-        [Tooltip("current patrol target")] private int PatrolTarget = 0;
+        [Tooltip("current patrol target")] public int PatrolTarget = 1;
+
 
     [Header("Distraction")]
         [Tooltip("List of distraction positions")] public List<Vector2Int> DistractionPoints = new List<Vector2Int>();
@@ -51,6 +52,8 @@ public class GuardEntity : MovingEntity
     {
         AttackLine = GetComponent<LineRenderer>();
         DetectionRangeMax = DetectionRangePatrol;
+        alertStatus = Alert.Patrol;
+        PatrolTarget = 1;
     }
 
     public override string HoverBoxText()
@@ -97,10 +100,23 @@ public class GuardEntity : MovingEntity
         attackEffect = false;
     }
 
+    //calculates the tiles this guard is looking at
     public override void CalculateTiles()
     {
-        for (int i = 0; i<inDetection.Count; i++)
-            inDetection[i].SurveillanceState(false);
+
+        //clears the last list of visible tiles. Turns off the "surveillanceState" tag if no other guard is looking at that tile (stops it from looking red)
+        for (int i = 0; i < inDetection.Count; i++)
+        {
+            bool Overlap = false;
+            for (int j = 0; j < NewManager.instance.listOfGuards.Count; j++)
+            {
+                if (NewManager.instance.listOfGuards[j] != this && NewManager.instance.listOfGuards[j].inDetection.Contains(inDetection[i]))
+                {
+                    Overlap = true;
+                }
+            }
+            if(!Overlap) inDetection[i].SurveillanceState(false);
+        }
         inDetection.Clear();
 
         List<HashSet<Vector2Int>> DetectLines = new List<HashSet<Vector2Int>>();
@@ -206,7 +222,7 @@ public class GuardEntity : MovingEntity
         print("start of turn");
         if (stunned > 0)
         {
-            stunned--;
+            stunChange(-1);
             CurrentTarget = null;
         }
         else
@@ -316,25 +332,27 @@ public class GuardEntity : MovingEntity
             if (nextDirection != direction)
             {
                 direction = nextDirection;
-                CalculateTiles();
+                for (int i = 0; i < NewManager.instance.listOfGuards.Count; i++)
+                {
+                    NewManager.instance.listOfGuards[i].CalculateTiles();
+                }
             }
             else
             {
                 //print("moving too " + nextTile.gridPosition);
                 if (nextTile.myEntity == null)
                 {
-                    MoveTile(nextTile);//move to the tile
-                                       //footsteps.Post(gameObject);
+                    StartCoroutine(MoveTile(nextTile)); //footsteps.Post(gameObject);
                 }
                 movementLeft--;
             }
 
-            yield return NewManager.Wait(PlayerPrefs.GetFloat("Animation Speed"));
+            yield return NewManager.Wait(movePauseTime);
             yield return newAction();
         }
     }
 
-    IEnumerator newAction()
+    protected IEnumerator newAction()
     {
         alertStatus = Alert.Patrol;
         if (DistractionPoints.Count > 0)
@@ -342,7 +360,10 @@ public class GuardEntity : MovingEntity
             alertStatus = Alert.Persue;
             NewManager.instance.FindTile(DistractionPoints[DistractionPoints.Count - 1]).currentGuardTarget = true;
         }
-        CheckForPlayer();
+        for (int i = 0; i < NewManager.instance.listOfGuards.Count; i++)
+        {
+            NewManager.instance.listOfGuards[i].CheckForPlayer();
+        }
         if (alertStatus == Alert.Attack)
         {
             if (movementLeft > 0 || attacksLeft > 0)
@@ -432,8 +453,8 @@ public class GuardEntity : MovingEntity
                         //print("moving too " + nextTile.gridPosition);
                         if (nextTile.myEntity == null)
                         {
-                            MoveTile(nextTile);//move to the tile
-                                               //footsteps.Post(gameObject);
+                            StartCoroutine(MoveTile(nextTile));
+                            //footsteps.Post(gameObject);
                         }
                         movementLeft--;
                     }
@@ -442,7 +463,7 @@ public class GuardEntity : MovingEntity
                     yield break;
 
 
-                yield return NewManager.Wait(PlayerPrefs.GetFloat("Animation Speed"));
+                yield return NewManager.Wait(movePauseTime);
                 distance = NewManager.instance.GetDistance(currentTile.gridPosition, detectedPlayer.currentTile.gridPosition);
                 if (distance < AttackRange)
                 {
@@ -471,7 +492,7 @@ public class GuardEntity : MovingEntity
         }
     }
 
-    IEnumerator Patrol()
+    public virtual IEnumerator Patrol()
     {
         //print(currentTile.gridPosition + "Patrolling");
         TileData nextTile;
@@ -497,15 +518,15 @@ public class GuardEntity : MovingEntity
             //print("moving too " + nextTile.gridPosition);
             if (nextTile.myEntity == null)
             {
-                MoveTile(nextTile);//move to the tile
-                                   //footsteps.Post(gameObject);
+                StartCoroutine(MoveTile(nextTile));
+                //footsteps.Post(gameObject);
             }
             movementLeft--;
         }
 
 
-        yield return NewManager.Wait(PlayerPrefs.GetFloat("Animation Speed"));
-        print("Checking New Action");
+        yield return NewManager.Wait(movePauseTime);
+        //print("Checking New Action");
         yield return newAction();
     }
 }
