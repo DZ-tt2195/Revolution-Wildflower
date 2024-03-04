@@ -603,6 +603,9 @@ public class Card : MonoBehaviour, IPointerClickHandler
                     yield return ChangeEnergy(currentPlayer);
                     break;
 
+                case "FREEMOVE":
+                    yield return NewManager.instance.ChooseMovePlayer(currentPlayer, 3, true);
+                    break;
                 case "CHANGEMP":
                     yield return ChangeMovement(currentPlayer);
                     break;
@@ -653,6 +656,12 @@ public class Card : MonoBehaviour, IPointerClickHandler
                 case "THROWENVIRONMENTAL":
                     yield return ChooseTile();
                     yield return CreateEnvironmental();
+                    break;
+                case "THROWMODIFIER":
+                    yield return ChooseTile();
+                    TileModifier newModifier = currentTarget.gameObject.AddComponent<TileModifier>();
+                    currentTarget.listOfModifiers.Add(newModifier);
+                    newModifier.card = this;
                     break;
 
                 default:

@@ -5,7 +5,6 @@ using UnityEngine.UI;
 using TMPro;
 using MyBox;
 using UnityEngine.EventSystems;
-//using UnityEditor.Experimental.GraphView;
 
 public class TileData : MonoBehaviour
 {
@@ -16,7 +15,8 @@ public class TileData : MonoBehaviour
         [Tooltip("All adjacent tiles")] [ReadOnly] public List<TileData> adjacentTiles;
         [Tooltip("Position in the grid")] [ReadOnly] public Vector2Int gridPosition;
         [Tooltip("The entity on this tile")] [ReadOnly] public Entity myEntity;
-        [Tooltip("What kind of tile this is")][ReadOnly] public TileType myType;
+        [Tooltip("What kind of tile this is")] [ReadOnly] public TileType myType;
+        [Tooltip("Modifiers on this tile")][ReadOnly] public List<TileModifier> listOfModifiers = new();
 
     [Foldout("Tile conditions", true)]
         [Tooltip("Defines whether you can choose this tile")][ReadOnly] public bool choosable = false;
