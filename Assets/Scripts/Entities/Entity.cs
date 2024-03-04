@@ -32,10 +32,9 @@ public class Entity : MonoBehaviour
         return "";
     }
 
-    public virtual void MoveTile(TileData newTile)
+    public virtual IEnumerator MoveTile(TileData newTile)
     {
         newTile = NewManager.instance.listOfTiles[newTile.gridPosition.x, newTile.gridPosition.y];
-        //print("In move " + newTile.gridPosition);
         if (currentTile != null)
             currentTile.myEntity = null;
 
@@ -44,6 +43,13 @@ public class Entity : MonoBehaviour
         this.transform.SetParent(newTile.transform);
         this.transform.localScale = new Vector3(1, 1, 1);
         this.transform.localPosition = tileOffset;
+
+        foreach (TileModifier modifier in newTile.listOfModifiers)
+        {
+            yield return modifier.ResolveList(this);
+        }
+        newTile.listOfModifiers.RemoveAll(item => item == null);
+
         CalculateTiles();
     }
 
