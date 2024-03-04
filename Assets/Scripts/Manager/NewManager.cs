@@ -1184,7 +1184,6 @@ public class NewManager : MonoBehaviour
                     yield break;
                 }
             }
-        }
 
             yield return lastSelectedPlayer.adjacentObjective.ObjectiveComplete(lastSelectedPlayer);
         }
