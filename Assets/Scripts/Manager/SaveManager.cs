@@ -156,11 +156,15 @@ public class SaveManager : MonoBehaviour
         FPS.instance.transform.localPosition = new Vector3(-850, -500);
 
         GameSettings.instance.transform.SetParent(canvas);
-        GameSettings.instance.transform.localPosition = new Vector3(0, 0);
+        GameSettings.instance.transform.localPosition = Vector3.zero;
+        GameSettings.instance.transform.localScale = Vector3.one;
+        GameSettings.instance.transform.localEulerAngles = Vector3.one;
         GameSettings.instance.transform.GetChild(0).gameObject.SetActive(false);
 
         KeywordTooltip.instance.transform.SetParent(canvas);
-        KeywordTooltip.instance.transform.localPosition = new Vector3(0, 0);
+        KeywordTooltip.instance.transform.localPosition = Vector3.zero;
+        KeywordTooltip.instance.transform.localScale = Vector3.one;
+        KeywordTooltip.instance.transform.localEulerAngles = Vector3.one;
     }
 
     public void UnloadObjects()
