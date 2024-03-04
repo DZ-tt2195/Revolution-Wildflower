@@ -154,8 +154,6 @@ public class SaveManager : MonoBehaviour
 
         FPS.instance.transform.SetParent(canvas);
         FPS.instance.transform.localPosition = new Vector3(-850, -500);
-        FPS.instance.transform.localScale = Vector3.one;
-        FPS.instance.transform.rotation = canvas.transform.rotation;
 
         GameSettings.instance.transform.SetParent(canvas);
         GameSettings.instance.transform.localPosition = new Vector3(0, 0);
