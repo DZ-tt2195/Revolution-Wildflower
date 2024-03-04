@@ -28,7 +28,7 @@ public class StaticGuard : GuardEntity
             //print("moving too " + nextTile.gridPosition);
             if (nextTile.myEntity == null)
             {
-                MoveTile(nextTile);//move to the tile
+                StartCoroutine(MoveTile(nextTile));
                 //footsteps.Post(gameObject);
             }
             movementLeft--;
