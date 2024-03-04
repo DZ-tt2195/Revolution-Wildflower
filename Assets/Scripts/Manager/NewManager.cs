@@ -894,7 +894,6 @@ public class NewManager : MonoBehaviour
 
             EnablePlayers();
             objectiveButton.gameObject.SetActive(false);
-
             endTurnImage.color = AnythingLeftThisTurn() ? Color.gray : Color.white;
 
             if (startTurn)
