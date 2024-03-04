@@ -4,8 +4,8 @@
       "card explanation displayed on the card itself",
       "atk, draw, dist, eng, mvmt, misc",
       "",
-      "15 cards in the deck",
-      "average cost: 1.5",
+      "17 cards in the deck",
+      "average cost: 1.8",
       "v/nv tagging",
       "health change",
       "movement change",
@@ -350,10 +350,28 @@
       "CardsInHand",
       "ChangeMP"
     ],
-    [],
-    [],
     [
-      " "
+      "Charge",
+      "Move up to 3 tiles. If you run into a guard, Stun 1 on that guard. Volume 3.",
+      "mvmt",
+      "atk",
+      "2",
+      "5",
+      "v",
+      "",
+      "3",
+      "",
+      "",
+      "",
+      "1",
+      "1",
+      "",
+      "",
+      "",
+      "3",
+      "",
+      "",
+      "FreeMove/StunAdjacentGuard/TargetDistraction"
     ]
   ]
 }

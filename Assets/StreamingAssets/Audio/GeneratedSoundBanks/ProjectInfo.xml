@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ProjectInfo>
-	<Project Name="Revolution-Wildflower_WwiseProject" GUID="{25251150-1025-42EB-8CE1-6BF8C478FE99}" Generator="2022.1.8.8316"/>
+	<Project Name="Revolution-Wildflower_WwiseProject" GUID="{25251150-1025-42EB-8CE1-6BF8C478FE99}" Generator="2022.1.4.8202"/>
 	<CacheRoot>../../../../Revolution-Wildflower_WwiseProject/.cache</CacheRoot>
 	<Platforms>
 		<Platform Name="Mac" GUID="{4239DF1D-2C33-4CC2-970B-7EDB2C1A14D4}" BasePlatform="Mac" BasePlatformGUID="{9C6217D5-DD11-4795-87C1-6CE02853C540}" Path="../../../../Revolution-Wildflower_WwiseProject/GeneratedSoundBanks/Mac"/>
@@ -9,5 +9,5 @@
 	<Languages>
 		<Language Name="English(US)" Id="684519430" GUID="{25F719ED-C360-4BC7-9BBC-4EA63E7E784F}" Default="true" UseAsStandIn="true"/>
 	</Languages>
-	<FileHash>{5CD927CF-B788-190C-F795-196DA434DC2A}</FileHash>
+	<FileHash>{1F33F9AA-4D2D-D00E-B8BB-5E978492DE23}</FileHash>
 </ProjectInfo>

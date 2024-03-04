@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using TMPro;
 using MyBox;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 //using UnityEngine.Rendering.Universal;
 //using UnityEditor.U2D;
 //using Unity.VisualScripting;
@@ -23,99 +24,106 @@ public class AStarNode
 public class NewManager : MonoBehaviour
 {
 
-#region Variables
+    #region Variables
 
     public static NewManager instance;
 
     [Foldout("Storing Things", true)]
-        [Tooltip("Reference to players")][ReadOnly] public List<PlayerEntity> listOfPlayers = new List<PlayerEntity>();
-        [Tooltip("Reference to walls")][ReadOnly] public List<WallEntity> listOfWalls = new List<WallEntity>();
-        [Tooltip("Reference to guards")][ReadOnly] public List<GuardEntity> listOfGuards = new List<GuardEntity>();
-        [Tooltip("Reference to active environmental objects")][ReadOnly] public List<EnvironmentalEntity> listOfEnvironmentals = new List<EnvironmentalEntity>();
-        [Tooltip("Reference to objectives")] [ReadOnly] public List<ObjectiveEntity> listOfObjectives = new List<ObjectiveEntity>();
+    [Tooltip("Reference to players")][ReadOnly] public List<PlayerEntity> listOfPlayers = new List<PlayerEntity>();
+    [Tooltip("Reference to walls")][ReadOnly] public List<WallEntity> listOfWalls = new List<WallEntity>();
+    [Tooltip("Reference to guards")][ReadOnly] public List<GuardEntity> listOfGuards = new List<GuardEntity>();
+    [Tooltip("Reference to active environmental objects")][ReadOnly] public List<EnvironmentalEntity> listOfEnvironmentals = new List<EnvironmentalEntity>();
+    [Tooltip("Reference to objectives")][ReadOnly] public List<ObjectiveEntity> listOfObjectives = new List<ObjectiveEntity>();
 
     [Foldout("Player decisions", true)]
-        [Tooltip("A tile that the player chose")][ReadOnly] public TileData chosenTile;
-        [Tooltip("A acard that the player chose")][ReadOnly] public Card chosenCard;
-        [Tooltip("Current Selected Tile")][ReadOnly] public TileData selectedTile;
-        [Tooltip("Quick reference to current movable tile")][ReadOnly] public TileData CurrentAvailableMoveTarget;
-        [Tooltip("The last path traced. This only is filled if (singleMovement) is disabled")][ReadOnly] public List<TileData> FullPath = new();
-        [Tooltip("Confirm your decisions")] public Collector confirmationCollector;
+    [Tooltip("A tile that the player chose")][ReadOnly] public TileData chosenTile;
+    [Tooltip("A acard that the player chose")][ReadOnly] public Card chosenCard;
+    [Tooltip("Current Selected Tile")][ReadOnly] public TileData selectedTile;
+    [Tooltip("Quick reference to current movable tile")][ReadOnly] public TileData CurrentAvailableMoveTarget;
+    [Tooltip("The last path traced. This only is filled if (singleMovement) is disabled")][ReadOnly] public List<TileData> FullPath = new();
+    [Tooltip("Confirm your decisions")] public Collector confirmationCollector;
 
     [Foldout("UI Elements", true)]
-        [Tooltip("Hazardbox to give to players")][SerializeField] public CanvasGroup ManagerHazardBox;
-        [Tooltip("Speed of turn fade")][SerializeField] float turnFadeSpeed = 0.05f;
-        [Tooltip("How much time the turn banner appears")][SerializeField] float turnHangDuration = 0.5f;
-        [Tooltip("pop up alerting player of turn")][SerializeField] private CanvasGroup turnAlertBar;
-        [Tooltip("text on turn banner")][SerializeField] private TMP_Text turnText;
-        [Tooltip("Spritesheet of player character faces")][SerializeField] private Sprite [] facesSpritesheet;
-        [Tooltip("Blank character face")][SerializeField] private Sprite emptyFace;
-        [Tooltip("Your hand in the canvas")] [ReadOnly] public Transform handContainer;
-        [Tooltip("The bar in the bottom center of the screen")] Transform playerStats;
-        [Tooltip("Image section containing objective, actions, and debug popups")] Transform informationImage;
-        [Tooltip("All the player's stats in text form")] TMP_Text stats;
-        [Tooltip("Current player selected")] TMP_Text currentCharacter;
-        [Tooltip("Selected player's health")] StatBar healthBar;
-        [Tooltip("Selected player's moves left")] StatBar movementBar;
-        [Tooltip("Selected player's energy")] StatBar energyBar;
-        [Tooltip("Face of selected character")] Image characterFace;
-        [Tooltip("Instructions for what the player is allowed to do right now")] TMP_Text instructions;
-        [Tooltip("Spend 3 energy to draw a card")] Button spendToDrawButton;
-        [Tooltip("End the turn")] Button endTurnButton;
-        [Tooltip("End turn button's image")] Image endTurnImage;
-        [Tooltip("Complete an objective you're next to")] [ReadOnly] public Button objectiveButton;
-        [Tooltip("Info on entities")] [ReadOnly] public EntityToolTip toolTip;
-        [Tooltip("Text that gets displayed when you game over")] TMP_Text gameOverText;
-        TMP_Text drawPile;
-        [Tooltip("Tracks number of cards in deck and discard pile")] TMP_Text deckTracker;
+    [Tooltip("Hazardbox to give to players")][SerializeField] public CanvasGroup ManagerHazardBox;
+    [Tooltip("Speed of turn fade")][SerializeField] float turnFadeSpeed = 0.05f;
+    [Tooltip("How much time the turn banner appears")][SerializeField] float turnHangDuration = 0.5f;
+    [Tooltip("pop up alerting player of turn")][SerializeField] private CanvasGroup turnAlertBar;
+    [Tooltip("text on turn banner")][SerializeField] private TMP_Text turnText;
+    [Tooltip("Spritesheet of player character faces")][SerializeField] private Sprite[] facesSpritesheet;
+    [Tooltip("Blank character face")][SerializeField] private Sprite emptyFace;
+    [Tooltip("Your hand in the canvas")][ReadOnly] public Transform handContainer;
+    [Tooltip("The bar in the bottom center of the screen")] Transform playerStats;
+    [Tooltip("Image section containing objective, actions, and debug popups")] Transform informationImage;
+    [Tooltip("All the player's stats in text form")] TMP_Text stats;
+    [Tooltip("Current player selected")] TMP_Text currentCharacter;
+    [Tooltip("Selected player's health")] StatBar healthBar;
+    [Tooltip("Selected player's moves left")] StatBar movementBar;
+    [Tooltip("Selected player's energy")] StatBar energyBar;
+    [Tooltip("Face of selected character")] Image selected_characterFace;
+    [Tooltip("Instructions for what the player is allowed to do right now")] TMP_Text instructions;
+    [Tooltip("Spend 3 energy to draw a card")] Button spendToDrawButton;
+    [Tooltip("End the turn")] Button endTurnButton;
+    [Tooltip("End turn button's image")] Image endTurnImage;
+    [Tooltip("Complete an objective you're next to")][ReadOnly] public Button objectiveButton;
+    [Tooltip("Exit the level if you're on the right tile")][ReadOnly] public Button exitButton;
+    [Tooltip("Info on entities")][ReadOnly] public EntityToolTip toolTip;
+    [Tooltip("Text that gets displayed when you game over")] TMP_Text gameOverText;
+    [Tooltip("Tracks number of cards in deck and discard pile")] TMP_Text deckTracker;
+    [Tooltip("GameObject holding tracker for deck piles")] Transform pilesTracker;
+    [Tooltip("Tracks number of cards in draw pile")] TMP_Text drawPile;
+    [Tooltip("Tracks number of cards in discard pile")] TMP_Text discardPile;
 
     [Foldout("Grid", true)]
-        [Tooltip("Tiles in the inspector")] Transform gridContainer;
-        [Tooltip("Storage of tiles")][ReadOnly] public TileData[,] listOfTiles;
-        [Tooltip("Spacing between tiles")][SerializeField] float tileSpacing;
+    [Tooltip("Tiles in the inspector")] Transform gridContainer;
+    [Tooltip("Storage of tiles")][ReadOnly] public TileData[,] listOfTiles;
+    [Tooltip("Spacing between tiles")][SerializeField] float tileSpacing;
 
     [Foldout("Prefabs", true)]
-        [Tooltip("Floor tile prefab")] [SerializeField] TileData floorTilePrefab;
-        [Tooltip("Player prefab")][SerializeField] PlayerEntity playerPrefab;
-        [Tooltip("Wall prefab")][SerializeField] WallEntity wallPrefab;
-        [Tooltip("Wall T prefab")][SerializeField] WallEntity wallTSplitPrefab;
-        [Tooltip("Wall Corner prefab")][SerializeField] WallEntity wallCornerPrefab;
-        [Tooltip("Wall Plus prefab")][SerializeField] WallEntity wallPlusPrefab;
-        [Tooltip("Guard prefab")][SerializeField] GuardEntity guardPrefab;
-        [Tooltip("Objective prefab")][SerializeField] ObjectiveEntity objectivePrefab;
-        [Tooltip("Toggle prefab")][SerializeField] ToggleEntity togglePrefab;
-        [Tooltip("Guard prefab")][SerializeField] ExitEntity exitPrefab;
-        [Tooltip("Environmental prefab")][SerializeField] EnvironmentalEntity environmentPrefab;
+    [Tooltip("Floor tile prefab")][SerializeField] TileData floorTilePrefab;
+    [Tooltip("Player prefab")][SerializeField] PlayerEntity playerPrefab;
+    [Tooltip("Wall prefab")][SerializeField] WallEntity wallPrefab;
+    [Tooltip("Wall T prefab")][SerializeField] WallEntity wallTSplitPrefab;
+    [Tooltip("Wall Corner prefab")][SerializeField] WallEntity wallCornerPrefab;
+    [Tooltip("Wall Plus prefab")][SerializeField] WallEntity wallPlusPrefab;
+    [Tooltip("Guard prefab")][SerializeField] GuardEntity guardPrefab;
+    [Tooltip("static guard prefab")][SerializeField] StaticGuard staticGuardPrefab;
+    [Tooltip("Objective prefab")][SerializeField] ObjectiveEntity objectivePrefab;
+    [Tooltip("Toggle prefab")][SerializeField] ToggleEntity togglePrefab;
+    //[Tooltip("Guard prefab")][SerializeField] ExitEntity exitPrefab;
+    [Tooltip("Environmental prefab")][SerializeField] EnvironmentalEntity environmentPrefab;
 
     [Foldout("Setup", true)]
-        [Tooltip("Amount of turns before a game over")] public int turnCount;
-        [Tooltip("The level number (starts at 0")] [SerializeField] int levelToLoad;
+    [Tooltip("Amount of turns before a game over")] public int turnCount;
+    [Tooltip("The level number (starts at 0")][SerializeField] int levelToLoad;
 
     [Foldout("Flashing", true)]
-        [Tooltip("the transparancy of card/tile borders")][ReadOnly] public float opacity = 1;
-        [Tooltip("whether the borders are turning white or black")][ReadOnly] public bool decrease = true;
+    [Tooltip("the transparancy of card/tile borders")][ReadOnly] public float opacity = 1;
+    [Tooltip("whether the borders are turning white or black")][ReadOnly] public bool decrease = true;
 
     public enum TurnSystem { You, Resolving, Environmentals, Enemy };
     [Foldout("Turn System", true)]
-        [Tooltip("last selected player")] [ReadOnly] public PlayerEntity lastSelectedPlayer;
-        [Tooltip("What's happening in the game")][ReadOnly] public TurnSystem currentTurn;
-        [Tooltip("Effects to do on future turns")][ReadOnly] public List<Card> futureEffects = new List<Card>();
-        [Tooltip("Num violent cards used")][ReadOnly] public int violentCards;
+    [Tooltip("last selected player")][ReadOnly] public PlayerEntity lastSelectedPlayer;
+    [Tooltip("What's happening in the game")][ReadOnly] public TurnSystem currentTurn;
+    [Tooltip("Effects to do on future turns")][ReadOnly] public List<Card> futureEffects = new List<Card>();
+    [Tooltip("Num violent cards used")][ReadOnly] public int violentCards;
+    [Tooltip("Mouse position")] Vector3 lastClickedMousePosition;
+    [Tooltip("Whether a player can be moved or not")][ReadOnly] public bool movingPlayer = false;
 
     [Foldout("Sound Effects", true)]
-        [SerializeField] AK.Wwise.Event buttonSound;
-        [SerializeField] AK.Wwise.Event endTurnSound;
-        [SerializeField] AK.Wwise.Event footsteps;
-        [SerializeField] AK.Wwise.Event characterSelectSound;
-        [SerializeField] AK.Wwise.Event beginTurnSound;
+    [SerializeField] AK.Wwise.Event buttonSound;
+    [SerializeField] AK.Wwise.Event endTurnSound;
+    [SerializeField] AK.Wwise.Event footsteps;
+    [SerializeField] AK.Wwise.Event characterSelectSound;
+    [SerializeField] AK.Wwise.Event beginTurnSound;
 
     #endregion
 
-#region Setup
+    #region Setup
 
     void Awake()
     {
         instance = this;
+
         turnAlertBar.alpha = 0;
 
         playerStats = GameObject.Find("SelectedPlayer_Stats").transform;
@@ -124,10 +132,10 @@ public class NewManager : MonoBehaviour
         healthBar = playerStats.Find("Health").GetComponentInChildren<StatBar>();
         movementBar = playerStats.Find("Movement").GetComponentInChildren<StatBar>();
         energyBar = playerStats.Find("Energy").GetComponentInChildren<StatBar>();
-        characterFace = playerStats.Find("CharacterFace").GetComponent<Image>();
+        selected_characterFace = playerStats.Find("selected_characterFace").GetComponent<Image>();
 
-        facesSpritesheet = Resources.LoadAll<Sprite>("Sprites/portrait_spritesheet");
-        emptyFace = Resources.Load<Sprite>("Sprites/characterSill");
+        facesSpritesheet = Resources.LoadAll<Sprite>("Sprites/selected_portrait_spritesheet");
+        emptyFace = Resources.Load<Sprite>("Sprites/noCharacter");
 
         //  
         //informationImage = GameObject.Find("Information Image").transform;
@@ -148,6 +156,10 @@ public class NewManager : MonoBehaviour
         objectiveButton = GameObject.Find("Objective Button").GetComponent<Button>();
         objectiveButton.onClick.AddListener(DoObjective);
         objectiveButton.gameObject.SetActive(false);
+
+        exitButton = GameObject.Find("Exit Button").GetComponent<Button>();
+        exitButton.gameObject.SetActive(false);
+        exitButton.onClick.AddListener(ExitCharacter);
 
         handContainer = GameObject.Find("Hand Container").transform;
         gridContainer = GameObject.Find("Grid Container").transform;
@@ -170,6 +182,11 @@ public class NewManager : MonoBehaviour
         gameOverText.transform.parent.gameObject.SetActive(false);
 
         GetTiles();
+        foreach (GuardEntity curGuard in listOfGuards)
+        {
+            curGuard.CalculateTiles();
+            curGuard.CheckForPlayer();
+        }
         StartCoroutine(StartPlayerTurn());
     }
 
@@ -184,10 +201,10 @@ public class NewManager : MonoBehaviour
         {
             for (int j = 0; j < listOfTiles.GetLength(1); j++)
             {
-                try{newGrid[i, j] = newGrid[i, j].Trim().Replace("\"", "").Replace("]","");}
-                catch (NullReferenceException){continue;}
+                try { newGrid[i, j] = newGrid[i, j].Trim().Replace("\"", "").Replace("]", ""); }
+                catch (NullReferenceException) { continue; }
 
-                if (newGrid[i,j] != "")
+                if (newGrid[i, j] != "")
                 {
                     TileData nextTile = Instantiate(floorTilePrefab);
                     nextTile.transform.SetParent(gridContainer);
@@ -214,12 +231,25 @@ public class NewManager : MonoBehaviour
                             break;
 
                         case 2: //create exit
-                            //print("exit");
+                            /*
                             thisTileEntity = Instantiate(exitPrefab, nextTile.transform);
                             thisTileEntity.name = "Exit";
                             ObjectiveEntity exitObjective = thisTileEntity.GetComponent<ExitEntity>();
                             exitObjective.objective = "Exit";
                             listOfObjectives.Add(exitObjective);
+                            */
+                            nextTile.myType = TileData.TileType.Exit;
+                            break;
+
+                        case 5: //create all exit
+                            /*
+                            thisTileEntity = Instantiate(exitPrefab, nextTile.transform);
+                            thisTileEntity.name = "Exit";
+                            ObjectiveEntity exitObjective = thisTileEntity.GetComponent<ExitEntity>();
+                            exitObjective.objective = "Exit";
+                            listOfObjectives.Add(exitObjective);
+                            */
+                            nextTile.myType = TileData.TileType.AllExit;
                             break;
 
                         case 3: //create objective
@@ -228,7 +258,7 @@ public class NewManager : MonoBehaviour
                             thisTileEntity.name = numberPlusAddition[1];
                             ObjectiveEntity defaultObjective = thisTileEntity.GetComponent<ObjectiveEntity>();
                             defaultObjective.objective = numberPlusAddition[2];
-                            try{defaultObjective.instructionsWhenCompleted = numberPlusAddition[3].ToUpper().Trim();}catch (IndexOutOfRangeException){/*do nothing*/}
+                            try { defaultObjective.instructionsWhenCompleted = numberPlusAddition[3].ToUpper().Trim(); } catch (IndexOutOfRangeException) {/*do nothing*/}
                             listOfObjectives.Add(defaultObjective);
                             break;
 
@@ -259,6 +289,7 @@ public class NewManager : MonoBehaviour
                             }
 
                             StartCoroutine(defaultToggle.ObjectiveComplete(null));
+
                             break;
 
                         case 10: //create wall
@@ -267,8 +298,7 @@ public class NewManager : MonoBehaviour
                             thisTileEntity.name = "Wall";
                             WallEntity wall = thisTileEntity.GetComponent<WallEntity>();
                             listOfWalls.Add(wall);
-                            wall.health = int.Parse(numberPlusAddition[1]);
-                            wall.WallDirection(numberPlusAddition[2]);
+                            wall.WallDirection(int.Parse(numberPlusAddition[1]), numberPlusAddition[2]);
                             break;
 
                         case 30: //create +
@@ -276,8 +306,7 @@ public class NewManager : MonoBehaviour
                             thisTileEntity.name = "PlusWall";
                             WallEntity PlusWall = thisTileEntity.GetComponent<WallEntity>();
                             listOfWalls.Add(PlusWall);
-                            PlusWall.health = int.Parse(numberPlusAddition[1]);
-                            PlusWall.WallDirection(numberPlusAddition[2]);
+                            PlusWall.WallDirection(int.Parse(numberPlusAddition[1]), numberPlusAddition[2]);
                             break;
 
                         case 40: //create T
@@ -285,8 +314,7 @@ public class NewManager : MonoBehaviour
                             thisTileEntity.name = "T-Wall";
                             WallEntity Twall = thisTileEntity.GetComponent<WallEntity>();
                             listOfWalls.Add(Twall);
-                            Twall.health = int.Parse(numberPlusAddition[1]);
-                            Twall.WallDirection(numberPlusAddition[2]);
+                            Twall.WallDirection(int.Parse(numberPlusAddition[1]), numberPlusAddition[2]);
                             break;
 
                         case 50: //create corner
@@ -294,8 +322,7 @@ public class NewManager : MonoBehaviour
                             thisTileEntity.name = "CornerWall";
                             WallEntity CornerWall = thisTileEntity.GetComponent<WallEntity>();
                             listOfWalls.Add(CornerWall);
-                            CornerWall.health = int.Parse(numberPlusAddition[1]);
-                            CornerWall.WallDirection(numberPlusAddition[2]);
+                            CornerWall.WallDirection(int.Parse(numberPlusAddition[1]), numberPlusAddition[2]);
                             break;
 
                         case 20: //create guard
@@ -317,12 +344,40 @@ public class NewManager : MonoBehaviour
                                     theGuard.PatrolPoints.Add(new Vector2Int(curX, curY));
                                 }
                             }
-                            catch (IndexOutOfRangeException){ continue; }
+                            catch (IndexOutOfRangeException) { continue; }
+                            break;
+
+                        case 21: //create static guard
+                            thisTileEntity = Instantiate(staticGuardPrefab, nextTile.transform);
+                            thisTileEntity.name = "Guard";
+                            GuardEntity theStaticGuard = thisTileEntity.GetComponent<GuardEntity>();
+                            theStaticGuard.movementLeft = theStaticGuard.movesPerTurn;
+                            theStaticGuard.direction = StringToDirection(numberPlusAddition[1]);
+                            listOfGuards.Add(theStaticGuard);
+
+                            try
+                            {
+                                string[] patrolList = numberPlusAddition[2].Split('|');
+                                foreach (string patrol in patrolList)
+                                {
+                                    string[] points = patrol.Split(",");
+                                    int.TryParse(points[0], out int curX);
+                                    int.TryParse(points[1], out int curY);
+                                    theStaticGuard.PatrolPoints.Add(new Vector2Int(curX, curY));
+                                }
+                            }
+                            catch (IndexOutOfRangeException) { continue; }
                             break;
                     }
 
-                    try{thisTileEntity.MoveTile(nextTile);}
-                    catch (NullReferenceException){continue;}
+                    try
+                    {
+                        thisTileEntity.MoveTile(nextTile);
+                    }
+                    catch (NullReferenceException)
+                    {
+                        continue;
+                    }
                 }
             }
         }
@@ -331,8 +386,14 @@ public class NewManager : MonoBehaviour
         {
             for (int j = 0; j < listOfTiles.GetLength(1); j++)
             {
-                try{FindAdjacent(listOfTiles[i, j]);}
-                catch (NullReferenceException){continue;}
+                try
+                {
+                    FindAdjacent(listOfTiles[i, j]);
+                }
+                catch (NullReferenceException)
+                {
+                    continue;
+                }
             }
         }
     }
@@ -361,9 +422,9 @@ public class NewManager : MonoBehaviour
         }
     }
 
-#endregion
+    #endregion
 
-#region Changing Stats
+    #region Changing Stats
 
     public void SetEnergy(PlayerEntity player, int n) //if you want to set energy to 2, type SetEnergy(2);
     {
@@ -385,7 +446,7 @@ public class NewManager : MonoBehaviour
     public void ChangeHealth(PlayerEntity player, int n) //if you want to subtract 3 health, type ChangeHealth(-3);
     {
         //player.health += n;
-        player.myEnergy = Math.Clamp(player.health + n, 0, 3);
+        player.health = Math.Clamp(player.health + n, 0, 3);
 
         UpdateStats(player);
         if (player.health <= 0)
@@ -399,7 +460,7 @@ public class NewManager : MonoBehaviour
 
     public void ChangeMovement(PlayerEntity player, int n) //if you want to subtract 3 movement, type ChangeMovement(-3);
     {
-        player.movementLeft = Math.Clamp(player.health + n, 0, player.movesPerTurn);
+        player.movementLeft = Math.Clamp(player.movementLeft + n, 0, player.movesPerTurn);
         UpdateStats(player);
     }
 
@@ -407,10 +468,9 @@ public class NewManager : MonoBehaviour
     {
         if (player == null)
         {
-            // stats.text = "";
-
+            stats.text = "";
             currentCharacter.text = "";
-            characterFace.sprite = emptyFace;
+            selected_characterFace.sprite = emptyFace;
 
             healthBar.SetValue(0);
             movementBar.SetValue(0);
@@ -422,17 +482,25 @@ public class NewManager : MonoBehaviour
             //discardPile.text = "Discard";
             handContainer.transform.localPosition = new Vector3(10000, 10000, 0);
         }
-        
+
         else
         {
             currentCharacter.text = $"{player.name}";
-            characterFace.sprite = player.name switch
+            switch (player.name)
             {
-                "Frankie" => facesSpritesheet[0],
-                "WK" => facesSpritesheet[1],
-                "Gail" => facesSpritesheet[2],
-                _ => emptyFace,
-            };
+                case "Frankie":
+                    selected_characterFace.sprite = facesSpritesheet[0];
+                    break;
+                case "WK":
+                    selected_characterFace.sprite = facesSpritesheet[1];
+                    break;
+                case "Gail":
+                    selected_characterFace.sprite = facesSpritesheet[2];
+                    break;
+                default:
+                    selected_characterFace.sprite = emptyFace;
+                    break;
+            }
 
             //  TO-DO: change this stuff so it isn't all text -Noah
             //deckTracker.text = $"<color=#70f5ff>Draw Pile <color=#ffffff>/ <color=#ff9670>Discard Pile " +
@@ -494,11 +562,15 @@ public class NewManager : MonoBehaviour
             {
                 facesIndex = 1;
             }
-            characterFace.sprite = facesSpritesheet[facesIndex];
-
+            selected_selected_characterFace.sprite = facesSpritesheet[facesIndex];
+            
             deckTracker.text = $"<color=#70f5ff>Draw Pile <color=#ffffff>/ <color=#ff9670>Discard Pile " +
                 $"\n\n<color=#70f5ff>{player.myDrawPile.Count} <color=#ffffff>/ <color=#ff9670>{player.myDiscardPile.Count}" +
                 $"\n({player.myExhaust.Count} exhausted)";
+            
+            // idk why the words arent coming up
+            drawPile.text = "Draw" + $"\n\n{player.myDrawPile.Count}";
+            discardPile.text = "Discard" + $"\n\n{player.myDiscardPile.Count}";
 
             if (player.myPosition * -2000 != handContainer.transform.localPosition.x)
             {
@@ -513,12 +585,14 @@ public class NewManager : MonoBehaviour
             health.text = "Health:";
             moves.text = "Moves:";
             energy.text = "Energy:";
-            characterFace.sprite = emptyFace;
+            selected_selected_characterFace.sprite = emptyFace;
 
-            deckTracker.text = "";
+            //deckTracker.text = "";
+            drawPile.text = "Draw";
+            discardPile.text = "Discard";
             handContainer.transform.localPosition = new Vector3(10000, 10000, 0);
         }
-
+/*
         stats.text += $"\n<color=#75ff59>{listOfObjectives.Count} Objectives Left" +
             $"| {turnCount} Turns Left";
 
@@ -534,18 +608,34 @@ public class NewManager : MonoBehaviour
         //this.instructions.text = instructions;
     }
 
-#endregion
+    #endregion
 
 #region Misc
 
     private void Update()
     {
         endTurnButton.gameObject.SetActive(currentTurn == TurnSystem.You);
-        if (currentTurn != TurnSystem.You)
-            spendToDrawButton.gameObject.SetActive(false);
+        /*
+              spendToDrawButton.gameObject.SetActive(currentTurn == TurnSystem.You);
+              exitButton.gameObject.SetActive(currentTurn == TurnSystem.You);
+              */
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            lastClickedMousePosition = Input.mousePosition;
+        }
+        else if (movingPlayer && Input.GetKeyUp(KeyCode.Mouse0))
+        {
+            if (Input.mousePosition.Equals(lastClickedMousePosition) && currentTurn == TurnSystem.You && !EventSystem.current.IsPointerOverGameObject())
+            {
+                StopCoroutine(ChooseMovePlayer(lastSelectedPlayer));
+                StopCoroutine(ChooseCardPlay(lastSelectedPlayer));
+                Debug.LogError("deselect");
 
-        if (Input.GetKeyDown(KeyCode.Escape))
-            GameOver("You quit.", false);
+                lastSelectedPlayer = null;
+                movingPlayer = false;
+                BackToStart(false);
+            }
+        }
     }
 
     private void FixedUpdate()
@@ -595,7 +685,7 @@ public class NewManager : MonoBehaviour
             MoveCamera.Focus(tile.transform.position);
             //Camera.main.transform.position = new Vector3(tile.transform.position.x, Camera.main.transform.position.y, tile.transform.position.z);
             if (moveMe)
-                StartCoroutine(ChooseMovePlayer(tile.myEntity.GetComponent<PlayerEntity>()));
+                ControlCharacter(tile.myEntity.GetComponent<PlayerEntity>());
         }
     }
 
@@ -605,7 +695,7 @@ public class NewManager : MonoBehaviour
         return newEnviro;
     }
 
-#endregion
+    #endregion
 
 #region Decision-making
 
@@ -693,7 +783,7 @@ public class NewManager : MonoBehaviour
     {
         if (PlayerPrefs.GetInt("Confirm Choices") == 1)
         {
-            //Debug.LogError($"confirm decision");
+            Debug.LogError($"confirm decision");
             DisableAllCards();
             DisableAllTiles();
 
@@ -710,7 +800,7 @@ public class NewManager : MonoBehaviour
         }
     }
 
-#endregion
+    #endregion
 
 #region Turn System
 
@@ -718,7 +808,7 @@ public class NewManager : MonoBehaviour
     {
         UpdateStats(null);
 
-        foreach(Card card in futureEffects)
+        foreach (Card card in futureEffects)
             yield return card.NextRoundEffect();
         futureEffects.Clear();
 
@@ -747,7 +837,7 @@ public class NewManager : MonoBehaviour
         }
 
         turnAlertBar.alpha = 0;
-        
+
         EnablePlayers();
         /*
         if (lastSelectedPlayer != null)
@@ -759,7 +849,7 @@ public class NewManager : MonoBehaviour
         */
     }
 
-    public void EnablePlayers()
+    void EnablePlayers()
     {
         foreach (PlayerEntity player in listOfPlayers)
         {
@@ -787,7 +877,7 @@ public class NewManager : MonoBehaviour
         return false;
     }
 
-    public void BackToStart(bool startTurn)
+    void BackToStart(bool startTurn)
     {
         if (listOfPlayers.Count > 0)
         {
@@ -798,9 +888,12 @@ public class NewManager : MonoBehaviour
             DisableAllTiles();
             DisableAllCards();
 
-            UpdateStats(lastSelectedPlayer);
+            if (lastSelectedPlayer != null)
+                UpdateStats(lastSelectedPlayer);
+
             EnablePlayers();
             objectiveButton.gameObject.SetActive(false);
+
             endTurnImage.color = AnythingLeftThisTurn() ? Color.gray : Color.white;
 
             if (startTurn)
@@ -819,23 +912,87 @@ public class NewManager : MonoBehaviour
             else if (lastSelectedPlayer != null)
             {
                 selectedTile = lastSelectedPlayer.currentTile;
-                StartCoroutine(ChooseMovePlayer(lastSelectedPlayer));
+                ControlCharacter(lastSelectedPlayer);
             }
+        }
+    }
+
+    bool CanExit(TileData tile)
+    {
+        if (listOfObjectives.Count > 0 || tile.myType == TileData.TileType.Regular)
+            return false;
+
+        if (tile.myType == TileData.TileType.Exit)
+            return true;
+
+        if (tile.myType == TileData.TileType.AllExit)
+        {
+            foreach (PlayerEntity player in listOfPlayers)
+            {
+                if (player.currentTile.myType == TileData.TileType.Regular)
+                    return false;
+            }
+            foreach (GuardEntity guard in listOfGuards)
+            {
+                if (guard.currentTile.myType == TileData.TileType.Regular)
+                    return false;
+            }
+            return true;
+        }
+
+        return false;
+    }
+
+    public void ControlCharacter(PlayerEntity currentPlayer)
+    {
+        if (currentTurn == TurnSystem.You)
+        {
+            Debug.Log($"control character {currentPlayer.name}");
+            StopCoroutine(ChooseCardPlay(currentPlayer));
+            StopCoroutine(ChooseMovePlayer(currentPlayer));
+
+            if (lastSelectedPlayer != currentPlayer)
+            {
+                characterSelectSound.Post(currentPlayer.gameObject);
+            }
+
+            lastSelectedPlayer = currentPlayer;
+            selectedTile = currentPlayer.currentTile;
+            AkSoundEngine.SetState("Character", currentPlayer.name);
+            UpdateStats(currentPlayer);
+
+            StartCoroutine(ChooseMovePlayer(currentPlayer));
+            StartCoroutine(ChooseCardPlay(currentPlayer));
+            UpdateInstructions("Choose a character to move / play a card.");
+
+            spendToDrawButton.gameObject.SetActive(currentPlayer.myHand.Count < 5 && currentPlayer.myEnergy >= 3);
+            exitButton.gameObject.SetActive(CanExit(currentPlayer.currentTile));
+
+            var foundCanvasObjects = FindObjectsOfType<Collector>();
+            foreach (Collector collector in foundCanvasObjects)
+                Destroy(collector.gameObject);
+
+            objectiveButton.gameObject.SetActive(currentPlayer.CheckForObjectives());
+            if (currentPlayer.adjacentObjective != null)
+                objectiveButton.GetComponentInChildren<TMP_Text>().text = currentPlayer.adjacentObjective.name;
         }
     }
 
     public IEnumerator ChooseMovePlayer(PlayerEntity currentPlayer)
     {
+        /*
         if (lastSelectedPlayer != currentPlayer)
         {
             characterSelectSound.Post(currentPlayer.gameObject);
-            lastSelectedPlayer = currentPlayer;
         }
 
+        lastSelectedPlayer = currentPlayer;
         AkSoundEngine.SetState("Character", currentPlayer.name);
 
         selectedTile = currentPlayer.currentTile;
         UpdateInstructions("Choose a character to move / play a card.");
+        */
+
         //reset current traced path
         for (int i = 0; i < FullPath.Count; i++)
         {
@@ -845,7 +1002,12 @@ public class NewManager : MonoBehaviour
 
         List<TileData> possibleTiles = CalculateReachableGrids(currentPlayer.currentTile, currentPlayer.movementLeft, true);
         WaitForDecisionMove(possibleTiles);
+        EnablePlayers();
+        currentTurn = TurnSystem.You;
+
+        /*
         spendToDrawButton.gameObject.SetActive(currentPlayer.myHand.Count < 5 && currentPlayer.myEnergy >= 3);
+        exitButton.gameObject.SetActive(CanExit(currentPlayer.currentTile));
 
         UpdateStats(currentPlayer);
         StartCoroutine(ChooseCardPlay(currentPlayer));
@@ -854,12 +1016,20 @@ public class NewManager : MonoBehaviour
         objectiveButton.gameObject.SetActive(currentPlayer.CheckForObjectives());
         if (currentPlayer.adjacentObjective != null)
             objectiveButton.GetComponentInChildren<TMP_Text>().text = currentPlayer.adjacentObjective.name;
+        */
 
         while (chosenTile == null)
         {
+            movingPlayer = true;
+            if (lastSelectedPlayer != currentPlayer)
+            {
+                lastSelectedPlayer = currentPlayer;
+                UpdateStats(lastSelectedPlayer);
+            }
+
             if (selectedTile != currentPlayer.currentTile || currentTurn != TurnSystem.You)
             {
-                Debug.LogError("switched off movement");
+                movingPlayer = false;
                 yield break;
             }
             else
@@ -868,6 +1038,7 @@ public class NewManager : MonoBehaviour
             }
         }
 
+        movingPlayer = false;
         currentTurn = TurnSystem.Resolving;
         Collector confirmDecision = ConfirmDecision("Confirm movement?", new Vector2(0, 200));
         if (confirmDecision != null)
@@ -879,18 +1050,16 @@ public class NewManager : MonoBehaviour
 
             if (decision == 1)
             {
-                StopCoroutine(ChooseCardPlay(currentPlayer));
-                BackToStart(false);
+                yield return (ChooseMovePlayer(currentPlayer));
                 yield break;
             }
         }
 
         yield return MovePlayer(currentPlayer);
-
     }
 
     IEnumerator MovePlayer(PlayerEntity currentPlayer)
-    { 
+    {
         currentTurn = TurnSystem.Resolving;
         int distanceTraveled = GetDistance(currentPlayer.currentTile.gridPosition, chosenTile.gridPosition);
         ChangeMovement(currentPlayer, -distanceTraveled);
@@ -900,7 +1069,7 @@ public class NewManager : MonoBehaviour
 
         if (distanceTraveled != 0)
             footsteps.Post(currentPlayer.gameObject);
-        yield return currentPlayer.MovePlayer(FullPath);
+        yield return (currentPlayer.MovePlayer(FullPath));
         //currentPlayer.MoveTile(chosenTile);
 
         BackToStart(false);
@@ -908,46 +1077,73 @@ public class NewManager : MonoBehaviour
 
     IEnumerator ChooseCardPlay(PlayerEntity currentPlayer) //choose a card to play
     {
-        if (currentPlayer != null)
+        currentTurn = TurnSystem.You;
+        List<Card> canBePlayed = new List<Card>();
+        foreach (Card card in currentPlayer.myHand)
         {
-            List<Card> canBePlayed = new List<Card>();
-            foreach (Card card in currentPlayer.myHand)
+            if (card.CanPlay(currentPlayer))
+                canBePlayed.Add(card);
+        }
+        WaitForDecision(canBePlayed);
+
+        while (chosenCard == null)
+        {
+            if (currentTurn != TurnSystem.You)
             {
-                if (card.CanPlay(currentPlayer))
-                    canBePlayed.Add(card);
+                yield break;
             }
-            WaitForDecision(canBePlayed);
-
-            while (chosenCard == null)
+            else
             {
-                if (currentTurn != TurnSystem.You)
-                {
-                    yield break;
-                }
-                else
-                {
-                    yield return null;
-                }
+                yield return null;
             }
+        }
 
-            currentTurn = TurnSystem.Resolving;
-            Collector confirmDecision = ConfirmDecision($"Play {chosenCard.name}?", new Vector2(0, -85));
-            if (confirmDecision != null)
+        currentTurn = TurnSystem.Resolving;
+        Collector confirmDecision = ConfirmDecision($"Play {chosenCard.name}?", new Vector2(0, -85));
+        if (confirmDecision != null)
+        {
+            yield return confirmDecision.WaitForChoice();
+            int decision = confirmDecision.chosenButton;
+            Destroy(confirmDecision.gameObject);
+
+            if (decision == 1)
             {
-                yield return confirmDecision.WaitForChoice();
-                int decision = confirmDecision.chosenButton;
-                Destroy(confirmDecision.gameObject);
-
-                if (decision == 1)
-                {
-                    StopCoroutine(ChooseMovePlayer(currentPlayer));
-                    BackToStart(false);
-                    yield break;
-                }
+                yield return (ChooseCardPlay(currentPlayer));
+                yield break;
             }
+        }
 
-            yield return currentPlayer.PlayCard(chosenCard, true);
-            BackToStart(false);
+        yield return currentPlayer.PlayCard(chosenCard, true);
+        BackToStart(false);
+    }
+
+    void ExitCharacter()
+    {
+        foreach (GuardEntity guard in listOfGuards)
+        {
+            if (guard.CurrentTarget == lastSelectedPlayer)
+                guard.resetAlert();
+        }
+
+        if (lastSelectedPlayer.currentTile.myType == TileData.TileType.AllExit)
+        {
+            GameOver("You won!", true);
+        }
+        else
+        {
+            listOfPlayers.Remove(lastSelectedPlayer);
+            Destroy(lastSelectedPlayer.myBar.gameObject);
+            Destroy(lastSelectedPlayer.gameObject);
+
+            if (listOfPlayers.Count == 0)
+            {
+                GameOver("You won!", true);
+            }
+            else
+            {
+                lastSelectedPlayer = null;
+                BackToStart(false);
+            }
         }
     }
 
@@ -985,6 +1181,7 @@ public class NewManager : MonoBehaviour
         StopAllCoroutines();
         objectiveButton.gameObject.SetActive(false);
         spendToDrawButton.gameObject.SetActive(false);
+        exitButton.gameObject.SetActive(false);
         UpdateInstructions("");
 
         foreach (PlayerEntity player in listOfPlayers)
@@ -1009,7 +1206,7 @@ public class NewManager : MonoBehaviour
         foreach (PlayerEntity player in listOfPlayers)
         {
             if (player.stunned > 0)
-                player.stunned--;
+                player.stunChange(-1);
         }
 
         foreach (EnvironmentalEntity environment in listOfEnvironmentals)
@@ -1040,7 +1237,6 @@ public class NewManager : MonoBehaviour
         {
             FocusOnTile(guard.currentTile, false);
             yield return (guard.EndOfTurn());
-
             guard.movementLeft = guard.movesPerTurn;
             guard.DetectionRangePatrol = guard.DetectionRangeMax;
         }
@@ -1102,6 +1298,8 @@ public class NewManager : MonoBehaviour
             TileData SelectTile = current.Item1;
             int cost = current.Item2;
 
+            reachableGrids.Remove(startLocation);
+            
             if (cost <= movementSpeed)
             {
                 reachableGrids.Add(SelectTile);;
@@ -1135,6 +1333,7 @@ public class NewManager : MonoBehaviour
                 }
             }
         }
+        reachableGrids.Remove(startLocation);
         return reachableGrids;
     }
 
