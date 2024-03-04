@@ -49,7 +49,7 @@ public class ToggleEntity : ObjectiveEntity
                     if (toggledOn)
                     {
                         WallEntity wall = getTile.transform.GetComponentInChildren<WallEntity>();
-                        wall.MoveTile(getTile);
+                        StartCoroutine(wall.MoveTile(getTile));
                     }
                     else
                     {

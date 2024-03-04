@@ -5,8 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using MyBox;
 using UnityEngine.EventSystems;
-using System.Text.RegularExpressions;
-using System.Linq;
+using System;
 
 public class Card : MonoBehaviour, IPointerClickHandler
 {
@@ -15,6 +14,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     [Foldout("Choices", true)]
         [ReadOnly] public Image image;
+        [ReadOnly] public Image background;
         bool enableBorder;
         [ReadOnly] public Image border;
         [ReadOnly] public Button button;
@@ -80,6 +80,12 @@ public class Card : MonoBehaviour, IPointerClickHandler
         public AK.Wwise.Event cardPlay;
         [SerializeField] AK.Wwise.Event addDistractionSound;
 
+    private EventHandler[] events;
+
+
+    public event EventHandler OnCardResolved;
+    public event EventHandler OnChoiceMade; 
+
 #endregion
 
 #region Setup
@@ -87,6 +93,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
     private void Awake()
     {
         image = GetComponent<Image>();
+        background = transform.Find("Canvas Group").Find("Background").GetComponent<Image>();
         border = transform.GetChild(0).GetComponent<Image>();
         button = this.GetComponent<Button>();
         button.onClick.AddListener(SendMe);
@@ -101,7 +108,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
     {
         if (eventData.button == PointerEventData.InputButton.Right)
         {
-            RightClick.instance.ChangeCard(this);
+            CardDisplay.instance.ChangeCard(this);
             cardMove.Post(gameObject);
         }
     }
@@ -114,31 +121,10 @@ public class Card : MonoBehaviour, IPointerClickHandler
         typeOne = ConvertToType(data.cat1);
         typeTwo = ConvertToType(data.cat2);
 
-        Color topColor = typeOne switch
-        {
-            CardType.Attack => Color.red,
-            CardType.Draw => Color.green,
-            CardType.Distraction => Color.blue,
-            CardType.Energy => Color.cyan,
-            CardType.Movement => Color.yellow,
-            CardType.Misc => Color.gray,
-            _ => Color.black,
-        };
-
-        Color bottomColor = typeTwo switch
-        {
-            CardType.Attack => Color.red,
-            CardType.Draw => Color.green,
-            CardType.Distraction => Color.blue,
-            CardType.Energy => Color.cyan,
-            CardType.Movement => Color.yellow,
-            CardType.Misc => Color.gray,
-            _ => topColor,
-        };
-
         Material mat = new Material(image.material);
-        mat.SetColor("_GradientColorTop", topColor);
-        mat.SetColor("_GradientColorBottom", bottomColor);
+        mat.SetColor("_GradientColorTop", ConvertToColor(typeOne));
+        mat.SetColor("_GradientColorBottom", ConvertToColor(typeTwo));
+        mat.SetTexture("_MainTex", image.mainTexture);
         image.material = mat;
 
         energyCost = data.epCost;
@@ -176,6 +162,21 @@ public class Card : MonoBehaviour, IPointerClickHandler
             "mvmt" => CardType.Movement,
             "misc" => CardType.Misc,
             _ => CardType.None,
+        };
+    }
+
+    public Color ConvertToColor(CardType cardType)
+    {
+        return cardType switch
+        {
+            CardType.Attack => Color.red,
+            CardType.Draw => Color.green,
+            CardType.Distraction => Color.blue,
+            CardType.Energy => Color.cyan,
+            CardType.Movement => Color.yellow,
+            CardType.Misc => Color.gray,
+            CardType.None => ConvertToColor(typeOne),
+            _ => Color.black,
         };
     }
 
@@ -388,9 +389,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     public IEnumerator RevealCard(float totalTime)
     {
-        image.sprite = cardFront;
-        yield return null;
-        /*if (image.sprite != cardFront)
+        if (image.sprite != cardFront)
         {
             transform.localEulerAngles = new Vector3(0, 0, 0);
             float elapsedTime = 0f;
@@ -417,7 +416,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
             }
 
             transform.localEulerAngles = originalRot;
-        }*/
+        }
     }
 
     public IEnumerator MoveCard(Vector3 newPos, Vector3 finalPos, Vector3 newRot, float waitTime)
@@ -429,7 +428,8 @@ public class Card : MonoBehaviour, IPointerClickHandler
         while (elapsedTime < waitTime)
         {
             transform.localPosition = Vector3.Lerp(originalPos, newPos, elapsedTime / waitTime);
-            transform.localEulerAngles = Vector3.Lerp(originalRot, newRot, elapsedTime / waitTime);
+            transform.localEulerAngles = Vector3.zero;
+            transform.localEulerAngles = Vector3.Lerp(originalRot, new Vector3(0, 0, newRot.z), elapsedTime / waitTime);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
@@ -439,12 +439,16 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     public void EnableCard()
     {
+        image.color = Color.white;
+        background.color = Color.white;
         enableBorder = true;
         button.interactable = true;
     }
 
     public void DisableCard()
     {
+        image.color = Color.gray;
+        background.color = Color.gray;
         enableBorder = false;
         button.interactable = false;
     }
@@ -518,6 +522,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
             }
         }
 
+        OnCardResolved?.Invoke(this, EventArgs.Empty);
         NewManager.instance.selectedTile = currentPlayer.currentTile;
         NewManager.instance.violentCards += (violent) ? 1 : 0;
     }
@@ -603,6 +608,9 @@ public class Card : MonoBehaviour, IPointerClickHandler
                     yield return ChangeEnergy(currentPlayer);
                     break;
 
+                case "FREEMOVE":
+                    yield return NewManager.instance.ChooseMovePlayer(currentPlayer, 3, true);
+                    break;
                 case "CHANGEMP":
                     yield return ChangeMovement(currentPlayer);
                     break;
@@ -653,6 +661,12 @@ public class Card : MonoBehaviour, IPointerClickHandler
                 case "THROWENVIRONMENTAL":
                     yield return ChooseTile();
                     yield return CreateEnvironmental();
+                    break;
+                case "THROWMODIFIER":
+                    yield return ChooseTile();
+                    TileModifier newModifier = currentTarget.gameObject.AddComponent<TileModifier>();
+                    currentTarget.listOfModifiers.Add(newModifier);
+                    newModifier.card = this;
                     break;
 
                 default:
@@ -713,7 +727,10 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
         if (adjacentTilesWithGuards.Count != 1)
         {
-            NewManager.instance.UpdateInstructions("Choose a guard in range.");
+            InstructionsManager.UpdateInstructions(this,
+                new string[] { "OnChoiceMade" },
+                new string[] { "Choose a guard in range." }
+            );
             NewManager.instance.WaitForDecision(adjacentTilesWithGuards);
 
             while (NewManager.instance.chosenTile == null)
@@ -734,6 +751,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
                 }
             }
 
+            OnChoiceMade?.Invoke(this, EventArgs.Empty);
             adjacentTilesWithGuards.Clear();
             adjacentTilesWithGuards.Add(NewManager.instance.chosenTile);
         }
@@ -748,7 +766,10 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
         if (adjacentTilesWithPlayers.Count != 1)
         {
-            NewManager.instance.UpdateInstructions("Choose a player in range.");
+            InstructionsManager.UpdateInstructions(this, 
+                new string[] {"OnChoiceMade", "OnCardResolved"}, 
+                new string[] { "Choose a player in range, ", "then resolve the card."}  
+                );
             NewManager.instance.WaitForDecision(adjacentTilesWithPlayers);
 
             while (NewManager.instance.chosenTile == null)
@@ -769,6 +790,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
                 }
             }
 
+            OnChoiceMade?.Invoke(this, EventArgs.Empty);
             adjacentTilesWithPlayers.Clear();
             adjacentTilesWithPlayers.Add(NewManager.instance.chosenTile);
         }
@@ -782,7 +804,10 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
         if (adjacentTilesWithWalls.Count != 1)
         {
-            NewManager.instance.UpdateInstructions("Choose a wall in range.");
+            InstructionsManager.UpdateInstructions(this,
+                new string[] { "OnChoiceMade" },
+                new string[] { "Choose a wall in range." }
+            );
             NewManager.instance.WaitForDecision(adjacentTilesWithWalls);
 
             while (NewManager.instance.chosenTile == null)
@@ -803,6 +828,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
                 }
             }
 
+            OnChoiceMade?.Invoke(this, EventArgs.Empty);
             adjacentTilesWithWalls.Clear();
             adjacentTilesWithWalls.Add(NewManager.instance.chosenTile);
         }
@@ -845,7 +871,10 @@ public class Card : MonoBehaviour, IPointerClickHandler
             tilesToSelect.Add(NewManager.instance.FindTile(point));
         }
 
-        NewManager.instance.UpdateInstructions("Choose a tile in range.");
+        InstructionsManager.UpdateInstructions(this,
+            new string[] { "OnChoiceMade" },
+            new string[] { "Choose a tile in range." }
+        );
         NewManager.instance.WaitForDecision(tilesToSelect);
 
         while (NewManager.instance.chosenTile == null)
@@ -866,13 +895,14 @@ public class Card : MonoBehaviour, IPointerClickHandler
             }
         }
 
+        OnChoiceMade?.Invoke(this, EventArgs.Empty);
         currentTarget = NewManager.instance.chosenTile;
     }
 
     IEnumerator ChooseTile()
     {
         List<TileData> tilesInRange = NewManager.instance.CalculateReachableGrids(currentPlayer.currentTile, range, false);
-        NewManager.instance.UpdateInstructions("Choose a tile in range.");
+        InstructionsManager.UpdateInstructions(this, new string[] { "OnChoiceMade" }, new string[] { "Choose a tile in range." });
         NewManager.instance.WaitForDecision(tilesInRange);
 
         while (NewManager.instance.chosenTile == null)
@@ -893,6 +923,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
             }
         }
 
+        OnChoiceMade?.Invoke(this, EventArgs.Empty);
         currentTarget = NewManager.instance.chosenTile;
     }
 
@@ -933,6 +964,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         }
 
         yield return newCollector.WaitForChoice();
+        OnChoiceMade?.Invoke(this, EventArgs.Empty);
         yield return ResolveMethod(choices[newCollector.chosenButton]);
         Destroy(newCollector.gameObject);
     }
@@ -941,7 +973,10 @@ public class Card : MonoBehaviour, IPointerClickHandler
     {
         for (int i = 0; i < chooseHand; i++)
         {
-            NewManager.instance.UpdateInstructions($"Discard a card from your hand ({chooseHand - i} more).");
+            InstructionsManager.UpdateInstructions(this,
+                new string[] { "OnChoiceMade" },
+                new string[] { $"Discard a card from your hand ({chooseHand - i} more)." }
+            );
             if (player.myHand.Count >= 2)
             {
                 NewManager.instance.WaitForDecision(player.myHand);
@@ -969,6 +1004,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
                 yield return player.DiscardFromHand(player.myHand[0]);
             }
             NewManager.instance.UpdateStats(currentPlayer);
+            OnChoiceMade?.Invoke(this, EventArgs.Empty);
         }
     }
 
@@ -976,7 +1012,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
     {
         for (int i = 0; i < chooseHand; i++)
         {
-            NewManager.instance.UpdateInstructions($"Give {otherPlayer.name} a card from your hand.");
+            InstructionsManager.UpdateInstructions(this, new string[] { "OnChoiceMade" }, new string[] { $"Give {otherPlayer.name} a card from your hand." });
             if (thisPlayer.myHand.Count >= 2)
             {
                 NewManager.instance.WaitForDecision(thisPlayer.myHand);
@@ -1003,6 +1039,8 @@ public class Card : MonoBehaviour, IPointerClickHandler
             {
                 otherPlayer.PlusCards(thisPlayer.myHand[0]);
             }
+
+            OnChoiceMade?.Invoke(this, EventArgs.Empty);
             thisPlayer.SortHand();
             NewManager.instance.UpdateStats(currentPlayer);
         }

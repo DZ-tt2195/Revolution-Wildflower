@@ -100,33 +100,14 @@ public class PlayerEntity : MovingEntity
         return answer;
     }
 
-    public IEnumerator MovePlayer(List<TileData> path)
-    {
-        foreach(TileData tile in path)
-        {
-            yield return NewManager.Wait(PlayerPrefs.GetFloat("Animation Speed"));
-            MoveTile(tile);
-        }
-        /*
-        float timer = 0;
-        for (int i = 0; i < path.Count; i++)
-        {
-            MoveTile(path[i]);
-            while (timer < moveDelay)
-            {
-                timer += Time.deltaTime;
-                yield return null;
-            }
-            timer = 0;
-        }
-        */
-    }
+    /*
     public override void MoveTile(TileData newTile)
     {
         base.MoveTile(newTile);
         foreach (GuardEntity guard in NewManager.instance.listOfGuards)
             guard.CheckForPlayer();
     }
+    */
 
     public bool CheckForObjectives()
     {
@@ -181,9 +162,9 @@ public class PlayerEntity : MovingEntity
         for (int i = 0; i < myHand.Count; i++)
         {
             Card nextCard = myHand[i];
-            float startingX = (myHand.Count-1)*-50;
-            float difference = 100;
-            Vector2 newPosition = new(startingX + difference * i, -485);
+            float startingX = (myHand.Count-1)*-(300/2);
+            float difference = 300;
+            Vector3 newPosition = new(startingX + difference * i, -485, 0);
             nextCard.transform.SetSiblingIndex(i);
             StartCoroutine(nextCard.MoveCard(newPosition, newPosition, Vector3.zero, PlayerPrefs.GetFloat("Animation Speed")));
         }

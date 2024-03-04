@@ -168,7 +168,7 @@
     ],
     [
       "Flashbang",
-      "Range 3, with Delay 1, Movement -3 on everyone within 3 tiles. Volume 7.",
+      "Range 3, with Delay 1, -3 Movement on everyone within 3 tiles. Volume 7.",
       "atk",
       "",
       "1",
@@ -649,11 +649,26 @@
     ],
     [
       "Sync",
-      "Find the first card with the same EP cost as ____? in your deck. If you can't, +1 Card.",
+      "Find the first card in your deck that costs 2 Ep. If you can't, +1 Card.",
       "draw",
       "",
       "1",
-      "1"
+      "1",
+      "",
+      "",
+      "",
+      "2",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "FindCost"
     ],
     [
       "Trackstar",
