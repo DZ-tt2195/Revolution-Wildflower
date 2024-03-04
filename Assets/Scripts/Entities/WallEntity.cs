@@ -7,15 +7,20 @@ public class WallEntity : Entity
 {
     [Foldout("Wall Entity", true)]
     [Tooltip("Health a wall has")] [ReadOnly] public int health;
-
+    [Tooltip("semi damaged wall sprite")] [SerializeField] Sprite damagedSprite;
+    [Tooltip("heavily damaged wall sprite")][SerializeField] Sprite heavilyDamagedSprite;
+    int maxHealth;
 
     public override string HoverBoxText()
     {
-        return "Current Health: " + health;
+        return $"Current Health: {health}";
     }
 
-    public void WallDirection(string data)
+    public void WallDirection(int initialHealth, string data)
     {
+        maxHealth = initialHealth;
+        health = initialHealth;
+
         switch (data)
         {
             case "l": //wall faces left
@@ -42,6 +47,14 @@ public class WallEntity : Entity
         {
             NewManager.instance.listOfWalls.Remove(this);
             Destroy(this.gameObject);
+        }
+        else if (health <= maxHealth*(1/3))
+        {
+            spriteRenderer.sprite = heavilyDamagedSprite;
+        }
+        else if (health <= maxHealth*(2/3))
+        {
+            spriteRenderer.sprite = damagedSprite;
         }
     }
 }

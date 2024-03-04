@@ -26,7 +26,7 @@ public class EnvironmentalEntity : MovingEntity
         }
     }
 
-#endregion
+    #endregion
 
 #region Activation 
 
@@ -61,12 +61,24 @@ public class EnvironmentalEntity : MovingEntity
 
         switch (methodName)
         {
-            case "GUARDMOVEMENT":
-                yield return GuardMovement(FindGuardsInRange());
+            case "SETVISION":
+                yield return SetGuardVision(FindGuardsInRange());
                 break;
-            case "STUNALL":
-                yield return StunAll(FindEntitiesInRange());
+
+            case "SLOWGUARDMOVEMENT":
+                yield return SlowGuardMovement(FindGuardsInRange());
                 break;
+            case "SLOWPLAYERMOVEMENT":
+                yield return SlowPlayerMovement(FindPlayersInRange());
+                break;
+
+            case "STUNPLAYERS":
+                yield return StunPlayers(FindPlayersInRange());
+                break;
+            case "STUNGUARDS":
+                yield return StunGuards(FindGuardsInRange());
+                break;
+
             case "DAMAGEWALLS":
                 yield return DamageWalls(FindWallsInRange());
                 break;
@@ -107,6 +119,21 @@ public class EnvironmentalEntity : MovingEntity
         return entitiesInRange;
     }
 
+    List<PlayerEntity> FindPlayersInRange()
+    {
+        List<TileData> tilesInRange = NewManager.instance.CalculateReachableGrids(this.currentTile, card.areaOfEffect, false);
+        List<PlayerEntity> entitiesInRange = new();
+
+        foreach (TileData tile in tilesInRange)
+        {
+            try { entitiesInRange.Add(tile.myEntity.GetComponent<PlayerEntity>()); }
+            catch (NullReferenceException) { continue; }
+        }
+
+        entitiesInRange.RemoveAll(item => item == null);
+        return entitiesInRange;
+    }
+
     List<MovingEntity> FindEntitiesInRange()
     {
         List<TileData> tilesInRange = NewManager.instance.CalculateReachableGrids(this.currentTile, card.areaOfEffect, false);
@@ -126,16 +153,20 @@ public class EnvironmentalEntity : MovingEntity
 
 #region Effects 
 
-    IEnumerator StunAll(List<MovingEntity> allEntities)
+    IEnumerator StunGuards(List<GuardEntity> allGuards)
     {
-        foreach (MovingEntity entity in allEntities)
+        foreach (GuardEntity guard in allGuards)
         {
-            if (entity.CompareTag("Player"))
-                yield return card.StunPlayer(entity.GetComponent<PlayerEntity>());
-            if (entity.CompareTag("Guard"))
-                yield return card.StunGuard(entity.GetComponent<GuardEntity>());
+            yield return card.StunGuard(guard);
         }
-        yield return null;
+    }
+
+    IEnumerator StunPlayers(List<PlayerEntity> allPlayers)
+    {
+        foreach (PlayerEntity player in allPlayers)
+        {
+            yield return card.StunPlayer(player);
+        }
     }
 
     IEnumerator DamageWalls(List<WallEntity> allWalls)
@@ -147,11 +178,25 @@ public class EnvironmentalEntity : MovingEntity
         yield return null;
     }
 
-    IEnumerator GuardMovement(List<GuardEntity> allGuards)
+    IEnumerator SlowPlayerMovement(List<PlayerEntity> allPlayers)
+    {
+        foreach (PlayerEntity player in allPlayers)
+            yield return player.movementLeft-=card.changeInMP;
+    }
+
+    IEnumerator SlowGuardMovement(List<GuardEntity> allGuards)
     {
         foreach (GuardEntity guard in allGuards)
             yield return card.AffectGuardMovement(guard);
-        yield return null;
+    }
+
+    IEnumerator SetGuardVision(List<GuardEntity> allGuards)
+    {
+        foreach (GuardEntity guard in allGuards)
+        {
+            guard.DetectionRangePatrol = card.vision;
+            yield return null;
+        }
     }
 
 #endregion

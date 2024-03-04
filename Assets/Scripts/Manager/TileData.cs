@@ -9,26 +9,27 @@ using UnityEngine.EventSystems;
 
 public class TileData : MonoBehaviour
 {
+    public enum TileType { Regular, Exit, AllExit };
     [Foldout("Tile information", true)]
         [Tooltip("Attached arrow")] public SpriteRenderer directionIndicator;
         [Tooltip("arrow sprites")] public List<Sprite> arrowSprites = new();
         [Tooltip("All adjacent tiles")] [ReadOnly] public List<TileData> adjacentTiles;
         [Tooltip("Position in the grid")] [ReadOnly] public Vector2Int gridPosition;
         [Tooltip("The entity on this tile")] [ReadOnly] public Entity myEntity;
+        [Tooltip("What kind of tile this is")][ReadOnly] public TileType myType;
 
     [Foldout("Tile conditions", true)]
-    [Tooltip("Defines whether you can choose this tile")][ReadOnly] public bool choosable = false;
-    [Tooltip("Defines whether you can click this tile")][ReadOnly] public bool clickable = false;
-    [Tooltip("Defines whether you can move onto this tile")][ReadOnly] public bool moveable = false;
-    [Tooltip("Defines whether you can move onto this tile")][ReadOnly] public bool currentGuardTarget = false;
-    [Tooltip("Defines whether you can select this tile for a card action")][ReadOnly] public bool CardSelectable = false;
-    [Tooltip("If your mouse is over this")] private bool moused = false;
+        [Tooltip("Defines whether you can choose this tile")][ReadOnly] public bool choosable = false;
+        [Tooltip("Defines whether you can click this tile")][ReadOnly] public bool clickable = false;
+        [Tooltip("Defines whether you can move onto this tile")][ReadOnly] public bool moveable = false;
+        [Tooltip("Defines whether you can move onto this tile")][ReadOnly] public bool currentGuardTarget = false;
+        [Tooltip("Defines whether you can select this tile for a card action")][ReadOnly] public bool CardSelectable = false;
+        [Tooltip("If your mouse is over this")] private bool moused = false;
 
     [Foldout("Mouse", true)]
         [Tooltip("Layer mask that mouse raycasts ignore")] [SerializeField] LayerMask mask;
         [Tooltip("timer that controls how long until a tool tip appears on hover")] float timeTillToolTip = 0.5f;
         [Tooltip("timer that controls how long until a tool tip appears on hover")] float toolTipHoverTimer = 0;
-
 
     [Foldout("Colors", true)]
         [Tooltip("Tile's sprite renderer")] SpriteRenderer myRenderer;
@@ -40,7 +41,7 @@ public class TileData : MonoBehaviour
         [Tooltip("color used for unselected moused over tiles you can move onto")][SerializeField] Color MoveableColor = new Color(0.9f, 0.9f, 0.9f, 1);
         [Tooltip("color used for guard's distraction target tiles")] [SerializeField] Color AlertColor = new Color(0.9f, 0.7f, 0.1f, 1);
         [Tooltip("color used for unselected moused over tiles you can select for a card action")][SerializeField] Color CardSelectableColor = new Color(0.9f, 0.7f, 0.1f, 1);     
-    [   Tooltip("Time for noise indecator to show")] [SerializeField] float AlertDelay = 0.2f;
+        [Tooltip("Time for noise indecator to show")] [SerializeField] float AlertDelay = 0.2f;
         [Tooltip("Base delay noise indecator")] [SerializeField] float BaseAlertDelay = 0.2f;
         [Tooltip("Variable indicating when tile should highlight for noise")][ReadOnly] bool noiseThrough = false;
 
@@ -91,9 +92,13 @@ public class TileData : MonoBehaviour
             border.color = ClickableColor;
             border.SetAlpha(NewManager.instance.opacity);
         }
+        else if (myType != TileType.Regular)
+        {
+            border.color = new Color(0, 1, 0, 1);
+        }
         else
         {
-            border.color = new Color(1, 1, 1, 0);
+            border.SetAlpha(0);
         }
     }
 
@@ -142,7 +147,6 @@ public class TileData : MonoBehaviour
                 //NewManager.instance.FullPath[i].directionIndicator.enabled = false;
             }
         }
-
     }
 
     private void MouseOver()
@@ -169,7 +173,7 @@ public class TileData : MonoBehaviour
                     if (player.stunned == 0)
                     {
                         NewManager.instance.StopAllCoroutines();
-                        StartCoroutine(NewManager.instance.ChooseMovePlayer(player));
+                        NewManager.instance.ControlCharacter(player);
                     }
                 }
             }

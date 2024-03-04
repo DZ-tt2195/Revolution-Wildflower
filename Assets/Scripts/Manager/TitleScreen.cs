@@ -10,6 +10,8 @@ using TMPro;
 using MyBox;
 using UnityEngine.SceneManagement;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
+//using UnityEngine.Windows;
 
 public class TitleScreen : MonoBehaviour
 {
@@ -99,6 +101,10 @@ public class TitleScreen : MonoBehaviour
         if (newName.text == "")
         {
             StartCoroutine(CausedError("Your save file needs a name."));
+        }
+        else if (!Regex.IsMatch(newName.text, @"^[a-zA-Z]+$"))
+        {
+            StartCoroutine(CausedError("Save file names can't have punctuation."));
         }
         else
         {

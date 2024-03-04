@@ -1,17 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
-//using System.Linq;
-//using UnityEditor.Rendering;
+using System.Linq;
+using UnityEditor.Rendering;
 using UnityEngine;
-//using UnityEngine.Windows;
-//using static UnityEditor.Searcher.SearcherWindow.Alignment; | <- you make me so angry
+using UnityEngine.Windows;
 using Input = UnityEngine.Input;
 
 public class MoveCamera : MonoBehaviour
 {
     [Header("Dragging")]
     [SerializeField]
-    private static float dragSpeed = 300;
+    private static float dragSpeed = 750;
     private static float minDragSpeed;
     private static float maxDragSpeed;
 
@@ -83,18 +82,18 @@ public class MoveCamera : MonoBehaviour
 
         if (Input.GetMouseButton(0))
         {
-                var input = new Vector3();
+            var input = new Vector3();
 
-                float currentDragSpeed = Mathf.Clamp(dragSpeed * (zoomMin / instance.camera.orthographicSize), minDragSpeed, maxDragSpeed);
+            float currentDragSpeed = Mathf.Clamp(dragSpeed * (zoomMin / instance.camera.orthographicSize), minDragSpeed, maxDragSpeed);
 
-                input.x = Input.GetAxis("Mouse X") * currentDragSpeed * Time.deltaTime;
-                input.z = Input.GetAxis("Mouse Y") * currentDragSpeed * Time.deltaTime;
+            input.x = Input.GetAxis("Mouse X") * currentDragSpeed * Time.deltaTime;
+            input.z = Input.GetAxis("Mouse Y") * currentDragSpeed * Time.deltaTime;
 
-                //  The camera's x/z axes are aligned with the isometric grid, not actual up/down, so some we need some conversion to make it work. 
-                float vertical = (input.x - input.z);
-                float horizontal = (input.x + input.z);
+            //  The camera's x/z axes are aligned with the isometric grid, not actual up/down, so some we need some conversion to make it work. 
+            float vertical = (input.x - input.z);
+            float horizontal = (input.x + input.z);
 
-                instance.transform.position = new Vector3(instance.transform.position.x + vertical, instance.transform.position.y, instance.transform.position.z + horizontal);
+            instance.transform.position = new Vector3(instance.transform.position.x + vertical, instance.transform.position.y, instance.transform.position.z + horizontal);
         }
 
         CalculateScroll();
