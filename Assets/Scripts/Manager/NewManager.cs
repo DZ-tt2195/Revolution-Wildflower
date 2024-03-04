@@ -132,8 +132,7 @@ public class NewManager : MonoBehaviour
         healthBar = playerStats.Find("Health").GetComponentInChildren<StatBar>();
         movementBar = playerStats.Find("Movement").GetComponentInChildren<StatBar>();
         energyBar = playerStats.Find("Energy").GetComponentInChildren<StatBar>();
-        selected_characterFace = playerStats.Find("selected_characterFace").GetComponent<Image>();
-
+        selected_characterFace = playerStats.Find("CharacterFace").GetComponent<Image>();
         facesSpritesheet = Resources.LoadAll<Sprite>("Sprites/selected_portrait_spritesheet");
         emptyFace = Resources.Load<Sprite>("Sprites/noCharacter");
 
@@ -145,7 +144,7 @@ public class NewManager : MonoBehaviour
 
         //deckTracker = GameObject.Find("Deck Tracker").GetComponent<TMP_Text>();
         //pilesTracker = GameObject.Find("Draw&Discard").transform;
-        drawPile = GameObject.Find("Draw Pile").transform.Find("RemainingText").GetComponent<TMP_Text>();  
+        drawPile = GameObject.Find("Draw Pile").GetComponentInChildren<TMP_Text>();  
         //discardPile = pilesTracker.GetChild(1).GetChild(0).GetComponent<TMP_Text>();
 
         endTurnButton = GameObject.Find("End Turn Button").GetComponent<Button>();
@@ -468,7 +467,7 @@ public class NewManager : MonoBehaviour
     {
         if (player == null)
         {
-            stats.text = "";
+            //stats.text = "";
             currentCharacter.text = "";
             selected_characterFace.sprite = emptyFace;
 
