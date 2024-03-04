@@ -132,19 +132,20 @@ public class NewManager : MonoBehaviour
         healthBar = playerStats.Find("Health").GetComponentInChildren<StatBar>();
         movementBar = playerStats.Find("Movement").GetComponentInChildren<StatBar>();
         energyBar = playerStats.Find("Energy").GetComponentInChildren<StatBar>();
-        selected_characterFace = playerStats.Find("selected_characterFace").GetComponent<Image>();
-
+        selected_characterFace = playerStats.Find("CharacterFace").GetComponent<Image>();
         facesSpritesheet = Resources.LoadAll<Sprite>("Sprites/selected_portrait_spritesheet");
         emptyFace = Resources.Load<Sprite>("Sprites/noCharacter");
 
-        informationImage = GameObject.Find("Information Image").transform;
-        stats = informationImage.GetChild(0).GetComponent<TMP_Text>();
-        instructions = informationImage.GetChild(1).GetComponent<TMP_Text>();
-        deckTracker = GameObject.Find("Deck Tracker").GetComponent<TMP_Text>();
+        //  
+        //informationImage = GameObject.Find("Information Image").transform;
+        //stats = informationImage.GetChild(0).GetComponent<TMP_Text>();
+        //instructions = informationImage.GetChild(1).GetComponent<TMP_Text>();
 
-        spendToDrawButton = GameObject.Find("Spend Energy Button").GetComponent<Button>();
-        spendToDrawButton.onClick.AddListener(SpendToDraw);
-        spendToDrawButton.gameObject.SetActive(false);
+
+        //deckTracker = GameObject.Find("Deck Tracker").GetComponent<TMP_Text>();
+        //pilesTracker = GameObject.Find("Draw&Discard").transform;
+        drawPile = GameObject.Find("Draw Pile").GetComponentInChildren<TMP_Text>();  
+        //discardPile = pilesTracker.GetChild(1).GetChild(0).GetComponent<TMP_Text>();
 
         endTurnButton = GameObject.Find("End Turn Button").GetComponent<Button>();
         endTurnButton.onClick.AddListener(Regain);
@@ -161,6 +162,8 @@ public class NewManager : MonoBehaviour
 
         handContainer = GameObject.Find("Hand Container").transform;
         gridContainer = GameObject.Find("Grid Container").transform;
+
+        spendToDrawButton = GameObject.Find("Spend Energy Button").GetComponent<Button>();
     }
 
     void Start()
@@ -368,7 +371,7 @@ public class NewManager : MonoBehaviour
 
                     try
                     {
-                        thisTileEntity.MoveTile(nextTile);
+                        StartCoroutine(thisTileEntity.MoveTile(nextTile));
                     }
                     catch (NullReferenceException)
                     {
@@ -458,13 +461,16 @@ public class NewManager : MonoBehaviour
     {
         player.movementLeft = Math.Clamp(player.movementLeft + n, 0, player.movesPerTurn);
         UpdateStats(player);
+
+        if (player.movementLeft + n < 0)
+            player.movementLeft += n;
     }
 
     public void UpdateStats(PlayerEntity player)
     {
         if (player == null)
         {
-            stats.text = "";
+            //stats.text = "";
             currentCharacter.text = "";
             selected_characterFace.sprite = emptyFace;
 
@@ -473,6 +479,7 @@ public class NewManager : MonoBehaviour
             energyBar.SetValue(0);
 
             //deckTracker.text = "";
+            //  TO-DO: Lerp the draw pile out of the scene. 
             //drawPile.text = "Draw";
             //discardPile.text = "Discard";
             handContainer.transform.localPosition = new Vector3(10000, 10000, 0);
@@ -498,8 +505,21 @@ public class NewManager : MonoBehaviour
             }
 
             //  TO-DO: change this stuff so it isn't all text -Noah
-            deckTracker.text = $"<color=#70f5ff>Draw Pile <color=#ffffff>/ <color=#ff9670>Discard Pile " +
-            $"\n\n<color=#70f5ff>{player.myDrawPile.Count} <color=#ffffff>/ <color=#ff9670>{player.myDiscardPile.Count}";
+            //deckTracker.text = $"<color=#70f5ff>Draw Pile <color=#ffffff>/ <color=#ff9670>Discard Pile " +
+            //$"\n\n<color=#70f5ff>{player.myDrawPile.Count} <color=#ffffff>/ <color=#ff9670>{player.myDiscardPile.Count}" +
+            //$"\n({player.myExhaust.Count} exhausted)";
+
+            // idk why the words arent coming up
+            drawPile.text = player.myDrawPile.Count.ToString();
+            if (player.myDrawPile.Count <= 5)
+            {
+                drawPile.color = Color.red;
+            }
+
+            else
+            {
+                drawPile.color = Color.black; 
+            }
 
             if (player.myPosition * -2000 != handContainer.transform.localPosition.x)
             {
@@ -512,7 +532,7 @@ public class NewManager : MonoBehaviour
             energyBar.SetValue(player.myEnergy); energyBar.SetMaximumValue(player.maxEnergy);
         }
 
-        stats.text = $"\n<color=#75ff59>{listOfObjectives.Count} Objectives Left" + $"| {turnCount} Turns Left";
+        //stats.text = $"\n<color=#75ff59>{listOfObjectives.Count} Objectives Left" + $"| {turnCount} Turns Left";
 
         foreach (PlayerEntity nextPlayer in listOfPlayers)
         {
@@ -586,7 +606,8 @@ public class NewManager : MonoBehaviour
 
     public void UpdateInstructions(string instructions)
     {
-        this.instructions.text = instructions;
+        //return;
+        //this.instructions.text = instructions;
     }
 
     #endregion
@@ -608,7 +629,7 @@ public class NewManager : MonoBehaviour
         {
             if (Input.mousePosition.Equals(lastClickedMousePosition) && currentTurn == TurnSystem.You && !EventSystem.current.IsPointerOverGameObject())
             {
-                StopCoroutine(ChooseMovePlayer(lastSelectedPlayer));
+                StopCoroutine(ChooseMovePlayer(lastSelectedPlayer, 0));
                 StopCoroutine(ChooseCardPlay(lastSelectedPlayer));
                 Debug.LogError("deselect");
 
@@ -764,7 +785,6 @@ public class NewManager : MonoBehaviour
     {
         if (PlayerPrefs.GetInt("Confirm Choices") == 1)
         {
-            Debug.LogError($"confirm decision");
             DisableAllCards();
             DisableAllTiles();
 
@@ -863,7 +883,7 @@ public class NewManager : MonoBehaviour
         if (listOfPlayers.Count > 0)
         {
             currentTurn = TurnSystem.You;
-            StopCoroutine(ChooseMovePlayer(lastSelectedPlayer));
+            StopCoroutine(ChooseMovePlayer(lastSelectedPlayer, 0));
             StopCoroutine(ChooseCardPlay(lastSelectedPlayer));
 
             DisableAllTiles();
@@ -874,7 +894,6 @@ public class NewManager : MonoBehaviour
 
             EnablePlayers();
             objectiveButton.gameObject.SetActive(false);
-
             endTurnImage.color = AnythingLeftThisTurn() ? Color.gray : Color.white;
 
             if (startTurn)
@@ -930,7 +949,7 @@ public class NewManager : MonoBehaviour
         {
             Debug.Log($"control character {currentPlayer.name}");
             StopCoroutine(ChooseCardPlay(currentPlayer));
-            StopCoroutine(ChooseMovePlayer(currentPlayer));
+            StopCoroutine(ChooseMovePlayer(currentPlayer, 0));
 
             if (lastSelectedPlayer != currentPlayer)
             {
@@ -942,7 +961,7 @@ public class NewManager : MonoBehaviour
             AkSoundEngine.SetState("Character", currentPlayer.name);
             UpdateStats(currentPlayer);
 
-            StartCoroutine(ChooseMovePlayer(currentPlayer));
+            StartCoroutine(ChooseMovePlayer(currentPlayer, currentPlayer.movementLeft));
             StartCoroutine(ChooseCardPlay(currentPlayer));
             UpdateInstructions("Choose a character to move / play a card.");
 
@@ -959,45 +978,19 @@ public class NewManager : MonoBehaviour
         }
     }
 
-    public IEnumerator ChooseMovePlayer(PlayerEntity currentPlayer)
+    public IEnumerator ChooseMovePlayer(PlayerEntity currentPlayer, int possibleMoves, bool freeMoves = false)
     {
-        /*
-        if (lastSelectedPlayer != currentPlayer)
-        {
-            characterSelectSound.Post(currentPlayer.gameObject);
-        }
-
-        lastSelectedPlayer = currentPlayer;
-        AkSoundEngine.SetState("Character", currentPlayer.name);
-
-        selectedTile = currentPlayer.currentTile;
-        UpdateInstructions("Choose a character to move / play a card.");
-        */
-
         //reset current traced path
         for (int i = 0; i < FullPath.Count; i++)
         {
             FullPath[i].directionIndicator.enabled = false;
         }
-        yield return Wait(0.2f);
+        yield return Wait(0.15f);
 
-        List<TileData> possibleTiles = CalculateReachableGrids(currentPlayer.currentTile, currentPlayer.movementLeft, true);
+        List<TileData> possibleTiles = CalculateReachableGrids(currentPlayer.currentTile, possibleMoves, true);
         WaitForDecisionMove(possibleTiles);
         EnablePlayers();
         currentTurn = TurnSystem.You;
-
-        /*
-        spendToDrawButton.gameObject.SetActive(currentPlayer.myHand.Count < 5 && currentPlayer.myEnergy >= 3);
-        exitButton.gameObject.SetActive(CanExit(currentPlayer.currentTile));
-
-        UpdateStats(currentPlayer);
-        StartCoroutine(ChooseCardPlay(currentPlayer));
-        EnablePlayers();
-
-        objectiveButton.gameObject.SetActive(currentPlayer.CheckForObjectives());
-        if (currentPlayer.adjacentObjective != null)
-            objectiveButton.GetComponentInChildren<TMP_Text>().text = currentPlayer.adjacentObjective.name;
-        */
 
         while (chosenTile == null)
         {
@@ -1031,28 +1024,35 @@ public class NewManager : MonoBehaviour
 
             if (decision == 1)
             {
-                yield return (ChooseMovePlayer(currentPlayer));
+                yield return (ChooseMovePlayer(currentPlayer, possibleMoves, freeMoves));
                 yield break;
             }
         }
 
-        yield return MovePlayer(currentPlayer);
-    }
-
-    IEnumerator MovePlayer(PlayerEntity currentPlayer)
-    {
-        currentTurn = TurnSystem.Resolving;
-        int distanceTraveled = GetDistance(currentPlayer.currentTile.gridPosition, chosenTile.gridPosition);
-        ChangeMovement(currentPlayer, -distanceTraveled);
-
         DisableAllTiles();
         DisableAllCards();
 
-        if (distanceTraveled != 0)
-            footsteps.Post(currentPlayer.gameObject);
-        yield return (currentPlayer.MovePlayer(FullPath));
-        //currentPlayer.MoveTile(chosenTile);
+        footsteps.Post(currentPlayer.gameObject);
+        foreach (TileData nextTile in FullPath)
+        {
+            yield return Wait(PlayerPrefs.GetFloat("Animation Speed"));
+            yield return currentPlayer.MoveTile(nextTile);
+            if (!freeMoves)
+                ChangeMovement(currentPlayer, -1);
+            if (currentPlayer.movementLeft == -1)
+                break;
+        }
 
+        /*
+        if (!freeMoves)
+        {
+            int distanceTraveled = GetDistance(currentPlayer.currentTile.gridPosition, chosenTile.gridPosition);
+            ChangeMovement(currentPlayer, -distanceTraveled);
+            if (distanceTraveled != 0)
+                footsteps.Post(currentPlayer.gameObject);
+        }
+        yield return (currentPlayer.MovePlayer(FullPath));
+        */
         BackToStart(false);
     }
 
@@ -1131,30 +1131,62 @@ public class NewManager : MonoBehaviour
     void SpendToDraw()
     {
         if (currentTurn == TurnSystem.You)
+            StartCoroutine(ResolveDraw());
+    }
+
+    IEnumerator ResolveDraw()
+    {
+        currentTurn = TurnSystem.Resolving;
+
+        Collector confirmDecision = ConfirmDecision($"Spend 3 energy to draw a card?", new Vector2(0, -85));
+        if (confirmDecision != null)
         {
-            currentTurn = TurnSystem.Resolving;
-            ChangeEnergy(lastSelectedPlayer, -3);
-            lastSelectedPlayer.PlusCards(1);
-            BackToStart(false);
+            yield return confirmDecision.WaitForChoice();
+            int decision = confirmDecision.chosenButton;
+            Destroy(confirmDecision.gameObject);
+
+            if (decision == 1)
+            {
+                BackToStart(false);
+                yield break;
+            }
         }
+
+        ChangeEnergy(lastSelectedPlayer, -3);
+        lastSelectedPlayer.PlusCards(1);
+        BackToStart(false);
     }
 
     void DoObjective()
     {
-        StartCoroutine(ResolveObjective());
+        if (currentTurn == TurnSystem.You)
+            StartCoroutine(ResolveObjective());
     }
 
     IEnumerator ResolveObjective()
     {
-        if (currentTurn == TurnSystem.You)
-        {
-            objectiveButton.gameObject.SetActive(false);
-            currentTurn = TurnSystem.Resolving;
-            if (lastSelectedPlayer != null && lastSelectedPlayer.adjacentObjective != null)
-                yield return (lastSelectedPlayer.adjacentObjective.ObjectiveComplete(lastSelectedPlayer));
+        objectiveButton.gameObject.SetActive(false);
+        currentTurn = TurnSystem.Resolving;
 
-            BackToStart(false);
+        if (lastSelectedPlayer != null && lastSelectedPlayer.adjacentObjective != null)
+        {
+            Collector confirmDecision = ConfirmDecision($"Spend 3 energy to draw a card?", new Vector2(0, -85));
+            if (confirmDecision != null)
+            {
+                yield return confirmDecision.WaitForChoice();
+                int decision = confirmDecision.chosenButton;
+                Destroy(confirmDecision.gameObject);
+
+                if (decision == 1)
+                {
+                    BackToStart(false);
+                    yield break;
+                }
+            }
+
+            yield return lastSelectedPlayer.adjacentObjective.ObjectiveComplete(lastSelectedPlayer);
         }
+        BackToStart(false);
     }
 
     void Regain()

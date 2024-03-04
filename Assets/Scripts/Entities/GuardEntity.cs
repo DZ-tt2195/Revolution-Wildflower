@@ -342,8 +342,7 @@ public class GuardEntity : MovingEntity
                 //print("moving too " + nextTile.gridPosition);
                 if (nextTile.myEntity == null)
                 {
-                    MoveTile(nextTile);//move to the tile
-                                       //footsteps.Post(gameObject);
+                    StartCoroutine(MoveTile(nextTile)); //footsteps.Post(gameObject);
                 }
                 movementLeft--;
             }
@@ -454,8 +453,8 @@ public class GuardEntity : MovingEntity
                         //print("moving too " + nextTile.gridPosition);
                         if (nextTile.myEntity == null)
                         {
-                            MoveTile(nextTile);//move to the tile
-                                               //footsteps.Post(gameObject);
+                            StartCoroutine(MoveTile(nextTile));
+                            //footsteps.Post(gameObject);
                         }
                         movementLeft--;
                     }
@@ -519,15 +518,15 @@ public class GuardEntity : MovingEntity
             //print("moving too " + nextTile.gridPosition);
             if (nextTile.myEntity == null)
             {
-                MoveTile(nextTile);//move to the tile
-                                   //footsteps.Post(gameObject);
+                StartCoroutine(MoveTile(nextTile));
+                //footsteps.Post(gameObject);
             }
             movementLeft--;
         }
 
 
         yield return NewManager.Wait(movePauseTime);
-        print("Checking New Action");
+        //print("Checking New Action");
         yield return newAction();
     }
 }
