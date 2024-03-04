@@ -21,6 +21,9 @@ public class ObjectiveEntity : Entity
         NewManager.instance.listOfObjectives.Remove(this);
         NewManager.instance.objectiveButton.gameObject.SetActive(false);
 
+        currentTile.myEntity = null;
+        player.adjacentObjective = null;
+
         if (!DialogueManager.GetInstance().dialogueIsPlaying)
         {
             DialogueManager.GetInstance().StartStory(inkJSON);

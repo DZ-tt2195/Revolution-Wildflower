@@ -132,19 +132,20 @@ public class NewManager : MonoBehaviour
         healthBar = playerStats.Find("Health").GetComponentInChildren<StatBar>();
         movementBar = playerStats.Find("Movement").GetComponentInChildren<StatBar>();
         energyBar = playerStats.Find("Energy").GetComponentInChildren<StatBar>();
-        selected_characterFace = playerStats.Find("selected_characterFace").GetComponent<Image>();
-
+        selected_characterFace = playerStats.Find("CharacterFace").GetComponent<Image>();
         facesSpritesheet = Resources.LoadAll<Sprite>("Sprites/selected_portrait_spritesheet");
         emptyFace = Resources.Load<Sprite>("Sprites/noCharacter");
 
-        informationImage = GameObject.Find("Information Image").transform;
-        stats = informationImage.GetChild(0).GetComponent<TMP_Text>();
-        instructions = informationImage.GetChild(1).GetComponent<TMP_Text>();
-        deckTracker = GameObject.Find("Deck Tracker").GetComponent<TMP_Text>();
+        //  
+        //informationImage = GameObject.Find("Information Image").transform;
+        //stats = informationImage.GetChild(0).GetComponent<TMP_Text>();
+        //instructions = informationImage.GetChild(1).GetComponent<TMP_Text>();
 
-        spendToDrawButton = GameObject.Find("Spend Energy Button").GetComponent<Button>();
-        spendToDrawButton.onClick.AddListener(SpendToDraw);
-        spendToDrawButton.gameObject.SetActive(false);
+
+        //deckTracker = GameObject.Find("Deck Tracker").GetComponent<TMP_Text>();
+        //pilesTracker = GameObject.Find("Draw&Discard").transform;
+        drawPile = GameObject.Find("Draw Pile").GetComponentInChildren<TMP_Text>();  
+        //discardPile = pilesTracker.GetChild(1).GetChild(0).GetComponent<TMP_Text>();
 
         endTurnButton = GameObject.Find("End Turn Button").GetComponent<Button>();
         endTurnButton.onClick.AddListener(Regain);
@@ -161,6 +162,8 @@ public class NewManager : MonoBehaviour
 
         handContainer = GameObject.Find("Hand Container").transform;
         gridContainer = GameObject.Find("Grid Container").transform;
+
+        spendToDrawButton = GameObject.Find("Spend Energy Button").GetComponent<Button>();
     }
 
     void Start()
@@ -467,7 +470,7 @@ public class NewManager : MonoBehaviour
     {
         if (player == null)
         {
-            stats.text = "";
+            //stats.text = "";
             currentCharacter.text = "";
             selected_characterFace.sprite = emptyFace;
 
@@ -476,6 +479,7 @@ public class NewManager : MonoBehaviour
             energyBar.SetValue(0);
 
             //deckTracker.text = "";
+            //  TO-DO: Lerp the draw pile out of the scene. 
             //drawPile.text = "Draw";
             //discardPile.text = "Discard";
             handContainer.transform.localPosition = new Vector3(10000, 10000, 0);
@@ -501,8 +505,21 @@ public class NewManager : MonoBehaviour
             }
 
             //  TO-DO: change this stuff so it isn't all text -Noah
-            deckTracker.text = $"<color=#70f5ff>Draw Pile <color=#ffffff>/ <color=#ff9670>Discard Pile " +
-            $"\n\n<color=#70f5ff>{player.myDrawPile.Count} <color=#ffffff>/ <color=#ff9670>{player.myDiscardPile.Count}";
+            //deckTracker.text = $"<color=#70f5ff>Draw Pile <color=#ffffff>/ <color=#ff9670>Discard Pile " +
+            //$"\n\n<color=#70f5ff>{player.myDrawPile.Count} <color=#ffffff>/ <color=#ff9670>{player.myDiscardPile.Count}" +
+            //$"\n({player.myExhaust.Count} exhausted)";
+
+            // idk why the words arent coming up
+            drawPile.text = player.myDrawPile.Count.ToString();
+            if (player.myDrawPile.Count <= 5)
+            {
+                drawPile.color = Color.red;
+            }
+
+            else
+            {
+                drawPile.color = Color.black; 
+            }
 
             if (player.myPosition * -2000 != handContainer.transform.localPosition.x)
             {
@@ -515,7 +532,7 @@ public class NewManager : MonoBehaviour
             energyBar.SetValue(player.myEnergy); energyBar.SetMaximumValue(player.maxEnergy);
         }
 
-        stats.text = $"\n<color=#75ff59>{listOfObjectives.Count} Objectives Left" + $"| {turnCount} Turns Left";
+        //stats.text = $"\n<color=#75ff59>{listOfObjectives.Count} Objectives Left" + $"| {turnCount} Turns Left";
 
         foreach (PlayerEntity nextPlayer in listOfPlayers)
         {
@@ -589,7 +606,8 @@ public class NewManager : MonoBehaviour
 
     public void UpdateInstructions(string instructions)
     {
-        this.instructions.text = instructions;
+        //return;
+        //this.instructions.text = instructions;
     }
 
     #endregion

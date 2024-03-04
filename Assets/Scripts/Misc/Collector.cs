@@ -28,6 +28,7 @@ public class Collector : MonoBehaviour
         this.transform.SetParent(canvas.transform);
         this.transform.localPosition = position;
         this.transform.localScale = new Vector3(1, 1, 1);
+        this.transform.rotation = canvas.transform.rotation;
     }
 
     internal void DestroyButton(int sibling)
