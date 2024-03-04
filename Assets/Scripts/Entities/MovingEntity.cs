@@ -31,7 +31,12 @@ public class MovingEntity : Entity
         {
             stunObject.SetActive(true);
             stunText.text = stunned.ToString();
-
+        }
+        else if (stunned < 0)
+        {
+            stunned = 0;
+            stunObject.SetActive(false);
+            stunText.text = "";
         }
     }
 }
