@@ -49,7 +49,8 @@ public class Entity : MonoBehaviour
             yield return modifier.ResolveList(this);
         }
         newTile.listOfModifiers.RemoveAll(item => item == null);
-
+        foreach (GuardEntity guard in NewManager.instance.listOfGuards)
+            guard.CheckForPlayer();
         CalculateTiles();
     }
 

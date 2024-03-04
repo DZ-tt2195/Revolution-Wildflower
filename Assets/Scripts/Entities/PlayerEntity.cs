@@ -108,6 +108,7 @@ public class PlayerEntity : MovingEntity
             guard.CheckForPlayer();
     }
     */
+    
 
     public bool CheckForObjectives()
     {
