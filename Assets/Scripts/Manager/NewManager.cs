@@ -7,6 +7,7 @@ using TMPro;
 using MyBox;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
+using System.Runtime.InteropServices.WindowsRuntime;
 //using UnityEngine.Rendering.Universal;
 //using UnityEditor.U2D;
 //using Unity.VisualScripting;
@@ -165,6 +166,7 @@ public class NewManager : MonoBehaviour
 
     void Start()
     {
+        levelToLoad = SaveManager.instance.currentSaveData.currentLevel;
         if (turnCount <= 0)
             throw new Exception("Didn't set turn count in NewManager (has to be > 0");
 
@@ -636,6 +638,11 @@ public class NewManager : MonoBehaviour
 
         StopAllCoroutines();
         GameObject.Find("Debrief Button").SetActive(won);
+        if (won)
+        {
+            SaveManager.instance.currentSaveData.currentLevel++;
+            ES3.Save("saveData", SaveManager.instance.currentSaveData, $"{Application.persistentDataPath}/{SaveManager.instance.saveFileName}.es3");
+        }
     }
 
     public TileData FindTile(Vector2 vector) //find a tile based off Vector2
