@@ -5,10 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using MyBox;
 using UnityEngine.EventSystems;
-using System.Text.RegularExpressions;
-using System.Linq;
 using System;
-using System.Reflection;
 
 public class Card : MonoBehaviour, IPointerClickHandler
 {

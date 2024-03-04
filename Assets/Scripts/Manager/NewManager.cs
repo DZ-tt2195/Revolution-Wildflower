@@ -24,7 +24,7 @@ public class AStarNode
 public class NewManager : MonoBehaviour
 {
 
-    #region Variables
+#region Variables
 
     public static NewManager instance;
 
@@ -118,7 +118,7 @@ public class NewManager : MonoBehaviour
 
     #endregion
 
-    #region Setup
+#region Setup
 
     void Awake()
     {
@@ -164,6 +164,8 @@ public class NewManager : MonoBehaviour
         gridContainer = GameObject.Find("Grid Container").transform;
 
         spendToDrawButton = GameObject.Find("Spend Energy Button").GetComponent<Button>();
+        spendToDrawButton.onClick.AddListener(SpendToDraw);
+        spendToDrawButton.gameObject.SetActive(false);
     }
 
     void Start()
@@ -423,7 +425,7 @@ public class NewManager : MonoBehaviour
 
     #endregion
 
-    #region Changing Stats
+#region Changing Stats
 
     public void SetEnergy(PlayerEntity player, int n) //if you want to set energy to 2, type SetEnergy(2);
     {
