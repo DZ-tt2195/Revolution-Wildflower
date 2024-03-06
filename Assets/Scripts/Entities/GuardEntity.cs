@@ -168,8 +168,10 @@ public class GuardEntity : MovingEntity
             {
                 if (currentTile != null)
                 {
-                    if (currentTile.myEntity != null) inDetection.Add(currentTile);
-                    else if (currentTile.myEntity.Occlusion == false) inDetection.Add(currentTile);
+                    if (currentTile.myEntity == null)
+                        inDetection.Add(currentTile);
+                    else if (currentTile.myEntity.Occlusion == false)
+                        inDetection.Add(currentTile);
                 }
             }
         }
