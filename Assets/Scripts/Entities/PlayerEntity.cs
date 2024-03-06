@@ -18,6 +18,7 @@ public class PlayerEntity : MovingEntity
         [Tooltip("turns where you can't be caught")] [ReadOnly] public int hidden = 0;
         [Tooltip("highest energy you can have")][ReadOnly] public int maxEnergy = 5;
         [Tooltip("damage taken during guard turn")][ReadOnly] public int damageTaken = 0;
+        [Tooltip("Player index")] [ReadOnly] private int index;
 
     //[Tooltip("normal player appearance")] [SerializeField] Material DefaultPlayerMaterial;
     //[Tooltip("appearance when hidden")] [SerializeField] Material HiddenPlayerMaterial;
@@ -59,16 +60,19 @@ public class PlayerEntity : MovingEntity
             case "Gail":
                 spriteRenderer.sprite = gailSprite;
                 tileOffset = new Vector3(0, 0.75f, 0);
+                index = 0;
                 GetCards(0);
                 break;
             case "Frankie":
                 spriteRenderer.sprite = frankieSprite;
                 tileOffset = new Vector3(-1, 0.75f, 0.8f);
+                index = 1;
                 GetCards(1);
                 break;
             case "WK":
                 spriteRenderer.sprite = wkSprite;
                 tileOffset = new Vector3(0, 0.75f, 0);
+                index = 2;
                 GetCards(2);
                 break;
         }
@@ -173,6 +177,7 @@ public class PlayerEntity : MovingEntity
         foreach (Card card in myHand)
             StartCoroutine(card.RevealCard(PlayerPrefs.GetFloat("Animation Speed")));
     }
+
 
     internal void PlusCards(Card card)
     {
