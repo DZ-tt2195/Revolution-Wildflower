@@ -5,6 +5,7 @@ using MyBox;
 using System;
 using System.Linq;
 using TMPro;
+using Ink;
 
 public class PlayerEntity : MovingEntity
 {
@@ -178,6 +179,20 @@ public class PlayerEntity : MovingEntity
             StartCoroutine(card.RevealCard(PlayerPrefs.GetFloat("Animation Speed")));
     }
 
+    public void ForceHand(string[] cards)
+    {
+        ShuffleIntoDeck(new List<Card>(myHand));
+        foreach (string cardName in cards)
+        {
+            Card card = myDrawPile.Find(x =>  x.textName.text == cardName);
+            if (card == null)
+            {
+                continue;
+            }
+            PlusCards(card);
+        }
+    }
+
 
     internal void PlusCards(Card card)
     {
@@ -254,6 +269,7 @@ public class PlayerEntity : MovingEntity
         }
         SortHand();
         myDrawPile.Shuffle();
+        Debug.Log(myHand.Count);
     }
 
     internal IEnumerator DiscardFromHand(Card discardMe)
