@@ -244,6 +244,18 @@ public class PlayerEntity : MovingEntity
         }
     }
 
+    public void ShuffleIntoDeck(List<Card> listOfCards)
+    {
+        foreach (Card card in listOfCards)
+        {
+            myHand.Remove(card);
+            myDrawPile.Add(card);
+            card.transform.localPosition = new Vector3(10000, 10000, 0);
+        }
+        SortHand();
+        myDrawPile.Shuffle();
+    }
+
     internal IEnumerator DiscardFromHand(Card discardMe)
     {
         if (!myDiscardPile.Contains(discardMe))
