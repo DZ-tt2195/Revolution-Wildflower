@@ -372,8 +372,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -187.4}
-  m_SizeDelta: {x: 207.47, y: 271.3809}
+  m_AnchoredPosition: {x: 27.497688, y: -190.08871}
+  m_SizeDelta: {x: 163.5172, y: 266.0034}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7937688880329316072
 CanvasRenderer:
@@ -403,7 +403,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Hi
+  m_text: This or another character that's up to 1 tile away gets +1 <link="Health"><sprite="Symbols"
+    name="Health"></link>.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 39a7efb7eb0b83547bd07f81adaea8e4, type: 2}
   m_sharedMaterial: {fileID: 9156730800055192786, guid: 39a7efb7eb0b83547bd07f81adaea8e4, type: 2}
@@ -430,7 +431,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 30
+  m_fontSize: 19.2
   m_fontSizeBase: 22
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -466,7 +467,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 39.511635, y: 9.716835, z: 3.9807053, w: 152.41705}
+  m_margin: {x: 0.7938309, y: 3.263855, z: 3.9807053, w: 152.41705}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0

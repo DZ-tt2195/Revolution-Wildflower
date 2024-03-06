@@ -16,6 +16,7 @@ public class SaveData
 {
     public bool freshFile;
     public List<string> chosenDecks = new List<string>(); //0 = Gail, 1 = Frankie, 2 = W.K.
+    public int currentLevel = 0; //0 = tutorial, 1 = lv 1, 2 = lv 2, 3 = final level
 
     public SaveData()
     {
@@ -151,23 +152,25 @@ public class SaveManager : MonoBehaviour
         CardDisplay.instance.transform.SetParent(canvas);
         CardDisplay.instance.transform.localPosition = new Vector3(0, 0);
 
-        FPS.instance.transform.SetParent(canvas);
-        FPS.instance.transform.localPosition = new Vector3(-850, -500);
-        FPS.instance.transform.localScale = Vector3.one;
-        FPS.instance.transform.rotation = canvas.transform.rotation;
+        //FPS.instance.transform.SetParent(canvas);
+        //FPS.instance.transform.localPosition = new Vector3(-850, -500);
 
         GameSettings.instance.transform.SetParent(canvas);
-        GameSettings.instance.transform.localPosition = new Vector3(0, 0);
+        GameSettings.instance.transform.localPosition = Vector3.zero;
+        GameSettings.instance.transform.localScale = Vector3.one;
+        GameSettings.instance.transform.localEulerAngles = Vector3.one;
         GameSettings.instance.transform.GetChild(0).gameObject.SetActive(false);
 
         KeywordTooltip.instance.transform.SetParent(canvas);
-        KeywordTooltip.instance.transform.localPosition = new Vector3(0, 0);
+        KeywordTooltip.instance.transform.localPosition = Vector3.zero;
+        KeywordTooltip.instance.transform.localScale = Vector3.one;
+        KeywordTooltip.instance.transform.localEulerAngles = Vector3.one;
     }
 
     public void UnloadObjects()
     {
         Preserve(CardDisplay.instance.gameObject);
-        Preserve(FPS.instance.gameObject);
+        //Preserve(FPS.instance.gameObject);
         Preserve(GameSettings.instance.gameObject);
         Preserve(KeywordTooltip.instance.gameObject);
         allCards.Clear();

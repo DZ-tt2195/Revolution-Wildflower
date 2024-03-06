@@ -7,6 +7,7 @@ using TMPro;
 using MyBox;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
+using System.Runtime.InteropServices.WindowsRuntime;
 //using UnityEngine.Rendering.Universal;
 //using UnityEditor.U2D;
 //using Unity.VisualScripting;
@@ -24,7 +25,7 @@ public class AStarNode
 public class NewManager : MonoBehaviour
 {
 
-    #region Variables
+#region Variables
 
     public static NewManager instance;
 
@@ -54,7 +55,8 @@ public class NewManager : MonoBehaviour
     [Tooltip("Your hand in the canvas")][ReadOnly] public Transform handContainer;
     [Tooltip("The bar in the bottom center of the screen")] Transform playerStats;
     [Tooltip("Image section containing objective, actions, and debug popups")] Transform informationImage;
-    [Tooltip("All the player's stats in text form")] TMP_Text stats;
+    [Tooltip("Text for current level's objective")] TMP_Text lvlObjective;
+    [Tooltip("Text for the turn count")] TMP_Text turnCountTxt;
     [Tooltip("Current player selected")] TMP_Text currentCharacter;
     [Tooltip("Selected player's health")] StatBar healthBar;
     [Tooltip("Selected player's moves left")] StatBar movementBar;
@@ -118,7 +120,7 @@ public class NewManager : MonoBehaviour
 
     #endregion
 
-    #region Setup
+#region Setup
 
     void Awake()
     {
@@ -136,10 +138,11 @@ public class NewManager : MonoBehaviour
         facesSpritesheet = Resources.LoadAll<Sprite>("Sprites/selected_portrait_spritesheet");
         emptyFace = Resources.Load<Sprite>("Sprites/noCharacter");
 
-        //  
-        //informationImage = GameObject.Find("Information Image").transform;
-        //stats = informationImage.GetChild(0).GetComponent<TMP_Text>();
-        //instructions = informationImage.GetChild(1).GetComponent<TMP_Text>();
+        informationImage = GameObject.Find("Information Image").transform;
+        instructions = informationImage.GetChild(0).GetComponent<TMP_Text>();
+        lvlObjective = informationImage.GetChild(1).GetChild(0).GetComponent<TMP_Text>();
+        turnCountTxt = informationImage.GetChild(2).GetChild(0).GetComponent<TMP_Text>();
+        
 
 
         //deckTracker = GameObject.Find("Deck Tracker").GetComponent<TMP_Text>();
@@ -164,10 +167,13 @@ public class NewManager : MonoBehaviour
         gridContainer = GameObject.Find("Grid Container").transform;
 
         spendToDrawButton = GameObject.Find("Spend Energy Button").GetComponent<Button>();
+        spendToDrawButton.onClick.AddListener(SpendToDraw);
+        spendToDrawButton.gameObject.SetActive(false);
     }
 
     void Start()
     {
+        levelToLoad = SaveManager.instance.currentSaveData.currentLevel;
         if (turnCount <= 0)
             throw new Exception("Didn't set turn count in NewManager (has to be > 0");
 
@@ -423,7 +429,7 @@ public class NewManager : MonoBehaviour
 
     #endregion
 
-    #region Changing Stats
+#region Changing Stats
 
     public void SetEnergy(PlayerEntity player, int n) //if you want to set energy to 2, type SetEnergy(2);
     {
@@ -470,7 +476,7 @@ public class NewManager : MonoBehaviour
     {
         if (player == null)
         {
-            //stats.text = "";
+            lvlObjective.text = "";
             currentCharacter.text = "";
             selected_characterFace.sprite = emptyFace;
 
@@ -532,7 +538,8 @@ public class NewManager : MonoBehaviour
             energyBar.SetValue(player.myEnergy); energyBar.SetMaximumValue(player.maxEnergy);
         }
 
-        //stats.text = $"\n<color=#75ff59>{listOfObjectives.Count} Objectives Left" + $"| {turnCount} Turns Left";
+        lvlObjective.text = $"{listOfObjectives.Count} Objectives Left";
+        turnCountTxt.text = $"{turnCount} Turns Left";
 
         foreach (PlayerEntity nextPlayer in listOfPlayers)
         {
@@ -657,6 +664,11 @@ public class NewManager : MonoBehaviour
 
         StopAllCoroutines();
         GameObject.Find("Debrief Button").SetActive(won);
+        if (won)
+        {
+            SaveManager.instance.currentSaveData.currentLevel++;
+            ES3.Save("saveData", SaveManager.instance.currentSaveData, $"{Application.persistentDataPath}/{SaveManager.instance.saveFileName}.es3");
+        }
     }
 
     public TileData FindTile(Vector2 vector) //find a tile based off Vector2
