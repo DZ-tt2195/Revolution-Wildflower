@@ -265,6 +265,7 @@ public class PlayerEntity : MovingEntity
         {
             myHand.Remove(card);
             myDrawPile.Add(card);
+            card.transform.SetParent(null);
             card.transform.localPosition = new Vector3(10000, 10000, 0);
         }
         SortHand();
