@@ -138,8 +138,8 @@ public class NewManager : MonoBehaviour
         facesSpritesheet = Resources.LoadAll<Sprite>("Sprites/selected_portrait_spritesheet");
         emptyFace = Resources.Load<Sprite>("Sprites/noCharacter");
 
-        informationImage = GameObject.Find("Information Image").transform;
-        instructions = informationImage.GetChild(0).GetComponent<TMP_Text>();
+        informationImage = GameObject.Find("TopLeftUI").transform;
+        instructions = informationImage.GetChild(0).GetChild(0).GetComponent<TMP_Text>();
         lvlObjective = informationImage.GetChild(1).GetChild(0).GetComponent<TMP_Text>();
         turnCountTxt = informationImage.GetChild(2).GetChild(0).GetComponent<TMP_Text>();
         
