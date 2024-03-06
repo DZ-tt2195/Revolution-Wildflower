@@ -187,6 +187,7 @@ public class NewManager : MonoBehaviour
         gameOverText.transform.parent.gameObject.SetActive(false);
 
         GetTiles();
+        TutorialManager.Setup();
         foreach (GuardEntity curGuard in listOfGuards)
         {
             curGuard.CalculateTiles();
