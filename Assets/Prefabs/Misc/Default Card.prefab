@@ -735,6 +735,54 @@ MonoBehaviour:
   MovementColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   MiscColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   FallbackColor: {r: 1, g: 1, b: 1, a: 1}
+  growthCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.0035438538
+      value: 1.0047302
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.5
+      value: 1.5
+      inSlope: -0.003947647
+      outSlope: -0.003947647
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.0025499896
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  moveCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.5
+      value: 250
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   attackSprite: {fileID: 21300000, guid: a4c9a6183e81f4315af5eac649ec6e1f, type: 3}
   distractSprite: {fileID: 21300000, guid: 5844126ae3a4649828cfad5f8a553cd4, type: 3}
   drawSprite: {fileID: 21300000, guid: 37845f3e662be4c8e820732aeaf0eb3f, type: 3}

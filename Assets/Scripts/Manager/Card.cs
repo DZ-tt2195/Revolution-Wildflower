@@ -7,7 +7,7 @@ using MyBox;
 using UnityEngine.EventSystems;
 using System;
 
-public class Card : MonoBehaviour, IPointerClickHandler
+public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
 
 #region Variables
@@ -40,7 +40,14 @@ public class Card : MonoBehaviour, IPointerClickHandler
         private Material material;
         private MaterialPropertyBlock materialPropertyBlock;
 
-        [SerializeField] Sprite attackSprite;
+        bool mouseOver = false;
+        float growthTimer = 0;
+        Vector3 cardSize;
+        [SerializeField] AnimationCurve growthCurve;
+        [SerializeField] AnimationCurve moveCurve;
+
+
+    [SerializeField] Sprite attackSprite;
         [SerializeField] Sprite distractSprite;
         [SerializeField] Sprite drawSprite;
         [SerializeField] Sprite energySprite;
@@ -99,6 +106,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     private void Awake()
     {
+        cardSize = transform.localScale;
         image = GetComponent<Image>();
         background = transform.Find("Canvas Group").Find("Background").GetComponent<Image>();
         border = transform.GetChild(0).GetComponent<Image>();
@@ -120,6 +128,16 @@ public class Card : MonoBehaviour, IPointerClickHandler
             CardDisplay.instance.ChangeCard(this);
             cardMove.Post(gameObject);
         }
+    }
+
+    public void OnPointerEnter(PointerEventData data)
+    {
+        mouseOver = true;
+    }
+
+    public void OnPointerExit(PointerEventData data)
+    {
+        mouseOver = false;
     }
 
     public void CardSetup(CardData data)
@@ -428,9 +446,35 @@ public class Card : MonoBehaviour, IPointerClickHandler
         return wallsInRange;
     }
 
-#endregion
+    #endregion
 
-#region Animations
+    #region Animations
+
+    public void Update()
+    {
+        
+        if (mouseOver)
+        {
+            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -1);
+            if (growthTimer + Time.deltaTime < growthCurve.keys[growthCurve.keys.Length - 1].time) growthTimer += Time.deltaTime;
+            else growthTimer = growthCurve.keys[growthCurve.keys.Length - 1].time;
+        }
+        else
+        {
+            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, 0);
+            if (growthTimer - Time.deltaTime > 0) growthTimer -= Time.deltaTime;
+            else growthTimer = 0;
+        }
+        float sizeValue = growthCurve.Evaluate(growthTimer);
+        float positionValue = moveCurve.Evaluate(growthTimer);
+        transform.localScale = cardSize * sizeValue;
+        /*
+        print("Base " + SaveManager.instance.cardBaseHeight);
+        print("position value " + positionValue);
+        print("current " + transform.position.y);
+        */
+        transform.localPosition = new Vector3(transform.localPosition.x, SaveManager.instance.cardBaseHeight + positionValue, transform.localPosition.z);
+    }
 
     public void HideCard()
     {
