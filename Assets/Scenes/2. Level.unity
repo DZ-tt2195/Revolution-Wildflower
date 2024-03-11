@@ -15055,7 +15055,7 @@ PrefabInstance:
     - target: {fileID: 2879224160831583952, guid: 5bd37c67f67424e7c913ee350c219bb8, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -1233128474, guid: 83f1b74330f0c7645ab0edb8cff490f3, type: 3}
+      objectReference: {fileID: -403495281, guid: 83f1b74330f0c7645ab0edb8cff490f3, type: 3}
     - target: {fileID: 4089370350289797580, guid: 5bd37c67f67424e7c913ee350c219bb8, type: 3}
       propertyPath: m_SizeDelta.x
       value: 160.5
@@ -15265,8 +15265,12 @@ PrefabInstance:
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 8093921653297319502, guid: 5bd37c67f67424e7c913ee350c219bb8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8093921653297319502, guid: 5bd37c67f67424e7c913ee350c219bb8, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 30.1
+      value: 45
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -33583,7 +33587,7 @@ PrefabInstance:
     - target: {fileID: 2879224160831583952, guid: 5bd37c67f67424e7c913ee350c219bb8, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -403495281, guid: 83f1b74330f0c7645ab0edb8cff490f3, type: 3}
+      objectReference: {fileID: -1233128474, guid: 83f1b74330f0c7645ab0edb8cff490f3, type: 3}
     - target: {fileID: 4089370350289797580, guid: 5bd37c67f67424e7c913ee350c219bb8, type: 3}
       propertyPath: m_SizeDelta.x
       value: 67.9407
@@ -33789,8 +33793,12 @@ PrefabInstance:
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 8093921653297319502, guid: 5bd37c67f67424e7c913ee350c219bb8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8093921653297319502, guid: 5bd37c67f67424e7c913ee350c219bb8, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 47
+      value: 30
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
