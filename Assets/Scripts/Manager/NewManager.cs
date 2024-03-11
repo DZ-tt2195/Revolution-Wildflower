@@ -7,10 +7,6 @@ using TMPro;
 using MyBox;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
-using System.Runtime.InteropServices.WindowsRuntime;
-//using UnityEngine.Rendering.Universal;
-//using UnityEditor.U2D;
-//using Unity.VisualScripting;
 
 public class AStarNode
 {
@@ -105,7 +101,13 @@ public class NewManager : MonoBehaviour
     public enum TurnSystem { You, Resolving, Environmentals, Enemy };
     [Foldout("Turn System", true)]
     [Tooltip("last selected player")][ReadOnly] public PlayerEntity lastSelectedPlayer;
-    [Tooltip("What's happening in the game")][ReadOnly] public TurnSystem currentTurn;
+    TurnSystem _CurrentTurn;
+    [Tooltip("What's happening in the game")][ReadOnly] public TurnSystem CurrentTurn
+    {
+        get { return _CurrentTurn; }
+        set { _CurrentTurn = value; Debug.Log($"changed turn to {value}"); }
+    }
+
     [Tooltip("Effects to do on future turns")][ReadOnly] public List<Card> futureEffects = new List<Card>();
     [Tooltip("Num violent cards used")][ReadOnly] public int violentCards;
     [Tooltip("Mouse position")] Vector3 lastClickedMousePosition;
@@ -138,8 +140,8 @@ public class NewManager : MonoBehaviour
         facesSpritesheet = Resources.LoadAll<Sprite>("Sprites/selected_portrait_spritesheet");
         emptyFace = Resources.Load<Sprite>("Sprites/noCharacter");
 
-        informationImage = GameObject.Find("Information Image").transform;
-        instructions = informationImage.GetChild(0).GetComponent<TMP_Text>();
+        informationImage = GameObject.Find("TopLeftUI").transform;
+        instructions = informationImage.GetChild(0).GetChild(0).GetComponent<TMP_Text>();
         lvlObjective = informationImage.GetChild(1).GetChild(0).GetComponent<TMP_Text>();
         turnCountTxt = informationImage.GetChild(2).GetChild(0).GetComponent<TMP_Text>();
         
@@ -187,6 +189,7 @@ public class NewManager : MonoBehaviour
         gameOverText.transform.parent.gameObject.SetActive(false);
 
         GetTiles();
+        //TutorialManager.instance.Setup();
         foreach (GuardEntity curGuard in listOfGuards)
         {
             curGuard.CalculateTiles();
@@ -453,6 +456,9 @@ public class NewManager : MonoBehaviour
         //player.health += n;
         player.health = Math.Clamp(player.health + n, 0, 3);
 
+        if (player != null && n < 0)
+            MoveCamera.instance.Shake();
+
         UpdateStats(player);
         if (player.health <= 0)
             GameOver($"{player.name} lost all their HP.", false);
@@ -623,10 +629,10 @@ public class NewManager : MonoBehaviour
 
     private void Update()
     {
-        endTurnButton.gameObject.SetActive(currentTurn == TurnSystem.You);
+        endTurnButton.gameObject.SetActive(CurrentTurn == TurnSystem.You);
         /*
-              spendToDrawButton.gameObject.SetActive(currentTurn == TurnSystem.You);
-              exitButton.gameObject.SetActive(currentTurn == TurnSystem.You);
+              spendToDrawButton.gameObject.SetActive(CurrentTurn == TurnSystem.You);
+              exitButton.gameObject.SetActive(CurrentTurn == TurnSystem.You);
               */
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
@@ -634,7 +640,7 @@ public class NewManager : MonoBehaviour
         }
         else if (movingPlayer && Input.GetKeyUp(KeyCode.Mouse0))
         {
-            if (Input.mousePosition.Equals(lastClickedMousePosition) && currentTurn == TurnSystem.You && !EventSystem.current.IsPointerOverGameObject())
+            if (Input.mousePosition.Equals(lastClickedMousePosition) && CurrentTurn == TurnSystem.You && !EventSystem.current.IsPointerOverGameObject())
             {
                 StopCoroutine(ChooseMovePlayer(lastSelectedPlayer, 0));
                 StopCoroutine(ChooseCardPlay(lastSelectedPlayer));
@@ -894,7 +900,7 @@ public class NewManager : MonoBehaviour
     {
         if (listOfPlayers.Count > 0)
         {
-            currentTurn = TurnSystem.You;
+            CurrentTurn = TurnSystem.You;
             StopCoroutine(ChooseMovePlayer(lastSelectedPlayer, 0));
             StopCoroutine(ChooseCardPlay(lastSelectedPlayer));
 
@@ -957,7 +963,7 @@ public class NewManager : MonoBehaviour
 
     public void ControlCharacter(PlayerEntity currentPlayer)
     {
-        if (currentTurn == TurnSystem.You)
+        if (CurrentTurn == TurnSystem.You)
         {
             Debug.Log($"control character {currentPlayer.name}");
             StopCoroutine(ChooseCardPlay(currentPlayer));
@@ -1002,7 +1008,14 @@ public class NewManager : MonoBehaviour
         List<TileData> possibleTiles = CalculateReachableGrids(currentPlayer.currentTile, possibleMoves, true);
         WaitForDecisionMove(possibleTiles);
         EnablePlayers();
-        currentTurn = TurnSystem.You;
+
+        if (!freeMoves)
+        {
+            CurrentTurn = TurnSystem.You;
+        }
+        else
+        {
+        }
 
         while (chosenTile == null)
         {
@@ -1013,7 +1026,7 @@ public class NewManager : MonoBehaviour
                 UpdateStats(lastSelectedPlayer);
             }
 
-            if (selectedTile != currentPlayer.currentTile || currentTurn != TurnSystem.You)
+            if (selectedTile != currentPlayer.currentTile || (!freeMoves && CurrentTurn != TurnSystem.You))
             {
                 movingPlayer = false;
                 yield break;
@@ -1025,7 +1038,7 @@ public class NewManager : MonoBehaviour
         }
 
         movingPlayer = false;
-        currentTurn = TurnSystem.Resolving;
+        CurrentTurn = TurnSystem.Resolving;
         Collector confirmDecision = ConfirmDecision("Confirm movement?", new Vector2(0, 200));
         if (confirmDecision != null)
         {
@@ -1065,12 +1078,14 @@ public class NewManager : MonoBehaviour
         }
         yield return (currentPlayer.MovePlayer(FullPath));
         */
-        BackToStart(false);
+
+        if (!freeMoves)
+            BackToStart(false);
     }
 
     IEnumerator ChooseCardPlay(PlayerEntity currentPlayer) //choose a card to play
     {
-        currentTurn = TurnSystem.You;
+        CurrentTurn = TurnSystem.You;
         List<Card> canBePlayed = new List<Card>();
         foreach (Card card in currentPlayer.myHand)
         {
@@ -1081,7 +1096,7 @@ public class NewManager : MonoBehaviour
 
         while (chosenCard == null)
         {
-            if (currentTurn != TurnSystem.You)
+            if (CurrentTurn != TurnSystem.You)
             {
                 yield break;
             }
@@ -1091,7 +1106,7 @@ public class NewManager : MonoBehaviour
             }
         }
 
-        currentTurn = TurnSystem.Resolving;
+        CurrentTurn = TurnSystem.Resolving;
         Collector confirmDecision = ConfirmDecision($"Play {chosenCard.name}?", new Vector2(0, -85));
         if (confirmDecision != null)
         {
@@ -1142,13 +1157,13 @@ public class NewManager : MonoBehaviour
 
     void SpendToDraw()
     {
-        if (currentTurn == TurnSystem.You)
+        if (CurrentTurn == TurnSystem.You)
             StartCoroutine(ResolveDraw());
     }
 
     IEnumerator ResolveDraw()
     {
-        currentTurn = TurnSystem.Resolving;
+        CurrentTurn = TurnSystem.Resolving;
 
         Collector confirmDecision = ConfirmDecision($"Spend 3 energy to draw a card?", new Vector2(0, -85));
         if (confirmDecision != null)
@@ -1171,14 +1186,14 @@ public class NewManager : MonoBehaviour
 
     void DoObjective()
     {
-        if (currentTurn == TurnSystem.You)
+        if (CurrentTurn == TurnSystem.You)
             StartCoroutine(ResolveObjective());
     }
 
     IEnumerator ResolveObjective()
     {
         objectiveButton.gameObject.SetActive(false);
-        currentTurn = TurnSystem.Resolving;
+        CurrentTurn = TurnSystem.Resolving;
 
         if (lastSelectedPlayer != null && lastSelectedPlayer.adjacentObjective != null)
         {
@@ -1224,7 +1239,7 @@ public class NewManager : MonoBehaviour
     IEnumerator EnvironmentalPhase()
     {
         selectedTile = null;
-        currentTurn = TurnSystem.Environmentals;
+        CurrentTurn = TurnSystem.Environmentals;
         DisableAllTiles();
         DisableAllCards();
 
@@ -1256,7 +1271,7 @@ public class NewManager : MonoBehaviour
         foreach (PlayerEntity player in listOfPlayers)
             yield return player.EndOfTurn();
 
-        currentTurn = TurnSystem.Enemy;
+        CurrentTurn = TurnSystem.Enemy;
         yield return FadeTurnBar("Company Turn");
         foreach (GuardEntity guard in listOfGuards)
         {

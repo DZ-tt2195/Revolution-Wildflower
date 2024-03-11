@@ -103,7 +103,6 @@ public class GuardEntity : MovingEntity
     //calculates the tiles this guard is looking at
     public override void CalculateTiles()
     {
-
         //clears the last list of visible tiles. Turns off the "surveillanceState" tag if no other guard is looking at that tile (stops it from looking red)
         for (int i = 0; i < inDetection.Count; i++)
         {
@@ -157,14 +156,25 @@ public class GuardEntity : MovingEntity
         }
         if (DetectionRangePatrol > 0)
         {
-            inDetection.Add(NewManager.instance.FindTile(new Vector2Int(currentTile.gridPosition.x + direction.y, currentTile.gridPosition.y + direction.x)));
-            inDetection.Add(NewManager.instance.FindTile(new Vector2Int(currentTile.gridPosition.x - direction.y, currentTile.gridPosition.y - direction.x)));
-            inDetection.Add(NewManager.instance.FindTile(new Vector2Int(currentTile.gridPosition.x + direction.y + direction.x, currentTile.gridPosition.y + direction.x + direction.y)));
-            inDetection.Add(NewManager.instance.FindTile(new Vector2Int(currentTile.gridPosition.x - direction.y + direction.x, currentTile.gridPosition.y - direction.x + direction.y)));
+            //checks all the tiles directly adjacent and ahead to the guard if they still have vision
+            List<TileData> peripheralTile = new()
+            {
+                NewManager.instance.FindTile(new Vector2Int(currentTile.gridPosition.x + direction.y, currentTile.gridPosition.y + direction.x)),
+                NewManager.instance.FindTile(new Vector2Int(currentTile.gridPosition.x - direction.y, currentTile.gridPosition.y - direction.x)),
+                NewManager.instance.FindTile(new Vector2Int(currentTile.gridPosition.x + direction.y + direction.x, currentTile.gridPosition.y + direction.x + direction.y)),
+                NewManager.instance.FindTile(new Vector2Int(currentTile.gridPosition.x - direction.y + direction.x, currentTile.gridPosition.y - direction.x + direction.y))
+            };
+            foreach (TileData currentTile in peripheralTile)
+            {
+                if (currentTile != null)
+                {
+                    if (currentTile.myEntity == null)
+                        inDetection.Add(currentTile);
+                    else if (currentTile.myEntity.Occlusion == false)
+                        inDetection.Add(currentTile);
+                }
+            }
         }
-        inDetection.RemoveAll(item => item == null); //delete all tiles that are null
-        for (int i = 0; i < inDetection.Count; i++)
-            inDetection[i].SurveillanceState(true);
     }
 
     public void addDistraction(Vector2Int position)

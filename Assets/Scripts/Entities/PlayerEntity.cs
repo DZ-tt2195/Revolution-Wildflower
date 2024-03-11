@@ -5,6 +5,7 @@ using MyBox;
 using System;
 using System.Linq;
 using TMPro;
+using Ink;
 
 public class PlayerEntity : MovingEntity
 {
@@ -18,6 +19,7 @@ public class PlayerEntity : MovingEntity
         [Tooltip("turns where you can't be caught")] [ReadOnly] public int hidden = 0;
         [Tooltip("highest energy you can have")][ReadOnly] public int maxEnergy = 5;
         [Tooltip("damage taken during guard turn")][ReadOnly] public int damageTaken = 0;
+        [Tooltip("Player index")] [ReadOnly] private int index;
 
     //[Tooltip("normal player appearance")] [SerializeField] Material DefaultPlayerMaterial;
     //[Tooltip("appearance when hidden")] [SerializeField] Material HiddenPlayerMaterial;
@@ -59,16 +61,19 @@ public class PlayerEntity : MovingEntity
             case "Gail":
                 spriteRenderer.sprite = gailSprite;
                 tileOffset = new Vector3(0, 0.75f, 0);
+                index = 0;
                 GetCards(0);
                 break;
             case "Frankie":
                 spriteRenderer.sprite = frankieSprite;
                 tileOffset = new Vector3(-1, 0.75f, 0.8f);
+                index = 1;
                 GetCards(1);
                 break;
             case "WK":
                 spriteRenderer.sprite = wkSprite;
                 tileOffset = new Vector3(0, 0.75f, 0);
+                index = 2;
                 GetCards(2);
                 break;
         }
@@ -174,6 +179,21 @@ public class PlayerEntity : MovingEntity
             StartCoroutine(card.RevealCard(PlayerPrefs.GetFloat("Animation Speed")));
     }
 
+    public void ForceHand(string[] cards)
+    {
+        ShuffleIntoDeck(new List<Card>(myHand));
+        foreach (string cardName in cards)
+        {
+            Card card = myDrawPile.Find(x =>  x.textName.text == cardName);
+            if (card == null)
+            {
+                continue;
+            }
+            PlusCards(card);
+        }
+    }
+
+
     internal void PlusCards(Card card)
     {
         card.transform.SetParent(this.transform);
@@ -237,6 +257,20 @@ public class PlayerEntity : MovingEntity
             drawMe.transform.localPosition = new Vector3(0, -1000, 0);
             drawMe.cardMove.Post(drawMe.gameObject);
         }
+    }
+
+    public void ShuffleIntoDeck(List<Card> listOfCards)
+    {
+        foreach (Card card in listOfCards)
+        {
+            myHand.Remove(card);
+            myDrawPile.Add(card);
+            card.transform.SetParent(null);
+            card.transform.localPosition = new Vector3(10000, 10000, 0);
+        }
+        SortHand();
+        myDrawPile.Shuffle();
+        Debug.Log(myHand.Count);
     }
 
     internal IEnumerator DiscardFromHand(Card discardMe)

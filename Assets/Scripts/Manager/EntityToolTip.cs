@@ -22,7 +22,6 @@ public class EntityToolTip : MonoBehaviour
     private void Update()
     {
         CanvasTransform.SetHeight((margin * 3) + EntityNameTransform.rect.height + EntityToolTipTransform.rect.height);
-       
         this.gameObject.SetActive(isActive);
         if (isActive)
         {

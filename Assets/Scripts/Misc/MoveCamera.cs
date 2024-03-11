@@ -1,9 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEditor.Rendering;
 using UnityEngine;
-using UnityEngine.Windows;
 using Input = UnityEngine.Input;
 
 public class MoveCamera : MonoBehaviour
@@ -41,7 +38,13 @@ public class MoveCamera : MonoBehaviour
 
     private static List<string> locks = new();
 
-    private static MoveCamera instance;
+    [Header("Shaking")]
+    [SerializeField] private AnimationCurve shakeCurve;
+    [SerializeField] private float defaultShakeDuration = 1f;
+    private bool restartShake = false;
+    private bool shaking = false;
+
+    public static MoveCamera instance;
 
     private Camera camera;
 
@@ -230,5 +233,46 @@ public class MoveCamera : MonoBehaviour
         }
 
         locks.Clear(); 
+    }
+
+    //code shamelessly stolen from Noah and uh that youtube video
+    public void Shake(float duration = -1f)
+    {
+        if (shaking)
+        {
+            restartShake = true;
+        }
+
+        if (duration != -1)
+        {
+            StartCoroutine(ShakeCoroutine(duration));
+        }
+        else
+        {
+            StartCoroutine(ShakeCoroutine(defaultShakeDuration));
+        }
+    }
+    private IEnumerator ShakeCoroutine(float duration)
+    {
+        Vector3 startPosition = transform.position;
+        float elapsedTime = 0f;
+        shaking = true;
+
+        while (elapsedTime < duration)
+        {
+            if (restartShake)
+            {
+                elapsedTime = 0;
+                restartShake = false;
+            }
+
+            elapsedTime += Time.deltaTime;
+            float strength = shakeCurve.Evaluate(elapsedTime / duration);
+            transform.position = startPosition + Random.insideUnitSphere * strength;
+            yield return null;
+        }
+
+        transform.position = startPosition;
+        shaking = false;
     }
 }

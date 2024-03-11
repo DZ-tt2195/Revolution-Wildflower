@@ -94,6 +94,15 @@ public class EnvironmentalEntity : MovingEntity
         List<TileData> tilesInRange = NewManager.instance.CalculateReachableGrids(this.currentTile, card.areaOfEffect, false);
         List<WallEntity> entitiesInRange = new();
 
+        try
+        {
+            entitiesInRange.Add(this.currentTile.myEntity.GetComponent<WallEntity>());
+        }
+        catch
+        {
+            //do nothing
+        }
+
         foreach (TileData tile in tilesInRange)
         {
             try { entitiesInRange.Add(tile.myEntity.GetComponent<WallEntity>()); }
@@ -108,6 +117,16 @@ public class EnvironmentalEntity : MovingEntity
     {
         List<TileData> tilesInRange = NewManager.instance.CalculateReachableGrids(this.currentTile, card.areaOfEffect, false);
         List<GuardEntity> entitiesInRange = new();
+
+        try
+        {
+            entitiesInRange.Add(this.currentTile.myEntity.GetComponent<GuardEntity>());
+        }
+        catch
+        {
+            //do nothing
+        }
+
 
         foreach (TileData tile in tilesInRange)
         {
@@ -124,6 +143,15 @@ public class EnvironmentalEntity : MovingEntity
         List<TileData> tilesInRange = NewManager.instance.CalculateReachableGrids(this.currentTile, card.areaOfEffect, false);
         List<PlayerEntity> entitiesInRange = new();
 
+        try
+        {
+            entitiesInRange.Add(this.currentTile.myEntity.GetComponent<PlayerEntity>());
+        }
+        catch
+        {
+            //do nothing
+        }
+
         foreach (TileData tile in tilesInRange)
         {
             try { entitiesInRange.Add(tile.myEntity.GetComponent<PlayerEntity>()); }
@@ -138,6 +166,15 @@ public class EnvironmentalEntity : MovingEntity
     {
         List<TileData> tilesInRange = NewManager.instance.CalculateReachableGrids(this.currentTile, card.areaOfEffect, false);
         List<MovingEntity> entitiesInRange = new();
+
+        try
+        {
+            entitiesInRange.Add(this.currentTile.myEntity.GetComponent<MovingEntity>());
+        }
+        catch
+        {
+            //do nothing
+        }
 
         foreach (TileData tile in tilesInRange)
         {

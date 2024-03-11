@@ -252,10 +252,7 @@ public class TileData : MonoBehaviour
                 {
                     NewManager.instance.FullPath[i].directionIndicator.enabled = false;
                 }
-
             }
-
-
         }
     }
 }
