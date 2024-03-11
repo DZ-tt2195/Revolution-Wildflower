@@ -32,7 +32,7 @@
 				</StateGroup>
 			</StateGroups>
 		</SoundBank>
-		<SoundBank Id="1605876511" Type="User" Language="SFX" Hash="{11A84998-0D58-1B0D-615C-D1E40354BE80}">
+		<SoundBank Id="1605876511" Type="User" Language="SFX" Hash="{5C515637-DECA-F738-1DFE-3526AD1947CD}">
 			<ShortName>SFX_Bank</ShortName>
 			<Path>SFX_Bank.bnk</Path>
 			<Media>
@@ -51,6 +51,10 @@
 				<File Id="114177002" Language="SFX" Streaming="false" Location="Memory">
 					<ShortName>bottle-placeholder.wav</ShortName>
 					<CachePath>SFX/bottle-placeholder_10C4C929.wem</CachePath>
+				</File>
+				<File Id="131768836" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>wildflower-frankie-2.wav</ShortName>
+					<CachePath>SFX/wildflower-frankie-2_D79FB2B7.wem</CachePath>
 				</File>
 				<File Id="149796096" Language="SFX" Streaming="false" Location="Memory">
 					<ShortName>guard-investigate.wav</ShortName>
@@ -79,6 +83,10 @@
 				<File Id="410281469" Language="SFX" Streaming="false" Location="Memory">
 					<ShortName>wildflower-frankie-1-intro.wav</ShortName>
 					<CachePath>SFX/wildflower-frankie-1-intro_D79FB2B7.wem</CachePath>
+				</File>
+				<File Id="509925270" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>wildflower-frankie-2-intro.wav</ShortName>
+					<CachePath>SFX/wildflower-frankie-2-intro_D79FB2B7.wem</CachePath>
 				</File>
 				<File Id="540079207" Language="SFX" Streaming="false" Location="Memory">
 					<ShortName>guard-notice-placeholder.wav</ShortName>
@@ -209,7 +217,9 @@
 						<SwitchContainer>
 							<SwitchValue GroupType="State" GroupId="436743010" Id="2106242461"/>
 							<MediaRefs>
+								<MediaRef Id="131768836"/>
 								<MediaRef Id="410281469"/>
+								<MediaRef Id="509925270"/>
 								<MediaRef Id="823904576"/>
 							</MediaRefs>
 						</SwitchContainer>
@@ -271,5 +281,5 @@
 			</StateGroups>
 		</SoundBank>
 	</SoundBanks>
-	<FileHash>{531FFC49-ECBB-EFE7-371A-E6DE5554C796}</FileHash>
+	<FileHash>{603AD0BA-692E-D0BD-A0EC-892421FB045F}</FileHash>
 </SoundBanksInfo>

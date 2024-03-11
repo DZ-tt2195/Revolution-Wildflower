@@ -15055,7 +15055,7 @@ PrefabInstance:
     - target: {fileID: 2879224160831583952, guid: 5bd37c67f67424e7c913ee350c219bb8, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -1233128474, guid: 83f1b74330f0c7645ab0edb8cff490f3, type: 3}
+      objectReference: {fileID: -403495281, guid: 83f1b74330f0c7645ab0edb8cff490f3, type: 3}
     - target: {fileID: 4089370350289797580, guid: 5bd37c67f67424e7c913ee350c219bb8, type: 3}
       propertyPath: m_SizeDelta.x
       value: 160.5
@@ -15265,8 +15265,12 @@ PrefabInstance:
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 8093921653297319502, guid: 5bd37c67f67424e7c913ee350c219bb8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8093921653297319502, guid: 5bd37c67f67424e7c913ee350c219bb8, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 30.1
+      value: 45
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -16251,7 +16255,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1166408842
 RectTransform:
   m_ObjectHideFlags: 0
@@ -16267,9 +16271,9 @@ RectTransform:
   - {fileID: 1519449176}
   m_Father: {fileID: 2007706340}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 152.75, y: -244.44}
   m_SizeDelta: {x: 305.5, y: 64.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1166408843
@@ -17279,10 +17283,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1166408842}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 152.75, y: -32.15}
+  m_SizeDelta: {x: 305.5, y: 64.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1519449177
 MonoBehaviour:
@@ -22633,7 +22637,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1626117060}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -23000,6 +23004,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9001204e548a44c92ace82db5eae670e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shakeCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1.0023575
+      inSlope: -1.0000153
+      outSlope: -1.0000153
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.9999924
+      value: 0.0023498535
+      inSlope: -1.0000153
+      outSlope: -1.0000153
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  defaultShakeDuration: 1
 --- !u!20 &1688208630
 Camera:
   m_ObjectHideFlags: 0
@@ -33558,7 +33587,7 @@ PrefabInstance:
     - target: {fileID: 2879224160831583952, guid: 5bd37c67f67424e7c913ee350c219bb8, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -403495281, guid: 83f1b74330f0c7645ab0edb8cff490f3, type: 3}
+      objectReference: {fileID: -1233128474, guid: 83f1b74330f0c7645ab0edb8cff490f3, type: 3}
     - target: {fileID: 4089370350289797580, guid: 5bd37c67f67424e7c913ee350c219bb8, type: 3}
       propertyPath: m_SizeDelta.x
       value: 67.9407
@@ -33764,8 +33793,12 @@ PrefabInstance:
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 8093921653297319502, guid: 5bd37c67f67424e7c913ee350c219bb8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8093921653297319502, guid: 5bd37c67f67424e7c913ee350c219bb8, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 47
+      value: 30
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

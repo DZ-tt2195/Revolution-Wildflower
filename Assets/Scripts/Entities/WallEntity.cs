@@ -43,6 +43,7 @@ public class WallEntity : Entity
     public void AffectWall(int effect)
     {
         health += effect;
+        MoveCamera.instance.Shake();
         if (health <= 0)
         {
             NewManager.instance.listOfWalls.Remove(this);

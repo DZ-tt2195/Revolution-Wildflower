@@ -5,16 +5,16 @@ using UnityEngine;
 public class TutorialManager : MonoBehaviour
 {
     public ForceCharacterHand[] forcedHands;
-    private static TutorialManager instance;
+    public static TutorialManager instance;
 
     private void Awake()
     {
         instance = this;
     }
 
-    public static void Setup()
+    public void Setup()
     {
-        instance.ForceCharacterHand();
+        ForceCharacterHand();
     }
 
     public void ForceCharacterHand()
