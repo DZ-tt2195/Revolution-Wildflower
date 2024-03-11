@@ -7,10 +7,6 @@ using TMPro;
 using MyBox;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
-using System.Runtime.InteropServices.WindowsRuntime;
-//using UnityEngine.Rendering.Universal;
-//using UnityEditor.U2D;
-//using Unity.VisualScripting;
 
 public class AStarNode
 {
@@ -109,7 +105,7 @@ public class NewManager : MonoBehaviour
     [Tooltip("What's happening in the game")][ReadOnly] public TurnSystem CurrentTurn
     {
         get { return _CurrentTurn; }
-        set { _CurrentTurn = value; Debug.LogError($"changed turn to {value}"); }
+        set { _CurrentTurn = value; Debug.Log($"changed turn to {value}"); }
     }
 
     [Tooltip("Effects to do on future turns")][ReadOnly] public List<Card> futureEffects = new List<Card>();
@@ -193,7 +189,7 @@ public class NewManager : MonoBehaviour
         gameOverText.transform.parent.gameObject.SetActive(false);
 
         GetTiles();
-        TutorialManager.Setup();
+        //TutorialManager.instance.Setup();
         foreach (GuardEntity curGuard in listOfGuards)
         {
             curGuard.CalculateTiles();
@@ -459,6 +455,9 @@ public class NewManager : MonoBehaviour
     {
         //player.health += n;
         player.health = Math.Clamp(player.health + n, 0, 3);
+
+        if (player != null && n < 0)
+            MoveCamera.instance.Shake();
 
         UpdateStats(player);
         if (player.health <= 0)
@@ -1012,12 +1011,10 @@ public class NewManager : MonoBehaviour
 
         if (!freeMoves)
         {
-            Debug.LogError("not free moves");
             CurrentTurn = TurnSystem.You;
         }
         else
         {
-            Debug.LogError("free moves");
         }
 
         while (chosenTile == null)

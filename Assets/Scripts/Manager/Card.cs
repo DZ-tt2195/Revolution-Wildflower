@@ -1339,6 +1339,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         guard.stunChange(stunDuration);
         guard.CalculateTiles();
         currentTarget = guard.currentTile;
+        MoveCamera.instance.Shake();
     }
 
     internal IEnumerator CreateEnvironmental()
