@@ -104,7 +104,7 @@ public class TitleScreen : MonoBehaviour
         }
         else if (!Regex.IsMatch(newName.text, @"^[a-zA-Z]+$"))
         {
-            StartCoroutine(CausedError("Save file names can't have punctuation."));
+            StartCoroutine(CausedError("Save file names can't have punctuation or numbers."));
         }
         else
         {
