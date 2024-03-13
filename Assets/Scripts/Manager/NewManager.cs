@@ -810,7 +810,7 @@ public class NewManager : MonoBehaviour
             collector.StatsSetup(header, position);
 
             collector.AddTextButton("Confirm");
-            collector.AddTextButton("Rechoose");
+            collector.AddTextButton("Go Back");
             return collector;
         }
         else

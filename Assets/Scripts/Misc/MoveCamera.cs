@@ -243,13 +243,16 @@ public class MoveCamera : MonoBehaviour
             restartShake = true;
         }
 
-        if (duration != -1)
+        if (PlayerPrefs.GetInt("Screen Shake") == 1)
         {
-            StartCoroutine(ShakeCoroutine(duration));
-        }
-        else
-        {
-            StartCoroutine(ShakeCoroutine(defaultShakeDuration));
+            if (duration != -1)
+            {
+                StartCoroutine(ShakeCoroutine(duration));
+            }
+            else
+            {
+                StartCoroutine(ShakeCoroutine(defaultShakeDuration));
+            }
         }
     }
     private IEnumerator ShakeCoroutine(float duration)
