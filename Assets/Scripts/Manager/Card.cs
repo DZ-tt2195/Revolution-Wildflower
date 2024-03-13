@@ -7,7 +7,7 @@ using MyBox;
 using UnityEngine.EventSystems;
 using System;
 
-public class Card : MonoBehaviour, IPointerClickHandler
+public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
 
 #region Variables
@@ -30,15 +30,30 @@ public class Card : MonoBehaviour, IPointerClickHandler
         public TMP_Text textDescr;
 
     [Foldout("Card Presentation", true)]
-        public Color AttackColor = Color.red;
-        public Color DrawColor = Color.green;
-        public Color DistractionColor = Color.blue;
-        public Color EnergyColor = Color.cyan;
-        public Color MovementColor = Color.yellow;
-        public Color MiscColor = Color.gray;
-        public Color FallbackColor = Color.white;
+        [SerializeField] Color AttackColor = Color.red;
+        [SerializeField] Color DrawColor = Color.green;
+        [SerializeField] Color DistractionColor = Color.blue;
+        [SerializeField] Color EnergyColor = Color.cyan;
+        [SerializeField] Color MovementColor = Color.yellow;
+        [SerializeField] Color MiscColor = Color.gray;
+        [SerializeField] Color FallbackColor = Color.white;
         private Material material;
         private MaterialPropertyBlock materialPropertyBlock;
+
+        bool mouseOver = false;
+        float growthTimer = 0;
+        Vector3 cardSize;
+        [SerializeField] AnimationCurve growthCurve;
+        [SerializeField] AnimationCurve moveCurve;
+
+
+    [SerializeField] Sprite attackSprite;
+        [SerializeField] Sprite distractSprite;
+        [SerializeField] Sprite drawSprite;
+        [SerializeField] Sprite energySprite;
+        [SerializeField] Sprite moveSprite;
+        public Image typeOneSprite { get; private set; }
+        public Image typeTwoSprite { get; private set; }
 
     [Foldout("Card stats", true)]
         [ReadOnly] public int energyCost;
@@ -82,7 +97,6 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     private EventHandler[] events;
 
-
     public event EventHandler OnCardResolved;
     public event EventHandler OnChoiceMade; 
 
@@ -92,11 +106,14 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
     private void Awake()
     {
+        cardSize = transform.localScale;
         image = GetComponent<Image>();
         background = transform.Find("Canvas Group").Find("Background").GetComponent<Image>();
         border = transform.GetChild(0).GetComponent<Image>();
         button = this.GetComponent<Button>();
         button.onClick.AddListener(SendMe);
+        typeOneSprite = transform.Find("Canvas Group").Find("Card Type 1").GetComponent<Image>();
+        typeTwoSprite = transform.Find("Canvas Group").Find("Card Type 2").GetComponent<Image>();
     }
 
     void SendMe()
@@ -113,13 +130,65 @@ public class Card : MonoBehaviour, IPointerClickHandler
         }
     }
 
+    public void OnPointerEnter(PointerEventData data)
+    {
+        mouseOver = true;
+    }
+
+    public void OnPointerExit(PointerEventData data)
+    {
+        mouseOver = false;
+    }
+
     public void CardSetup(CardData data)
     {
         textName.text = data.name;
         textDescr.text = KeywordTooltip.instance.EditText(data.desc);
 
         typeOne = ConvertToType(data.cat1);
+        switch (typeOne)
+        {
+            case CardType.Attack:
+                typeOneSprite.sprite = attackSprite;
+                break;
+            case CardType.Draw:
+                typeOneSprite.sprite = drawSprite;
+                break;
+            case CardType.Distraction:
+                typeOneSprite.sprite = distractSprite;
+                break;
+            case CardType.Energy:
+                typeOneSprite.sprite = energySprite;
+                break;
+            case CardType.Movement:
+                typeOneSprite.sprite = moveSprite;
+                break;
+            default:
+                typeOneSprite.gameObject.SetActive(false);
+                break;
+        }
         typeTwo = ConvertToType(data.cat2);
+        switch (typeTwo)
+        {
+            case CardType.Attack:
+                typeTwoSprite.sprite = attackSprite;
+                break;
+            case CardType.Draw:
+                typeTwoSprite.sprite = drawSprite;
+                break;
+            case CardType.Distraction:
+                typeTwoSprite.sprite = distractSprite;
+                break;
+            case CardType.Energy:
+                typeTwoSprite.sprite = energySprite;
+                break;
+            case CardType.Movement:
+                typeTwoSprite.sprite = moveSprite;
+                break;
+            default:
+                typeTwoSprite.gameObject.SetActive(false);
+                break;
+        }
 
         Material mat = new Material(image.material);
         mat.SetColor("_GradientColorTop", ConvertToColor(typeOne));
@@ -377,9 +446,35 @@ public class Card : MonoBehaviour, IPointerClickHandler
         return wallsInRange;
     }
 
-#endregion
+    #endregion
 
-#region Animations
+    #region Animations
+
+    public void Update()
+    {
+        
+        if (mouseOver)
+        {
+            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -1);
+            if (growthTimer + Time.deltaTime < growthCurve.keys[growthCurve.keys.Length - 1].time) growthTimer += Time.deltaTime;
+            else growthTimer = growthCurve.keys[growthCurve.keys.Length - 1].time;
+        }
+        else
+        {
+            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, 0);
+            if (growthTimer - Time.deltaTime > 0) growthTimer -= Time.deltaTime;
+            else growthTimer = 0;
+        }
+        float sizeValue = growthCurve.Evaluate(growthTimer);
+        float positionValue = moveCurve.Evaluate(growthTimer);
+        transform.localScale = cardSize * sizeValue;
+        /*
+        print("Base " + SaveManager.instance.cardBaseHeight);
+        print("position value " + positionValue);
+        print("current " + transform.position.y);
+        */
+        transform.localPosition = new Vector3(transform.localPosition.x, SaveManager.instance.cardBaseHeight + positionValue, transform.localPosition.z);
+    }
 
     public void HideCard()
     {
@@ -630,7 +725,8 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
                 case "STUNADJACENTGUARD":
                     yield return ChooseGuard();
-                    yield return StunGuard(adjacentTilesWithGuards[0].myEntity.GetComponent<GuardEntity>());
+                    if (adjacentTilesWithGuards.Count > 0)
+                        yield return StunGuard(adjacentTilesWithGuards[0].myEntity.GetComponent<GuardEntity>());
                     break;
 
                 case "ATTACKADJACENTWALL":
@@ -640,7 +736,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
 
                 case "THROWNBOTTLE":
                     yield return ChooseTileLOS();
-                    if (currentTarget.myEntity.CompareTag("Guard")) yield return CalculateDistraction(currentPlayer.currentTile);
+                    if (currentTarget.myEntity != null && currentTarget.myEntity.CompareTag("Guard")) yield return CalculateDistraction(currentPlayer.currentTile);
                     else yield return CalculateDistraction(currentTarget);
                     break;
                 case "CHOOSEDISTRACTION":
@@ -1287,6 +1383,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         guard.stunChange(stunDuration);
         guard.CalculateTiles();
         currentTarget = guard.currentTile;
+        MoveCamera.instance.Shake();
     }
 
     internal IEnumerator CreateEnvironmental()

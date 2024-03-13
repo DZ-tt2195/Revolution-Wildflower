@@ -37,7 +37,7 @@ public class SaveManager : MonoBehaviour
     [Tooltip("Put names of the card TSVs in here")] public List<string> playerDecks;
     [Tooltip("Put names of the level TSVs (in order)")] public List<string> levelSheets;
     [ReadOnly] public List<Card> allCards = new List<Card>();
-
+    public float cardBaseHeight = -481;
     #endregion
 
 #region Setup
@@ -135,7 +135,7 @@ public class SaveManager : MonoBehaviour
             {
                 Card nextCopy = Instantiate(cardPrefab, canvas);
                 nextCopy.name = $"{data[i].name}";
-                nextCopy.transform.localPosition = new Vector3(10000, 10000);
+                nextCopy.transform.localPosition = new Vector3(10000, cardBaseHeight);
                 nextCopy.CardSetup(data[i]);
                 characterCards.Add(nextCopy);
                 allCards.Add(nextCopy);

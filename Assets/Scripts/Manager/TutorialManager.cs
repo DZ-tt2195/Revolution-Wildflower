@@ -109,7 +109,8 @@ public class TutorialManager : MonoBehaviour
         foreach (ForceCharacterHand hand in parameters.forcedHands)
         {
             PlayerEntity player = NewManager.instance.listOfPlayers.Find(x => x.name == hand.CharacterName);
-            player.ForceHand(hand.CardNames);
+            if (player != null)
+                player.ForceHand(hand.CardNames);
         }
     }
 }

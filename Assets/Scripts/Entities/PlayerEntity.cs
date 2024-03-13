@@ -170,7 +170,7 @@ public class PlayerEntity : MovingEntity
             Card nextCard = myHand[i];
             float startingX = (myHand.Count-1)*-(300/2);
             float difference = 300;
-            Vector3 newPosition = new(startingX + difference * i, -485, 0);
+            Vector3 newPosition = new(startingX + difference * i, SaveManager.instance.cardBaseHeight, 0);
             nextCard.transform.SetSiblingIndex(i);
             StartCoroutine(nextCard.MoveCard(newPosition, newPosition, Vector3.zero, PlayerPrefs.GetFloat("Animation Speed")));
         }

@@ -361,7 +361,7 @@
 							<PropertyList>
 								<Property Name="Volume" Type="Real64">
 									<ValueList>
-										<Value>-8</Value>
+										<Value>-6</Value>
 									</ValueList>
 								</Property>
 							</PropertyList>
@@ -544,6 +544,179 @@
 										</ObjectList>
 									</ObjectLists>
 								</MusicSegment>
+								<MusicSegment Name="wildflower-frankie-2" ID="{95AA1A77-CADD-4B7C-83FD-D097D9767B1B}" ShortID="427033639">
+									<PropertyList>
+										<Property Name="EndPosition" Type="Real64" Value="79200"/>
+										<Property Name="Volume" Type="Real64">
+											<ValueList>
+												<Value>4</Value>
+											</ValueList>
+										</Property>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{100BE001-2367-43C2-97F3-A212E8B5F1FD}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{7426D2B4-AE1E-46BF-A735-554A72E4A279}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<MusicTrack Name="wildflower-frankie-2" ID="{F6D96636-BDBB-4041-825E-63FDB1CEEA0A}" ShortID="405720348">
+											<ReferenceList>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{7426D2B4-AE1E-46BF-A735-554A72E4A279}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="wildflower-frankie-2" ID="{6D3F8224-FA8F-433C-9E5B-E9DBB33CDE19}">
+													<Language>SFX</Language>
+													<AudioFile>wildflower-frankie-2.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="131768836"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<TransitionList>
+												<MusicTransition Name="Root" ID="{1DA63FE3-8391-484D-B732-01789AAF2F19}">
+													<PropertyList>
+														<Property Name="IsFolder" Type="bool" Value="True"/>
+													</PropertyList>
+													<TransitionInfo/>
+												</MusicTransition>
+											</TransitionList>
+											<ObjectLists>
+												<ObjectList Name="Sequences">
+													<Reference>
+														<Local>
+															<MusicTrackSequence Name="" ID="{E1CBD040-E153-47F4-9BCE-009D72592C5D}">
+																<ObjectLists>
+																	<ObjectList Name="Clips">
+																		<Reference>
+																			<Local>
+																				<MusicClip Name="wildflower-frankie-2" ID="{9317274C-DB38-40D5-9C2D-4B808E6E4762}">
+																					<PropertyList>
+																						<Property Name="EndTrimOffset" Type="Real64" Value="79200"/>
+																						<Property Name="FadeInMode" Type="int16" Value="0"/>
+																						<Property Name="FadeOutMode" Type="int16" Value="0"/>
+																					</PropertyList>
+																					<AudioSourceRef Name="wildflower-frankie-2" ID="{6D3F8224-FA8F-433C-9E5B-E9DBB33CDE19}"/>
+																				</MusicClip>
+																			</Local>
+																		</Reference>
+																	</ObjectList>
+																</ObjectLists>
+															</MusicTrackSequence>
+														</Local>
+													</Reference>
+												</ObjectList>
+											</ObjectLists>
+										</MusicTrack>
+									</ChildrenList>
+									<ObjectLists>
+										<ObjectList Name="Cues">
+											<Reference>
+												<Local>
+													<MusicCue Name="Entry Cue" ID="{E5E88346-0967-45F0-9B4F-C4EBDF68EFC9}"/>
+												</Local>
+											</Reference>
+											<Reference>
+												<Local>
+													<MusicCue Name="Exit Cue" ID="{E490955B-3074-4F2E-8453-9FBC35372DA3}">
+														<PropertyList>
+															<Property Name="CueType" Type="int16" Value="1"/>
+															<Property Name="TimeMs" Type="Real64" Value="76800"/>
+														</PropertyList>
+													</MusicCue>
+												</Local>
+											</Reference>
+										</ObjectList>
+									</ObjectLists>
+								</MusicSegment>
+								<MusicSegment Name="wildflower-frankie-2-intro" ID="{7F9E9723-0A90-4FAA-91C8-CE2F94F9609D}" ShortID="886948642">
+									<PropertyList>
+										<Property Name="EndPosition" Type="Real64" Value="20400"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{100BE001-2367-43C2-97F3-A212E8B5F1FD}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{7426D2B4-AE1E-46BF-A735-554A72E4A279}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<MusicTrack Name="wildflower-frankie-2-intro" ID="{E64A1921-754A-48CB-A420-496E586827B8}" ShortID="435938120">
+											<ReferenceList>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{7426D2B4-AE1E-46BF-A735-554A72E4A279}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="wildflower-frankie-2-intro" ID="{DA148EA4-4E5F-49A5-AA58-E7D25DE03FB1}">
+													<Language>SFX</Language>
+													<AudioFile>wildflower-frankie-2-intro.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="509925270"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<TransitionList>
+												<MusicTransition Name="Root" ID="{E5BC7F42-D271-40F8-9AFD-D6FAB4D4DBE8}">
+													<PropertyList>
+														<Property Name="IsFolder" Type="bool" Value="True"/>
+													</PropertyList>
+													<TransitionInfo/>
+												</MusicTransition>
+											</TransitionList>
+											<ObjectLists>
+												<ObjectList Name="Sequences">
+													<Reference>
+														<Local>
+															<MusicTrackSequence Name="" ID="{47A97A3B-600A-4397-871A-C4AEE19E4CAA}">
+																<ObjectLists>
+																	<ObjectList Name="Clips">
+																		<Reference>
+																			<Local>
+																				<MusicClip Name="wildflower-frankie-2-intro" ID="{718B1761-51CD-4170-8615-1ADFA36C47AB}">
+																					<PropertyList>
+																						<Property Name="EndTrimOffset" Type="Real64" Value="20400"/>
+																						<Property Name="FadeInMode" Type="int16" Value="0"/>
+																						<Property Name="FadeOutMode" Type="int16" Value="0"/>
+																					</PropertyList>
+																					<AudioSourceRef Name="wildflower-frankie-2-intro" ID="{DA148EA4-4E5F-49A5-AA58-E7D25DE03FB1}"/>
+																				</MusicClip>
+																			</Local>
+																		</Reference>
+																	</ObjectList>
+																</ObjectLists>
+															</MusicTrackSequence>
+														</Local>
+													</Reference>
+												</ObjectList>
+											</ObjectLists>
+										</MusicTrack>
+									</ChildrenList>
+									<ObjectLists>
+										<ObjectList Name="Cues">
+											<Reference>
+												<Local>
+													<MusicCue Name="Entry Cue" ID="{80E7110F-F4E2-40B4-BA2C-18CD554E8882}"/>
+												</Local>
+											</Reference>
+											<Reference>
+												<Local>
+													<MusicCue Name="Exit Cue" ID="{5C14768A-8494-40F8-936F-F04BED6FE859}">
+														<PropertyList>
+															<Property Name="CueType" Type="int16" Value="1"/>
+															<Property Name="TimeMs" Type="Real64" Value="19200"/>
+														</PropertyList>
+													</MusicCue>
+												</Local>
+											</Reference>
+										</ObjectList>
+									</ObjectLists>
+								</MusicSegment>
 							</ChildrenList>
 							<TransitionList>
 								<MusicTransition Name="Root" ID="{4D10208C-93F0-4BFC-B4EA-9F6E441BDE2F}">
@@ -561,18 +734,18 @@
 							<Playlist>
 								<MusicPlaylistItem Name="" ID="{E521EA4B-CF08-4781-BF81-5C1E33B16652}" ShortID="523953762">
 									<ChildrenList>
-										<MusicPlaylistItem Name="" ID="{F5D9F7B7-2E40-4567-A7FD-53B82F077737}" ShortID="877922718">
+										<MusicPlaylistItem Name="" ID="{6C7A125E-28D9-4B83-8227-7EDFD157CF3B}" ShortID="1005835399">
 											<PropertyList>
 												<Property Name="PlaylistItemType" Type="int16" Value="1"/>
 											</PropertyList>
-											<SegmentRef Name="wildflower-frankie-1-intro" ID="{1880C8DB-D24C-4729-A169-6BCE24725696}"/>
+											<SegmentRef Name="wildflower-frankie-2-intro" ID="{7F9E9723-0A90-4FAA-91C8-CE2F94F9609D}"/>
 										</MusicPlaylistItem>
-										<MusicPlaylistItem Name="" ID="{2C2F8D03-6454-4E26-A3B8-E0BFA2422439}" ShortID="397315536">
+										<MusicPlaylistItem Name="" ID="{37651C2B-D4D1-41DE-BA66-341592008B3A}" ShortID="298595527">
 											<PropertyList>
 												<Property Name="LoopCount" Type="int16" Value="0"/>
 												<Property Name="PlaylistItemType" Type="int16" Value="1"/>
 											</PropertyList>
-											<SegmentRef Name="wildflower-frankie-1" ID="{AFC55B44-2F79-4906-9EA2-55B2C71E0FA5}"/>
+											<SegmentRef Name="wildflower-frankie-2" ID="{95AA1A77-CADD-4B7C-83FD-D097D9767B1B}"/>
 										</MusicPlaylistItem>
 									</ChildrenList>
 								</MusicPlaylistItem>
@@ -882,7 +1055,6 @@
 										</Reference>
 									</ReferenceList>
 									<TransitionInfo>
-										<JumpToPlaylistItemRef Name="" ID="{2C2F8D03-6454-4E26-A3B8-E0BFA2422439}"/>
 										<SourceFadeOut>
 											<MusicFade Name="Source Fade-out" ID="{2202F48B-8D58-4887-881B-2479F4B5C2A0}">
 												<PropertyList>

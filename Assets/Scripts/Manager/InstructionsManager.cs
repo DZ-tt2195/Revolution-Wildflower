@@ -1,11 +1,11 @@
-using OpenCover.Framework.Model;
+//using OpenCover.Framework.Model;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using TMPro;
 using Unity.VisualScripting;
-using UnityEditor.PackageManager;
+//using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class InstructionsManager : MonoBehaviour

@@ -445,8 +445,11 @@ MonoBehaviour:
   attacksPerTurn: 1
   CurrentTarget: {fileID: 0}
   DetectionRangePatrol: 4
+  DetectionRangeMax: 3
   DetectionAngle: 30
+  alertStatus: 0
   PatrolPoints: []
+  PatrolTarget: 1
   DistractionPoints: []
   distractionNotif: {fileID: 4833084862800118945, guid: 56619bf925a60454c899f16a561b26a3, type: 3}
   NotifOffset: 5
@@ -526,7 +529,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 200
-  m_Sprite: {fileID: 21300000, guid: 30eb33774938e4dc29258930e925f207, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0cfabdf193c30a044b17c7318e046d1f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

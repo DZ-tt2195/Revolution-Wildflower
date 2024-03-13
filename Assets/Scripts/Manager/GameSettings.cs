@@ -13,6 +13,7 @@ public class GameSettings : MonoBehaviour
     [SerializeField] Slider animationSlider;
     [SerializeField] TMP_Text animationText;
     [SerializeField] Toggle confirmationToggle;
+    [SerializeField] Toggle screenShakeToggle;
     [SerializeField] Button quitButton;
 
     private void Awake()
@@ -20,6 +21,7 @@ public class GameSettings : MonoBehaviour
         instance = this;
         animationSlider.onValueChanged.AddListener(SetAnimationSpeed);
         confirmationToggle.onValueChanged.AddListener(delegate { SetConfirmationStatus(); });
+        screenShakeToggle.onValueChanged.AddListener(delegate { SetScreenShake(); });
     }
 
     private void Start()
@@ -31,7 +33,11 @@ public class GameSettings : MonoBehaviour
         if (PlayerPrefs.HasKey("Animation Speed"))
             SetAnimationSpeed(PlayerPrefs.GetFloat("Animation Speed"));
         else
-            SetAnimationSpeed(1f);
+            SetAnimationSpeed(0.5f);
+
+        if (!PlayerPrefs.HasKey("Screen Shake")) //0 doesn't screen shake, 1 does
+            PlayerPrefs.SetInt("Screen Shake", 1);
+        screenShakeToggle.isOn = (PlayerPrefs.GetInt("Screen Shake") == 1);
     }
 
     private void Update()
@@ -56,5 +62,10 @@ public class GameSettings : MonoBehaviour
         animationSlider.value = value;
         animationText.text = value.ToString("F1");
         PlayerPrefs.SetFloat("Animation Speed", value);
+    }
+
+    void SetScreenShake()
+    {
+        PlayerPrefs.SetInt("Screen Shake", screenShakeToggle.isOn ? 1 : 0);
     }
 }

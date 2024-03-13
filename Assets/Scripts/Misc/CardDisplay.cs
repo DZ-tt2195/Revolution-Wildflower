@@ -12,6 +12,8 @@ public class CardDisplay : MonoBehaviour
     [SerializeField] TMP_Text cardName;
     [SerializeField] TMP_Text cardCost;
     [SerializeField] TMP_Text cardDescr;
+    [SerializeField] Image typeOne;
+    [SerializeField] Image typeTwo;
 
     private void Awake()
     {
@@ -44,6 +46,17 @@ public class CardDisplay : MonoBehaviour
         this.cardName.text = newCard.textName.text;
         this.cardCost.text = newCard.textCost.text;
         this.cardDescr.text = newCard.textDescr.text;
+
+        typeOne.sprite = newCard.typeOneSprite.sprite;
+        if (newCard.typeTwoSprite.gameObject.activeSelf)
+        {
+            typeTwo.sprite = newCard.typeTwoSprite.sprite;
+            typeTwo.gameObject.SetActive(true);
+        }
+        else
+        {
+            typeTwo.gameObject.SetActive(false);
+        }
 
         Material mat = new Material(bigImage.material);
         mat.SetColor("_GradientColorTop", newCard.ConvertToColor(newCard.typeOne));

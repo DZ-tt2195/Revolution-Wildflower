@@ -16,7 +16,8 @@ public class MovingEntity : Entity
 
     private void Start()
     {
-        stunObject.SetActive(false);
+        if (stunObject != null)
+            stunObject.SetActive(false);
     }
 
     public virtual IEnumerator EndOfTurn()
