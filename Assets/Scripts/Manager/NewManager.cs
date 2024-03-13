@@ -189,13 +189,14 @@ public class NewManager : MonoBehaviour
         gameOverText.transform.parent.gameObject.SetActive(false);
 
         GetTiles();
-        //TutorialManager.instance.Setup();
         foreach (GuardEntity curGuard in listOfGuards)
         {
             curGuard.CalculateTiles();
             curGuard.CheckForPlayer();
         }
-        StartCoroutine(StartPlayerTurn());
+        //StartCoroutine(StartPlayerTurn());
+
+        TutorialManager.SetLevelStartParameters(SaveManager.instance.levelSheets[levelToLoad]);
     }
 
     void GetTiles()
@@ -741,6 +742,13 @@ public class NewManager : MonoBehaviour
         }
     }
 
+    public void EnableTile(int x, int y)
+    {
+        listOfTiles[x, y].clickable = true;
+        listOfTiles[x, y].choosable = true;
+        listOfTiles[x, y].CardSelectable = true;
+    }
+
     public void DisableAllCards()
     {
         foreach (Card card in SaveManager.instance.allCards)
@@ -823,7 +831,7 @@ public class NewManager : MonoBehaviour
 
 #region Turn System
 
-    IEnumerator StartPlayerTurn()
+    public IEnumerator StartPlayerTurn()
     {
         UpdateStats(null);
 
@@ -875,6 +883,12 @@ public class NewManager : MonoBehaviour
             player.currentTile.clickable = true;
             //player.currentTile.moveable = true;
         }
+    }
+
+    public void ForcePlayer(PlayerEntity playerToForce)
+    {
+        DisableAllTiles();
+        listOfPlayers.Find(x => x == playerToForce).currentTile.clickable = true;
     }
 
     bool AnythingLeftThisTurn()

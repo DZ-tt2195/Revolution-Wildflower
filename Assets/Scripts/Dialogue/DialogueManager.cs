@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using Ink.Runtime;
 using System.Runtime.CompilerServices;
+using System;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -30,6 +31,7 @@ public class DialogueManager : MonoBehaviour
     public Story currentStory;
 
     public bool dialogueIsPlaying { get; private set; }
+    private bool runningFunction = false;
 
     private bool canContinueToNextLine = false;
 
@@ -40,6 +42,7 @@ public class DialogueManager : MonoBehaviour
     private const string SPEAKER_TAG = "speaker";
     private const string PORTRAIT_TAG = "portrait";
     private const string LAYOUT_TAG  = "layout";
+
 
     [HideInInspector] public static DialogueVariables dialogueVariables;
    
@@ -80,7 +83,8 @@ public class DialogueManager : MonoBehaviour
 
         // handle continuine to the next line in dialogue when submite is pressed
        if (canContinueToNextLine  
-            &&  currentStory.currentChoices.Count == 0
+            && currentStory.currentChoices.Count == 0
+            && !runningFunction
             && Input.GetKeyDown(KeyCode.Space))
        {
            ContinueStory();
@@ -91,6 +95,14 @@ public class DialogueManager : MonoBehaviour
     {
         currentStory = new Story(inkJSON.text);
         dialogueVariables.StartListening(currentStory);
+
+        currentStory.BindExternalFunction("CameraFocusPlayer",  (string playerName) =>      { CameraFocusPlayer(playerName); });
+        currentStory.BindExternalFunction("CameraFocusGuard",   (int index) =>              { CameraFocusGuard(index); });
+        currentStory.BindExternalFunction("CameraFocusTile",    (int x, int y) =>           { CameraFocusTile(x, y); });
+        currentStory.BindExternalFunction("ForcePlayer",        (string playerName) =>      { ForcePlayer(playerName); });
+        currentStory.BindExternalFunction("ForceCard",          (string cardName) =>        { ForceCard(cardName); });
+        //currentStory.BindExternalFunction("ForceCardDraw", (string playerName) => { CameraFocusPlayer(playerName); });
+        //currentStory.BindExternalFunction("ToggleUIElement", (string playerName) => { CameraFocusPlayer(playerName); });
     }
     public void EnterDialogueMode()
     {
@@ -234,4 +246,96 @@ public class DialogueManager : MonoBehaviour
         return variableValue;
     }
 
+
+
+    //  INK FUNCTIONS
+
+    //  To be called in events ONLY; don't put this in ink files.
+    public void FunctionFinished()
+    {
+        runningFunction = false;
+        MoveCamera.OnFocusComplete -= FunctionFinished;
+        ContinueStory();
+    }
+
+    public void CameraFocusPlayer(string playerName)
+    {
+        runningFunction = true;
+        PlayerEntity player = NewManager.instance.listOfPlayers.Find(x => x.name == playerName);
+
+        if (player == null)
+        {
+            Debug.LogError("DialogueManager, CameraFocusPlayer: Couldn't find player of name " +  playerName);
+            return;
+        }
+
+        MoveCamera.Focus(player);
+        MoveCamera.OnFocusComplete += FunctionFinished;
+    }
+
+    public void CameraFocusGuard(int index)
+    {
+        runningFunction = true;
+        GuardEntity guard = NewManager.instance.listOfGuards[index];
+        if (guard == null)
+        {
+            Debug.LogError("DialogueManager, CameraFocusGuard: Couldn't find guard with index " + index);
+            return;
+        }
+
+        MoveCamera.Focus(guard);
+        MoveCamera.OnFocusComplete += FunctionFinished;
+    }
+
+    public void CameraFocusTile(int x, int y)
+    {
+        runningFunction = true;
+        TileData tile = NewManager.instance.listOfTiles[x, y];
+        if (tile == null)
+        {
+            Debug.LogError("DialogueManager, CameraFocusTile: Couldn't find tile at position " + x + " " + y);
+            return;
+        }
+
+        MoveCamera.Focus(tile.transform.position);
+        MoveCamera.OnFocusComplete += FunctionFinished;
+    }
+
+    public void ForcePlayer(string playerName)
+    {
+        NewManager.instance.ForcePlayer(NewManager.instance.listOfPlayers.Find(x => x.name == playerName));
+    }
+
+    public void ForceTile(int x, int y)
+    {
+        NewManager.instance.DisableAllTiles();
+        NewManager.instance.EnableTile(x, y);
+    }
+
+    public void ForceCard(string cardName)
+    {
+        List<Card> hand = NewManager.instance.lastSelectedPlayer.myHand;
+        for (int i = 0; i < hand.Count; i++)
+        {
+            if (hand[i].textName.text == cardName)
+            {
+                hand[i].EnableCard();
+            }
+
+            else
+            {
+                hand[i].DisableCard();
+            }
+        }
+    }
+
+    public void ForceDrawCard(string cardName)
+    {
+
+    }
+
+    public void ToggleUIElements(string elementName, bool toggle)
+    {
+
+    }
 }
