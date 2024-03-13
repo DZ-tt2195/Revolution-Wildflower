@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.Windows;
@@ -44,6 +46,8 @@ public class MoveCamera : MonoBehaviour
     private static MoveCamera instance;
 
     private Camera camera;
+
+    public static Action OnFocusComplete;
 
     private void Start()
     {
@@ -153,6 +157,7 @@ public class MoveCamera : MonoBehaviour
         focusedPosition = Vector3.zero;
 
         Unfocus(false);
+        OnFocusComplete?.Invoke();
     }
 
     public static void Focus(Entity entity, float targetZoom = -1)
