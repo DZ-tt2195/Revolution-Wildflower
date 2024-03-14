@@ -1,12 +1,18 @@
-Hi! so you're the crew Spike was talking about. It's nice to meet you. I'm Clover. #speaker: Clover #portrait: Clover
+Hi! so you're the crew Gail was talking about. It's nice to meet you. #speaker: Clover #portrait: Clover
 
-Good to meet you too, what do you have for us? #speaker: Frankie #portrait: Frankie
+Good to meet you too #speaker: Frankie #portrait: Frankie
+
+Gail said you would explain who you are. #speaker: WK #portrait: WK
+
+That's understandable. I'm a colleague of Gail's parents before they were fired. 
+
+What happened to them was unfair and I don't agree with what the company is doing.
 
 Word around is that Icarus Industries will be bringing big changes but no one really knows. 
 
 Do you have any idea on what it is? #speaker: Gail #portrait: Gail
 
-If I have to guess, it has to be something related to the new land they have recently acquired. #speaker: Clover #portrait: Clover
+If I have to guess, it has to be something related to the fracking site. #speaker: Clover #portrait: Clover
 
 I would rather we fully know what's happening before Icarus Industries does an offical announcement. 
 
@@ -24,6 +30,6 @@ Have an entry and exit strategy? or is that on us? #speaker: Gail #portrait: Gai
 
 You'll enter through a window near the north of the building and exit through one of the back entrances. Both will be left unlocked for you. #speaker: Clover #portrait: Clover
 
-Spike is gonna handle cameras, but note you'll have limited time to be there.
+I can handle cameras, but note you'll have limited time to be there.
 
 Good Luck.
