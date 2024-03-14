@@ -1,9 +1,13 @@
-To complete levels, you have to complete objectives. 
+EXTERNAL EnableUI(elements)
 
-And to do that, you must be adjacent to the objective tile. 
+To conclude a mission, you must complete all objectives and successfully reach the exit point.
 
-You move by selecting the character and then selecting the tile you want to move towards. you have a limited amount of Movement Points (MP) which determines how far you can move.
+You can only complete an objective once a character has moved to an adjacent tile.
 
-Two things to note, Each character will have their own pool of MP and you regain it at the beginning of your next turn.
+~ EnableUI("SelectedPlayer_Stats, Movement")
 
-Select the highlighted tile and confirm your decision (you can disable confirmations in the settings)
+A character's <color="yellow">Movement Points (MP)</color> determine how far they can move in a turn. They fully replenish at the end of each turn.
+
+Let's spend some MP to get Frankie next to the objective.
+
+Click on Frankie to preview his range of movement, then confirm his move by selecting the highlighted tile. <br>(You can disable confirmation windows in the Settings menu.)

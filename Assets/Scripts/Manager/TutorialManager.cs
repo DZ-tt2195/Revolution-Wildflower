@@ -42,7 +42,7 @@ public class TutorialManager : MonoBehaviour
         if (elements == null) { return;  }
         for (var i = 0; i < elements.Length; i++)
         {
-            for (var j = 0; j < levelStartUI.Length; i++)
+            for (var j = 0; j < levelStartUI.Length; j++)
             {
                 if (elements[i] == levelStartUI[j].name)
                 {
@@ -57,7 +57,7 @@ public class TutorialManager : MonoBehaviour
         if (elements == null) { return; }
         for (var i = 0; i < elements.Length; i++)
         {
-            for (var j = 0; j < levelStartUI.Length; i++)
+            for (var j = 0; j < levelStartUI.Length; j++)
             {
                 if (elements[i] == levelStartUI[j].name)
                 {
@@ -80,6 +80,7 @@ public class TutorialManager : MonoBehaviour
 
         if (parameters.dialogueOnStart)
         {
+            instance.DisableAllUI();
             DialogueManager.GetInstance().StartStory(parameters.dialogueAsset);
             foreach (LevelStartDialogueVariable dialogueVariable in parameters.dialogueVariables)
             {
@@ -100,6 +101,7 @@ public class TutorialManager : MonoBehaviour
 
         else
         {
+            NewManager.instance.UpdateStats(null);
             NewManager.instance.StartCoroutine(NewManager.instance.StartPlayerTurn());
         }
     }

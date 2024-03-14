@@ -5,6 +5,7 @@ using TMPro;
 using Ink.Runtime;
 using System.Runtime.CompilerServices;
 using System;
+using System.Text.RegularExpressions;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -32,6 +33,8 @@ public class DialogueManager : MonoBehaviour
 
     public bool dialogueIsPlaying { get; private set; }
     private bool runningFunction = false;
+
+    private int currentVisibleCharacterIndex;
 
     private bool canContinueToNextLine = false;
 
@@ -101,6 +104,8 @@ public class DialogueManager : MonoBehaviour
         currentStory.BindExternalFunction("CameraFocusTile",    (int x, int y) =>           { CameraFocusTile(x, y); });
         currentStory.BindExternalFunction("ForcePlayer",        (string playerName) =>      { ForcePlayer(playerName); });
         currentStory.BindExternalFunction("ForceCard",          (string cardName) =>        { ForceCard(cardName); });
+        currentStory.BindExternalFunction("EnableUI",           (string elements) =>        { EnableUI(elements); });
+
         //currentStory.BindExternalFunction("ForceCardDraw", (string playerName) => { CameraFocusPlayer(playerName); });
         //currentStory.BindExternalFunction("ToggleUIElement", (string playerName) => { CameraFocusPlayer(playerName); });
     }
@@ -137,7 +142,6 @@ public class DialogueManager : MonoBehaviour
         // set the text to the full line, but set the visible characters to 0
         dialogueText.text = line;
         dialogueText.maxVisibleCharacters = 0;
-        dialogueText.text = "";
 
         // hide items while text is typing
         continueIcon.SetActive(false);
@@ -151,7 +155,7 @@ public class DialogueManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space) && dialogueText.maxVisibleCharacters > 0)
             {
                 dialogueText.maxVisibleCharacters = line.Length;
-                dialogueText.text = line;
+                //dialogueText.text = line;
                 break;
             }
 
@@ -168,7 +172,7 @@ public class DialogueManager : MonoBehaviour
             else
             {
                 dialogueText.maxVisibleCharacters++;
-                dialogueText.text += letter;
+                //dialogueText.text += letter;
                 textCrawlSound.Post(gameObject);
                 yield return new WaitForSeconds(typingSpeed);
             }
@@ -327,6 +331,17 @@ public class DialogueManager : MonoBehaviour
                 hand[i].DisableCard();
             }
         }
+    }
+
+    //  This version takes in one string and splits it into an array for the TutorialManager version.
+    //  Since ink is limited in the number of parameters it can take, we have to do it this way. 
+    public void EnableUI(string elements = null)
+    {
+        Debug.Log("enabled ui");
+        TutorialManager manager = FindObjectOfType<TutorialManager>();
+
+        string[] elementsArray = Regex.Split(elements, ", ");
+        manager.EnableUI(elementsArray);
     }
 
     public void ForceDrawCard(string cardName)

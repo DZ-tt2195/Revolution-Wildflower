@@ -195,7 +195,7 @@ public class NewManager : MonoBehaviour
             curGuard.CheckForPlayer();
         }
         //StartCoroutine(StartPlayerTurn());
-
+        //UpdateStats(null);
         TutorialManager.SetLevelStartParameters(SaveManager.instance.levelSheets[levelToLoad]);
     }
 
@@ -630,7 +630,7 @@ public class NewManager : MonoBehaviour
 
     private void Update()
     {
-        endTurnButton.gameObject.SetActive(CurrentTurn == TurnSystem.You);
+        //endTurnButton.gameObject.SetActive(CurrentTurn == TurnSystem.You);
         /*
               spendToDrawButton.gameObject.SetActive(CurrentTurn == TurnSystem.You);
               exitButton.gameObject.SetActive(CurrentTurn == TurnSystem.You);

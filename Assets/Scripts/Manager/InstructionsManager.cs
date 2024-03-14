@@ -112,7 +112,6 @@ public class InstructionsManager : MonoBehaviour
             Manager.instructions.Clear();
             Manager.instructionsObject.SetActive(false);
             instance.active = false;
-
         }
 
         public void Setup(object obj, string thisEvent, string text)
