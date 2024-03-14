@@ -22,7 +22,8 @@ public class DialogueManager : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI displayNameText;
     [SerializeField] private Animator portraitAnimator;
-    [SerializeField ]private Animator layoutAnimator;
+    [SerializeField] private Animator layoutAnimator;
+    [SerializeField] private Animator backgroundAnimator;
 
     [Header("Sounds")]
     [SerializeField] AK.Wwise.Event textCrawlSound;
@@ -42,6 +43,7 @@ public class DialogueManager : MonoBehaviour
     private const string SPEAKER_TAG = "speaker";
     private const string PORTRAIT_TAG = "portrait";
     private const string LAYOUT_TAG  = "layout";
+    private const string BACKGROUND_TAG = "bg";
 
 
     [HideInInspector] public static DialogueVariables dialogueVariables;
@@ -110,10 +112,11 @@ public class DialogueManager : MonoBehaviour
         dialogueIsPlaying = true;
         dialoguePanel.SetActive(true);
 
-        // reset portrait, layout, and speaker
+        // reset portrait, layout, background, and speaker
         displayNameText.text = "???";
         portraitAnimator.Play("Default");
         layoutAnimator.Play("Left");
+        backgroundAnimator.Play("Default");
 
         ContinueStory();
 
@@ -226,6 +229,9 @@ public class DialogueManager : MonoBehaviour
                     break;
                 case LAYOUT_TAG:
                     layoutAnimator.Play(tagValue);
+                    break;
+                case BACKGROUND_TAG:
+                    backgroundAnimator.Play(tagValue);
                     break;
                 default:
                     Debug.LogWarning("Tag came in but is not being handled: " + tag);
