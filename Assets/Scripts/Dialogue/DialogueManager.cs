@@ -42,6 +42,7 @@ public class DialogueManager : MonoBehaviour
     private Coroutine displayLineCoroutine;
 
     private static DialogueManager instance;
+    public static event Action DialogueCompleted;
 
     private const string SPEAKER_TAG = "speaker";
     private const string PORTRAIT_TAG = "portrait";
@@ -117,28 +118,33 @@ public class DialogueManager : MonoBehaviour
         dialogueIsPlaying = true;
         dialoguePanel.SetActive(true);
 
+        Debug.Log("Set active true");
+
         // reset portrait, layout, background, and speaker
-        displayNameText.text = "???";
-        portraitAnimator.Play("Default");
-        layoutAnimator.Play("Left");
-        backgroundAnimator.Play("Default");
+        //displayNameText.text = "???";
+        //portraitAnimator.Play("Default");
+        //layoutAnimator.Play("Left");
+        //backgroundAnimator.Play("Default");
 
         ContinueStory();
 
     }
 
     private IEnumerator ExitDialogueMode()
-        {
-            yield return new WaitForSeconds(0.2f);
+    {
+        yield return new WaitForSeconds(0.2f);
 
-            dialogueVariables.StopListening(currentStory);
+        dialogueVariables.StopListening(currentStory);
 
-            dialogueIsPlaying = false;
-            dialoguePanel.SetActive(false);
-            dialogueText.text = "";
+        dialogueIsPlaying = false;
+        dialoguePanel.SetActive(false);
+        dialogueText.text = "";
 
-            textboxStopSound.Post(gameObject);
-        }
+        textboxStopSound.Post(gameObject);
+
+        Debug.Log("Dialogue Completed");
+        DialogueCompleted?.Invoke();
+    }
 
     private IEnumerator DisplayLine(string line)
     {
@@ -344,9 +350,11 @@ public class DialogueManager : MonoBehaviour
     public void EnableUI(string elements = null)
     {
         Debug.Log("enabled ui");
+        Debug.Log(elements);
         TutorialManager manager = FindObjectOfType<TutorialManager>();
 
         string[] elementsArray = Regex.Split(elements, ", ");
+        Debug.Log(string.Join("\n", elementsArray));
         manager.EnableUI(elementsArray);
     }
 

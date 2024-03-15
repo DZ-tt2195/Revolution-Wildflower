@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 78c7db91023423946b9c34d04e4ef7c7, type: 3}
-  m_Name: ExitTest
+  m_Name: Tut1Run
   m_EditorClassIdentifier: 
   dialogueOnStart: 1
   dialogueAsset: {fileID: 4900000, guid: 6cac60f4a7a45ef4f824c3c2ac2f6b51, type: 3}

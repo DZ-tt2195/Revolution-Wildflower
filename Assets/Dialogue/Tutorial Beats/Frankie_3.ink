@@ -1,1 +1,0 @@
-With that done, you are able to exit the level. You may do so by clicking exit when you are adjacent to the exit tile.

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Timeline.Actions;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TutorialManager : MonoBehaviour
 {
@@ -32,6 +33,10 @@ public class TutorialManager : MonoBehaviour
         foreach (GameObject ui in levelStartUI)
         {
             ui.SetActive(true);
+            if (ui.TryGetComponent(out Button button))
+            {
+                button.enabled = true;
+            }
         }
 
         DisableUI(exceptions);
@@ -57,12 +62,23 @@ public class TutorialManager : MonoBehaviour
         if (elements == null) { return; }
         for (var i = 0; i < elements.Length; i++)
         {
+            bool found = false;
             for (var j = 0; j < levelStartUI.Length; j++)
             {
                 if (elements[i] == levelStartUI[j].name)
                 {
                     levelStartUI[j].SetActive(true);
+                    Debug.Log(levelStartUI[j].name);
+                    found = true;
+                    if (levelStartUI[j].TryGetComponent(out Button button))
+                    {
+                        button.enabled = false;
+                    }
                 }
+            }
+            if (!found)
+            {
+                Debug.LogError("TutorialManager, EnableUI: Could not find " + elements[i]);
             }
         }
     }
@@ -81,6 +97,7 @@ public class TutorialManager : MonoBehaviour
         if (parameters.dialogueOnStart)
         {
             instance.DisableAllUI();
+            MoveCamera.AddLock("Tutorial");
             DialogueManager.GetInstance().StartStory(parameters.dialogueAsset);
             foreach (LevelStartDialogueVariable dialogueVariable in parameters.dialogueVariables)
             {
@@ -97,6 +114,8 @@ public class TutorialManager : MonoBehaviour
                 }
             }
             DialogueManager.GetInstance().EnterDialogueMode();
+            Debug.Log("Entering dialogue mode");
+            DialogueManager.DialogueCompleted += instance.ExitTutorial;
         }
 
         else
@@ -104,6 +123,26 @@ public class TutorialManager : MonoBehaviour
             NewManager.instance.UpdateStats(null);
             NewManager.instance.StartCoroutine(NewManager.instance.StartPlayerTurn());
         }
+    }
+
+    public void ExitTutorial()
+    {
+        DialogueManager.DialogueCompleted -= ExitTutorial;
+
+        MoveCamera.RemoveLock("Tutorial");
+
+        foreach(GameObject ui in levelStartUI)
+        {
+            if (ui.TryGetComponent(out Button button))
+            {
+                button.enabled = true;
+            }
+        }
+
+
+        NewManager.instance.UpdateStats(null);
+        NewManager.instance.StartCoroutine(NewManager.instance.StartPlayerTurn());
+
     }
 
     public void ForceCharacterHand(LevelStartParameters parameters)

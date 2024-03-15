@@ -213,6 +213,8 @@ public class NewManager : MonoBehaviour
                 try { newGrid[i, j] = newGrid[i, j].Trim().Replace("\"", "").Replace("]", ""); }
                 catch (NullReferenceException) { continue; }
 
+                Debug.Log(newGrid[i, j]);
+
                 if (newGrid[i, j] != "")
                 {
                     TileData nextTile = Instantiate(floorTilePrefab);
@@ -223,7 +225,7 @@ public class NewManager : MonoBehaviour
                     nextTile.gridPosition = new Vector2Int(i, j);
 
                     Entity thisTileEntity = null;
-                    string[] numberPlusAddition = newGrid[i, j].Split("/");
+                    string[] numberPlusAddition = newGrid[i, j].Split("|");
 
                     switch (int.Parse(numberPlusAddition[0]))
                     {
@@ -267,7 +269,25 @@ public class NewManager : MonoBehaviour
                             thisTileEntity.name = numberPlusAddition[1];
                             ObjectiveEntity defaultObjective = thisTileEntity.GetComponent<ObjectiveEntity>();
                             defaultObjective.objective = numberPlusAddition[2];
-                            try { defaultObjective.instructionsWhenCompleted = numberPlusAddition[3].ToUpper().Trim(); } catch (IndexOutOfRangeException) {/*do nothing*/}
+
+                            if (numberPlusAddition.Length > 3)
+                            {
+                                Debug.Log(numberPlusAddition.Length);
+                                if (numberPlusAddition[3] != "null")
+                                {
+                                    defaultObjective.instructionsWhenCompleted = numberPlusAddition[3].ToUpper().Trim();
+                                }
+                            }
+
+                            if (numberPlusAddition.Length > 4)
+                            {
+                                if (numberPlusAddition[4] != "null")
+                                {
+                                    defaultObjective.textAssetFile = numberPlusAddition[4];
+                                }
+                            }
+
+
                             listOfObjectives.Add(defaultObjective);
                             break;
 
@@ -487,9 +507,9 @@ public class NewManager : MonoBehaviour
             currentCharacter.text = "";
             selected_characterFace.sprite = emptyFace;
 
-            healthBar.SetValue(0);
-            movementBar.SetValue(0);
-            energyBar.SetValue(0);
+            if (healthBar.gameObject.activeInHierarchy) { healthBar.SetValue(0); };
+            if (movementBar.gameObject.activeInHierarchy) { movementBar.SetValue(0); };
+            if (energyBar.gameObject.activeInHierarchy) { energyBar.SetValue(0); }
 
             //deckTracker.text = "";
             //  TO-DO: Lerp the draw pile out of the scene. 
@@ -531,7 +551,7 @@ public class NewManager : MonoBehaviour
 
             else
             {
-                drawPile.color = Color.black; 
+                drawPile.color = Color.black;
             }
 
             if (player.myPosition * -2000 != handContainer.transform.localPosition.x)
@@ -540,9 +560,9 @@ public class NewManager : MonoBehaviour
                 handContainer.transform.localPosition = new Vector3(player.myPosition * -2000, 0, 0);
             }
 
-            healthBar.SetValue(player.health);
-            movementBar.SetValue(player.movementLeft); movementBar.SetMaximumValue(player.movesPerTurn);
-            energyBar.SetValue(player.myEnergy); energyBar.SetMaximumValue(player.maxEnergy);
+            if (healthBar.gameObject.activeInHierarchy) { healthBar.SetValue(player.health); }
+            if (movementBar.gameObject.activeInHierarchy) { movementBar.SetValue(player.movementLeft); movementBar.SetMaximumValue(player.movesPerTurn); }
+            if (energyBar.gameObject.activeInHierarchy) { energyBar.SetValue(player.myEnergy); energyBar.SetMaximumValue(player.maxEnergy); }
         }
 
         lvlObjective.text = $"{listOfObjectives.Count} Objectives Left";

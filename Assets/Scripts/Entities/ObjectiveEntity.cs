@@ -8,8 +8,10 @@ public class ObjectiveEntity : Entity
 {
     [Header("Ink JSON")]
     [SerializeField] private TextAsset inkJSON;
+    [ReadOnly] [HideInInspector] public string textAssetFile;
     [ReadOnly] public string objective;
     [ReadOnly] public string instructionsWhenCompleted;
+
 
     public virtual bool CanInteract()
     {
@@ -23,6 +25,13 @@ public class ObjectiveEntity : Entity
 
         currentTile.myEntity = null;
         player.adjacentObjective = null;
+
+        if (textAssetFile != null)
+        {
+            Debug.Log("Dialogue/" + textAssetFile + ".json");
+            inkJSON = Resources.Load<TextAsset>("Dialogue/" + textAssetFile);
+            Debug.Log(inkJSON);
+        }
 
         if (!DialogueManager.GetInstance().dialogueIsPlaying)
         {
