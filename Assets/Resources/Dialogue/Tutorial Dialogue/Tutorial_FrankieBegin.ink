@@ -2,7 +2,7 @@ Okay. Radio check. #speaker: Gail #portrait: Gail
 
 Gail, you don’t have to be so seri- #speaker: Frankie #portrait: Frankie
 
-If we fuck up, We can get arrested and we will never get the answers we need. #speaker: Gail #portrait: Gail
+If we fuck up, we *will* get arrested and we’ll never get the answers we need. #speaker: Gail #portrait: Gail
 
 So forgive me for being serious.
 
@@ -12,12 +12,12 @@ You’re right. Sorry. I hear you loud and clear.
 
 I hear you. #speaker: WK #portrait: WK
 
-Alright. As much as I would like to plan a lot more ahead, the news hasn’t been too hopeful. #speaker: Gail #portrait: Gail
+Alright. As much as I would like to plan a lot further ahead, the news hasn’t been too hopeful. #speaker: Gail #portrait: Gail
 
 Where are you right now?
 
 I’m outside the fence. There’s that hole that you mentioned. #speaker: Frankie #portrait: Frankie
 
-Good. Remember, We go one by one. Let’s try to keep it quiet. Keep us posted. #speaker: Gail #portrait: Gail
+Good. Remember, we go one by one. Let’s try to keep it quiet. Keep us posted. #speaker: Gail #portrait: Gail
 
 Got it. #speaker: Frankie #portrait: Frankie
