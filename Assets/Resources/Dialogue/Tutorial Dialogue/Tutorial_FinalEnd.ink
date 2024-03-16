@@ -1,6 +1,6 @@
-That was way too close. #speaker: WK #portrait: WK
+That was way too close. #speaker: WK #portrait: WK #bg: Forest
 
-Yea. Frankie, are we still good to meet at yours tomorrow? #speaker: Gail #portrait: Gail
+Yea. Frankie, are we still good to meet at your place tomorrow? #speaker: Gail #portrait: Gail
 
 Yup! It’s ready whenever we need it. #speaker: Frankie #portrait: Frankie
 
