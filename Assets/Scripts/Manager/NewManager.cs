@@ -7,6 +7,7 @@ using TMPro;
 using MyBox;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
+using Unity.VisualScripting;
 
 public class AStarNode
 {
@@ -195,7 +196,7 @@ public class NewManager : MonoBehaviour
             curGuard.CheckForPlayer();
         }
         //StartCoroutine(StartPlayerTurn());
-        //UpdateStats(null);
+        UpdateStats(null);
         TutorialManager.SetLevelStartParameters(SaveManager.instance.levelSheets[levelToLoad]);
     }
 
@@ -212,8 +213,6 @@ public class NewManager : MonoBehaviour
             {
                 try { newGrid[i, j] = newGrid[i, j].Trim().Replace("\"", "").Replace("]", ""); }
                 catch (NullReferenceException) { continue; }
-
-                Debug.Log(newGrid[i, j]);
 
                 if (newGrid[i, j] != "")
                 {
@@ -520,6 +519,7 @@ public class NewManager : MonoBehaviour
 
         else
         {
+            Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
             currentCharacter.text = $"{player.name}";
             switch (player.name)
             {
@@ -753,6 +753,7 @@ public class NewManager : MonoBehaviour
                     listOfTiles[i, j].choosable = false;
                     listOfTiles[i, j].CardSelectable = false;
                     listOfTiles[i, j].directionIndicator.enabled = false;
+                    listOfTiles[i, j].indicatorArrow = false;
                 }
                 catch (NullReferenceException)
                 {
@@ -805,11 +806,39 @@ public class NewManager : MonoBehaviour
         chosenCard = null;
         DisableAllTiles();
 
-        foreach (TileData tile in canBeChosen)
+        if (TutorialManager.forcedTiles.Count > 0)
         {
-            tile.CardSelectable = true;
-            tile.clickable = true;
-            tile.choosable = true;
+            foreach (Vector2Int tilePos in TutorialManager.forcedTiles)
+            {
+                foreach (TileData tile in canBeChosen)
+                {
+                    if (tile.gridPosition == tilePos)
+                    {
+                        tile.CardSelectable = true;
+                        tile.clickable = true;
+                        tile.choosable = true;
+                        tile.indicatorArrow = true;
+                    }
+
+                    else
+                    {
+                        tile.CardSelectable = true;
+                        tile.clickable = false;
+                        tile.choosable = true;
+                    }
+                }
+            }
+        }
+
+        else
+        {
+            foreach (TileData tile in canBeChosen)
+            {
+                tile.CardSelectable = true;
+                tile.clickable = true;
+                tile.choosable = true;
+
+            }
         }
     }
 
@@ -819,11 +848,38 @@ public class NewManager : MonoBehaviour
         chosenCard = null;
         DisableAllTiles();
 
-        foreach (TileData tile in canBeChosen)
+        if (TutorialManager.forcedTiles.Count > 0)
         {
-            tile.moveable = true;
-            tile.clickable = true;
-            tile.choosable = true;
+            foreach (Vector2Int tilePos in TutorialManager.forcedTiles)
+            {
+                foreach (TileData tile in canBeChosen)
+                {
+                    if (tile.gridPosition == tilePos)
+                    {
+                        tile.moveable = true;
+                        tile.clickable = true;
+                        tile.choosable = true;
+                        tile.indicatorArrow = true;
+                    }
+
+                    else
+                    {
+                        tile.moveable = true;
+                        tile.clickable = false;
+                        tile.choosable = false;
+                    }
+                }
+            }
+        }
+
+        else
+        {
+            foreach (TileData tile in canBeChosen)
+            {
+                tile.moveable = true;
+                tile.clickable = true;
+                tile.choosable = true;
+            }
         }
     }
 
@@ -1017,12 +1073,22 @@ public class NewManager : MonoBehaviour
             StartCoroutine(ChooseCardPlay(currentPlayer));
             UpdateInstructions("Choose a character to move / play a card.");
 
-            spendToDrawButton.gameObject.SetActive(currentPlayer.myHand.Count < 5 && currentPlayer.myEnergy >= 3);
+            if (TutorialManager.GetUIState("Spend Energy Button").canSpawn)
+            {
+                spendToDrawButton.gameObject.SetActive(currentPlayer.myHand.Count < 5 && currentPlayer.myEnergy >= 3);
+            }
+
+            else
+            {
+                spendToDrawButton.gameObject.SetActive(false);
+            }
+
             exitButton.gameObject.SetActive(CanExit(currentPlayer.currentTile));
 
             var foundCanvasObjects = FindObjectsOfType<Collector>();
             foreach (Collector collector in foundCanvasObjects)
                 Destroy(collector.gameObject);
+
 
             objectiveButton.gameObject.SetActive(currentPlayer.CheckForObjectives());
             if (currentPlayer.adjacentObjective != null)

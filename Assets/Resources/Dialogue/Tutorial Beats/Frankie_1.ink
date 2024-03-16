@@ -1,13 +1,21 @@
 EXTERNAL EnableUI(elements)
+EXTERNAL DisableAllUI(exceptions)
+EXTERNAL FocusUI(elements)
+EXTERNAL ForceTile(x, y)
 
-To conclude a mission, you must complete all objectives and successfully reach the exit point.
+~ DisableAllUI("")
+To clear a mission, you must complete all objectives and successfully reach an extraction point.
 
-You can only complete an objective once a character has moved to an adjacent tile.
+Objectives are specific points of interest spread across the map. You can only complete an objective once a character has reached an adjacent tile.
 
-~ EnableUI("SelectedPlayer_Stats, Movement, End Turn Button")
+~ EnableUI("SelectedPlayer_Stats, PlayerName, CharacterFace, Movement")
 
-A character's <color="yellow">Movement Points (MP)</color> determine how far they can move in a turn. They fully replenish at the end of each turn.
+~ FocusUI("Movement")
 
-Let's spend some MP to get Frankie next to the objective. That desk with the computer looks promising.
+~ ForceTile(5, 1)
+
+A character's <color="yellow">Movement Points (MP)</color> determine how far they can move in a turn.
+
+Let's spend some of Frankie's MP to get him next to the objective. That desk with the computer looks promising.
 
 Click on Frankie to preview his range of movement, then confirm his move by selecting the highlighted tile.

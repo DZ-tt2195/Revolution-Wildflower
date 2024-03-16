@@ -11,76 +11,233 @@ public class TutorialManager : MonoBehaviour
     private LevelStartParameters parameters; 
     private static TutorialManager instance;
     [SerializeField] private string levelStartParametersFilePath;
-    public GameObject[] levelStartUI;
+    [SerializeField] private GameObject[] levelStartUI;
+    private static List<UIState> levelUIStates = new();
+    public static List<UIState> focusedUIElements = new();
+    public static List<Vector2Int> forcedTiles = new();
 
     private void Awake()
     {
         instance = this;
     }
 
-    public void DisableAllUI(string[] exceptions = null)
+    private void Start()
     {
+        levelUIStates.Clear();
         foreach(GameObject ui in levelStartUI)
         {
-            ui.SetActive(false);
+            levelUIStates.Add(new UIState(ui));
+        }
+    }
+
+    public static UIState GetUIState(string name)
+    {
+        return levelUIStates.Find(x => x.gameObject.name == name);
+    }
+
+    public static void TrySetActive(string element, bool active)
+    {
+
+        if (instance == null)
+        {
+            Debug.Log("TrySetActive: No Tutorial Manager instance found");
+            return;
         }
 
-        EnableUI(exceptions);
+        foreach (UIState ui in levelUIStates)
+        {
+            if (ui.gameObject.name == element)
+            {
+                // If the UI can spawn, you can freely spawn/despawn it. 
+                if (ui.canSpawn)
+                {
+                    ui.gameObject.SetActive(active);
+                }
+
+                else
+                {
+                    //  If the UI cannot spawn, and we want to turn it off, we can. 
+                    if (ui.gameObject.activeInHierarchy && active == false)
+                    {
+                        ui.gameObject.SetActive(active);
+                    }
+
+                    //  Otherwise, intentionally do nothing. 
+                    else
+                    {
+                        continue;
+                    }
+                }
+            }
+        }
+    }
+
+    public static void TrySetActiveAll(bool active)
+    {
+        if (instance == null)
+        {
+            Debug.Log("TrySetActiveAll: No Tutorial Manager instance found");
+            return;
+        }
+
+        foreach(UIState ui in levelUIStates)
+        {
+            TrySetActive(ui.gameObject.name, active);
+        }
+    }
+
+    public void EnableUI(string[] elements)
+    {
+        foreach(string element in elements)
+        {
+            UIState ui = levelUIStates.Find(x => x.gameObject.name == element);
+            if (ui == null)
+            {
+                Debug.LogError("TutorialManager, EnableUI: Couldn't find element of name " + element);
+                continue;
+            }    
+            ui.canSpawn = true;
+            TrySetActive(element, true);
+        }
     }
 
     public void EnableAllUI(string[] exceptions = null)
     {
-        foreach (GameObject ui in levelStartUI)
+        foreach (UIState ui in levelUIStates)
         {
-            ui.SetActive(true);
-            if (ui.TryGetComponent(out Button button))
+            if (exceptions == null)
+            {
+                ui.canSpawn = true;
+                TrySetActive(ui.gameObject.name, true);
+            }
+
+            else
+            {
+                foreach (string exception in exceptions)
+                {
+                    if (exception == ui.gameObject.name)
+                    {
+                        continue;
+                    }
+
+                    else
+                    {
+                        ui.canSpawn = true;
+                        TrySetActive(ui.gameObject.name, true);
+                    }
+                }
+            }
+        }
+    }
+
+    public void DisableUI(string[] elements)
+    {
+        foreach (string element in elements)
+        {
+            UIState ui = levelUIStates.Find(x => x.gameObject.name == element);
+            if (ui == null)
+            {
+                Debug.LogError("TutorialManager, EnableUI: Couldn't find element of name " + element);
+                continue;
+            }
+            ui.canSpawn = false;
+            TrySetActive(element, false);
+        }
+    }
+
+    public void DisableAllUI(string[] exceptions = null)
+    {
+        foreach (UIState ui in levelUIStates)
+        {
+            if (exceptions == null)
+            {
+                ui.canSpawn = false;
+                TrySetActive(ui.gameObject.name, false);
+            }
+
+            else
+            {
+                foreach (string exception in exceptions)
+                {
+                    if (exception == ui.gameObject.name)
+                    {
+                        continue;
+                    }
+
+                    else
+                    {
+                        ui.canSpawn = false;
+                        TrySetActive(ui.gameObject.name, false);
+                    }
+                }
+            }
+        }
+    }
+
+    public void FocusUI(string[] elements)
+    {
+        foreach (string element in elements)
+        {
+            UIState ui = levelUIStates.Find(x => x.gameObject.name == element);
+            if (ui == null)
+            {
+                Debug.LogError("TutorialManager, FocusUI: Couldn't find element of name " + element);
+                continue;
+            }
+
+            focusedUIElements.Add(ui);
+            ui.gameObject.transform.SetParent(GameObject.Find("Dialogue Panel").transform);
+            ui.gameObject.transform.SetAsLastSibling();
+
+            if (ui.gameObject.TryGetComponent(out Button button))
+            {
+                button.enabled = false;
+            }
+        }
+    }
+
+    public void UnfocusUI(string[] elements)
+    {
+        foreach (string element in elements)
+        {
+            UIState ui = focusedUIElements.Find(x => x.gameObject.name == element);
+            if (ui == null)
+            {
+                Debug.LogError("TutorialManager, UnfocusUI: Couldn't find element of name " + element);
+                continue;
+            }
+
+            focusedUIElements.Remove(ui);
+            ui.gameObject.transform.SetParent(ui.parent);
+            ui.gameObject.transform.SetSiblingIndex(ui.siblingIndex);
+
+            if (ui.gameObject.TryGetComponent(out Button button))
+            {
+                button.enabled = true;
+            }
+        }
+    }
+
+    public static void UnfocusAllUI()
+    {
+        if (instance == null)
+        {
+            Debug.Log("TrySetActive: No Tutorial Manager instance found");
+            return;
+        }
+
+        foreach (UIState ui in focusedUIElements)
+        {
+            ui.gameObject.transform.SetParent(ui.parent);
+            ui.gameObject.transform.SetSiblingIndex(ui.siblingIndex);
+
+            if (ui.gameObject.TryGetComponent(out Button button))
             {
                 button.enabled = true;
             }
         }
 
-        DisableUI(exceptions);
-    }
-
-    public void DisableUI(string[] elements = null)
-    {
-        if (elements == null) { return;  }
-        for (var i = 0; i < elements.Length; i++)
-        {
-            for (var j = 0; j < levelStartUI.Length; j++)
-            {
-                if (elements[i] == levelStartUI[j].name)
-                {
-                    levelStartUI[j].SetActive(false);
-                }
-            }
-        }
-    }
-
-    public void EnableUI(string[] elements = null)
-    {
-        if (elements == null) { return; }
-        for (var i = 0; i < elements.Length; i++)
-        {
-            bool found = false;
-            for (var j = 0; j < levelStartUI.Length; j++)
-            {
-                if (elements[i] == levelStartUI[j].name)
-                {
-                    levelStartUI[j].SetActive(true);
-                    Debug.Log(levelStartUI[j].name);
-                    found = true;
-                    if (levelStartUI[j].TryGetComponent(out Button button))
-                    {
-                        button.enabled = false;
-                    }
-                }
-            }
-            if (!found)
-            {
-                Debug.LogError("TutorialManager, EnableUI: Could not find " + elements[i]);
-            }
-        }
+        focusedUIElements.Clear();
     }
 
     public static void SetLevelStartParameters(string levelName)
@@ -96,7 +253,6 @@ public class TutorialManager : MonoBehaviour
 
         if (parameters.dialogueOnStart)
         {
-            instance.DisableAllUI();
             MoveCamera.AddLock("Tutorial");
             DialogueManager.GetInstance().StartStory(parameters.dialogueAsset);
             foreach (LevelStartDialogueVariable dialogueVariable in parameters.dialogueVariables)
@@ -139,7 +295,6 @@ public class TutorialManager : MonoBehaviour
             }
         }
 
-
         NewManager.instance.UpdateStats(null);
         NewManager.instance.StartCoroutine(NewManager.instance.StartPlayerTurn());
 
@@ -162,4 +317,21 @@ public class ForceCharacterHand
     public string CharacterName;
     public bool ForceHand;
     public string[] CardNames; 
+}
+
+[System.Serializable]
+public class UIState
+{
+    public GameObject gameObject;
+    public Transform parent;
+    public bool canSpawn;
+    public int siblingIndex;
+
+    public UIState(GameObject gameObject)
+    {
+        this.gameObject = gameObject;
+        this.canSpawn = true;
+        this.parent = gameObject.transform.parent; 
+        this.siblingIndex = gameObject.transform.GetSiblingIndex();
+    }
 }
