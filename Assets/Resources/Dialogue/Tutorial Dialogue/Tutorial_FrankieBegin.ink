@@ -1,4 +1,4 @@
-Okay. Radio check. #speaker: Gail #portrait: Gail
+Okay. Radio check. #speaker: Gail #portrait: Gail #bg: Forest
 
 Gail, you don’t have to be so seri- #speaker: Frankie #portrait: Frankie
 
