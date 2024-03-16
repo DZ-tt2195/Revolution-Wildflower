@@ -1,4 +1,4 @@
-Wow, W.K., hold up! #speaker: Frankie #protrait: Frankie
+Wow, W.K., hold up! #speaker: Frankie #protrait: Frankie #bg: Forest
 
 I think I see a guard.
 

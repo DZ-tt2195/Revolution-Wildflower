@@ -23,6 +23,7 @@ public class TileData : MonoBehaviour
         [Tooltip("Defines whether you can click this tile")][ReadOnly] public bool clickable = false;
         [Tooltip("Defines whether you can move onto this tile")][ReadOnly] public bool moveable = false;
         [Tooltip("Defines whether you can move onto this tile")][ReadOnly] public bool currentGuardTarget = false;
+        [Tooltip("Defines whether an arrow should be hovering over this tile.")][ReadOnly] public bool indicatorArrow = false;
         [Tooltip("Defines whether you can select this tile for a card action")][ReadOnly] public bool CardSelectable = false;
         [Tooltip("If your mouse is over this")] private bool moused = false;
 
@@ -35,6 +36,8 @@ public class TileData : MonoBehaviour
         [Tooltip("Tile's sprite renderer")] SpriteRenderer myRenderer;
         [Tooltip("Tile's materal")] [SerializeField] Renderer renderer3d;
         [Tooltip("Glowing border's sprite renderer")] SpriteRenderer border;
+    [Tooltip("Indication arrow for forced tiles")] SpriteRenderer indicator;
+    [Tooltip("Indication arrow transform")]private Transform indicatorTransform;
         [Tooltip("color used for unselected moused over tiles")][SerializeField] Color mouseOverColor = new Color(0.9f,0.9f,0.9f,1);
         [Tooltip("color used for selected tiles")][SerializeField] Color SelectedColor = new Color(0.6f, 0.6f, 0.6f, 1);
         [Tooltip("color used for unselected moused over tiles (general)")][SerializeField] Color ClickableColor = new Color(0.9f, 0.9f, 0.9f, 1);
@@ -51,6 +54,8 @@ public class TileData : MonoBehaviour
         myRenderer.sortingOrder = 0;
         border = this.transform.GetChild(0).GetComponent<SpriteRenderer>();
         border.color = new Color(1f, 1f, 1f, 0);
+        indicator = this.transform.GetChild(1).GetComponent<SpriteRenderer>();
+        indicatorTransform = indicator.transform;
         directionIndicator.enabled = false;
     }
 
@@ -100,6 +105,15 @@ public class TileData : MonoBehaviour
         {
             border.SetAlpha(0);
         }
+
+        if (indicatorArrow)
+        {
+            indicator.SetAlpha(1);
+            indicatorTransform.position = new Vector3(indicatorTransform.position.x, Mathf.Sin(Time.time * 1.5f) * 0.5f + 2, indicatorTransform.position.z);
+        }
+
+        else { indicator.SetAlpha(0); }
+
     }
 
     public IEnumerator NoiseFlash(int distance)

@@ -1,11 +1,20 @@
+EXTERNAL EnableUI(elements)
+EXTERNAL FocusUI(elements)
+
 Excellent work.
 
-With all objectives complete, you should make your way towards the exit.
+With all objectives complete, you should make your way towards an extraction point.
 
-However, you probably don't have the <color="yellow">MP</color> to reach it.
+You can always tell extraction points apart by their <b><color="green">green outline</b></color>. Currently, they are all located on your right.
 
-To fully restore your <color="yellow">MP</color>, press the <b>End Turn</b> button.
+Once a character reaches an extraction point with all objectives complete, you can press the <b>Exit</b> button to secure their escape.
 
-After that, head to your right in order to leave. You can always tell an exit tile apart by its <b><color="green">green outline</b></color>.
+However, Frankie probably doesn’t have the <color="yellow">MP</color> to reach them right now.
 
-In the future, keep in mind that you'll need <b>the whole crew</b> to reach the exit. Leave no one behind.
+~ EnableUI("End Turn Button")
+
+~ FocusUI("End Turn Button")
+
+To fully restore the crew’s <color="yellow">MP</color>, you can always end your turn by pressing the <b>End Turn</b> button.
+
+In the future, keep in mind that you'll need <b>the whole crew</b> to reach an extraction point for a successful mission. Leave no one behind.

@@ -1,16 +1,14 @@
-Disturbing events are currently shaking our little town of Revelations to its core. #speaker: News Anchor
+Disturbing events at Lake Flynn are shaking our town of Revelations to its core. #speaker: News Anchor
 
-Overnight, Lake Flynn has been filled with hundreds of dead fish.
+Seemingly overnight, the popular hang-out spot erupted with hundreds of dead fish. The water continues to turn a startling shade of blood red.
 
-The sudden sight has stricken fear in our government, local businesses, and churches.
+The sudden sight has struck fear in our government, local businesses, and churches.
 
-Not only this but there has been an increase of admissions to St. Lawrence Hospital. 
-
-Multiple people have reported to have stomach issues, fevers, and possible respiratory issues. 
+Following the events at Lake Flynn, St. Lawrence Hospital has reported an increase in admissions to the ICU. Multiple people have reported stomach issues, fevers, and possible respiratory issues. 
 
 Both St. Lawrence Hospital and the Mayor have not issued a statement.
 
-Rumors are circling that there is a connection between the surge of sick people and dead fish.
+Rumors are circling that there is a connection between the surge of sick citizens and the dead fish.
 
 We will keep you posted, Revelations, as we learn more about the situation.
 
@@ -18,7 +16,7 @@ In light of the situation, newcomer Icarus Industries has vowed to assist our to
 
 They have begun donations to our medical centers, assisting local businesses, and hiring environmental specialists to look into the issue.
 
-Icarus Industries has only recently moved into our humble town and is already getting good grace from everyo-
+Icarus Industries has only recently moved into our quiet town and is already receiving good graces from everyo–
 
 Imagine a future where you can enjoy fresh air. #Advertisement
 
@@ -28,4 +26,5 @@ Imagine a future where winters stay cold and summers stay hot.
 
 Icarus Industries strives for this future, and we plan to bring the future to you. 
 
-We wish to give back to Revelations, Missouri bringing new jobs and new hope
+We wish to give back to Revelations, Missouri bringing new jobs and new hope–
+

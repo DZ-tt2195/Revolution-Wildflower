@@ -53,6 +53,7 @@ public class MoveCamera : MonoBehaviour
 
     private void Start()
     {
+        cameras.Clear();
         instance = this;
         camera = GetComponent<Camera>();
         cameras.Add(GetComponent<Camera>());

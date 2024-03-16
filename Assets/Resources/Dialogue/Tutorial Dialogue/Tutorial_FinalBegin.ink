@@ -1,4 +1,4 @@
-I hate how closed off everything is. #speaker: Frankie #portrait: Frankie
+I hate how closed off everything is. #speaker: Frankie #portrait: Frankie #bg: Forest
 
 Makes sense. You don’t want anyone walking in. They can get hurt, or worse, find things out. #speaker: WK #portrait: WK
 

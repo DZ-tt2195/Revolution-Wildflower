@@ -108,6 +108,10 @@ public class DialogueManager : MonoBehaviour
         currentStory.BindExternalFunction("ForcePlayer",        (string playerName) =>      { ForcePlayer(playerName); });
         currentStory.BindExternalFunction("ForceCard",          (string cardName) =>        { ForceCard(cardName); });
         currentStory.BindExternalFunction("EnableUI",           (string elements) =>        { EnableUI(elements); });
+        currentStory.BindExternalFunction("DisableAllUI",       (string exceptions) =>      { DisableAllUI(exceptions); });
+        currentStory.BindExternalFunction("FocusUI",            (string elements) =>        { FocusUI(elements); });
+        currentStory.BindExternalFunction("ForceTile",          (int x, int y) =>           { ForceTile(x, y); });
+
 
         //currentStory.BindExternalFunction("ForceCardDraw", (string playerName) => { CameraFocusPlayer(playerName); });
         //currentStory.BindExternalFunction("ToggleUIElement", (string playerName) => { CameraFocusPlayer(playerName); });
@@ -117,6 +121,9 @@ public class DialogueManager : MonoBehaviour
         dialogueVariables.VariablesToStory(currentStory);
         dialogueIsPlaying = true;
         dialoguePanel.SetActive(true);
+        TutorialManager.TrySetActiveAll(false);
+        TutorialManager.forcedTiles.Clear();
+        MoveCamera.AddLock("Dialogue");
 
         Debug.Log("Set active true");
 
@@ -139,6 +146,9 @@ public class DialogueManager : MonoBehaviour
         dialogueIsPlaying = false;
         dialoguePanel.SetActive(false);
         dialogueText.text = "";
+        TutorialManager.TrySetActiveAll(true);
+        TutorialManager.UnfocusAllUI();
+        MoveCamera.RemoveLock("Dialogue");
 
         textboxStopSound.Post(gameObject);
 
@@ -324,8 +334,7 @@ public class DialogueManager : MonoBehaviour
 
     public void ForceTile(int x, int y)
     {
-        NewManager.instance.DisableAllTiles();
-        NewManager.instance.EnableTile(x, y);
+        TutorialManager.forcedTiles.Add(new Vector2Int(x, y));
     }
 
     public void ForceCard(string cardName)
@@ -347,10 +356,11 @@ public class DialogueManager : MonoBehaviour
 
     //  This version takes in one string and splits it into an array for the TutorialManager version.
     //  Since ink is limited in the number of parameters it can take, we have to do it this way. 
-    public void EnableUI(string elements = null)
+    public void EnableUI(string elements)
     {
         Debug.Log("enabled ui");
         Debug.Log(elements);
+
         TutorialManager manager = FindObjectOfType<TutorialManager>();
 
         string[] elementsArray = Regex.Split(elements, ", ");
@@ -358,12 +368,30 @@ public class DialogueManager : MonoBehaviour
         manager.EnableUI(elementsArray);
     }
 
-    public void ForceDrawCard(string cardName)
+    public void DisableAllUI(string exceptions)
     {
+        Debug.Log("disabled all ui except " + exceptions);
+        TutorialManager manager = FindObjectOfType<TutorialManager>();
 
+        string[] exceptionsArray = Regex.Split(exceptions, ", ");
+        if (manager)
+        {
+            manager.DisableAllUI(exceptionsArray);
+        }
     }
 
-    public void ToggleUIElements(string elementName, bool toggle)
+    public void FocusUI(string element)
+    {
+        TutorialManager manager = FindObjectOfType<TutorialManager>();
+
+        string[] elementsArray = Regex.Split(element, ", ");
+        if (manager)
+        {
+            manager.FocusUI(elementsArray);
+        }
+    }
+
+    public void ForceDrawCard(string cardName)
     {
 
     }
