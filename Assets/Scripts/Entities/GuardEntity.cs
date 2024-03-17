@@ -440,7 +440,7 @@ public class GuardEntity : MovingEntity
                 StartCoroutine(detectedPlayer.TakeDamage(1));
                 StartCoroutine(attackEffectRoutine());
                 meleeHit.Post(gameObject);
-                yield break;
+                yield return NewManager.Wait(movePauseTime);
 
             }
             else
