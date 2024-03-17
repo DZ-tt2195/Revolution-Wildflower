@@ -519,7 +519,6 @@ public class NewManager : MonoBehaviour
 
         else
         {
-            Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
             currentCharacter.text = $"{player.name}";
             switch (player.name)
             {

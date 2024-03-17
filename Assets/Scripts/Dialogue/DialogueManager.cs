@@ -64,6 +64,10 @@ public class DialogueManager : MonoBehaviour
         {
             dialogueVariables = new DialogueVariables(loadGlobalsJSON);
         }
+
+        dialoguePanel.SetActive(false);
+        dialogueIsPlaying = false;
+
     }
 
     public static DialogueManager GetInstance()
@@ -73,8 +77,6 @@ public class DialogueManager : MonoBehaviour
 
     private void Start()
     {
-        dialogueIsPlaying = false;
-        dialoguePanel.SetActive(false);
 
         layoutAnimator.GetComponent<Animator>();
     }
@@ -99,7 +101,9 @@ public class DialogueManager : MonoBehaviour
 
     public void StartStory(TextAsset inkJSON)
     {
+        Debug.Log(inkJSON.text);
         currentStory = new Story(inkJSON.text);
+        Debug.Log(currentStory.currentText);
         dialogueVariables.StartListening(currentStory);
 
         currentStory.BindExternalFunction("CameraFocusPlayer",  (string playerName) =>      { CameraFocusPlayer(playerName); });
@@ -124,7 +128,7 @@ public class DialogueManager : MonoBehaviour
         TutorialManager.TrySetActiveAll(false);
         TutorialManager.forcedTiles.Clear();
         MoveCamera.AddLock("Dialogue");
-
+        dialoguePanel.SetActive(true);
         Debug.Log("Set active true");
 
         // reset portrait, layout, background, and speaker
@@ -158,6 +162,7 @@ public class DialogueManager : MonoBehaviour
 
     private IEnumerator DisplayLine(string line)
     {
+        Debug.Log("displaying line " + line);
         // set the text to the full line, but set the visible characters to 0
         dialogueText.text = line;
         dialogueText.maxVisibleCharacters = 0;
@@ -205,8 +210,10 @@ public class DialogueManager : MonoBehaviour
 
     private void ContinueStory()
     {
+        Debug.Log(currentStory.currentText);
         if (currentStory.canContinue)
         {
+            Debug.Log("Can continue");
             // set text for the current dialogue line
             if (displayLineCoroutine != null)
             {
@@ -220,6 +227,7 @@ public class DialogueManager : MonoBehaviour
         }
         else
         {
+            Debug.Log("Can't continue");
             StartCoroutine(ExitDialogueMode());
         }
     }

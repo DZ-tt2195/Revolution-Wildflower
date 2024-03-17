@@ -1,7 +1,5 @@
-When your turn ends, it goes to the guard's turn, in which all guards in the level will move. 
+Did you see that orange wave? That meant WK’s card caused <color="orange">Noise.</color>
 
-Guards have their own movement, that can be seen when you hover over them.
+Any Guard who hears that <color="orange">Noise.</color> is going to break patrol and investigate.
 
-Red tiles in front of guards are their view of you, if any of your characters are caught in their view, they will be chased.
-
-Guards can and will hurt you if given the chance. Once one character loses all of their Health Points (HP), you lose the mission and will have to restart.
+That reaction from the Guard meant they were successfully distracted by the <color="orange">Noise.</color>. Use the opportunity to escape!
