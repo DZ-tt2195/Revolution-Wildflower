@@ -1,8 +1,4 @@
-using JetBrains.Annotations;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
-using UnityEditor.Timeline.Actions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -281,8 +277,8 @@ public class TutorialManager : MonoBehaviour
 
         else
         {
-            NewManager.instance.UpdateStats(null);
-            NewManager.instance.StartCoroutine(NewManager.instance.StartPlayerTurn());
+            LevelUIManager.instance.UpdateStats(null);
+            PhaseManager.instance.StartCoroutine(PhaseManager.instance.StartPlayerTurn());
         }
     }
 
@@ -300,8 +296,8 @@ public class TutorialManager : MonoBehaviour
             }
         }
 
-        NewManager.instance.UpdateStats(null);
-        NewManager.instance.StartCoroutine(NewManager.instance.StartPlayerTurn());
+        LevelUIManager.instance.UpdateStats(null);
+        PhaseManager.instance.StartCoroutine(PhaseManager.instance.StartPlayerTurn());
 
     }
 
@@ -309,7 +305,7 @@ public class TutorialManager : MonoBehaviour
     {
         foreach (ForceCharacterHand hand in parameters.forcedHands)
         {
-            PlayerEntity player = NewManager.instance.listOfPlayers.Find(x => x.name == hand.CharacterName);
+            PlayerEntity player = LevelGenerator.instance.listOfPlayers.Find(x => x.name == hand.CharacterName);
             if (player != null)
                 player.ForceHand(hand.CardNames);
         }

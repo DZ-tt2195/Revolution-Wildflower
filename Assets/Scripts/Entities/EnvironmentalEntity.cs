@@ -32,7 +32,7 @@ public class EnvironmentalEntity : MovingEntity
 
     IEnumerator ResolveList(string condition)
     {
-        string divide = card.enviroEffect.Replace(" ", "");
+        string divide = card.data.enviroaction.Replace(" ", "");
         divide = divide.ToUpper().Trim();
         string[] methodsInStrings = divide.Split('/');
 
@@ -40,8 +40,8 @@ public class EnvironmentalEntity : MovingEntity
         {
             foreach (string nextMethod in methodsInStrings)
             {
-                NewManager.instance.DisableAllTiles();
-                NewManager.instance.DisableAllCards();
+                LevelGenerator.instance.DisableAllTiles();
+                LevelGenerator.instance.DisableAllCards();
 
                 if (nextMethod == "" || nextMethod == "NONE" || nextMethod == condition)
                 {
@@ -58,30 +58,40 @@ public class EnvironmentalEntity : MovingEntity
     IEnumerator ResolveMethod(string methodName)
     {
         methodName = methodName.Replace("]", "").Trim();
+        List<GuardEntity> guardsInRange = FindGuardsInRange();
+        List<PlayerEntity> playersInRange = FindPlayersInRange();
+        List<WallEntity> wallsInRange = FindWallsInRange();
 
         switch (methodName)
         {
             case "SETVISION":
-                yield return SetGuardVision(FindGuardsInRange());
+                foreach (GuardEntity guard in guardsInRange)
+                    guard.DetectionRangePatrol = card.data.vision;
                 break;
 
             case "SLOWGUARDMOVEMENT":
-                yield return SlowGuardMovement(FindGuardsInRange());
+                foreach (GuardEntity guard in guardsInRange)
+                    guard.movementLeft -= card.data.chMP;
                 break;
             case "SLOWPLAYERMOVEMENT":
-                yield return SlowPlayerMovement(FindPlayersInRange());
+                foreach (PlayerEntity player in playersInRange)
+                    player.movementLeft -= card.data.chMP;
                 break;
 
             case "STUNPLAYERS":
-                yield return StunPlayers(FindPlayersInRange());
+                foreach (PlayerEntity player in playersInRange)
+                    yield return card.StunPlayer(player);
                 break;
             case "STUNGUARDS":
-                yield return StunGuards(FindGuardsInRange());
+                foreach (GuardEntity guard in guardsInRange)
+                    yield return card.StunGuard(guard);
                 break;
 
             case "DAMAGEWALLS":
-                yield return DamageWalls(FindWallsInRange());
+                foreach (WallEntity wall in wallsInRange)
+                    yield return card.AttackWall(wall);
                 break;
+
             default:
                 Debug.LogError($"{methodName} isn't a method");
                 yield return null;
@@ -91,7 +101,7 @@ public class EnvironmentalEntity : MovingEntity
 
     List<WallEntity> FindWallsInRange()
     {
-        List<TileData> tilesInRange = NewManager.instance.CalculateReachableGrids(this.currentTile, card.areaOfEffect, false);
+        List<TileData> tilesInRange = Pathfinder.instance.CalculateReachableGrids(this.currentTile, card.data.aoe, false);
         List<WallEntity> entitiesInRange = new();
 
         try
@@ -115,7 +125,7 @@ public class EnvironmentalEntity : MovingEntity
 
     List<GuardEntity> FindGuardsInRange()
     {
-        List<TileData> tilesInRange = NewManager.instance.CalculateReachableGrids(this.currentTile, card.areaOfEffect, false);
+        List<TileData> tilesInRange = Pathfinder.instance.CalculateReachableGrids(this.currentTile, card.data.aoe, false);
         List<GuardEntity> entitiesInRange = new();
 
         try
@@ -140,7 +150,7 @@ public class EnvironmentalEntity : MovingEntity
 
     List<PlayerEntity> FindPlayersInRange()
     {
-        List<TileData> tilesInRange = NewManager.instance.CalculateReachableGrids(this.currentTile, card.areaOfEffect, false);
+        List<TileData> tilesInRange = Pathfinder.instance.CalculateReachableGrids(this.currentTile, card.data.aoe, false);
         List<PlayerEntity> entitiesInRange = new();
 
         try
@@ -160,80 +170,6 @@ public class EnvironmentalEntity : MovingEntity
 
         entitiesInRange.RemoveAll(item => item == null);
         return entitiesInRange;
-    }
-
-    List<MovingEntity> FindEntitiesInRange()
-    {
-        List<TileData> tilesInRange = NewManager.instance.CalculateReachableGrids(this.currentTile, card.areaOfEffect, false);
-        List<MovingEntity> entitiesInRange = new();
-
-        try
-        {
-            entitiesInRange.Add(this.currentTile.myEntity.GetComponent<MovingEntity>());
-        }
-        catch
-        {
-            //do nothing
-        }
-
-        foreach (TileData tile in tilesInRange)
-        {
-            try { entitiesInRange.Add(tile.myEntity.GetComponent<MovingEntity>()); }
-            catch (NullReferenceException) { continue; }
-        }
-
-        entitiesInRange.RemoveAll(item => item == null);
-        return entitiesInRange;
-    }
-
-#endregion
-
-#region Effects 
-
-    IEnumerator StunGuards(List<GuardEntity> allGuards)
-    {
-        foreach (GuardEntity guard in allGuards)
-        {
-            yield return card.StunGuard(guard);
-        }
-    }
-
-    IEnumerator StunPlayers(List<PlayerEntity> allPlayers)
-    {
-        foreach (PlayerEntity player in allPlayers)
-        {
-            yield return card.StunPlayer(player);
-        }
-    }
-
-    IEnumerator DamageWalls(List<WallEntity> allWalls)
-    {
-        foreach (WallEntity entity in allWalls)
-        {
-            yield return card.AttackWall(entity);
-        }
-        yield return null;
-    }
-
-    IEnumerator SlowPlayerMovement(List<PlayerEntity> allPlayers)
-    {
-        foreach (PlayerEntity player in allPlayers)
-            yield return player.movementLeft-=card.changeInMP;
-    }
-
-    IEnumerator SlowGuardMovement(List<GuardEntity> allGuards)
-    {
-        foreach (GuardEntity guard in allGuards)
-            yield return card.AffectGuardMovement(guard);
-    }
-
-    IEnumerator SetGuardVision(List<GuardEntity> allGuards)
-    {
-        foreach (GuardEntity guard in allGuards)
-        {
-            guard.DetectionRangePatrol = card.vision;
-            yield return null;
-        }
     }
 
 #endregion

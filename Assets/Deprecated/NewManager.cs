@@ -5,10 +5,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using MyBox;
-using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
-using Unity.VisualScripting;
 
+/*
 public class AStarNode
 {
     public TileData ATileData;
@@ -18,10 +17,10 @@ public class AStarNode
     public int HCost; //travel distance from node to target node
     public int FCost => GCost + HCost; //Astar value of this tile, the lower it is, the better for the pathfinder.
 }
-
+*/
 public class NewManager : MonoBehaviour
 {
-
+/*
 #region Variables
 
     public static NewManager instance;
@@ -248,6 +247,7 @@ public class NewManager : MonoBehaviour
                             exitObjective.objective = "Exit";
                             listOfObjectives.Add(exitObjective);
                             */
+/*
                             nextTile.myType = TileData.TileType.Exit;
                             break;
 
@@ -259,6 +259,7 @@ public class NewManager : MonoBehaviour
                             exitObjective.objective = "Exit";
                             listOfObjectives.Add(exitObjective);
                             */
+/*
                             nextTile.myType = TileData.TileType.AllExit;
                             break;
 
@@ -635,6 +636,7 @@ public class NewManager : MonoBehaviour
         {
             nextPlayer.myBar.ChangeText($"{nextPlayer.myHand.Count} Cards; {nextPlayer.health} HP; \n{nextPlayer.movementLeft} Moves; {nextPlayer.myEnergy} Energy");
         }*/
+/*
     }
 
     public void UpdateInstructions(string instructions)
@@ -654,6 +656,7 @@ public class NewManager : MonoBehaviour
               spendToDrawButton.gameObject.SetActive(CurrentTurn == TurnSystem.You);
               exitButton.gameObject.SetActive(CurrentTurn == TurnSystem.You);
               */
+/*
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             lastClickedMousePosition = Input.mousePosition;
@@ -949,6 +952,7 @@ public class NewManager : MonoBehaviour
             StartCoroutine(ChooseMovePlayer(lastSelectedPlayer));
         }
         */
+/*
     }
 
     void EnablePlayers()
@@ -1014,6 +1018,7 @@ public class NewManager : MonoBehaviour
                 catch
                 {
                     /*do nothing*/
+/*
                 }
             }
             else if (lastSelectedPlayer != null)
@@ -1177,6 +1182,7 @@ public class NewManager : MonoBehaviour
         }
         yield return (currentPlayer.MovePlayer(FullPath));
         */
+/*
 
         if (!freeMoves)
             BackToStart(false);
@@ -1674,5 +1680,5 @@ public class NewManager : MonoBehaviour
     //find fastest way to get from one point to another
 
     #endregion
-
+*/
 }

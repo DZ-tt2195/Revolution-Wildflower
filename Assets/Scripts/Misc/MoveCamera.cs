@@ -121,7 +121,7 @@ public class MoveCamera : MonoBehaviour
 
                 else
                 {
-                    newPosition = new Vector3(NewManager.instance.listOfTiles.GetLength(0) * -2, 0, NewManager.instance.listOfTiles.GetLength(1) * -2);
+                    newPosition = new Vector3(LevelGenerator.instance.listOfTiles.GetLength(0) * -2, 0, LevelGenerator.instance.listOfTiles.GetLength(1) * -2);
                 }
 
                 instance.transform.position = Vector3.Lerp(instance.transform.position, new Vector3(newPosition.x, 0, newPosition.z), Time.deltaTime * 3);

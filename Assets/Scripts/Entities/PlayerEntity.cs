@@ -49,7 +49,7 @@ public class PlayerEntity : MovingEntity
 
     public void PlayerSetup(string name, Transform hand)
     {
-        HazardBox = NewManager.instance.ManagerHazardBox;
+        HazardBox = LevelUIManager.instance.ManagerHazardBox;
         HazardBox.alpha = 0;
         handTransform = hand;
         movementLeft = movesPerTurn;
@@ -79,7 +79,7 @@ public class PlayerEntity : MovingEntity
         }
 
         PlayerEntity me = this;
-        myBar.button.onClick.AddListener(() => NewManager.instance.FocusOnTile(me.currentTile, true));
+        myBar.button.onClick.AddListener(() => PhaseManager.instance.FocusOnTile(me.currentTile, true));
     }
 
     void GetCards(int n)
@@ -144,7 +144,7 @@ public class PlayerEntity : MovingEntity
             HazardBox.alpha -= FadeSpeed;
             yield return null;
         }
-        NewManager.instance.ChangeHealth(this, -damage);
+        LevelUIManager.instance.ChangeHealth(this, -damage);
         yield return null;
     }
 
@@ -281,7 +281,7 @@ public class PlayerEntity : MovingEntity
             discardMe.transform.SetAsLastSibling();
             StartCoroutine(discardMe.MoveCard(new Vector2(1200, -440), new Vector2(0, -1000), Vector3.zero, PlayerPrefs.GetFloat("Animation Speed")));
             SortHand();
-            yield return NewManager.Wait(PlayerPrefs.GetFloat("Animation Speed"));
+            yield return new WaitForSeconds(PlayerPrefs.GetFloat("Animation Speed"));
 
             myDiscardPile.Add(discardMe);
             discardMe.transform.SetParent(null);
@@ -310,7 +310,7 @@ public class PlayerEntity : MovingEntity
 
     internal IEnumerator PlayCard(Card playMe, bool payEnergy)
     {
-        NewManager.instance.DisableAllCards();
+        LevelGenerator.instance.DisableAllCards();
         playMe.cardPlay.Post(playMe.gameObject);
         StartCoroutine(playMe.MoveCard(new Vector2(playMe.transform.localPosition.x, -200), new Vector2(playMe.transform.localPosition.x, -200), new Vector3(0, 0, 0), PlayerPrefs.GetFloat("Animation Speed")));
         yield return playMe.FadeAway(PlayerPrefs.GetFloat("Animation Speed"));
@@ -319,14 +319,14 @@ public class PlayerEntity : MovingEntity
         StartCoroutine(this.DiscardFromHand(playMe));
 
         if (payEnergy)
-            NewManager.instance.ChangeEnergy(this, int.Parse(playMe.textCost.text)*-1);
+            LevelUIManager.instance.ChangeEnergy(this, int.Parse(playMe.textCost.text)*-1);
 
-        NewManager.instance.UpdateStats(this);
+        LevelUIManager.instance.UpdateStats(this);
         yield return playMe.OnPlayEffect();
 
         this.cardsPlayed.Add(playMe);
-        if (playMe.nextRoundEffectsInOrder != "")
-            NewManager.instance.futureEffects.Add(playMe);
+        if (playMe.data.nextAct != "")
+            PhaseManager.instance.futureEffects.Add(playMe);
     }
 
     internal void MyTurn()
