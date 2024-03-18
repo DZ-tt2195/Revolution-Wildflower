@@ -17,7 +17,7 @@ public class DialogueManager : MonoBehaviour
 
     [Header("Dialouge UI")]
 
-    [SerializeField] private GameObject dialoguePanel;
+    [SerializeField] public GameObject dialoguePanel;
     [SerializeField] private GameObject continueIcon;
     [SerializeField] private TextMeshProUGUI dialogueText;
 

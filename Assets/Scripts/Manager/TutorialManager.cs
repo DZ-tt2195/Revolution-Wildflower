@@ -281,9 +281,15 @@ public class TutorialManager : MonoBehaviour
 
         else
         {
+            DialogueManager.GetInstance().dialoguePanel.SetActive(false);
             NewManager.instance.UpdateStats(null);
             NewManager.instance.StartCoroutine(NewManager.instance.StartPlayerTurn());
         }
+    }
+
+    public static void ChainTutorial(string className, string eventName, string fileName)
+    {
+
     }
 
     public void ExitTutorial()
