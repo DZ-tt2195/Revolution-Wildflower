@@ -725,7 +725,7 @@ public class NewManager : MonoBehaviour
             MoveCamera.Focus(tile.transform.position);
             Debug.Log(tile.transform.position);
             //Camera.main.transform.position = new Vector3(tile.transform.position.x, Camera.main.transform.position.y, tile.transform.position.z);
-            if (moveMe)
+            if (moveMe && CurrentTurn == TurnSystem.You)
                 ControlCharacter(tile.myEntity.GetComponent<PlayerEntity>());
         }
     }
