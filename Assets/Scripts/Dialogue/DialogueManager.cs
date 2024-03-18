@@ -114,6 +114,9 @@ public class DialogueManager : MonoBehaviour
         currentStory.BindExternalFunction("EnableUI",           (string elements) =>        { EnableUI(elements); });
         currentStory.BindExternalFunction("DisableAllUI",       (string exceptions) =>      { DisableAllUI(exceptions); });
         currentStory.BindExternalFunction("FocusUI",            (string elements) =>        { FocusUI(elements); });
+        currentStory.BindExternalFunction("UnfocusUI",          (string elements) =>        { UnfocusUI(elements); });
+        currentStory.BindExternalFunction("FocusPlayer",        (string name) =>            { FocusPlayer(name); });
+
         currentStory.BindExternalFunction("ForceTile",          (int x, int y) =>           { ForceTile(x, y); });
 
 
@@ -388,19 +391,31 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
-    public void FocusUI(string element)
+    public void FocusUI(string elements)
     {
         TutorialManager manager = FindObjectOfType<TutorialManager>();
 
-        string[] elementsArray = Regex.Split(element, ", ");
+        string[] elementsArray = Regex.Split(elements, ", ");
         if (manager)
         {
             manager.FocusUI(elementsArray);
         }
     }
 
-    public void ForceDrawCard(string cardName)
+    public void UnfocusUI(string elements)
     {
+        TutorialManager manager = FindObjectOfType<TutorialManager>();
 
+        string[] elementsArray = Regex.Split(elements, ", ");
+        if (manager)
+        {
+            manager.UnfocusUI(elementsArray);
+        }
+    }
+
+    public void FocusPlayer(string name)
+    {
+        Debug.Log("focusing player");
+        NewManager.instance.UpdateStats(NewManager.instance.listOfPlayers.Find(x => x.name == name));
     }
 }

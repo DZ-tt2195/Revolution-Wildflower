@@ -14,20 +14,25 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] private GameObject[] levelStartUI;
     private static List<UIState> levelUIStates = new();
     public static List<UIState> focusedUIElements = new();
+    public static Vector2Int forcedMovementTile;
+    public static Vector2Int forcedCardSelectionTile;
+    public static string forcedCard;
+
     public static List<Vector2Int> forcedTiles = new();
 
     private void Awake()
     {
         instance = this;
+        levelUIStates.Clear();
+        foreach (GameObject ui in levelStartUI)
+        {
+            levelUIStates.Add(new UIState(ui));
+        }
     }
 
     private void Start()
     {
-        levelUIStates.Clear();
-        foreach(GameObject ui in levelStartUI)
-        {
-            levelUIStates.Add(new UIState(ui));
-        }
+
     }
 
     public static UIState GetUIState(string name)

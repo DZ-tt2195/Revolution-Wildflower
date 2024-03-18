@@ -15,4 +15,10 @@ MonoBehaviour:
   dialogueOnStart: 1
   dialogueAsset: {fileID: 4900000, guid: 06f9de69e9092be4284c113ef1f140d9, type: 3}
   dialogueVariables: []
-  forcedHands: []
+  forcedHands:
+  - CharacterName: W.K.
+    ForceHand: 1
+    CardNames:
+    - Bandage
+    - Glass Bottle
+    - Emergency Fund
