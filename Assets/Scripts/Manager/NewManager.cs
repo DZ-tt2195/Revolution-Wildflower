@@ -61,7 +61,7 @@ public class NewManager : MonoBehaviour
     [Tooltip("Face of selected character")] Image selected_characterFace;
     [Tooltip("Instructions for what the player is allowed to do right now")] TMP_Text instructions;
     [Tooltip("Spend 3 energy to draw a card")] Button spendToDrawButton;
-    [Tooltip("End the turn")] Button endTurnButton;
+    [Tooltip("End the turn")] public Button endTurnButton;
     [Tooltip("End turn button's image")] Image endTurnImage;
     [Tooltip("Complete an objective you're next to")][ReadOnly] public Button objectiveButton;
     [Tooltip("Exit the level if you're on the right tile")][ReadOnly] public Button exitButton;
@@ -723,6 +723,7 @@ public class NewManager : MonoBehaviour
         if (tile != null)
         {
             MoveCamera.Focus(tile.transform.position);
+            Debug.Log(tile.transform.position);
             //Camera.main.transform.position = new Vector3(tile.transform.position.x, Camera.main.transform.position.y, tile.transform.position.z);
             if (moveMe)
                 ControlCharacter(tile.myEntity.GetComponent<PlayerEntity>());

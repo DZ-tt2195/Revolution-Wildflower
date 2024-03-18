@@ -1382,6 +1382,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: stairway
       objectReference: {fileID: 0}
+    - target: {fileID: 1432891884336432860, guid: ebd54c6fbfa9de147b59cb37d3b25531, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2727555324195763055, guid: ebd54c6fbfa9de147b59cb37d3b25531, type: 3}
       propertyPath: m_LocalPosition.x
       value: 19.737572
@@ -15198,7 +15202,7 @@ PrefabInstance:
     - target: {fileID: 2879224160831583952, guid: 5bd37c67f67424e7c913ee350c219bb8, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -403495281, guid: 83f1b74330f0c7645ab0edb8cff490f3, type: 3}
+      objectReference: {fileID: -1233128474, guid: 83f1b74330f0c7645ab0edb8cff490f3, type: 3}
     - target: {fileID: 4089370350289797580, guid: 5bd37c67f67424e7c913ee350c219bb8, type: 3}
       propertyPath: m_SizeDelta.x
       value: 160.5
@@ -23398,7 +23402,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!64 &1785836721
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -33710,7 +33714,7 @@ Transform:
   m_GameObject: {fileID: 1785836720}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 59.4, y: -44.9, z: 18.749239}
+  m_LocalPosition: {x: 56.36, y: -44.9, z: 18.749239}
   m_LocalScale: {x: 0.732051, y: 0.8497401, z: 0.84974}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -33743,7 +33747,7 @@ PrefabInstance:
     - target: {fileID: 2879224160831583952, guid: 5bd37c67f67424e7c913ee350c219bb8, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -1233128474, guid: 83f1b74330f0c7645ab0edb8cff490f3, type: 3}
+      objectReference: {fileID: -403495281, guid: 83f1b74330f0c7645ab0edb8cff490f3, type: 3}
     - target: {fileID: 4089370350289797580, guid: 5bd37c67f67424e7c913ee350c219bb8, type: 3}
       propertyPath: m_SizeDelta.x
       value: 67.9407
@@ -34785,7 +34789,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!64 &2050261034
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -35107,7 +35111,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2077760949
 Transform:
   m_ObjectHideFlags: 0

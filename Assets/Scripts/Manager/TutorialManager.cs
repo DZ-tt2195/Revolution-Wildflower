@@ -283,7 +283,9 @@ public class TutorialManager : MonoBehaviour
         {
             DialogueManager.GetInstance().dialoguePanel.SetActive(false);
             NewManager.instance.UpdateStats(null);
+            NewManager.instance.endTurnButton.gameObject.SetActive(true);
             NewManager.instance.StartCoroutine(NewManager.instance.StartPlayerTurn());
+
         }
     }
 
