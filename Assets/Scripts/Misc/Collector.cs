@@ -60,6 +60,7 @@ public class Collector : MonoBehaviour
     void ReceiveChoice(int buttonNumber)
     {
         chosenButton = buttonNumber;
+        MoveCamera.RemoveLock("Confirmation");
     }
 
     internal void DisableAll()

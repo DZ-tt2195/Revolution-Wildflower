@@ -89,14 +89,29 @@ public class DialogueManager : MonoBehaviour
             return;
         }
 
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (dialogueText.maxVisibleCharacters > 0 && dialogueText.maxVisibleCharacters < dialogueText.text.Length) 
+            {
+                dialogueText.maxVisibleCharacters = dialogueText.text.Length;
+                continueIcon.SetActive(true);
+                canContinueToNextLine = true;
+            }
+
+            else if (canContinueToNextLine && currentStory.currentChoices.Count == 0 && !runningFunction)
+            {
+                ContinueStory();
+            }
+        }
+
         // handle continuine to the next line in dialogue when submite is pressed
-       if (canContinueToNextLine  
+       /*if (canContinueToNextLine  
             && currentStory.currentChoices.Count == 0
             && !runningFunction
             && Input.GetKeyDown(KeyCode.Space))
        {
            ContinueStory();
-       }
+       }*/
     }
 
     public void StartStory(TextAsset inkJSON)
@@ -179,12 +194,12 @@ public class DialogueManager : MonoBehaviour
 
         foreach (char letter in line.ToCharArray())
         {
-            if (Input.GetKeyDown(KeyCode.Space) && dialogueText.maxVisibleCharacters > 0)
+            /*if (Input.GetKeyDown(KeyCode.Space) && dialogueText.maxVisibleCharacters > 0)
             {
                 dialogueText.maxVisibleCharacters = line.Length;
                 //dialogueText.text = line;
                 break;
-            }
+            }*/
 
             // check for rich text tag, if found, add it without warning
             if (letter == '<' || isAddingRichTextTag)

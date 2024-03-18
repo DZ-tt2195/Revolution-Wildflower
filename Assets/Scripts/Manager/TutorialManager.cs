@@ -51,6 +51,11 @@ public class TutorialManager : MonoBehaviour
 
         foreach (UIState ui in levelUIStates)
         {
+            if (!ui.gameObject)
+            {
+                return;
+            }
+
             if (ui.gameObject.name == element)
             {
                 // If the UI can spawn, you can freely spawn/despawn it. 

@@ -649,7 +649,7 @@ public class NewManager : MonoBehaviour
 
     private void Update()
     {
-        //endTurnButton.gameObject.SetActive(CurrentTurn == TurnSystem.You);
+        TutorialManager.TrySetActive(endTurnButton.gameObject.name, CurrentTurn == TurnSystem.You);
         /*
               spendToDrawButton.gameObject.SetActive(CurrentTurn == TurnSystem.You);
               exitButton.gameObject.SetActive(CurrentTurn == TurnSystem.You);
@@ -682,6 +682,9 @@ public class NewManager : MonoBehaviour
 
     public void GameOver(string cause, bool won)
     {
+
+        MoveCamera.AddLock("Game Over");
+
         gameOverText.text = cause;
         gameOverText.transform.parent.gameObject.SetActive(true);
 
@@ -887,6 +890,8 @@ public class NewManager : MonoBehaviour
     {
         if (PlayerPrefs.GetInt("Confirm Choices") == 1)
         {
+            MoveCamera.AddLock("Confirmation");
+
             DisableAllCards();
             DisableAllTiles();
 
@@ -1292,12 +1297,13 @@ public class NewManager : MonoBehaviour
 
     IEnumerator ResolveObjective()
     {
-        objectiveButton.gameObject.SetActive(false);
+        TutorialManager.TrySetActive(objectiveButton.gameObject.name, true);
+        //objectiveButton.gameObject.SetActive(false);
         CurrentTurn = TurnSystem.Resolving;
 
         if (lastSelectedPlayer != null && lastSelectedPlayer.adjacentObjective != null)
         {
-            Collector confirmDecision = ConfirmDecision($"Spend 3 energy to draw a card?", new Vector2(0, -85));
+            Collector confirmDecision = ConfirmDecision($"Complete this Objective?", new Vector2(0, -85));
             if (confirmDecision != null)
             {
                 yield return confirmDecision.WaitForChoice();

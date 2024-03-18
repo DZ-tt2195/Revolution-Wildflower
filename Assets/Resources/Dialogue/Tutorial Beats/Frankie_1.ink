@@ -2,6 +2,9 @@ EXTERNAL EnableUI(elements)
 EXTERNAL DisableAllUI(exceptions)
 EXTERNAL FocusUI(elements)
 EXTERNAL ForceTile(x, y)
+EXTERNAL FocusPlayer(name)
+
+~ FocusPlayer("Frankie")
 
 ~ DisableAllUI("")
 To clear a mission, you must complete all objectives and successfully reach an extraction point.

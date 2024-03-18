@@ -219,7 +219,7 @@ public class MoveCamera : MonoBehaviour
         locks.Remove(lockName);
     }
 
-    public void ClearLocks()
+    public static void ClearLocks()
     {   
         if (locks.Count == 0)
         {
