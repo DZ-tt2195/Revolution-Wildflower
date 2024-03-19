@@ -1,4 +1,8 @@
+using JetBrains.Annotations;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
+using UnityEditor.Timeline.Actions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,11 +14,11 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] private GameObject[] levelStartUI;
     private static List<UIState> levelUIStates = new();
     public static List<UIState> focusedUIElements = new();
-    public static Vector2Int forcedMovementTile;
-    public static Vector2Int forcedCardSelectionTile;
+    public static Vector2Int? forcedMovementTile;
+    public static Vector2Int? forcedSelectionTile;
     public static string forcedCard;
 
-    public static List<Vector2Int> forcedTiles = new();
+    //public static List<Vector2Int> forcedTiles = new();
 
     private void Awake()
     {
@@ -24,6 +28,11 @@ public class TutorialManager : MonoBehaviour
         {
             levelUIStates.Add(new UIState(ui));
         }
+    }
+
+    private void Start()
+    {
+
     }
 
     public static UIState GetUIState(string name)
@@ -43,7 +52,9 @@ public class TutorialManager : MonoBehaviour
         foreach (UIState ui in levelUIStates)
         {
             if (!ui.gameObject)
+            {
                 return;
+            }
 
             if (ui.gameObject.name == element)
             {
@@ -241,10 +252,10 @@ public class TutorialManager : MonoBehaviour
 
     public static void SetLevelStartParameters(string levelName)
     {
-        LevelStartParameters parameters = Resources.Load<LevelStartParameters>($"{instance.levelStartParametersFilePath}/{levelName}");
+        LevelStartParameters parameters = Resources.Load<LevelStartParameters>(instance.levelStartParametersFilePath + "/" + levelName);
         if (parameters == null)
         {
-            Debug.LogError($"TutorialManager, SetLevelStartParameters: Could not find LevelStartParameters at {instance.levelStartParametersFilePath}/{levelName}");
+            Debug.LogError("TutorialManager, SetLevelStartParameters: Could not find LevelStartParameters at " + instance.levelStartParametersFilePath + "/" + levelName);
             return;
         }
 
@@ -275,9 +286,17 @@ public class TutorialManager : MonoBehaviour
 
         else
         {
-            LevelUIManager.instance.UpdateStats(null);
-            PhaseManager.instance.StartCoroutine(PhaseManager.instance.StartPlayerTurn());
+            DialogueManager.GetInstance().dialoguePanel.SetActive(false);
+            NewManager.instance.UpdateStats(null);
+            NewManager.instance.endTurnButton.gameObject.SetActive(true);
+            NewManager.instance.StartCoroutine(NewManager.instance.StartPlayerTurn());
+
         }
+    }
+
+    public static void ChainTutorial(string className, string eventName, string fileName)
+    {
+
     }
 
     public void ExitTutorial()
@@ -294,8 +313,8 @@ public class TutorialManager : MonoBehaviour
             }
         }
 
-        LevelUIManager.instance.UpdateStats(null);
-        PhaseManager.instance.StartCoroutine(PhaseManager.instance.StartPlayerTurn());
+        NewManager.instance.UpdateStats(null);
+        NewManager.instance.StartCoroutine(NewManager.instance.StartPlayerTurn());
 
     }
 
@@ -303,7 +322,7 @@ public class TutorialManager : MonoBehaviour
     {
         foreach (ForceCharacterHand hand in parameters.forcedHands)
         {
-            PlayerEntity player = LevelGenerator.instance.listOfPlayers.Find(x => x.name == hand.CharacterName);
+            PlayerEntity player = NewManager.instance.listOfPlayers.Find(x => x.name == hand.CharacterName);
             if (player != null)
                 player.ForceHand(hand.CardNames);
         }

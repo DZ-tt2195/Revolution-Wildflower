@@ -123,64 +123,85 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: selected_portrait_spritesheet_0
+      name: selected_portrait_spritesheet_3
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 3836
-        height: 4368
+        x: 1172
+        y: 48
+        width: 2343
+        height: 2985
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 098ebfa0f0650ed4cb88ce4de62715ca
-      internalID: -1149757235
+      spriteID: 8d7fe63bdded3984891710a9122fa678
+      internalID: 363942148
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: selected_portrait_spritesheet_1
+      name: selected_portrait_spritesheet_4
       rect:
         serializedVersion: 2
-        x: 3836
-        y: 0
-        width: 3836
-        height: 4368
+        x: 4358
+        y: 37
+        width: 2989
+        height: 3061
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 65885b30ae2eacc439355c074eee5cc4
-      internalID: 1895267887
+      spriteID: 46d3e16ee234a42458c8250d90c4766f
+      internalID: -1984934782
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: selected_portrait_spritesheet_2
+      name: selected_portrait_spritesheet_6
       rect:
         serializedVersion: 2
-        x: 7672
+        x: 8330
         y: 0
-        width: 3836
-        height: 4368
+        width: 2293
+        height: 3058
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ec73125922ce6194ab37ac45cc78b29d
-      internalID: -923044054
+      spriteID: dc161e76825f6e449928e2196b7e5ba7
+      internalID: 807269234
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: selected_portrait_spritesheet_11
+      rect:
+        serializedVersion: 2
+        x: 4350
+        y: 290
+        width: 24
+        height: 22
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8b1ce8699b683a840a659be8eeff8ea8
+      internalID: 2051003015
       vertices: []
       indices: 
       edges: []
@@ -198,7 +219,16 @@ TextureImporter:
     nameFileIdTable:
       selected_portrait_spritesheet_0: -1149757235
       selected_portrait_spritesheet_1: 1895267887
+      selected_portrait_spritesheet_10: 1122091870
+      selected_portrait_spritesheet_11: 2051003015
       selected_portrait_spritesheet_2: -923044054
+      selected_portrait_spritesheet_3: 363942148
+      selected_portrait_spritesheet_4: -1984934782
+      selected_portrait_spritesheet_5: -897062099
+      selected_portrait_spritesheet_6: 807269234
+      selected_portrait_spritesheet_7: 210335349
+      selected_portrait_spritesheet_8: -1701609456
+      selected_portrait_spritesheet_9: -666354169
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

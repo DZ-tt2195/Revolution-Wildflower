@@ -3,6 +3,7 @@ EXTERNAL EnableUI(elements)
 EXTERNAL FocusUI(elements)
 EXTERNAL UnfocusUI(elements)
 EXTERNAL FocusPlayer(name)
+EXTERNAL ForceSelectionTile(x, y)
 
 ~ FocusPlayer("WK")
 
@@ -51,6 +52,8 @@ Unlike most guards, the guard in WK’s path won’t budge. Heading straight for
 ~ UnfocusUI("Energy")
 
 ~ FocusUI("Player Hands")
+
+~ ForceSelectionTile(7, 1)
 
 Fortunately, WK has a Distraction Card in their hand. Distractions allow you to direct and mislead guards.
 

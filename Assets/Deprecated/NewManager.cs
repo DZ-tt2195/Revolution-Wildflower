@@ -60,7 +60,7 @@ public class NewManager : MonoBehaviour
     [Tooltip("Face of selected character")] Image selected_characterFace;
     [Tooltip("Instructions for what the player is allowed to do right now")] TMP_Text instructions;
     [Tooltip("Spend 3 energy to draw a card")] Button spendToDrawButton;
-    [Tooltip("End the turn")] Button endTurnButton;
+    [Tooltip("End the turn")] public Button endTurnButton;
     [Tooltip("End turn button's image")] Image endTurnImage;
     [Tooltip("Complete an objective you're next to")][ReadOnly] public Button objectiveButton;
     [Tooltip("Exit the level if you're on the right tile")][ReadOnly] public Button exitButton;
@@ -651,7 +651,7 @@ public class NewManager : MonoBehaviour
 
     private void Update()
     {
-        //endTurnButton.gameObject.SetActive(CurrentTurn == TurnSystem.You);
+        TutorialManager.TrySetActive(endTurnButton.gameObject.name, CurrentTurn == TurnSystem.You);
         /*
               spendToDrawButton.gameObject.SetActive(CurrentTurn == TurnSystem.You);
               exitButton.gameObject.SetActive(CurrentTurn == TurnSystem.You);
@@ -685,6 +685,9 @@ public class NewManager : MonoBehaviour
 
     public void GameOver(string cause, bool won)
     {
+
+        MoveCamera.AddLock("Game Over");
+
         gameOverText.text = cause;
         gameOverText.transform.parent.gameObject.SetActive(true);
 
@@ -726,8 +729,9 @@ public class NewManager : MonoBehaviour
         if (tile != null)
         {
             MoveCamera.Focus(tile.transform.position);
+            Debug.Log(tile.transform.position);
             //Camera.main.transform.position = new Vector3(tile.transform.position.x, Camera.main.transform.position.y, tile.transform.position.z);
-            if (moveMe)
+            if (moveMe && CurrentTurn == TurnSystem.You)
                 ControlCharacter(tile.myEntity.GetComponent<PlayerEntity>());
         }
     }
@@ -808,26 +812,23 @@ public class NewManager : MonoBehaviour
         chosenCard = null;
         DisableAllTiles();
 
-        if (TutorialManager.forcedTiles.Count > 0)
+        if (TutorialManager.forcedSelectionTile != null)
         {
-            foreach (Vector2Int tilePos in TutorialManager.forcedTiles)
+            foreach (TileData tile in canBeChosen)
             {
-                foreach (TileData tile in canBeChosen)
+                if (tile.gridPosition == TutorialManager.forcedSelectionTile)
                 {
-                    if (tile.gridPosition == tilePos)
-                    {
-                        tile.CardSelectable = true;
-                        tile.clickable = true;
-                        tile.choosable = true;
-                        tile.indicatorArrow = true;
-                    }
+                    tile.CardSelectable = true;
+                    tile.clickable = true;
+                    tile.choosable = true;
+                    tile.indicatorArrow = true;
+                }
 
-                    else
-                    {
-                        tile.CardSelectable = true;
-                        tile.clickable = false;
-                        tile.choosable = true;
-                    }
+                else
+                {
+                    tile.CardSelectable = true;
+                    tile.clickable = false;
+                    tile.choosable = true;
                 }
             }
         }
@@ -850,26 +851,24 @@ public class NewManager : MonoBehaviour
         chosenCard = null;
         DisableAllTiles();
 
-        if (TutorialManager.forcedTiles.Count > 0)
-        {
-            foreach (Vector2Int tilePos in TutorialManager.forcedTiles)
-            {
-                foreach (TileData tile in canBeChosen)
-                {
-                    if (tile.gridPosition == tilePos)
-                    {
-                        tile.moveable = true;
-                        tile.clickable = true;
-                        tile.choosable = true;
-                        tile.indicatorArrow = true;
-                    }
 
-                    else
-                    {
-                        tile.moveable = true;
-                        tile.clickable = false;
-                        tile.choosable = false;
-                    }
+        if (TutorialManager.forcedMovementTile != null)
+        {
+            foreach (TileData tile in canBeChosen)
+            {
+                if (tile.gridPosition == TutorialManager.forcedSelectionTile)
+                {
+                    tile.CardSelectable = true;
+                    tile.clickable = true;
+                    tile.choosable = true;
+                    tile.indicatorArrow = true;
+                }
+
+                else
+                {
+                    tile.CardSelectable = true;
+                    tile.clickable = false;
+                    tile.choosable = true;
                 }
             }
         }
@@ -889,6 +888,8 @@ public class NewManager : MonoBehaviour
     {
         if (PlayerPrefs.GetInt("Confirm Choices") == 1)
         {
+            MoveCamera.AddLock("Confirmation");
+
             DisableAllCards();
             DisableAllTiles();
 
@@ -1297,12 +1298,13 @@ public class NewManager : MonoBehaviour
 
     IEnumerator ResolveObjective()
     {
-        objectiveButton.gameObject.SetActive(false);
+        TutorialManager.TrySetActive(objectiveButton.gameObject.name, true);
+        //objectiveButton.gameObject.SetActive(false);
         CurrentTurn = TurnSystem.Resolving;
 
         if (lastSelectedPlayer != null && lastSelectedPlayer.adjacentObjective != null)
         {
-            Collector confirmDecision = ConfirmDecision($"Spend 3 energy to draw a card?", new Vector2(0, -85));
+            Collector confirmDecision = ConfirmDecision($"Complete this Objective?", new Vector2(0, -85));
             if (confirmDecision != null)
             {
                 yield return confirmDecision.WaitForChoice();

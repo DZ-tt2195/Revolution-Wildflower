@@ -34,7 +34,7 @@
     ],
     [
       "0",
-      "3|COMPLETE OBJECTIVE|real info|null|Tutorial Beats/Frankie_3",
+      "3|COMPLETE|real info|null|Tutorial Beats/Frankie_3",
       "0",
       "0",
       "0",

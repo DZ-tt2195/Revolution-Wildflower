@@ -47,7 +47,17 @@ public class CardDisplay : MonoBehaviour
         this.cardCost.text = newCard.textCost.text;
         this.cardDescr.text = newCard.textDescr.text;
 
-        typeOne.sprite = newCard.typeOneSprite.sprite;
+        if (newCard.typeOneSprite.gameObject.activeSelf)
+        {
+            typeOne.sprite = newCard.typeOneSprite.sprite;
+            typeOne.gameObject.SetActive(true);
+        }
+
+        else
+        {
+            typeOne.gameObject.SetActive(false);
+        }
+
         if (newCard.typeTwoSprite.gameObject.activeSelf)
         {
             typeTwo.sprite = newCard.typeTwoSprite.sprite;

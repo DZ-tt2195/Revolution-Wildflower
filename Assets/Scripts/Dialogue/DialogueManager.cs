@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using Ink.Runtime;
+using System.Runtime.CompilerServices;
 using System;
 using System.Text.RegularExpressions;
 
@@ -16,7 +17,7 @@ public class DialogueManager : MonoBehaviour
 
     [Header("Dialouge UI")]
 
-    [SerializeField] private GameObject dialoguePanel;
+    [SerializeField] public GameObject dialoguePanel;
     [SerializeField] private GameObject continueIcon;
     [SerializeField] private TextMeshProUGUI dialogueText;
 
@@ -90,7 +91,7 @@ public class DialogueManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (dialogueText.maxVisibleCharacters > 0 && dialogueText.maxVisibleCharacters < dialogueText.text.Length)
+            if (dialogueText.maxVisibleCharacters > 0 && dialogueText.maxVisibleCharacters < dialogueText.text.Length) 
             {
                 dialogueText.maxVisibleCharacters = dialogueText.text.Length;
                 continueIcon.SetActive(true);
@@ -102,6 +103,15 @@ public class DialogueManager : MonoBehaviour
                 ContinueStory();
             }
         }
+
+        // handle continuine to the next line in dialogue when submite is pressed
+       /*if (canContinueToNextLine  
+            && currentStory.currentChoices.Count == 0
+            && !runningFunction
+            && Input.GetKeyDown(KeyCode.Space))
+       {
+           ContinueStory();
+       }*/
     }
 
     public void StartStory(TextAsset inkJSON)
@@ -122,20 +132,22 @@ public class DialogueManager : MonoBehaviour
         currentStory.BindExternalFunction("UnfocusUI",          (string elements) =>        { UnfocusUI(elements); });
         currentStory.BindExternalFunction("FocusPlayer",        (string name) =>            { FocusPlayer(name); });
 
-        currentStory.BindExternalFunction("ForceTile",          (int x, int y) =>           { ForceTile(x, y); });
+        currentStory.BindExternalFunction("ForceMovementTile",  (int x, int y) =>           { ForceMovementTile(x, y); });
+        currentStory.BindExternalFunction("ForceSelectionTile", (int x, int y) =>           { ForceSelectionTile(x, y); });
+
 
 
         //currentStory.BindExternalFunction("ForceCardDraw", (string playerName) => { CameraFocusPlayer(playerName); });
         //currentStory.BindExternalFunction("ToggleUIElement", (string playerName) => { CameraFocusPlayer(playerName); });
     }
-
     public void EnterDialogueMode()
     {
         dialogueVariables.VariablesToStory(currentStory);
         dialogueIsPlaying = true;
         dialoguePanel.SetActive(true);
         TutorialManager.TrySetActiveAll(false);
-        TutorialManager.forcedTiles.Clear();
+        TutorialManager.forcedMovementTile = null;
+        TutorialManager.forcedSelectionTile = null; 
         MoveCamera.AddLock("Dialogue");
         dialoguePanel.SetActive(true);
         Debug.Log("Set active true");
@@ -185,11 +197,18 @@ public class DialogueManager : MonoBehaviour
 
         foreach (char letter in line.ToCharArray())
         {
+            /*if (Input.GetKeyDown(KeyCode.Space) && dialogueText.maxVisibleCharacters > 0)
+            {
+                dialogueText.maxVisibleCharacters = line.Length;
+                //dialogueText.text = line;
+                break;
+            }*/
+
             // check for rich text tag, if found, add it without warning
             if (letter == '<' || isAddingRichTextTag)
             {
                 isAddingRichTextTag = true;
-                if (letter == '>')
+                if(letter == '>')
                 {
                     isAddingRichTextTag = false;
                 }
@@ -297,7 +316,7 @@ public class DialogueManager : MonoBehaviour
     public void CameraFocusPlayer(string playerName)
     {
         runningFunction = true;
-        PlayerEntity player = LevelGenerator.instance.listOfPlayers.Find(x => x.name == playerName);
+        PlayerEntity player = NewManager.instance.listOfPlayers.Find(x => x.name == playerName);
 
         if (player == null)
         {
@@ -312,7 +331,7 @@ public class DialogueManager : MonoBehaviour
     public void CameraFocusGuard(int index)
     {
         runningFunction = true;
-        GuardEntity guard = LevelGenerator.instance.listOfGuards[index];
+        GuardEntity guard = NewManager.instance.listOfGuards[index];
         if (guard == null)
         {
             Debug.LogError("DialogueManager, CameraFocusGuard: Couldn't find guard with index " + index);
@@ -326,7 +345,7 @@ public class DialogueManager : MonoBehaviour
     public void CameraFocusTile(int x, int y)
     {
         runningFunction = true;
-        TileData tile = LevelGenerator.instance.listOfTiles[x, y];
+        TileData tile = NewManager.instance.listOfTiles[x, y];
         if (tile == null)
         {
             Debug.LogError("DialogueManager, CameraFocusTile: Couldn't find tile at position " + x + " " + y);
@@ -339,17 +358,21 @@ public class DialogueManager : MonoBehaviour
 
     public void ForcePlayer(string playerName)
     {
-        LevelGenerator.instance.ForcePlayer(LevelGenerator.instance.listOfPlayers.Find(x => x.name == playerName));
+        NewManager.instance.ForcePlayer(NewManager.instance.listOfPlayers.Find(x => x.name == playerName));
     }
 
-    public void ForceTile(int x, int y)
+    public void ForceMovementTile(int x, int y)
     {
-        TutorialManager.forcedTiles.Add(new Vector2Int(x, y));
+        TutorialManager.forcedMovementTile = new Vector2Int(x, y);
     }
 
+    public void ForceSelectionTile(int x, int y)
+    {
+        TutorialManager.forcedSelectionTile = new Vector2Int(x, y);
+    }
     public void ForceCard(string cardName)
     {
-        List<Card> hand = PhaseManager.instance.lastSelectedPlayer.myHand;
+        List<Card> hand = NewManager.instance.lastSelectedPlayer.myHand;
         for (int i = 0; i < hand.Count; i++)
         {
             if (hand[i].textName.text == cardName)
@@ -415,6 +438,6 @@ public class DialogueManager : MonoBehaviour
     public void FocusPlayer(string name)
     {
         Debug.Log("focusing player");
-        LevelUIManager.instance.UpdateStats(LevelGenerator.instance.listOfPlayers.Find(x => x.name == name));
+        NewManager.instance.UpdateStats(NewManager.instance.listOfPlayers.Find(x => x.name == name));
     }
 }

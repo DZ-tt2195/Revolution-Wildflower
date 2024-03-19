@@ -583,15 +583,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 19.2
+  m_fontSize: 17.2
   m_fontSizeBase: 22
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 18
+  m_fontSizeMin: 15
   m_fontSizeMax: 30
   m_fontStyle: 0
   m_HorizontalAlignment: 2
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -619,7 +619,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0.7938309, y: 3.263855, z: 3.9807053, w: 152.41705}
+  m_margin: {x: 0.7938309, y: 20.659645, z: 3.9807053, w: 171.8327}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -638,6 +638,8 @@ GameObject:
   - component: {fileID: 1569491245602149742}
   - component: {fileID: 4697064048662673205}
   - component: {fileID: 6508822373905849686}
+  - component: {fileID: -4191244214060135657}
+  - component: {fileID: 1092468070653313073}
   m_Layer: 5
   m_Name: Default Card
   m_TagString: Untagged
@@ -735,12 +737,13 @@ MonoBehaviour:
   MovementColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   MiscColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   FallbackColor: {r: 1, g: 1, b: 1, a: 1}
+  animationSpeed: 3
   growthCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0.0035438538
-      value: 1.0047302
+      time: 0.00015693065
+      value: -0.00017369998
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -748,8 +751,8 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 0.5
-      value: 1.5
+      time: 1.0002922
+      value: 1.0001904
       inSlope: -0.003947647
       outSlope: -0.003947647
       tangentMode: 0
@@ -759,6 +762,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  growthAmount: 1.77
   moveCurve:
     serializedVersion: 2
     m_Curve:
@@ -772,8 +776,8 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 0.5
-      value: 250
+      time: 0.99995255
+      value: 1.0020013
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -783,6 +787,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  moveAmount: 250
   attackSprite: {fileID: 21300000, guid: a4c9a6183e81f4315af5eac649ec6e1f, type: 3}
   distractSprite: {fileID: 21300000, guid: 5844126ae3a4649828cfad5f8a553cd4, type: 3}
   drawSprite: {fileID: 21300000, guid: 37845f3e662be4c8e820732aeaf0eb3f, type: 3}
@@ -845,6 +850,46 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!223 &-4191244214060135657
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5933497273186232708}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_AdditionalShaderChannelsFlag: 25
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
+--- !u!114 &1092468070653313073
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5933497273186232708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &6131263412447150180
 GameObject:
   m_ObjectHideFlags: 0

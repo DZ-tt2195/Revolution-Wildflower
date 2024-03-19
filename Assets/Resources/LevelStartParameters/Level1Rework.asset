@@ -10,15 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 78c7db91023423946b9c34d04e4ef7c7, type: 3}
-  m_Name: Tut2Distract
+  m_Name: Level1Rework
   m_EditorClassIdentifier: 
-  dialogueOnStart: 1
-  dialogueAsset: {fileID: 4900000, guid: 06f9de69e9092be4284c113ef1f140d9, type: 3}
+  dialogueOnStart: 0
+  dialogueAsset: {fileID: 0}
   dialogueVariables: []
-  forcedHands:
-  - CharacterName: WK
-    ForceHand: 1
-    CardNames:
-    - Bandage
-    - Glass Bottle
-    - Emergency Fund
+  forcedHands: []
