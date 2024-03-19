@@ -1,7 +1,7 @@
 EXTERNAL EnableUI(elements)
 EXTERNAL DisableAllUI(exceptions)
 EXTERNAL FocusUI(elements)
-EXTERNAL ForceTile(x, y)
+EXTERNAL ForceMovementTile(x, y)
 EXTERNAL FocusPlayer(name)
 
 ~ FocusPlayer("Frankie")
@@ -15,7 +15,7 @@ Objectives are specific points of interest spread across the map. You can only c
 
 ~ FocusUI("Movement")
 
-~ ForceTile(5, 1)
+~ ForceMovementTile(5, 1)
 
 A character's <color="yellow">Movement Points (MP)</color> determine how far they can move in a turn.
 

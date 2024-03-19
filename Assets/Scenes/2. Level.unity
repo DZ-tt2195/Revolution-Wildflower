@@ -6450,7 +6450,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2087921933}
   m_HandleRect: {fileID: 2087921932}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -15534,7 +15534,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Violent Cards Used: X'
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 67e304d4f7c98ec49a1a8c7bc70cdbeb, type: 2}
   m_sharedMaterial: {fileID: -3235312398612908723, guid: 67e304d4f7c98ec49a1a8c7bc70cdbeb, type: 2}
@@ -34128,7 +34128,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 874926083}
   m_HandleRect: {fileID: 874926082}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:

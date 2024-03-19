@@ -132,7 +132,9 @@ public class DialogueManager : MonoBehaviour
         currentStory.BindExternalFunction("UnfocusUI",          (string elements) =>        { UnfocusUI(elements); });
         currentStory.BindExternalFunction("FocusPlayer",        (string name) =>            { FocusPlayer(name); });
 
-        currentStory.BindExternalFunction("ForceTile",          (int x, int y) =>           { ForceTile(x, y); });
+        currentStory.BindExternalFunction("ForceMovementTile",  (int x, int y) =>           { ForceMovementTile(x, y); });
+        currentStory.BindExternalFunction("ForceSelectionTile", (int x, int y) =>           { ForceSelectionTile(x, y); });
+
 
 
         //currentStory.BindExternalFunction("ForceCardDraw", (string playerName) => { CameraFocusPlayer(playerName); });
@@ -144,7 +146,8 @@ public class DialogueManager : MonoBehaviour
         dialogueIsPlaying = true;
         dialoguePanel.SetActive(true);
         TutorialManager.TrySetActiveAll(false);
-        TutorialManager.forcedTiles.Clear();
+        TutorialManager.forcedMovementTile = null;
+        TutorialManager.forcedSelectionTile = null; 
         MoveCamera.AddLock("Dialogue");
         dialoguePanel.SetActive(true);
         Debug.Log("Set active true");
@@ -358,11 +361,15 @@ public class DialogueManager : MonoBehaviour
         NewManager.instance.ForcePlayer(NewManager.instance.listOfPlayers.Find(x => x.name == playerName));
     }
 
-    public void ForceTile(int x, int y)
+    public void ForceMovementTile(int x, int y)
     {
-        TutorialManager.forcedTiles.Add(new Vector2Int(x, y));
+        TutorialManager.forcedMovementTile = new Vector2Int(x, y);
     }
 
+    public void ForceSelectionTile(int x, int y)
+    {
+        TutorialManager.forcedSelectionTile = new Vector2Int(x, y);
+    }
     public void ForceCard(string cardName)
     {
         List<Card> hand = NewManager.instance.lastSelectedPlayer.myHand;

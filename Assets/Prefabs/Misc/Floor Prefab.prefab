@@ -255,7 +255,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4479619021227722195}
   - component: {fileID: 4956272866728434820}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Pointer
   m_TagString: Untagged
   m_Icon: {fileID: 0}

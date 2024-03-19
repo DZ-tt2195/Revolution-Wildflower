@@ -14,11 +14,11 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] private GameObject[] levelStartUI;
     private static List<UIState> levelUIStates = new();
     public static List<UIState> focusedUIElements = new();
-    public static Vector2Int forcedMovementTile;
-    public static Vector2Int forcedCardSelectionTile;
+    public static Vector2Int? forcedMovementTile;
+    public static Vector2Int? forcedSelectionTile;
     public static string forcedCard;
 
-    public static List<Vector2Int> forcedTiles = new();
+    //public static List<Vector2Int> forcedTiles = new();
 
     private void Awake()
     {

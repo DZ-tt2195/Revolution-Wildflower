@@ -39,13 +39,16 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         [SerializeField] Color FallbackColor = Color.white;
         private Material material;
         private MaterialPropertyBlock materialPropertyBlock;
+        private Canvas canvas;
+        [SerializeField] private float animationSpeed;
 
         bool mouseOver = false;
         float growthTimer = 0;
         Vector3 cardSize;
         [SerializeField] AnimationCurve growthCurve;
+    [SerializeField] private float growthAmount;
         [SerializeField] AnimationCurve moveCurve;
-
+    [SerializeField] private float moveAmount = 250;
 
     [SerializeField] Sprite attackSprite;
         [SerializeField] Sprite distractSprite;
@@ -114,6 +117,13 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         button.onClick.AddListener(SendMe);
         typeOneSprite = transform.Find("Canvas Group").Find("Card Type 1").GetComponent<Image>();
         typeTwoSprite = transform.Find("Canvas Group").Find("Card Type 2").GetComponent<Image>();
+        canvas = GetComponent<Canvas>();
+        if (GameObject.Find("Camera (1)"))
+        {
+            GameObject.Find("Camera (1)").TryGetComponent<Camera>(out Camera cam);
+            canvas.worldCamera = cam;
+            canvas.overrideSorting = true;
+        }
     }
 
     void SendMe()
@@ -456,24 +466,26 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         if (mouseOver)
         {
             transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -1);
-            if (growthTimer + Time.deltaTime < growthCurve.keys[growthCurve.keys.Length - 1].time) growthTimer += Time.deltaTime;
+            if (growthTimer + Time.deltaTime < growthCurve.keys[growthCurve.keys.Length - 1].time) growthTimer += Time.deltaTime * animationSpeed;
             else growthTimer = growthCurve.keys[growthCurve.keys.Length - 1].time;
+            canvas.sortingOrder = 1;
         }
         else
         {
             transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, 0);
-            if (growthTimer - Time.deltaTime > 0) growthTimer -= Time.deltaTime;
+            if (growthTimer - Time.deltaTime > 0) growthTimer -= Time.deltaTime * animationSpeed;
             else growthTimer = 0;
+            canvas.sortingOrder = 0;
         }
         float sizeValue = growthCurve.Evaluate(growthTimer);
         float positionValue = moveCurve.Evaluate(growthTimer);
-        transform.localScale = cardSize * sizeValue;
+        transform.localScale = Vector3.Lerp(cardSize, cardSize * growthAmount, sizeValue);
         /*
         print("Base " + SaveManager.instance.cardBaseHeight);
         print("position value " + positionValue);
         print("current " + transform.position.y);
         */
-        transform.localPosition = new Vector3(transform.localPosition.x, SaveManager.instance.cardBaseHeight + positionValue, transform.localPosition.z);
+        transform.localPosition = new Vector3(transform.localPosition.x, SaveManager.instance.cardBaseHeight + Mathf.Lerp(0, moveAmount, positionValue), transform.localPosition.z);
     }
 
     public void HideCard()

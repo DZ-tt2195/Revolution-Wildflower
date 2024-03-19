@@ -809,26 +809,23 @@ public class NewManager : MonoBehaviour
         chosenCard = null;
         DisableAllTiles();
 
-        if (TutorialManager.forcedTiles.Count > 0)
+        if (TutorialManager.forcedSelectionTile != null)
         {
-            foreach (Vector2Int tilePos in TutorialManager.forcedTiles)
+            foreach (TileData tile in canBeChosen)
             {
-                foreach (TileData tile in canBeChosen)
+                if (tile.gridPosition == TutorialManager.forcedSelectionTile)
                 {
-                    if (tile.gridPosition == tilePos)
-                    {
-                        tile.CardSelectable = true;
-                        tile.clickable = true;
-                        tile.choosable = true;
-                        tile.indicatorArrow = true;
-                    }
+                    tile.CardSelectable = true;
+                    tile.clickable = true;
+                    tile.choosable = true;
+                    tile.indicatorArrow = true;
+                }
 
-                    else
-                    {
-                        tile.CardSelectable = true;
-                        tile.clickable = false;
-                        tile.choosable = true;
-                    }
+                else
+                {
+                    tile.CardSelectable = true;
+                    tile.clickable = false;
+                    tile.choosable = true;
                 }
             }
         }
@@ -851,26 +848,24 @@ public class NewManager : MonoBehaviour
         chosenCard = null;
         DisableAllTiles();
 
-        if (TutorialManager.forcedTiles.Count > 0)
-        {
-            foreach (Vector2Int tilePos in TutorialManager.forcedTiles)
-            {
-                foreach (TileData tile in canBeChosen)
-                {
-                    if (tile.gridPosition == tilePos)
-                    {
-                        tile.moveable = true;
-                        tile.clickable = true;
-                        tile.choosable = true;
-                        tile.indicatorArrow = true;
-                    }
 
-                    else
-                    {
-                        tile.moveable = true;
-                        tile.clickable = false;
-                        tile.choosable = false;
-                    }
+        if (TutorialManager.forcedMovementTile != null)
+        {
+            foreach (TileData tile in canBeChosen)
+            {
+                if (tile.gridPosition == TutorialManager.forcedSelectionTile)
+                {
+                    tile.CardSelectable = true;
+                    tile.clickable = true;
+                    tile.choosable = true;
+                    tile.indicatorArrow = true;
+                }
+
+                else
+                {
+                    tile.CardSelectable = true;
+                    tile.clickable = false;
+                    tile.choosable = true;
                 }
             }
         }
