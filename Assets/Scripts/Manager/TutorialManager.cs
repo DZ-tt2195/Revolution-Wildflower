@@ -287,9 +287,9 @@ public class TutorialManager : MonoBehaviour
         else
         {
             DialogueManager.GetInstance().dialoguePanel.SetActive(false);
-            NewManager.instance.UpdateStats(null);
-            NewManager.instance.endTurnButton.gameObject.SetActive(true);
-            NewManager.instance.StartCoroutine(NewManager.instance.StartPlayerTurn());
+            LevelUIManager.instance.UpdateStats(null);
+            PhaseManager.instance.endTurnButton.gameObject.SetActive(true);
+            PhaseManager.instance.StartCoroutine(PhaseManager.instance.StartPlayerTurn());
 
         }
     }
@@ -313,16 +313,15 @@ public class TutorialManager : MonoBehaviour
             }
         }
 
-        NewManager.instance.UpdateStats(null);
-        NewManager.instance.StartCoroutine(NewManager.instance.StartPlayerTurn());
-
+        LevelUIManager.instance.UpdateStats(null);
+        PhaseManager.instance.StartCoroutine(PhaseManager.instance.StartPlayerTurn());
     }
 
     public void ForceCharacterHand(LevelStartParameters parameters)
     {
         foreach (ForceCharacterHand hand in parameters.forcedHands)
         {
-            PlayerEntity player = NewManager.instance.listOfPlayers.Find(x => x.name == hand.CharacterName);
+            PlayerEntity player = LevelGenerator.instance.listOfPlayers.Find(x => x.name == hand.CharacterName);
             if (player != null)
                 player.ForceHand(hand.CardNames);
         }
