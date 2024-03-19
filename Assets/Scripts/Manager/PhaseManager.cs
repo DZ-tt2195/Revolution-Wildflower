@@ -65,6 +65,10 @@ public class PhaseManager : MonoBehaviour
         endTurnImage = endTurnButton.GetComponent<Image>();
         endTurnButton.gameObject.SetActive(false);
 
+        spendToDrawButton = GameObject.Find("Spend Energy Button").GetComponent<Button>();
+        spendToDrawButton.onClick.AddListener(SpendToDraw);
+        spendToDrawButton.gameObject.SetActive(false);
+
         objectiveButton = GameObject.Find("Objective Button").GetComponent<Button>();
         objectiveButton.onClick.AddListener(DoObjective);
         objectiveButton.gameObject.SetActive(false);
@@ -83,6 +87,7 @@ public class PhaseManager : MonoBehaviour
     {
         gameOverText.text = cause;
         gameOverText.transform.parent.gameObject.SetActive(true);
+        MoveCamera.AddLock("Game Over");
 
         TMP_Text endStats = GameObject.Find("End Stats").GetComponent<TMP_Text>();
         endStats.text = $"Violent Cards Used: {violentCards}";
@@ -97,6 +102,8 @@ public class PhaseManager : MonoBehaviour
 
     private void Update()
     {
+        TutorialManager.TrySetActive(endTurnButton.gameObject.name, CurrentPhase == TurnSystem.WaitingOnPlayer);
+
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             lastClickedMousePosition = Input.mousePosition;
@@ -118,7 +125,7 @@ public class PhaseManager : MonoBehaviour
 
     #endregion
 
-#region Turns
+#region Turn Control
 
     /// <summary>
     /// start the player turns
@@ -135,22 +142,6 @@ public class PhaseManager : MonoBehaviour
         selectedTile = null;
         beginTurnSound.Post(gameObject);
         BackToStart(true);
-    }
-
-    /// <summary>
-    /// move the camera to a tile
-    /// </summary>
-    /// <param name="tile">the tile to move to</param>
-    /// <param name="moveMe">start controlling the player on that tile</param>
-    public void FocusOnTile(TileData tile, bool moveMe)
-    {
-        if (tile != null)
-        {
-            MoveCamera.Focus(tile.transform.position);
-            //Camera.main.transform.position = new Vector3(tile.transform.position.x, Camera.main.transform.position.y, tile.transform.position.z);
-            if (moveMe)
-                ControlCharacter(tile.myEntity.GetComponent<PlayerEntity>());
-        }
     }
 
     /// <summary>
@@ -197,27 +188,92 @@ public class PhaseManager : MonoBehaviour
     }
 
     /// <summary>
-    /// check if anything's left this turn for the end turn button
+    /// player turn has ended
     /// </summary>
-    /// <returns></returns>
-    bool AnythingLeftThisTurn()
+    void EndPlayerTurn()
     {
+        StopAllCoroutines();
+        objectiveButton.gameObject.SetActive(false);
+        spendToDrawButton.gameObject.SetActive(false);
+        exitButton.gameObject.SetActive(false);
+
         foreach (PlayerEntity player in LevelGenerator.instance.listOfPlayers)
         {
-            bool movementCheck = player.movementLeft > 0;
-            bool handCheck = false;
-
-            foreach (Card card in player.myHand)
-            {
-                if (card.CanPlay(player))
-                    handCheck = true;
-            }
-
-            if (handCheck || movementCheck)
-                return true;
+            LevelUIManager.instance.SetEnergy(player, player.maxEnergy);
+            LevelUIManager.instance.SetMovement(player, player.movesPerTurn);
+            player.damageTaken = 0;
+            player.cardsPlayed.Clear();
         }
-        return false;
+
+        LevelUIManager.instance.UpdateStats(null);
+        StartCoroutine(EnvironmentalPhase());
     }
+
+    /// <summary>
+    /// resolve all environmentals
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator EnvironmentalPhase()
+    {
+        selectedTile = null;
+        CurrentPhase = TurnSystem.Environmentals;
+        LevelGenerator.instance.DisableAllTiles();
+        LevelGenerator.instance.DisableAllCards();
+
+        foreach (PlayerEntity player in LevelGenerator.instance.listOfPlayers)
+        {
+            if (player.stunned > 0)
+                player.stunChange(-1);
+        }
+
+        foreach (EnvironmentalEntity environment in LevelGenerator.instance.listOfEnvironmentals)
+        {
+            if (environment != null)
+            {
+                FocusOnTile(environment.currentTile, false);
+                yield return environment.EndOfTurn();
+            }
+        }
+        StartCoroutine(GuardTurn());
+    }
+
+    /// <summary>
+    /// guards take their turn
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator GuardTurn()
+    {
+        //erases current visible path
+        foreach (TileData tile in Pathfinder.instance.FullPath)
+            tile.directionIndicator.enabled = false;
+        endTurnSound.Post(gameObject);
+        foreach (PlayerEntity player in LevelGenerator.instance.listOfPlayers)
+            yield return player.EndOfTurn();
+
+        CurrentPhase = TurnSystem.WaitingOnGuard;
+        yield return LevelUIManager.instance.FadeTurnBar("Company Turn");
+        foreach (GuardEntity guard in LevelGenerator.instance.listOfGuards)
+        {
+            FocusOnTile(guard.currentTile, false);
+            yield return guard.EndOfTurn();
+            guard.movementLeft = guard.movesPerTurn;
+            guard.DetectionRangePatrol = guard.DetectionRangeMax;
+        }
+
+        turnCount--;
+        if (turnCount == 0)
+        {
+            GameOver("You ran out of time.", false);
+        }
+        else
+        {
+            StartCoroutine(StartPlayerTurn());
+        }
+    }
+
+    #endregion
+
+#region Controlling Player
 
     /// <summary>
     /// allow the player to move or play cards
@@ -389,6 +445,50 @@ public class PhaseManager : MonoBehaviour
         BackToStart(false);
     }
 
+
+    #endregion
+
+#region Other Actions
+
+    /// <summary>
+    /// move the camera to a tile
+    /// </summary>
+    /// <param name="tile">the tile to move to</param>
+    /// <param name="moveMe">start controlling the player on that tile</param>
+    public void FocusOnTile(TileData tile, bool moveMe)
+    {
+        if (tile != null)
+        {
+            MoveCamera.Focus(tile.transform.position);
+            //Camera.main.transform.position = new Vector3(tile.transform.position.x, Camera.main.transform.position.y, tile.transform.position.z);
+            if (moveMe && CurrentPhase == TurnSystem.WaitingOnPlayer)
+                ControlCharacter(tile.myEntity.GetComponent<PlayerEntity>());
+        }
+    }
+
+    /// <summary>
+    /// check if anything's left this turn for the end turn button
+    /// </summary>
+    /// <returns></returns>
+    bool AnythingLeftThisTurn()
+    {
+        foreach (PlayerEntity player in LevelGenerator.instance.listOfPlayers)
+        {
+            bool movementCheck = player.movementLeft > 0;
+            bool handCheck = false;
+
+            foreach (Card card in player.myHand)
+            {
+                if (card.CanPlay(player))
+                    handCheck = true;
+            }
+
+            if (handCheck || movementCheck)
+                return true;
+        }
+        return false;
+    }
+
     /// <summary>
     /// if this tile can be used to exit the level
     /// </summary>
@@ -468,7 +568,7 @@ public class PhaseManager : MonoBehaviour
     /// <returns></returns>
     IEnumerator ResolveObjective()
     {
-        objectiveButton.gameObject.SetActive(false);
+        TutorialManager.TrySetActive(objectiveButton.gameObject.name, true);
         CurrentPhase = TurnSystem.ResolvingAction;
 
         if (lastSelectedPlayer != null && lastSelectedPlayer.adjacentObjective != null)
@@ -493,87 +593,35 @@ public class PhaseManager : MonoBehaviour
     }
 
     /// <summary>
-    /// player turn has ended
+    /// spend 3 energy to draw a card
     /// </summary>
-    void EndPlayerTurn()
+    void SpendToDraw()
     {
-        StopAllCoroutines();
-        objectiveButton.gameObject.SetActive(false);
-        spendToDrawButton.gameObject.SetActive(false);
-        exitButton.gameObject.SetActive(false);
-
-        foreach (PlayerEntity player in LevelGenerator.instance.listOfPlayers)
-        {
-            LevelUIManager.instance.SetEnergy(player, player.maxEnergy);
-            LevelUIManager.instance.SetMovement(player, player.movesPerTurn);
-            player.damageTaken = 0;
-            player.cardsPlayed.Clear();
-        }
-
-        LevelUIManager.instance.UpdateStats(null);
-        StartCoroutine(EnvironmentalPhase());
+        if (CurrentPhase == TurnSystem.WaitingOnPlayer)
+            StartCoroutine(ResolveDraw());
     }
 
-    /// <summary>
-    /// resolve all environmentals
-    /// </summary>
-    /// <returns></returns>
-    IEnumerator EnvironmentalPhase()
+    IEnumerator ResolveDraw()
     {
-        selectedTile = null;
-        CurrentPhase = TurnSystem.Environmentals;
-        LevelGenerator.instance.DisableAllTiles();
-        LevelGenerator.instance.DisableAllCards();
+        CurrentPhase = TurnSystem.ResolvingAction;
 
-        foreach (PlayerEntity player in LevelGenerator.instance.listOfPlayers)
+        Collector confirmDecision = ConfirmDecision($"Spend 3 energy to draw a card?", new Vector2(0, -85));
+        if (confirmDecision != null)
         {
-            if (player.stunned > 0)
-                player.stunChange(-1);
-        }
+            yield return confirmDecision.WaitForChoice();
+            int decision = confirmDecision.chosenButton;
+            Destroy(confirmDecision.gameObject);
 
-        foreach (EnvironmentalEntity environment in LevelGenerator.instance.listOfEnvironmentals)
-        {
-            if (environment != null)
+            if (decision == 1)
             {
-                FocusOnTile(environment.currentTile, false);
-                yield return environment.EndOfTurn();
+                BackToStart(false);
+                yield break;
             }
         }
-        StartCoroutine(GuardTurn());
-    }
 
-    /// <summary>
-    /// guards take their turn
-    /// </summary>
-    /// <returns></returns>
-    IEnumerator GuardTurn() 
-    {
-        //erases current visible path
-        foreach (TileData tile in Pathfinder.instance.FullPath)
-            tile.directionIndicator.enabled = false;
-        endTurnSound.Post(gameObject);
-        foreach (PlayerEntity player in LevelGenerator.instance.listOfPlayers)
-            yield return player.EndOfTurn();
-
-        CurrentPhase = TurnSystem.WaitingOnGuard;
-        yield return LevelUIManager.instance.FadeTurnBar("Company Turn");
-        foreach (GuardEntity guard in LevelGenerator.instance.listOfGuards)
-        {
-            FocusOnTile(guard.currentTile, false);
-            yield return guard.EndOfTurn();
-            guard.movementLeft = guard.movesPerTurn;
-            guard.DetectionRangePatrol = guard.DetectionRangeMax;
-        }
-
-        turnCount--;
-        if (turnCount == 0)
-        {
-            GameOver("You ran out of time.", false);
-        }
-        else
-        {
-            StartCoroutine(StartPlayerTurn());
-        }
+        LevelUIManager.instance.ChangeEnergy(lastSelectedPlayer, -3);
+        lastSelectedPlayer.PlusCards(1);
+        BackToStart(false);
     }
 
     #endregion
@@ -592,6 +640,7 @@ public class PhaseManager : MonoBehaviour
         {
             LevelGenerator.instance.DisableAllCards();
             LevelGenerator.instance.DisableAllTiles();
+            MoveCamera.AddLock("Confirmation");
 
             Collector collector = Instantiate(confirmationCollector);
             collector.StatsSetup(header, position);

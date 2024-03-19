@@ -143,6 +143,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
 
     public void CardSetup(CardData data)
     {
+        this.data = data;
         textName.text = data.name;
         textDescr.text = KeywordTooltip.instance.EditText(data.desc);
 

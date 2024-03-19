@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using Ink.Runtime;
-using System.Runtime.CompilerServices;
 using System;
 using System.Text.RegularExpressions;
 
@@ -89,14 +88,20 @@ public class DialogueManager : MonoBehaviour
             return;
         }
 
-        // handle continuine to the next line in dialogue when submite is pressed
-       if (canContinueToNextLine  
-            && currentStory.currentChoices.Count == 0
-            && !runningFunction
-            && Input.GetKeyDown(KeyCode.Space))
-       {
-           ContinueStory();
-       }
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (dialogueText.maxVisibleCharacters > 0 && dialogueText.maxVisibleCharacters < dialogueText.text.Length)
+            {
+                dialogueText.maxVisibleCharacters = dialogueText.text.Length;
+                continueIcon.SetActive(true);
+                canContinueToNextLine = true;
+            }
+
+            else if (canContinueToNextLine && currentStory.currentChoices.Count == 0 && !runningFunction)
+            {
+                ContinueStory();
+            }
+        }
     }
 
     public void StartStory(TextAsset inkJSON)
@@ -123,6 +128,7 @@ public class DialogueManager : MonoBehaviour
         //currentStory.BindExternalFunction("ForceCardDraw", (string playerName) => { CameraFocusPlayer(playerName); });
         //currentStory.BindExternalFunction("ToggleUIElement", (string playerName) => { CameraFocusPlayer(playerName); });
     }
+
     public void EnterDialogueMode()
     {
         dialogueVariables.VariablesToStory(currentStory);
@@ -179,18 +185,11 @@ public class DialogueManager : MonoBehaviour
 
         foreach (char letter in line.ToCharArray())
         {
-            if (Input.GetKeyDown(KeyCode.Space) && dialogueText.maxVisibleCharacters > 0)
-            {
-                dialogueText.maxVisibleCharacters = line.Length;
-                //dialogueText.text = line;
-                break;
-            }
-
             // check for rich text tag, if found, add it without warning
             if (letter == '<' || isAddingRichTextTag)
             {
                 isAddingRichTextTag = true;
-                if(letter == '>')
+                if (letter == '>')
                 {
                     isAddingRichTextTag = false;
                 }

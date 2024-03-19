@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 using MyBox;
+using System;
 
 public class GuardEntity : MovingEntity
 {
@@ -511,6 +513,8 @@ public class GuardEntity : MovingEntity
                 PatrolTarget = 0;
             }
         }
+        
+
         Pathfinder.instance.CalculatePathfinding(currentTile, LevelGenerator.instance.listOfTiles[PatrolPoints[PatrolTarget].x, PatrolPoints[PatrolTarget].y], movementLeft, true, true);
         nextTile = Pathfinder.instance.CurrentAvailableMoveTarget;  //moves towards the next patrol point
         Vector2Int nextDirection = nextTile.gridPosition - currentTile.gridPosition;

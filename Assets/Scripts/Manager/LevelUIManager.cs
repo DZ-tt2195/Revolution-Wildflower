@@ -114,7 +114,7 @@ public class LevelUIManager : MonoBehaviour
             if (movementBar.gameObject.activeInHierarchy) { movementBar.SetValue(0); };
             if (energyBar.gameObject.activeInHierarchy) { energyBar.SetValue(0); }
 
-            handContainer.transform.localPosition = new Vector3(0, 0, 0);
+            handContainer.transform.localPosition = new Vector3(-10000, -10000, 0);
         }
 
         else
@@ -132,7 +132,6 @@ public class LevelUIManager : MonoBehaviour
             {
                 drawPile.color = Color.red;
             }
-
             else
             {
                 drawPile.color = Color.black;
@@ -140,6 +139,7 @@ public class LevelUIManager : MonoBehaviour
 
             if (player.myPosition * -2000 != handContainer.transform.localPosition.x)
             {
+                Debug.Log("move hands on screen");
                 player.MyTurn();
                 handContainer.transform.localPosition = new Vector3(player.myPosition * -2000, 0, 0);
             }

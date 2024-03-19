@@ -26,11 +26,6 @@ public class TutorialManager : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-
-    }
-
     public static UIState GetUIState(string name)
     {
         return levelUIStates.Find(x => x.gameObject.name == name);
@@ -47,6 +42,9 @@ public class TutorialManager : MonoBehaviour
 
         foreach (UIState ui in levelUIStates)
         {
+            if (!ui.gameObject)
+                return;
+
             if (ui.gameObject.name == element)
             {
                 // If the UI can spawn, you can freely spawn/despawn it. 
@@ -243,10 +241,10 @@ public class TutorialManager : MonoBehaviour
 
     public static void SetLevelStartParameters(string levelName)
     {
-        LevelStartParameters parameters = Resources.Load<LevelStartParameters>(instance.levelStartParametersFilePath + "/" + levelName);
+        LevelStartParameters parameters = Resources.Load<LevelStartParameters>($"{instance.levelStartParametersFilePath}/{levelName}");
         if (parameters == null)
         {
-            Debug.LogError("TutorialManager, SetLevelStartParameters: Could not find LevelStartParameters at " + instance.levelStartParametersFilePath + "/" + levelName);
+            Debug.LogError($"TutorialManager, SetLevelStartParameters: Could not find LevelStartParameters at {instance.levelStartParametersFilePath}/{levelName}");
             return;
         }
 
