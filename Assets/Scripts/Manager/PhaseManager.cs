@@ -107,11 +107,14 @@ public class PhaseManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             lastClickedMousePosition = Input.mousePosition;
+            Debug.Log(Input.mousePosition);
         }
         else if (movingPlayer && Input.GetKeyUp(KeyCode.Mouse0))
         {
             if (Input.mousePosition.Equals(lastClickedMousePosition) && CurrentPhase == TurnSystem.WaitingOnPlayer && !EventSystem.current.IsPointerOverGameObject())
             {
+                Debug.Log(lastClickedMousePosition);
+
                 StopCoroutine(ChooseMovePlayer(lastSelectedPlayer, 0));
                 StopCoroutine(ChooseCardPlay(lastSelectedPlayer));
                 Debug.LogError("deselect");
@@ -445,7 +448,6 @@ public class PhaseManager : MonoBehaviour
         BackToStart(false);
     }
 
-
     #endregion
 
 #region Other Actions
@@ -699,7 +701,6 @@ public class PhaseManager : MonoBehaviour
                 {
                     tile.CardSelectable = true;
                     tile.clickable = true;
-                    tile.choosable = true;
                     tile.indicatorArrow = true;
                 }
 
@@ -707,7 +708,6 @@ public class PhaseManager : MonoBehaviour
                 {
                     tile.CardSelectable = true;
                     tile.clickable = false;
-                    tile.choosable = true;
                 }
             }
         }
@@ -718,8 +718,6 @@ public class PhaseManager : MonoBehaviour
             {
                 tile.CardSelectable = true;
                 tile.clickable = true;
-                tile.choosable = true;
-
             }
         }
     }
@@ -738,15 +736,15 @@ public class PhaseManager : MonoBehaviour
                 {
                     tile.CardSelectable = true;
                     tile.clickable = true;
-                    tile.choosable = true;
                     tile.indicatorArrow = true;
+                    tile.moveable = true;
                 }
 
                 else
                 {
                     tile.CardSelectable = true;
                     tile.clickable = false;
-                    tile.choosable = true;
+                    tile.moveable = true;
                 }
             }
         }
@@ -755,9 +753,9 @@ public class PhaseManager : MonoBehaviour
         {
             foreach (TileData tile in canBeChosen)
             {
+                tile.CardSelectable = false;
                 tile.moveable = true;
                 tile.clickable = true;
-                tile.choosable = true;
             }
         }
     }

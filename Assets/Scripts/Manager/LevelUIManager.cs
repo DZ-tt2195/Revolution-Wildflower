@@ -139,7 +139,6 @@ public class LevelUIManager : MonoBehaviour
 
             if (player.myPosition * -2000 != handContainer.transform.localPosition.x)
             {
-                Debug.Log("move hands on screen");
                 player.MyTurn();
                 handContainer.transform.localPosition = new Vector3(player.myPosition * -2000, 0, 0);
             }

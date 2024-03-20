@@ -19,10 +19,9 @@ public class TileData : MonoBehaviour
         [Tooltip("Modifiers on this tile")][ReadOnly] public List<TileModifier> listOfModifiers = new();
 
     [Foldout("Tile conditions", true)]
-        [Tooltip("Defines whether you can choose this tile")][ReadOnly] public bool choosable = false;
         [Tooltip("Defines whether you can click this tile")][ReadOnly] public bool clickable = false;
         [Tooltip("Defines whether you can move onto this tile")][ReadOnly] public bool moveable = false;
-        [Tooltip("Defines whether you can move onto this tile")][ReadOnly] public bool currentGuardTarget = false;
+        [Tooltip("if a guard is looking at this tile")][ReadOnly] public bool currentGuardTarget = false;
         [Tooltip("Defines whether an arrow should be hovering over this tile.")][ReadOnly] public bool indicatorArrow = false;
         [Tooltip("Defines whether you can select this tile for a card action")][ReadOnly] public bool CardSelectable = false;
         [Tooltip("If your mouse is over this")] private bool moused = false;
@@ -36,8 +35,8 @@ public class TileData : MonoBehaviour
         [Tooltip("Tile's sprite renderer")] SpriteRenderer myRenderer;
         [Tooltip("Tile's materal")] [SerializeField] Renderer renderer3d;
         [Tooltip("Glowing border's sprite renderer")] SpriteRenderer border;
-    [Tooltip("Indication arrow for forced tiles")] SpriteRenderer indicator;
-    [Tooltip("Indication arrow transform")]private Transform indicatorTransform;
+        [Tooltip("Indication arrow for forced tiles")] SpriteRenderer indicator;
+        [Tooltip("Indication arrow transform")]private Transform indicatorTransform;
         [Tooltip("color used for unselected moused over tiles")][SerializeField] Color mouseOverColor = new Color(0.9f,0.9f,0.9f,1);
         [Tooltip("color used for selected tiles")][SerializeField] Color SelectedColor = new Color(0.6f, 0.6f, 0.6f, 1);
         [Tooltip("color used for unselected moused over tiles (general)")][SerializeField] Color ClickableColor = new Color(0.9f, 0.9f, 0.9f, 1);
@@ -163,7 +162,7 @@ public class TileData : MonoBehaviour
                     tile.directionIndicator.enabled = false;
             }
             PhaseManager.instance.selectedTile = this;
-            if (choosable)
+            if (moveable || CardSelectable)
             {
                 PhaseManager.instance.ReceiveChoice(this);
             }
@@ -185,12 +184,11 @@ public class TileData : MonoBehaviour
             toolTipHoverTimer += Time.deltaTime;
             if (toolTipHoverTimer >= timeTillToolTip)
             {
-                /*
-                PathfindingManager.instance.toolTip.EntityName.text = myEntity.name;
-                PathfindingManager.instance.toolTip.EntityInfo.text = myEntity.HoverBoxText();
-                PathfindingManager.instance.toolTip.gameObject.SetActive(true);
-                PathfindingManager.instance.toolTip.isActive = true;
-                */
+                EntityToolTip.instance.EntityName.text = myEntity.name;
+                EntityToolTip.instance.EntityInfo.text = myEntity.HoverBoxText();
+                EntityToolTip.instance.gameObject.SetActive(true);
+                EntityToolTip.instance.isActive = true;
+
                 //if the tile entity is a guard, show their path to their current target
                 if (myEntity.CompareTag("Enemy"))
                 {

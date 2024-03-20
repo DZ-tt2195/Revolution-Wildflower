@@ -347,7 +347,6 @@ public class LevelGenerator : MonoBehaviour
                 {
                     listOfTiles[i, j].clickable = false;
                     listOfTiles[i, j].moveable = false;
-                    listOfTiles[i, j].choosable = false;
                     listOfTiles[i, j].CardSelectable = false;
                     listOfTiles[i, j].directionIndicator.enabled = false;
                     listOfTiles[i, j].indicatorArrow = false;
