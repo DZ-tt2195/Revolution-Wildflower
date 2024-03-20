@@ -1,3 +1,4 @@
+#portrait: News Anchor #layout: News
 Disturbing events at Lake Flynn are shaking our town of Revelations to its core. #speaker: News Anchor #bg: NewsAnimation 1  
 
 Seemingly overnight, the popular hang-out spot erupted with hundreds of dead fish. The water continues to turn a startling shade of blood red. #bg: NewsAnimation 2
@@ -16,7 +17,10 @@ In light of the situation, newcomer Icarus Industries has vowed to assist our to
 
 They have begun donations to our medical centers, assisting local businesses, and hiring environmental specialists to look into the issue. #bg: NewsAnimation 8
 
-Icarus Industries has only recently moved into our quiet town and is already receiving good graces from everyo–
+Icarus Industries has only recently moved into our quiet town and is already receiving good graces from everyo–  
+
+That's bullshit. #speaker: Gail #layout: Right #bg: Default
+
 
 /* Imagine a future where you can enjoy fresh air. #Advertisement
 
