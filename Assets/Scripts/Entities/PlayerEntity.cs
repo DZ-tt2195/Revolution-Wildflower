@@ -52,7 +52,7 @@ public class PlayerEntity : MovingEntity
         HazardBox = LevelUIManager.instance.ManagerHazardBox;
         HazardBox.alpha = 0;
         handTransform = hand;
-        movementLeft = movesPerTurn;
+        movementLeft = maxMovement;
         this.name = name;
         myBar.playerName.text = name;
 
@@ -105,16 +105,6 @@ public class PlayerEntity : MovingEntity
         return answer;
     }
 
-    /*
-    public override void MoveTile(TileData newTile)
-    {
-        base.MoveTile(newTile);
-        foreach (GuardEntity guard in NewManager.instance.listOfGuards)
-            guard.CheckForPlayer();
-    }
-    */
-    
-
     public bool CheckForObjectives()
     {
         foreach (TileData tile in currentTile.adjacentTiles)
@@ -144,7 +134,7 @@ public class PlayerEntity : MovingEntity
             HazardBox.alpha -= FadeSpeed;
             yield return null;
         }
-        LevelUIManager.instance.ChangeHealth(this, -damage);
+        ChangeHealth(-damage);
         yield return null;
     }
 
@@ -153,8 +143,74 @@ public class PlayerEntity : MovingEntity
         yield return null;
         costChange.Clear();
         hidden = hidden > 0 ? hidden - 1 : 0;
+    }
 
-        //meshRenderer.material = (hidden > 0) ? HiddenPlayerMaterial : DefaultPlayerMaterial;
+    /// <summary>
+    /// set energy value
+    /// </summary>
+    /// <param name="n">to change to 2, n = 2</param>
+    public void SetEnergy(int n)
+    {
+        ChangeEnergy(n - myEnergy);
+    }
+
+    /// <summary>
+    /// change energy value
+    /// </summary>
+    /// <param name="n">to subtract 3 energy, n = -3</param>
+    public void ChangeEnergy(int n)
+    {
+        this.myEnergy = Math.Clamp(this.myEnergy + n, 0, this.maxEnergy);
+        LevelUIManager.instance.UpdateStats(this);
+    }
+
+    /// <summary>
+    /// set health value
+    /// </summary>
+    /// <param name="player">the player</param>
+    /// <param name="n">to change to 2, n = 2</param>
+    public void SetHealth( int n)
+    {
+        ChangeHealth(n - health);
+    }
+
+    /// <summary>
+    /// change health value
+    /// </summary>
+    /// <param name="n">to subtract 3 health, n = -3</param>
+    public void ChangeHealth(int n)
+    {
+        this.health = Math.Clamp(this.health + n, 0, 3);
+
+        if (n < 0)
+            MoveCamera.instance.Shake();
+
+        LevelUIManager.instance.UpdateStats(this);
+        if (this.health <= 0)
+            PhaseManager.instance.GameOver($"{this.name} lost all their HP.", false);
+    }
+
+    /// <summary>
+    /// set movement value
+    /// </summary>
+    /// <param name="n">to change to 2, n = 2</param>
+    public void SetMovement(int n)
+    {
+        ChangeMovement(n - movementLeft);
+    }
+
+    /// <summary>
+    /// change movement value
+    /// </summary>
+    /// <param name="player">the player</param>
+    /// <param name="n">to subtract 3 movement, n = -3</param>
+    public void ChangeMovement(int n)
+    {
+        this.movementLeft = Math.Clamp(this.movementLeft + n, 0, this.maxMovement);
+        LevelUIManager.instance.UpdateStats(this);
+
+        if (this.movementLeft + n < 0)
+            this.movementLeft += n;
     }
 
 #endregion
@@ -319,7 +375,7 @@ public class PlayerEntity : MovingEntity
         StartCoroutine(this.DiscardFromHand(playMe));
 
         if (payEnergy)
-            LevelUIManager.instance.ChangeEnergy(this, int.Parse(playMe.textCost.text)*-1);
+            ChangeEnergy(int.Parse(playMe.textCost.text)*-1);
 
         LevelUIManager.instance.UpdateStats(this);
         yield return playMe.OnPlayEffect();

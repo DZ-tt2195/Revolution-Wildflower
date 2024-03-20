@@ -601,41 +601,41 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
                     break;
 
                 case "CHANGEHP":
-                    LevelUIManager.instance.ChangeHealth(currentPlayer, data.chHP);
+                    currentPlayer.ChangeHealth( data.chHP);
                     break;
                 case "CHANGEADJACENTHP":
                     yield return ChoosePlayer();
                     PlayerEntity player = adjacentTilesWithPlayers[0].myEntity.GetComponent<PlayerEntity>();
                     currentTarget = currentPlayer.currentTile;
-                    LevelUIManager.instance.ChangeHealth(player, data.chHP);
+                    player.ChangeHealth( data.chHP);
                     break;
 
                 case "CHANGEEP":
-                    LevelUIManager.instance.ChangeEnergy(currentPlayer, data.chEP);
+                    currentPlayer.ChangeEnergy(data.chEP);
                     break;
                 case "MAXENERGY":
                     currentPlayer.maxEnergy += data.chEP;
                     break;
                 case "ZEROENERGY":
-                    LevelUIManager.instance.SetEnergy(currentPlayer, 0);
+                    currentPlayer.SetEnergy( 0);
                     break;
                 case "CONVERTMOVEMENTTOENERGY":
                     yield return ChooseFromSlider("Pay how much movement?", 0, currentPlayer.movementLeft);
-                    LevelUIManager.instance.ChangeMovement(currentPlayer, -1 * sliderData);
-                    LevelUIManager.instance.ChangeEnergy(currentPlayer, sliderData);
+                    currentPlayer.ChangeMovement( -1 * sliderData);
+                    currentPlayer.ChangeEnergy( sliderData);
                     break;
 
                 case "FREEMOVE":
                     yield return PhaseManager.instance.ChooseMovePlayer(currentPlayer, 3, true);
                     break;
                 case "CHANGEMP":
-                    LevelUIManager.instance.ChangeMovement(currentPlayer, data.chMP);
+                    currentPlayer.ChangeMovement( data.chMP);
                     break;
                 case "MAXMOVEMENT":
-                    currentPlayer.movesPerTurn += data.chMP;
+                    currentPlayer.maxMovement += data.chMP;
                     break;
                 case "ZEROMOVEMENT":
-                    LevelUIManager.instance.SetMovement(currentPlayer, 0);
+                    currentPlayer.SetMovement( 0);
                     break;
 
                 case "CHANGECOST":

@@ -145,7 +145,7 @@ public class LevelUIManager : MonoBehaviour
             }
 
             if (healthBar.gameObject.activeInHierarchy) { healthBar.SetValue(player.health); }
-            if (movementBar.gameObject.activeInHierarchy) { movementBar.SetValue(player.movementLeft); movementBar.SetMaximumValue(player.movesPerTurn); }
+            if (movementBar.gameObject.activeInHierarchy) { movementBar.SetValue(player.movementLeft); movementBar.SetMaximumValue(player.maxMovement); }
             if (energyBar.gameObject.activeInHierarchy) { energyBar.SetValue(player.myEnergy); energyBar.SetMaximumValue(player.maxEnergy); }
         }
 
@@ -156,78 +156,6 @@ public class LevelUIManager : MonoBehaviour
         {
             nextPlayer.myBar.ChangeText($"{nextPlayer.myHand.Count} Cards; {nextPlayer.health} HP; \n{nextPlayer.movementLeft} Moves; {nextPlayer.myEnergy} Energy");
         }
-    }
-
-    /// <summary>
-    /// set energy value
-    /// </summary>
-    /// <param name="player">the player</param>
-    /// <param name="n">to change to 2, n = 2</param>
-    public void SetEnergy(PlayerEntity player, int n)
-    {
-        ChangeEnergy(player, n - (int)player.myEnergy);
-    }
-
-    /// <summary>
-    /// change energy value
-    /// </summary>
-    /// <param name="player">the player</param>
-    /// <param name="n">to subtract 3 energy, n = -3</param>
-    public void ChangeEnergy(PlayerEntity player, int n)
-    {
-        player.myEnergy = Math.Clamp(player.myEnergy + n, 0, player.maxEnergy);
-        UpdateStats(player);
-    }
-
-    /// <summary>
-    /// set health value
-    /// </summary>
-    /// <param name="player">the player</param>
-    /// <param name="n">to change to 2, n = 2</param>
-    public void SetHealth(PlayerEntity player, int n)
-    {
-        ChangeHealth(player, n - (int)player.health);
-    }
-
-    /// <summary>
-    /// change health value
-    /// </summary>
-    /// <param name="player">the player</param>
-    /// <param name="n">to subtract 3 health, n = -3</param>
-    public void ChangeHealth(PlayerEntity player, int n)
-    {
-        player.health = Math.Clamp(player.health + n, 0, 3);
-
-        if (player != null && n < 0)
-            MoveCamera.instance.Shake();
-
-        UpdateStats(player);
-        if (player.health <= 0)
-            PhaseManager.instance.GameOver($"{player.name} lost all their HP.", false);
-    }
-
-    /// <summary>
-    /// set movement value
-    /// </summary>
-    /// <param name="player">the player</param>
-    /// <param name="n">to change to 2, n = 2</param>
-    public void SetMovement(PlayerEntity player, int n)
-    {
-        ChangeMovement(player, n - (int)player.movementLeft);
-    }
-
-    /// <summary>
-    /// change movement value
-    /// </summary>
-    /// <param name="player">the player</param>
-    /// <param name="n">to subtract 3 movement, n = -3</param>
-    public void ChangeMovement(PlayerEntity player, int n)
-    {
-        player.movementLeft = Math.Clamp(player.movementLeft + n, 0, player.movesPerTurn);
-        UpdateStats(player);
-
-        if (player.movementLeft + n < 0)
-            player.movementLeft += n;
     }
 
     #endregion

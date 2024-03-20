@@ -199,8 +199,8 @@ public class PhaseManager : MonoBehaviour
 
         foreach (PlayerEntity player in LevelGenerator.instance.listOfPlayers)
         {
-            LevelUIManager.instance.SetEnergy(player, player.maxEnergy);
-            LevelUIManager.instance.SetMovement(player, player.movesPerTurn);
+            player.SetEnergy(player.maxEnergy);
+            player.SetMovement(player.maxMovement);
             player.damageTaken = 0;
             player.cardsPlayed.Clear();
         }
@@ -256,7 +256,7 @@ public class PhaseManager : MonoBehaviour
         {
             FocusOnTile(guard.currentTile, false);
             yield return guard.EndOfTurn();
-            guard.movementLeft = guard.movesPerTurn;
+            guard.movementLeft = guard.maxMovement;
             guard.DetectionRangePatrol = guard.DetectionRangeMax;
         }
 
@@ -385,7 +385,7 @@ public class PhaseManager : MonoBehaviour
             yield return currentPlayer.MoveTile(nextTile);
             if (!freeMoves)
             {
-                LevelUIManager.instance.ChangeMovement(currentPlayer, -1);
+                currentPlayer.ChangeMovement(-1);
             }
             if (currentPlayer.movementLeft == -1)
             {
@@ -619,7 +619,7 @@ public class PhaseManager : MonoBehaviour
             }
         }
 
-        LevelUIManager.instance.ChangeEnergy(lastSelectedPlayer, -3);
+        lastSelectedPlayer.ChangeEnergy(-3);
         lastSelectedPlayer.PlusCards(1);
         BackToStart(false);
     }

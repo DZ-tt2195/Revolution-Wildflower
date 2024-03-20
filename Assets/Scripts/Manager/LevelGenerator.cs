@@ -52,7 +52,7 @@ public class LevelGenerator : MonoBehaviour
 
         PlayerEntity defaultPlayer = playerPrefab;
         LevelUIManager.instance.healthBar.SetMaximumValue(defaultPlayer.health);
-        LevelUIManager.instance.movementBar.SetMaximumValue(defaultPlayer.movesPerTurn);
+        LevelUIManager.instance.movementBar.SetMaximumValue(defaultPlayer.maxMovement);
         LevelUIManager.instance.energyBar.SetMaximumValue(defaultPlayer.maxEnergy);
 
         GenerateTiles(levelToLoad);
@@ -95,8 +95,8 @@ public class LevelGenerator : MonoBehaviour
                             PlayerEntity player = thisTileEntity.GetComponent<PlayerEntity>();
                             player.myPosition = listOfPlayers.Count;
                             player.myBar = playerButtons.GetChild(listOfPlayers.Count).GetComponent<PlayerBar>();
-                            LevelUIManager.instance.SetEnergy(player, player.maxEnergy);
-                            LevelUIManager.instance.SetMovement(player, player.movesPerTurn);
+                            player.SetEnergy(player.maxEnergy);
+                            player.SetMovement(player.maxMovement);
                             listOfPlayers.Add(player);
                             player.PlayerSetup(numberPlusAddition[1], LevelUIManager.instance.handContainer.GetChild(player.myPosition).GetChild(0));
                             break;
@@ -201,7 +201,7 @@ public class LevelGenerator : MonoBehaviour
                             thisTileEntity = Instantiate(guardPrefab, nextTile.transform);
                             thisTileEntity.name = "Guard";
                             GuardEntity theGuard = thisTileEntity.GetComponent<GuardEntity>();
-                            theGuard.movementLeft = theGuard.movesPerTurn;
+                            theGuard.movementLeft = theGuard.maxMovement;
                             theGuard.direction = StringToDirection(numberPlusAddition[1]);
                             listOfGuards.Add(theGuard);
 
@@ -223,7 +223,7 @@ public class LevelGenerator : MonoBehaviour
                             thisTileEntity = Instantiate(staticGuardPrefab, nextTile.transform);
                             thisTileEntity.name = "Guard";
                             GuardEntity theStaticGuard = thisTileEntity.GetComponent<GuardEntity>();
-                            theStaticGuard.movementLeft = theStaticGuard.movesPerTurn;
+                            theStaticGuard.movementLeft = theStaticGuard.maxMovement;
                             theStaticGuard.direction = StringToDirection(numberPlusAddition[1]);
                             listOfGuards.Add(theStaticGuard);
 
