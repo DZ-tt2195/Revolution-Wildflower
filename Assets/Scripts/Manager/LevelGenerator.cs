@@ -207,7 +207,8 @@ public class LevelGenerator : MonoBehaviour
 
                             try
                             {
-                                string[] patrolList = numberPlusAddition[2].Split('|');
+                                Debug.Log(numberPlusAddition[2]);
+                                string[] patrolList = numberPlusAddition[2].Split('-');
                                 foreach (string patrol in patrolList)
                                 {
                                     string[] points = patrol.Split(",");
@@ -245,6 +246,8 @@ public class LevelGenerator : MonoBehaviour
                     try
                     {
                         StartCoroutine(thisTileEntity.MoveTile(nextTile));
+                        if (int.Parse(numberPlusAddition[0]) == 1)
+                            PhaseManager.instance.FocusOnTile(nextTile, false);
                     }
                     catch (NullReferenceException)
                     {
@@ -253,6 +256,8 @@ public class LevelGenerator : MonoBehaviour
                 }
             }
         }
+
+        LevelUIManager.instance.UpdateStats(null);
 
         for (int i = 0; i < listOfTiles.GetLength(0); i++) //then each tile finds adjacent tiles
         {

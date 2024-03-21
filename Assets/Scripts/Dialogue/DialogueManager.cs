@@ -183,7 +183,7 @@ public class DialogueManager : MonoBehaviour
 
     private IEnumerator DisplayLine(string line)
     {
-        Debug.Log("displaying line " + line);
+        //Debug.Log("displaying line " + line);
         // set the text to the full line, but set the visible characters to 0
         dialogueText.text = line;
         dialogueText.maxVisibleCharacters = 0;
@@ -231,10 +231,10 @@ public class DialogueManager : MonoBehaviour
 
     private void ContinueStory()
     {
-        Debug.Log(currentStory.currentText);
+        //Debug.Log(currentStory.currentText);
         if (currentStory.canContinue)
         {
-            Debug.Log("Can continue");
+            //Debug.Log("Can continue");
             // set text for the current dialogue line
             if (displayLineCoroutine != null)
             {
@@ -248,7 +248,7 @@ public class DialogueManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("Can't continue");
+            //Debug.Log("Can't continue");
             StartCoroutine(ExitDialogueMode());
         }
     }

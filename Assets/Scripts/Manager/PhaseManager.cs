@@ -21,7 +21,6 @@ public class PhaseManager : MonoBehaviour
 
     public enum TurnSystem { WaitingOnPlayer, ResolvingAction, Environmentals, WaitingOnGuard };
     [Foldout("Phases in a turn", true)]
-    [Tooltip("last selected player")][ReadOnly] public PlayerEntity lastSelectedPlayer;
     [Tooltip("if a player is being moved or not")][ReadOnly] public bool movingPlayer = false;
     [Tooltip("Mouse position")] Vector3 lastClickedMousePosition;
     TurnSystem _CurrentPhase;
@@ -29,6 +28,12 @@ public class PhaseManager : MonoBehaviour
     {
         get { return _CurrentPhase; }
         set { _CurrentPhase = value; Debug.Log($"changed turn to {value}"); }
+    }
+    PlayerEntity _LastSelectedPlayer;
+    [Tooltip("last selected player")][ReadOnly] public PlayerEntity lastSelectedPlayer
+    {
+        get { return _LastSelectedPlayer; }
+        set { _LastSelectedPlayer = value; LevelUIManager.instance.UpdateStats(value); }
     }
 
     [Foldout("Turn buttons", true)]
@@ -107,20 +112,17 @@ public class PhaseManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             lastClickedMousePosition = Input.mousePosition;
-            Debug.Log(Input.mousePosition);
         }
         else if (movingPlayer && Input.GetKeyUp(KeyCode.Mouse0))
         {
             if (Input.mousePosition.Equals(lastClickedMousePosition) && CurrentPhase == TurnSystem.WaitingOnPlayer && !EventSystem.current.IsPointerOverGameObject())
             {
-                Debug.Log(lastClickedMousePosition);
-
                 StopCoroutine(ChooseMovePlayer(lastSelectedPlayer, 0));
                 StopCoroutine(ChooseCardPlay(lastSelectedPlayer));
                 Debug.LogError("deselect");
 
-                lastSelectedPlayer = null;
                 movingPlayer = false;
+                lastSelectedPlayer = null;
                 BackToStart(false);
             }
         }
@@ -136,8 +138,8 @@ public class PhaseManager : MonoBehaviour
     /// <returns></returns>
     public IEnumerator StartPlayerTurn()
     {
-        LevelUIManager.instance.UpdateStats(null);
-
+        StartCoroutine(LevelUIManager.instance.FadeTurnBar("Player Turn"));
+        Debug.Log("starting player turns");
         foreach (Card card in futureEffects)
             yield return card.NextRoundEffect();
         futureEffects.Clear();
@@ -167,10 +169,10 @@ public class PhaseManager : MonoBehaviour
 
             objectiveButton.gameObject.SetActive(false);
             endTurnImage.color = AnythingLeftThisTurn() ? Color.gray : Color.white;
+            LevelGenerator.instance.EnablePlayers();
 
             if (startTurn)
             {
-                StartCoroutine(LevelUIManager.instance.FadeTurnBar("Player Turn"));
                 try
                 {
                     selectedTile = lastSelectedPlayer.currentTile;
@@ -186,7 +188,6 @@ public class PhaseManager : MonoBehaviour
                 selectedTile = lastSelectedPlayer.currentTile;
                 ControlCharacter(lastSelectedPlayer);
             }
-            LevelGenerator.instance.EnablePlayers();
         }
     }
 
@@ -340,11 +341,11 @@ public class PhaseManager : MonoBehaviour
         {
             CurrentPhase = TurnSystem.WaitingOnPlayer;
         }
+        movingPlayer = true;
 
         while (chosenTile == null)
         {
-            movingPlayer = true;
-            if (lastSelectedPlayer != currentPlayer)
+            if (movingPlayer && lastSelectedPlayer != currentPlayer)
             {
                 lastSelectedPlayer = currentPlayer;
                 LevelUIManager.instance.UpdateStats(lastSelectedPlayer);
@@ -352,7 +353,6 @@ public class PhaseManager : MonoBehaviour
 
             if (selectedTile != currentPlayer.currentTile || (!freeMoves && CurrentPhase != TurnSystem.WaitingOnPlayer))
             {
-                movingPlayer = false;
                 yield break;
             }
             else
@@ -409,7 +409,7 @@ public class PhaseManager : MonoBehaviour
     IEnumerator ChooseCardPlay(PlayerEntity currentPlayer) //choose a card to play
     {
         CurrentPhase = TurnSystem.WaitingOnPlayer;
-        List<Card> canBePlayed = new List<Card>();
+        List<Card> canBePlayed = new();
         foreach (Card card in currentPlayer.myHand)
         {
             if (card.CanPlay(currentPlayer))
@@ -419,7 +419,7 @@ public class PhaseManager : MonoBehaviour
 
         while (chosenCard == null)
         {
-            if (CurrentPhase != TurnSystem.ResolvingAction)
+            if (CurrentPhase != TurnSystem.WaitingOnPlayer)
             {
                 yield break;
             }
@@ -429,6 +429,7 @@ public class PhaseManager : MonoBehaviour
             }
         }
 
+        Debug.Log($"chosen card no longer null");
         CurrentPhase = TurnSystem.ResolvingAction;
         Collector confirmDecision = ConfirmDecision($"Play {chosenCard.name}?", new Vector2(0, -85));
         if (confirmDecision != null)
@@ -621,12 +622,20 @@ public class PhaseManager : MonoBehaviour
             }
         }
 
-        lastSelectedPlayer.ChangeEnergy(-3);
-        lastSelectedPlayer.PlusCards(1);
+        if (lastSelectedPlayer != null)
+        {
+            lastSelectedPlayer.ChangeEnergy(-3);
+            lastSelectedPlayer.PlusCards(1);
+        }
+        else
+        {
+            LevelGenerator.instance.listOfPlayers[0].ChangeEnergy(-3);
+            LevelGenerator.instance.listOfPlayers[0].PlusCards(1);
+        }
         BackToStart(false);
     }
 
-    #endregion
+#endregion
 
 #region Decisions
 
@@ -732,9 +741,9 @@ public class PhaseManager : MonoBehaviour
         {
             foreach (TileData tile in canBeChosen)
             {
-                if (tile.gridPosition == TutorialManager.forcedSelectionTile)
+                Debug.Log(tile.gridPosition + " " + TutorialManager.forcedMovementTile);
+                if (tile.gridPosition == TutorialManager.forcedMovementTile)
                 {
-                    tile.CardSelectable = true;
                     tile.clickable = true;
                     tile.indicatorArrow = true;
                     tile.moveable = true;
@@ -742,9 +751,8 @@ public class PhaseManager : MonoBehaviour
 
                 else
                 {
-                    tile.CardSelectable = true;
-                    tile.clickable = false;
                     tile.moveable = true;
+                    tile.clickable = false;
                 }
             }
         }
@@ -753,7 +761,6 @@ public class PhaseManager : MonoBehaviour
         {
             foreach (TileData tile in canBeChosen)
             {
-                tile.CardSelectable = false;
                 tile.moveable = true;
                 tile.clickable = true;
             }

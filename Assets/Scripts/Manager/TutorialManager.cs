@@ -252,10 +252,11 @@ public class TutorialManager : MonoBehaviour
 
     public static void SetLevelStartParameters(string levelName)
     {
-        LevelStartParameters parameters = Resources.Load<LevelStartParameters>(instance.levelStartParametersFilePath + "/" + levelName);
+        LevelStartParameters parameters = Resources.Load<LevelStartParameters>($"{instance.levelStartParametersFilePath}/{levelName}");
         if (parameters == null)
         {
-            Debug.LogError("TutorialManager, SetLevelStartParameters: Could not find LevelStartParameters at " + instance.levelStartParametersFilePath + "/" + levelName);
+            PhaseManager.instance.StartCoroutine(PhaseManager.instance.StartPlayerTurn());
+            Debug.LogError($"TutorialManager, SetLevelStartParameters: Could not find LevelStartParameters at {instance.levelStartParametersFilePath}/{levelName}");
             return;
         }
 
@@ -290,13 +291,7 @@ public class TutorialManager : MonoBehaviour
             LevelUIManager.instance.UpdateStats(null);
             PhaseManager.instance.endTurnButton.gameObject.SetActive(true);
             PhaseManager.instance.StartCoroutine(PhaseManager.instance.StartPlayerTurn());
-
         }
-    }
-
-    public static void ChainTutorial(string className, string eventName, string fileName)
-    {
-
     }
 
     public void ExitTutorial()

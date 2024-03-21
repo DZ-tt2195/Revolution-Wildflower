@@ -51,7 +51,7 @@ public class MoveCamera : MonoBehaviour
 
     public static Action OnFocusComplete;
 
-    private void Start()
+    private void Awake()
     {
         cameras.Clear();
         instance = this;

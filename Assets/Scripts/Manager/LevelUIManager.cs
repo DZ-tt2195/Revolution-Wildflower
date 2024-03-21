@@ -61,6 +61,11 @@ public class LevelUIManager : MonoBehaviour
         turnCountTxt = informationImage.GetChild(1).GetChild(0).GetComponent<TMP_Text>();
     }
 
+    private void Start()
+    {
+        UpdateStats(null);
+    }
+
     private void FixedUpdate()
     {
         opacity += (decrease) ? 0.05f : -0.05f;
@@ -73,6 +78,7 @@ public class LevelUIManager : MonoBehaviour
         LevelGenerator.instance.DisableAllCards();
         LevelGenerator.instance.DisableAllTiles();
 
+        turnAlertBar.gameObject.SetActive(true);
         turnAlertBar.alpha = 0;
         turnText.text = message;
 
