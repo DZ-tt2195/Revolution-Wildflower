@@ -19,7 +19,6 @@ public class PlayerEntity : MovingEntity
         [Tooltip("turns where you can't be caught")] [ReadOnly] public int hidden = 0;
         [Tooltip("highest energy you can have")][ReadOnly] public int maxEnergy = 5;
         [Tooltip("damage taken during guard turn")][ReadOnly] public int damageTaken = 0;
-        [Tooltip("Player index")] [ReadOnly] private int index;
 
     //[Tooltip("normal player appearance")] [SerializeField] Material DefaultPlayerMaterial;
     //[Tooltip("appearance when hidden")] [SerializeField] Material HiddenPlayerMaterial;
@@ -47,36 +46,35 @@ public class PlayerEntity : MovingEntity
 
 #region Entity stuff
 
-    public void PlayerSetup(string name, Transform hand)
+    public void PlayerSetup(string name)
     {
         HazardBox = LevelUIManager.instance.ManagerHazardBox;
         HazardBox.alpha = 0;
-        handTransform = hand;
         movementLeft = maxMovement;
         this.name = name;
-        myBar.playerName.text = name;
 
         switch (name)
         {
             case "Gail":
                 spriteRenderer.sprite = gailSprite;
+                myPosition = 2;
                 tileOffset = new Vector3(0, 0.75f, 0);
-                index = 0;
-                GetCards(0);
                 break;
             case "Frankie":
                 spriteRenderer.sprite = frankieSprite;
+                myPosition = 1;
                 tileOffset = new Vector3(-1, 0.75f, 0.8f);
-                index = 1;
-                GetCards(1);
                 break;
             case "WK":
                 spriteRenderer.sprite = wkSprite;
+                myPosition = 0;
                 tileOffset = new Vector3(0, 0.75f, 0);
-                index = 2;
-                GetCards(2);
                 break;
         }
+        Transform playerButtons = GameObject.Find("Player Buttons").transform;
+        myBar = playerButtons.GetChild(myPosition).GetComponent<PlayerBar>();
+        handTransform = LevelUIManager.instance.handContainer.GetChild(myPosition).GetChild(0);
+        GetCards(myPosition);
 
         PlayerEntity me = this;
         myBar.button.onClick.AddListener(() => PhaseManager.instance.FocusOnTile(me.currentTile, true));

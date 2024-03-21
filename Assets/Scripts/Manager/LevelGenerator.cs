@@ -67,7 +67,6 @@ public class LevelGenerator : MonoBehaviour
     {
         string[,] newGrid = LevelLoader.LoadLevelGrid(SaveManager.instance.levelSheets[levelToLoad]);
         listOfTiles = new TileData[newGrid.GetLength(0), newGrid.GetLength(1)];
-        Transform playerButtons = GameObject.Find("Player Buttons").transform;
 
         for (int i = 0; i < listOfTiles.GetLength(0); i++) //generate all tiles
         {
@@ -93,12 +92,10 @@ public class LevelGenerator : MonoBehaviour
                         case 1: //create player
                             thisTileEntity = Instantiate(playerPrefab, nextTile.transform);
                             PlayerEntity player = thisTileEntity.GetComponent<PlayerEntity>();
-                            player.myPosition = listOfPlayers.Count;
-                            player.myBar = playerButtons.GetChild(listOfPlayers.Count).GetComponent<PlayerBar>();
                             player.SetEnergy(player.maxEnergy);
                             player.SetMovement(player.maxMovement);
                             listOfPlayers.Add(player);
-                            player.PlayerSetup(numberPlusAddition[1], LevelUIManager.instance.handContainer.GetChild(player.myPosition).GetChild(0));
+                            player.PlayerSetup(numberPlusAddition[1]);
                             break;
 
                         case 2: //create exit
