@@ -108,6 +108,7 @@ public class TileData : MonoBehaviour
 
         if (indicatorArrow)
         {
+            Debug.Log("arrow should render");
             indicator.SetAlpha(1);
             indicatorTransform.position = new Vector3(indicatorTransform.position.x, Mathf.Sin(Time.time * 1.5f) * 0.5f + 2, indicatorTransform.position.z);
         }

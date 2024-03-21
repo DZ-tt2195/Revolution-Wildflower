@@ -363,7 +363,9 @@ public class NewManager : MonoBehaviour
 
                             try
                             {
-                                string[] patrolList = numberPlusAddition[2].Split('|');
+                                Debug.Log(numberPlusAddition[2]);
+                                string[] patrolList = numberPlusAddition[2].Split('-');
+                                Debug.Log("Patrol string array length " + patrolList.Length);
                                 foreach (string patrol in patrolList)
                                 {
                                     string[] points = patrol.Split(",");
@@ -851,19 +853,22 @@ public class NewManager : MonoBehaviour
 
         if (TutorialManager.forcedMovementTile != null)
         {
+            Debug.Log("Forcing movement at " + TutorialManager.forcedMovementTile);
             foreach (TileData tile in canBeChosen)
             {
-                if (tile.gridPosition == TutorialManager.forcedSelectionTile)
+                Debug.Log(tile.gridPosition + " " + TutorialManager.forcedMovementTile);
+                if (tile.gridPosition == TutorialManager.forcedMovementTile)
                 {
-                    tile.CardSelectable = true;
+                    Debug.Log("the chosen one");
                     tile.clickable = true;
                     tile.choosable = true;
                     tile.indicatorArrow = true;
+                    tile.moveable = true;
                 }
 
                 else
                 {
-                    tile.CardSelectable = true;
+                    tile.moveable = true;
                     tile.clickable = false;
                     tile.choosable = true;
                 }
