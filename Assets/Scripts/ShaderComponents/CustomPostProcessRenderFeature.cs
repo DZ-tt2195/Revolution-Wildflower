@@ -34,6 +34,8 @@ public class CustomPostProcessRendererFeature : ScriptableRendererFeature
         compositeMat = CoreUtils.CreateEngineMaterial(compositeShader);
         
         customPass = new CustomPostProcessPass(bloomMat, compositeMat);
+
+        if (!Application.isPlaying) SetActive(false);
     }
 
     protected override void Dispose(bool disposing)
