@@ -11,7 +11,6 @@ public class GameSettings : MonoBehaviour
     public static GameSettings instance;
     [SerializeField] GameObject background;
     [SerializeField] Slider animationSlider;
-    [SerializeField] TMP_Text animationText;
     [SerializeField] Toggle confirmationToggle;
     [SerializeField] Toggle screenShakeToggle;
     [SerializeField] Button quitButton;
@@ -60,7 +59,6 @@ public class GameSettings : MonoBehaviour
     void SetAnimationSpeed(float value)
     {
         animationSlider.value = value;
-        animationText.text = value.ToString("F1");
         PlayerPrefs.SetFloat("Animation Speed", value);
     }
 

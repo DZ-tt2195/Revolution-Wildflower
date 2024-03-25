@@ -34,7 +34,7 @@ public class Entity : MonoBehaviour
 
     public virtual IEnumerator MoveTile(TileData newTile)
     {
-        newTile = NewManager.instance.listOfTiles[newTile.gridPosition.x, newTile.gridPosition.y];
+        newTile = LevelGenerator.instance.listOfTiles[newTile.gridPosition.x, newTile.gridPosition.y];
         if (currentTile != null)
             currentTile.myEntity = null;
 
@@ -49,7 +49,7 @@ public class Entity : MonoBehaviour
             yield return modifier.ResolveList(this);
         }
         newTile.listOfModifiers.RemoveAll(item => item == null);
-        foreach (GuardEntity guard in NewManager.instance.listOfGuards)
+        foreach (GuardEntity guard in LevelGenerator.instance.listOfGuards)
             guard.CheckForPlayer();
         CalculateTiles();
     }

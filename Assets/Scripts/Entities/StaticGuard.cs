@@ -2,20 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using MyBox;
-using UnityEngine.UIElements;
-using Unity.VisualScripting;
 
 public class StaticGuard : GuardEntity
 {
 
     public override IEnumerator Patrol()
     {
-        if (currentTile == NewManager.instance.listOfTiles[PatrolPoints[0].x, PatrolPoints[0].y])
+        if (currentTile == LevelGenerator.instance.listOfTiles[PatrolPoints[0].x, PatrolPoints[0].y])
         {
             yield break;
         }
-        NewManager.instance.CalculatePathfinding(currentTile, NewManager.instance.listOfTiles[PatrolPoints[PatrolTarget].x, PatrolPoints[PatrolTarget].y], movementLeft, true, true);
-        TileData nextTile = NewManager.instance.CurrentAvailableMoveTarget;  //moves towards the next patrol point
+        Pathfinder.instance.CalculatePathfinding(currentTile, LevelGenerator.instance.listOfTiles[PatrolPoints[PatrolTarget].x, PatrolPoints[PatrolTarget].y], movementLeft, true, true);
+        TileData nextTile = Pathfinder.instance.CurrentAvailableMoveTarget;  //moves towards the next patrol point
         Vector2Int nextDirection = nextTile.gridPosition - currentTile.gridPosition;
 
         if (nextDirection != direction)
@@ -33,7 +31,7 @@ public class StaticGuard : GuardEntity
             }
             movementLeft--;
         }
-        yield return NewManager.Wait(movePauseTime);
+        yield return new WaitForSeconds(movePauseTime);
         print("Checking New Action");
         yield return newAction();
     }

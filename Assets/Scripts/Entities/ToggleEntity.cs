@@ -20,7 +20,7 @@ public class ToggleEntity : ObjectiveEntity
                 {
                     foreach (Vector2Int vector in targetPoints)
                     {
-                        TileData getTile = NewManager.instance.FindTile(vector);
+                        TileData getTile = LevelGenerator.instance.FindTile(vector);
                         if (getTile.myEntity != null)
                         {
                             Debug.Log($"{getTile} has entity");
@@ -45,7 +45,7 @@ public class ToggleEntity : ObjectiveEntity
             case "TOGGLEWALLS":
                 foreach (Vector2Int vector in targetPoints)
                 {
-                    TileData getTile = NewManager.instance.FindTile(vector);
+                    TileData getTile = LevelGenerator.instance.FindTile(vector);
                     if (toggledOn)
                     {
                         WallEntity wall = getTile.transform.GetComponentInChildren<WallEntity>();

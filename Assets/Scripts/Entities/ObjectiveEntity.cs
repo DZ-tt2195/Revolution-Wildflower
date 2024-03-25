@@ -20,8 +20,8 @@ public class ObjectiveEntity : Entity
 
     public virtual IEnumerator ObjectiveComplete(PlayerEntity player)
     {
-        NewManager.instance.listOfObjectives.Remove(this);
-        NewManager.instance.objectiveButton.gameObject.SetActive(false);
+        LevelGenerator.instance.listOfObjectives.Remove(this);
+        PhaseManager.instance.objectiveButton.gameObject.SetActive(false);
 
         currentTile.myEntity = null;
         player.adjacentObjective = null;
@@ -47,14 +47,14 @@ public class ObjectiveEntity : Entity
             switch (nextInstruction)
             {
                 case "ALLDRAW":
-                    foreach (PlayerEntity nextPlayer in NewManager.instance.listOfPlayers)
+                    foreach (PlayerEntity nextPlayer in LevelGenerator.instance.listOfPlayers)
                         nextPlayer.PlusCards(2);
                     break;
             }
         }
 
-        NewManager.instance.listOfObjectives.Remove(this);
-        NewManager.instance.objectiveButton.gameObject.SetActive(false);
+        LevelGenerator.instance.listOfObjectives.Remove(this);
+        PhaseManager.instance.objectiveButton.gameObject.SetActive(false);
         currentTile.myEntity = null;
         player.adjacentObjective = null;
 
