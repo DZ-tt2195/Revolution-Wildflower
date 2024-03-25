@@ -19,10 +19,9 @@ public class TileData : MonoBehaviour
         [Tooltip("Modifiers on this tile")][ReadOnly] public List<TileModifier> listOfModifiers = new();
 
     [Foldout("Tile conditions", true)]
-        [Tooltip("Defines whether you can choose this tile")][ReadOnly] public bool choosable = false;
         [Tooltip("Defines whether you can click this tile")][ReadOnly] public bool clickable = false;
         [Tooltip("Defines whether you can move onto this tile")][ReadOnly] public bool moveable = false;
-        [Tooltip("Defines whether you can move onto this tile")][ReadOnly] public bool currentGuardTarget = false;
+        [Tooltip("if a guard is looking at this tile")][ReadOnly] public bool currentGuardTarget = false;
         [Tooltip("Defines whether an arrow should be hovering over this tile.")][ReadOnly] public bool indicatorArrow = false;
         [Tooltip("Defines whether you can select this tile for a card action")][ReadOnly] public bool CardSelectable = false;
         [Tooltip("If your mouse is over this")] private bool moused = false;
@@ -36,8 +35,8 @@ public class TileData : MonoBehaviour
         [Tooltip("Tile's sprite renderer")] SpriteRenderer myRenderer;
         [Tooltip("Tile's materal")] [SerializeField] Renderer renderer3d;
         [Tooltip("Glowing border's sprite renderer")] SpriteRenderer border;
-    [Tooltip("Indication arrow for forced tiles")] SpriteRenderer indicator;
-    [Tooltip("Indication arrow transform")]private Transform indicatorTransform;
+        [Tooltip("Indication arrow for forced tiles")] SpriteRenderer indicator;
+        [Tooltip("Indication arrow transform")]private Transform indicatorTransform;
         [Tooltip("color used for unselected moused over tiles")][SerializeField] Color mouseOverColor = new Color(0.9f,0.9f,0.9f,1);
         [Tooltip("color used for selected tiles")][SerializeField] Color SelectedColor = new Color(0.6f, 0.6f, 0.6f, 1);
         [Tooltip("color used for unselected moused over tiles (general)")][SerializeField] Color ClickableColor = new Color(0.9f, 0.9f, 0.9f, 1);
@@ -69,10 +68,10 @@ public class TileData : MonoBehaviour
         {
             border.color = AlertColor;
         }
-        else if (NewManager.instance.selectedTile == this)
+        else if (PhaseManager.instance.selectedTile == this)
         {
             border.color = SelectedColor;
-            border.SetAlpha(NewManager.instance.opacity);
+            border.SetAlpha(LevelUIManager.instance.opacity);
         }
         else if (currentGuardTarget)
         {
@@ -85,17 +84,17 @@ public class TileData : MonoBehaviour
         else if (moveable)
         {
             border.color = MoveableColor;
-            border.SetAlpha(NewManager.instance.opacity);
+            border.SetAlpha(LevelUIManager.instance.opacity);
         }
         else if (CardSelectable)
         {
             border.color = CardSelectableColor;
-            border.SetAlpha(NewManager.instance.opacity);
+            border.SetAlpha(LevelUIManager.instance.opacity);
         }
         else if (clickable)
         {
             border.color = ClickableColor;
-            border.SetAlpha(NewManager.instance.opacity);
+            border.SetAlpha(LevelUIManager.instance.opacity);
         }
         else if (myType != TileType.Regular)
         {
@@ -119,11 +118,9 @@ public class TileData : MonoBehaviour
 
     public IEnumerator NoiseFlash(int distance)
     {
-        //print("noiseflash at distance " + distance);
-        //print("Time to flash" + AlertDelay * distance);
-        yield return NewManager.Wait(AlertDelay * distance);
+        yield return new WaitForSeconds(AlertDelay * distance);
         noiseThrough = true;
-        yield return NewManager.Wait(BaseAlertDelay + AlertDelay * distance);
+        yield return new WaitForSeconds(BaseAlertDelay + AlertDelay * distance);
         noiseThrough = false;
     }
 
@@ -133,22 +130,12 @@ public class TileData : MonoBehaviour
         //generates a visible path the player is going to take to get to the space (clearing the last list and ignoring the first and last tile)
         if (moveable)
         {
-            for (int i = 0; i < NewManager.instance.FullPath.Count; i++)
-            {
-                NewManager.instance.FullPath[i].directionIndicator.enabled = false;
-            }
+            foreach (TileData tile in Pathfinder.instance.FullPath)
+                tile.directionIndicator.enabled = false;
 
-            NewManager.instance.CalculatePathfinding(NewManager.instance.lastSelectedPlayer.currentTile,this, NewManager.instance.lastSelectedPlayer.movementLeft,false,false);
-            for (int i = 0; i < NewManager.instance.FullPath.Count; i++) 
-            {
-                NewManager.instance.FullPath[i].directionIndicator.enabled = true;
-                /*
-                if (i != NewManager.instance.FullPath.Count - 1)
-                {
-                    NewManager.instance.FullPath[i].directionIndicator.enabled = true;
-                }
-                */
-            }
+            Pathfinder.instance.CalculatePathfinding(PhaseManager.instance.lastSelectedPlayer.currentTile,this, PhaseManager.instance.lastSelectedPlayer.movementLeft,false,false);
+            foreach (TileData tile in Pathfinder.instance.FullPath)
+                tile.directionIndicator.enabled = true;
         }
     }
 
@@ -157,10 +144,12 @@ public class TileData : MonoBehaviour
         moused = false;
         if (moveable)
         {
-            for (int i = 0; i < NewManager.instance.FullPath.Count; i++)
+            /*
+            for (int i = 0; i < PathfindingManager.instance.FullPath.Count; i++)
             {
                 //NewManager.instance.FullPath[i].directionIndicator.enabled = false;
             }
+            */
         }
     }
 
@@ -170,15 +159,13 @@ public class TileData : MonoBehaviour
         {
             if (moveable)
             {
-                for (int i = 0; i < NewManager.instance.FullPath.Count; i++)
-                {
-                    NewManager.instance.FullPath[i].directionIndicator.enabled = false;
-                }
+                foreach (TileData tile in Pathfinder.instance.FullPath)
+                    tile.directionIndicator.enabled = false;
             }
-            NewManager.instance.selectedTile = this;
-            if (choosable)
+            PhaseManager.instance.selectedTile = this;
+            if (moveable || CardSelectable)
             {
-                NewManager.instance.ReceiveChoice(this);
+                PhaseManager.instance.ReceiveChoice(this);
             }
             else if (myEntity != null)
             {
@@ -187,8 +174,7 @@ public class TileData : MonoBehaviour
                     PlayerEntity player = myEntity.GetComponent<PlayerEntity>();
                     if (player.stunned == 0)
                     {
-                        NewManager.instance.StopAllCoroutines();
-                        NewManager.instance.ControlCharacter(player);
+                        PhaseManager.instance.ControlCharacter(player);
                     }
                 }
             }
@@ -199,42 +185,34 @@ public class TileData : MonoBehaviour
             toolTipHoverTimer += Time.deltaTime;
             if (toolTipHoverTimer >= timeTillToolTip)
             {
-                NewManager.instance.toolTip.EntityName.text = myEntity.name;
-                NewManager.instance.toolTip.EntityInfo.text = myEntity.HoverBoxText();
-                NewManager.instance.toolTip.gameObject.SetActive(true);
-                NewManager.instance.toolTip.isActive = true;
-                
+                EntityToolTip.instance.EntityName.text = myEntity.name;
+                EntityToolTip.instance.EntityInfo.text = myEntity.HoverBoxText();
+                EntityToolTip.instance.gameObject.SetActive(true);
+                EntityToolTip.instance.isActive = true;
+
                 //if the tile entity is a guard, show their path to their current target
                 if (myEntity.CompareTag("Enemy"))
                 {
-                    for (int i = 0; i < NewManager.instance.FullPath.Count; i++)
-                    {
-                        NewManager.instance.FullPath[i].directionIndicator.enabled = false;
-                    }
+                    foreach (TileData tile in Pathfinder.instance.FullPath)
+                        tile.directionIndicator.enabled = false;
                     GuardEntity currentGuard = myEntity.gameObject.GetComponent<GuardEntity>();
                     if (currentGuard.alertStatus == GuardEntity.Alert.Patrol)
                     {
-                        NewManager.instance.CalculatePathfinding(this, NewManager.instance.listOfTiles[currentGuard.PatrolPoints[currentGuard.PatrolTarget].x, currentGuard.PatrolPoints[currentGuard.PatrolTarget].y],99,false,false);
-                        for (int i = 0; i < NewManager.instance.FullPath.Count; i++)
-                        {
-                            NewManager.instance.FullPath[i].directionIndicator.enabled = true;
-                        }
+                        Pathfinder.instance.CalculatePathfinding(this, LevelGenerator.instance.listOfTiles[currentGuard.PatrolPoints[currentGuard.PatrolTarget].x, currentGuard.PatrolPoints[currentGuard.PatrolTarget].y],99,false,false);
+                        foreach (TileData tile in Pathfinder.instance.FullPath)
+                            tile.directionIndicator.enabled = true;
                     }
                     else if (currentGuard.alertStatus == GuardEntity.Alert.Attack)
                     {
-                        NewManager.instance.CalculatePathfinding(this, currentGuard.CurrentTarget.currentTile, 99, false, false);
-                        for (int i = 0; i < NewManager.instance.FullPath.Count; i++)
-                        {
-                            NewManager.instance.FullPath[i].directionIndicator.enabled = true;
-                        }
+                        Pathfinder.instance.CalculatePathfinding(this, currentGuard.CurrentTarget.currentTile, 99, false, false);
+                        foreach (TileData tile in Pathfinder.instance.FullPath)
+                            tile.directionIndicator.enabled = true;
                     }
                     else if (currentGuard.alertStatus == GuardEntity.Alert.Persue)
                     {
-                        NewManager.instance.CalculatePathfinding(this, NewManager.instance.listOfTiles[currentGuard.DistractionPoints[0].x,currentGuard.DistractionPoints[0].y], 99, false, false);
-                        for (int i = 0; i < NewManager.instance.FullPath.Count; i++)
-                        {
-                            NewManager.instance.FullPath[i].directionIndicator.enabled = true;
-                        }
+                        Pathfinder.instance.CalculatePathfinding(this, LevelGenerator.instance.listOfTiles[currentGuard.DistractionPoints[0].x,currentGuard.DistractionPoints[0].y], 99, false, false);
+                        foreach (TileData tile in Pathfinder.instance.FullPath)
+                            tile.directionIndicator.enabled = true;
                     }
                 }
             }
@@ -263,10 +241,8 @@ public class TileData : MonoBehaviour
             if (toolTipHoverTimer > 0)
             {
                 toolTipHoverTimer = 0;
-                for (int i = 0; i < NewManager.instance.FullPath.Count; i++)
-                {
-                    NewManager.instance.FullPath[i].directionIndicator.enabled = false;
-                }
+                foreach (TileData tile in Pathfinder.instance.FullPath)
+                    tile.directionIndicator.enabled = false;
             }
         }
     }

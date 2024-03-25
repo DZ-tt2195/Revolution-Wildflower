@@ -9,7 +9,7 @@ public class MovingEntity : Entity
 {
     [Foldout("Moving Entity", true)]
         [Tooltip("Remaining moves")] [ReadOnly] public int movementLeft;
-        [Tooltip("How many tiles this moves per turn")] public int movesPerTurn = 4;
+        [Tooltip("How many tiles this moves per turn")] public int maxMovement = 4;
         [Tooltip("Turns which this does nothing")][ReadOnly] public int stunned = 0;
         [Tooltip("stunned indicator")][SerializeField] GameObject stunObject;
         [Tooltip("stunned number")][SerializeField] TMP_Text stunText;

@@ -183,7 +183,7 @@ public class DialogueManager : MonoBehaviour
 
     private IEnumerator DisplayLine(string line)
     {
-        Debug.Log("displaying line " + line);
+        //Debug.Log("displaying line " + line);
         // set the text to the full line, but set the visible characters to 0
         dialogueText.text = line;
         dialogueText.maxVisibleCharacters = 0;
@@ -231,10 +231,10 @@ public class DialogueManager : MonoBehaviour
 
     private void ContinueStory()
     {
-        Debug.Log(currentStory.currentText);
+        //Debug.Log(currentStory.currentText);
         if (currentStory.canContinue)
         {
-            Debug.Log("Can continue");
+            //Debug.Log("Can continue");
             // set text for the current dialogue line
             if (displayLineCoroutine != null)
             {
@@ -248,7 +248,7 @@ public class DialogueManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("Can't continue");
+            //Debug.Log("Can't continue");
             StartCoroutine(ExitDialogueMode());
         }
     }
@@ -316,7 +316,7 @@ public class DialogueManager : MonoBehaviour
     public void CameraFocusPlayer(string playerName)
     {
         runningFunction = true;
-        PlayerEntity player = NewManager.instance.listOfPlayers.Find(x => x.name == playerName);
+        PlayerEntity player = LevelGenerator.instance.listOfPlayers.Find(x => x.name == playerName);
 
         if (player == null)
         {
@@ -331,7 +331,7 @@ public class DialogueManager : MonoBehaviour
     public void CameraFocusGuard(int index)
     {
         runningFunction = true;
-        GuardEntity guard = NewManager.instance.listOfGuards[index];
+        GuardEntity guard = LevelGenerator.instance.listOfGuards[index];
         if (guard == null)
         {
             Debug.LogError("DialogueManager, CameraFocusGuard: Couldn't find guard with index " + index);
@@ -345,7 +345,7 @@ public class DialogueManager : MonoBehaviour
     public void CameraFocusTile(int x, int y)
     {
         runningFunction = true;
-        TileData tile = NewManager.instance.listOfTiles[x, y];
+        TileData tile = LevelGenerator.instance.listOfTiles[x, y];
         if (tile == null)
         {
             Debug.LogError("DialogueManager, CameraFocusTile: Couldn't find tile at position " + x + " " + y);
@@ -358,7 +358,7 @@ public class DialogueManager : MonoBehaviour
 
     public void ForcePlayer(string playerName)
     {
-        NewManager.instance.ForcePlayer(NewManager.instance.listOfPlayers.Find(x => x.name == playerName));
+        LevelGenerator.instance.ForcePlayer(LevelGenerator.instance.listOfPlayers.Find(x => x.name == playerName));
     }
 
     public void ForceMovementTile(int x, int y)
@@ -372,7 +372,7 @@ public class DialogueManager : MonoBehaviour
     }
     public void ForceCard(string cardName)
     {
-        List<Card> hand = NewManager.instance.lastSelectedPlayer.myHand;
+        List<Card> hand = PhaseManager.instance.lastSelectedPlayer.myHand;
         for (int i = 0; i < hand.Count; i++)
         {
             if (hand[i].textName.text == cardName)
@@ -438,6 +438,6 @@ public class DialogueManager : MonoBehaviour
     public void FocusPlayer(string name)
     {
         Debug.Log("focusing player");
-        NewManager.instance.UpdateStats(NewManager.instance.listOfPlayers.Find(x => x.name == name));
+        LevelUIManager.instance.UpdateStats(LevelGenerator.instance.listOfPlayers.Find(x => x.name == name));
     }
 }

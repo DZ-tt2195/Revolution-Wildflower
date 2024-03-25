@@ -6,6 +6,7 @@ using TMPro;
 
 public class EntityToolTip : MonoBehaviour
 {
+    public static EntityToolTip instance;
     private RectTransform CanvasTransform;
     [SerializeField] RectTransform EntityNameTransform;
     [SerializeField] RectTransform EntityToolTipTransform;
@@ -16,6 +17,7 @@ public class EntityToolTip : MonoBehaviour
 
     private void Awake()
     {
+        instance = this;
         CanvasTransform = GetComponent<RectTransform>();
     }
 

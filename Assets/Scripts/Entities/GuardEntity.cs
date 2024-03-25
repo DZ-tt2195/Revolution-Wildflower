@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 using MyBox;
-using UnityEngine.UIElements;
-using Unity.VisualScripting;
+using System;
 
 public class GuardEntity : MovingEntity
 {
@@ -96,7 +96,7 @@ public class GuardEntity : MovingEntity
     IEnumerator attackEffectRoutine()
     {
         attackEffect = true;
-        yield return NewManager.Wait(attackEffectDuration);
+        yield return new WaitForSeconds (attackEffectDuration);
         attackEffect = false;
     }
 
@@ -107,9 +107,9 @@ public class GuardEntity : MovingEntity
         for (int i = 0; i < inDetection.Count; i++)
         {
             bool Overlap = false;
-            for (int j = 0; j < NewManager.instance.listOfGuards.Count; j++)
+            for (int j = 0; j < LevelGenerator.instance.listOfGuards.Count; j++)
             {
-                if (NewManager.instance.listOfGuards[j] != this && NewManager.instance.listOfGuards[j].inDetection.Contains(inDetection[i]))
+                if (LevelGenerator.instance.listOfGuards[j] != this && LevelGenerator.instance.listOfGuards[j].inDetection.Contains(inDetection[i]))
                 {
                     Overlap = true;
                 }
@@ -127,7 +127,7 @@ public class GuardEntity : MovingEntity
         {
             float lineAngle = baseAngle + (i * Mathf.Deg2Rad);
             Vector2 newVector = new Vector2(Mathf.Cos(lineAngle), Mathf.Sin(lineAngle));
-            DetectLines.Add(NewManager.instance.line(currentTile.gridPosition,currentTile.gridPosition + Vector2Int.RoundToInt(newVector.normalized * DetectionRangePatrol)));
+            DetectLines.Add(Pathfinder.instance.line(currentTile.gridPosition,currentTile.gridPosition + Vector2Int.RoundToInt(newVector.normalized * DetectionRangePatrol)));
         }
 
         //running through each of the lines in the list, seeing how far they can look 
@@ -135,7 +135,7 @@ public class GuardEntity : MovingEntity
         {
             foreach (Vector2Int point in DetectLines[i])
             {
-                TileData TileToAdd = NewManager.instance.FindTile(point);
+                TileData TileToAdd = LevelGenerator.instance.FindTile(point);
                 if (TileToAdd == null)
                 {
                     break;
@@ -152,17 +152,17 @@ public class GuardEntity : MovingEntity
         }
         foreach (Vector2Int point in SpacesToCheck)
         {
-            inDetection.Add(NewManager.instance.FindTile(point));
+            inDetection.Add(LevelGenerator.instance.FindTile(point));
         }
         if (DetectionRangePatrol > 0)
         {
             //checks all the tiles directly adjacent and ahead to the guard if they still have vision
             List<TileData> peripheralTile = new()
             {
-                NewManager.instance.FindTile(new Vector2Int(currentTile.gridPosition.x + direction.y, currentTile.gridPosition.y + direction.x)),
-                NewManager.instance.FindTile(new Vector2Int(currentTile.gridPosition.x - direction.y, currentTile.gridPosition.y - direction.x)),
-                NewManager.instance.FindTile(new Vector2Int(currentTile.gridPosition.x + direction.y + direction.x, currentTile.gridPosition.y + direction.x + direction.y)),
-                NewManager.instance.FindTile(new Vector2Int(currentTile.gridPosition.x - direction.y + direction.x, currentTile.gridPosition.y - direction.x + direction.y))
+                LevelGenerator.instance.FindTile(new Vector2Int(currentTile.gridPosition.x + direction.y, currentTile.gridPosition.y + direction.x)),
+                LevelGenerator.instance.FindTile(new Vector2Int(currentTile.gridPosition.x - direction.y, currentTile.gridPosition.y - direction.x)),
+                LevelGenerator.instance.FindTile(new Vector2Int(currentTile.gridPosition.x + direction.y + direction.x, currentTile.gridPosition.y + direction.x + direction.y)),
+                LevelGenerator.instance.FindTile(new Vector2Int(currentTile.gridPosition.x - direction.y + direction.x, currentTile.gridPosition.y - direction.x + direction.y))
             };
             foreach (TileData currentTile in peripheralTile)
             {
@@ -186,9 +186,9 @@ public class GuardEntity : MovingEntity
         notification.transform.position = new Vector3(transform.position.x, transform.position.y + NotifOffset, transform.position.z);
         for (int i = 0; i < DistractionPoints.Count; i++)
         {
-            NewManager.instance.FindTile(DistractionPoints[i]).currentGuardTarget = false;
+            LevelGenerator.instance.FindTile(DistractionPoints[i]).currentGuardTarget = false;
         }
-        NewManager.instance.FindTile(DistractionPoints[DistractionPoints.Count - 1]).currentGuardTarget = true;
+        LevelGenerator.instance.FindTile(DistractionPoints[^1]).currentGuardTarget = true;
     }
 
     public void CheckForPlayer()
@@ -218,9 +218,9 @@ public class GuardEntity : MovingEntity
             int minDistance = 1000;
             for (int i = 0;i < newTargets.Count;i++) 
             {
-                if (NewManager.instance.GetDistance(currentTile.gridPosition, newTargets[i].currentTile.gridPosition) < minDistance)
+                if (Pathfinder.instance.GetDistance(currentTile.gridPosition, newTargets[i].currentTile.gridPosition) < minDistance)
                 {
-                    minDistance = NewManager.instance.GetDistance(currentTile.gridPosition, newTargets[i].currentTile.gridPosition);
+                    minDistance = Pathfinder.instance.GetDistance(currentTile.gridPosition, newTargets[i].currentTile.gridPosition);
                     Alerted(newTargets[i]);
                 }
             }
@@ -261,7 +261,7 @@ public class GuardEntity : MovingEntity
             {
                 if (DistractionPoints.Count > 0)
                 {
-                    NewManager.instance.FindTile(DistractionPoints[DistractionPoints.Count - 1]).currentGuardTarget = true;
+                    LevelGenerator.instance.FindTile(DistractionPoints[^1]).currentGuardTarget = true;
                 }
                 print("End of Turn persue");
                 yield return persue();
@@ -278,7 +278,7 @@ public class GuardEntity : MovingEntity
             alertedSound.Post(gameObject);
             foreach (Vector2Int pos in DistractionPoints)
             {
-                TileData tile = NewManager.instance.FindTile(pos);
+                TileData tile = LevelGenerator.instance.FindTile(pos);
                 tile.currentGuardTarget = false;
             }
         }
@@ -296,10 +296,10 @@ public class GuardEntity : MovingEntity
             yield return (newAction());
             yield break;
         }
-        if (currentTile.gridPosition == DistractionPoints[DistractionPoints.Count - 1])
+        if (currentTile.gridPosition == DistractionPoints[^1])
         {
             print("on distraction point");
-            NewManager.instance.FindTile(DistractionPoints[DistractionPoints.Count - 1]).currentGuardTarget = false;
+            LevelGenerator.instance.FindTile(DistractionPoints[^1]).currentGuardTarget = false;
             DistractionPoints.RemoveAt(DistractionPoints.Count - 1);
             if (DistractionPoints.Count == 0)
             {
@@ -335,16 +335,16 @@ public class GuardEntity : MovingEntity
         {
             //print(movementLeft);
             TileData nextTile;
-            NewManager.instance.CalculatePathfinding(currentTile, NewManager.instance.FindTile(DistractionPoints[DistractionPoints.Count - 1]), movementLeft, true, true);
-            nextTile = NewManager.instance.CurrentAvailableMoveTarget;  //moves towards the next patrol point
+            Pathfinder.instance.CalculatePathfinding(currentTile, LevelGenerator.instance.FindTile(DistractionPoints[^1]), movementLeft, true, true);
+            nextTile = Pathfinder.instance.CurrentAvailableMoveTarget;  //moves towards the next patrol point
             Vector2Int nextDirection = nextTile.gridPosition - currentTile.gridPosition;
 
             if (nextDirection != direction)
             {
                 direction = nextDirection;
-                for (int i = 0; i < NewManager.instance.listOfGuards.Count; i++)
+                foreach (GuardEntity guard in LevelGenerator.instance.listOfGuards)
                 {
-                    NewManager.instance.listOfGuards[i].CalculateTiles();
+                    guard.CalculateTiles();
                 }
             }
             else
@@ -357,7 +357,7 @@ public class GuardEntity : MovingEntity
                 movementLeft--;
             }
 
-            yield return NewManager.Wait(movePauseTime);
+            yield return new WaitForSeconds(movePauseTime);
             yield return newAction();
         }
     }
@@ -368,12 +368,11 @@ public class GuardEntity : MovingEntity
         if (DistractionPoints.Count > 0)
         {
             alertStatus = Alert.Persue;
-            NewManager.instance.FindTile(DistractionPoints[DistractionPoints.Count - 1]).currentGuardTarget = true;
+            LevelGenerator.instance.FindTile(DistractionPoints[^1]).currentGuardTarget = true;
         }
-        for (int i = 0; i < NewManager.instance.listOfGuards.Count; i++)
-        {
-            NewManager.instance.listOfGuards[i].CheckForPlayer();
-        }
+        foreach (GuardEntity guard in LevelGenerator.instance.listOfGuards)
+            guard.CheckForPlayer();
+
         if (alertStatus == Alert.Attack)
         {
             if (movementLeft > 0 || attacksLeft > 0)
@@ -400,15 +399,15 @@ public class GuardEntity : MovingEntity
 
     IEnumerator Attack(PlayerEntity detectedPlayer)
     {
-
-        print(currentTile.gridPosition + " attacking player at " + detectedPlayer.currentTile.gridPosition);
-        HashSet<Vector2Int> lineToPlayer = NewManager.instance.line(currentTile.gridPosition, detectedPlayer.currentTile.gridPosition);
+        print($"{currentTile.gridPosition} attacking player at {detectedPlayer.currentTile.gridPosition}");
+        HashSet<Vector2Int> lineToPlayer = Pathfinder.instance.line(currentTile.gridPosition, detectedPlayer.currentTile.gridPosition);
         bool inSight = true;
-        int distance = NewManager.instance.GetDistance(currentTile.gridPosition, detectedPlayer.currentTile.gridPosition);
+        int distance = Pathfinder.instance.GetDistance(currentTile.gridPosition, detectedPlayer.currentTile.gridPosition);
+
         foreach (Vector2Int entry in lineToPlayer)
         {
             print("line of sight " + entry + " To target");
-            TileData TileToCheck = NewManager.instance.FindTile(entry);
+            TileData TileToCheck = LevelGenerator.instance.FindTile(entry);
             if (TileToCheck != null)
             {
                 if (TileToCheck.myEntity != false)
@@ -440,7 +439,7 @@ public class GuardEntity : MovingEntity
                 StartCoroutine(detectedPlayer.TakeDamage(1));
                 StartCoroutine(attackEffectRoutine());
                 meleeHit.Post(gameObject);
-                yield return NewManager.Wait(movePauseTime);
+                yield return new WaitForSeconds(movePauseTime);
 
             }
             else
@@ -449,8 +448,8 @@ public class GuardEntity : MovingEntity
                 if (movementLeft > 0)
                 {
                     TileData nextTile;
-                    NewManager.instance.CalculatePathfinding(currentTile, detectedPlayer.currentTile, movementLeft, true,true);
-                    nextTile = NewManager.instance.CurrentAvailableMoveTarget;  //moves towards the next patrol point
+                    Pathfinder.instance.CalculatePathfinding(currentTile, detectedPlayer.currentTile, movementLeft, true,true);
+                    nextTile = Pathfinder.instance.CurrentAvailableMoveTarget;  //moves towards the next patrol point
                     Vector2Int nextDirection = nextTile.gridPosition - currentTile.gridPosition;
 
                     if (nextDirection != direction)
@@ -473,8 +472,8 @@ public class GuardEntity : MovingEntity
                     yield break;
 
 
-                yield return NewManager.Wait(movePauseTime);
-                distance = NewManager.instance.GetDistance(currentTile.gridPosition, detectedPlayer.currentTile.gridPosition);
+                yield return new WaitForSeconds(movePauseTime);
+                distance = Pathfinder.instance.GetDistance(currentTile.gridPosition, detectedPlayer.currentTile.gridPosition);
                 if (distance < AttackRange)
                 {
                     if (attacksLeft > 0)
@@ -493,7 +492,7 @@ public class GuardEntity : MovingEntity
             print("moving to distraction persuit");
             DistractionPoints.Add(detectedPlayer.currentTile.gridPosition);
             alertStatus = Alert.Persue;
-            NewManager.instance.FindTile(DistractionPoints[DistractionPoints.Count - 1]).currentGuardTarget = true;
+            LevelGenerator.instance.FindTile(DistractionPoints[^1]).currentGuardTarget = true;
             if (movementLeft > 0)
             {
                 print("Persuing from attack");
@@ -506,7 +505,7 @@ public class GuardEntity : MovingEntity
     {
         //print(currentTile.gridPosition + "Patrolling");
         TileData nextTile;
-        if (currentTile == NewManager.instance.listOfTiles[PatrolPoints[PatrolTarget].x, PatrolPoints[PatrolTarget].y])
+        if (currentTile == LevelGenerator.instance.listOfTiles[PatrolPoints[PatrolTarget].x, PatrolPoints[PatrolTarget].y])
         {
             PatrolTarget++;
             if (PatrolTarget >= PatrolPoints.Count)
@@ -514,8 +513,10 @@ public class GuardEntity : MovingEntity
                 PatrolTarget = 0;
             }
         }
-        NewManager.instance.CalculatePathfinding(currentTile, NewManager.instance.listOfTiles[PatrolPoints[PatrolTarget].x, PatrolPoints[PatrolTarget].y], movementLeft, true, true);
-        nextTile = NewManager.instance.CurrentAvailableMoveTarget;  //moves towards the next patrol point
+        
+
+        Pathfinder.instance.CalculatePathfinding(currentTile, LevelGenerator.instance.listOfTiles[PatrolPoints[PatrolTarget].x, PatrolPoints[PatrolTarget].y], movementLeft, true, true);
+        nextTile = Pathfinder.instance.CurrentAvailableMoveTarget;  //moves towards the next patrol point
         Vector2Int nextDirection = nextTile.gridPosition - currentTile.gridPosition;
 
         if (nextDirection != direction)
@@ -535,7 +536,7 @@ public class GuardEntity : MovingEntity
         }
 
 
-        yield return NewManager.Wait(movePauseTime);
+        yield return new WaitForSeconds(movePauseTime);
         //print("Checking New Action");
         yield return newAction();
     }

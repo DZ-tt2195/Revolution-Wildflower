@@ -15,8 +15,8 @@ using MyBox;
 public class SaveData
 {
     public bool freshFile;
-    public List<string> chosenDecks = new List<string>(); //0 = Gail, 1 = Frankie, 2 = W.K.
-    public int currentLevel = 0; //0 = tutorial, 1 = lv 1, 2 = lv 2, 3 = final level
+    public List<string> chosenDecks = new List<string>(); //0 = W.K., 1 = Frankie, 2 = Gail.
+    public int currentLevel = 0;
 
     public SaveData()
     {

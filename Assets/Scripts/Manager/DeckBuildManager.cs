@@ -39,13 +39,13 @@ public class DeckBuildManager : MonoBehaviour
             switch (i)
             {
                 case 0:
-                    nameText.text = "Gail";
+                    nameText.text = "W.K";
                     break;
                 case 1:
                     nameText.text = "Frankie";
                     break;
                 case 2:
-                    nameText.text = "W.K.";
+                    nameText.text = "Gail";
                     break;
             }
         }

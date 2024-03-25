@@ -46,7 +46,7 @@ public class WallEntity : Entity
         MoveCamera.instance.Shake();
         if (health <= 0)
         {
-            NewManager.instance.listOfWalls.Remove(this);
+            LevelGenerator.instance.listOfWalls.Remove(this);
             Destroy(this.gameObject);
         }
         else if (health <= maxHealth*(1/3))

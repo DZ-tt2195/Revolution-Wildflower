@@ -9,14 +9,14 @@ public class TileModifier : MonoBehaviour
 
     public IEnumerator ResolveList(Entity entity)
     {
-        string divide = card.enviroEffect.Replace(" ", "");
+        string divide = card.data.enviroaction.Replace(" ", "");
         divide = divide.ToUpper().Trim();
         string[] methodsInStrings = divide.Split('/');
 
             foreach (string nextMethod in methodsInStrings)
             {
-                NewManager.instance.DisableAllTiles();
-                NewManager.instance.DisableAllCards();
+                LevelGenerator.instance.DisableAllTiles();
+                LevelGenerator.instance.DisableAllCards();
 
                 if (nextMethod == "" || nextMethod == "NONE")
                 {
@@ -39,7 +39,7 @@ public class TileModifier : MonoBehaviour
                 Destroy(this);
                 break;
             case "ZEROMOVEMENT":
-                yield return ZeroMovement(entity);
+                entity.GetComponent<MovingEntity>().movementLeft = -1;
                 break;
             default:
                 Debug.LogError($"{methodName} isn't a method");
@@ -48,10 +48,4 @@ public class TileModifier : MonoBehaviour
         }
     }
 
-    IEnumerator ZeroMovement(Entity entity)
-    {
-        entity.GetComponent<MovingEntity>().movementLeft = -1;
-        Debug.Log($"hit {entity.name}");
-        yield return null;
-    }
 }
