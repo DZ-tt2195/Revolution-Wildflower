@@ -1421,7 +1421,6 @@ MonoBehaviour:
   violentCards: 0
   turnCount: 10
   futureEffects: []
-  lastSelectedPlayer: {fileID: 0}
   movingPlayer: 0
   objectiveButton: {fileID: 0}
   endTurnButton: {fileID: 0}
@@ -6651,7 +6650,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2087921933}
   m_HandleRect: {fileID: 2087921932}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -34267,7 +34266,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 874926083}
   m_HandleRect: {fileID: 874926082}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:

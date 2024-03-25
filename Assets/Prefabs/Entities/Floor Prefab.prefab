@@ -175,7 +175,6 @@ MonoBehaviour:
   myEntity: {fileID: 0}
   myType: 0
   listOfModifiers: []
-  choosable: 0
   clickable: 0
   moveable: 0
   currentGuardTarget: 0
