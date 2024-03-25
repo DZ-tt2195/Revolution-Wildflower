@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 //using System.Drawing;
 
 [Serializable]
-class KeywordHover
+public class KeywordHover
 {
     public string keyword;
     public string description;
@@ -17,7 +17,8 @@ class KeywordHover
 public class KeywordTooltip : MonoBehaviour
 {
     public static KeywordTooltip instance;
-    float displace;
+    float XCap;
+    float Ydisplace;
     [SerializeField] List<KeywordHover> linkedKeywords = new();
     [SerializeField] List<KeywordHover> spriteKeywords = new();
     [SerializeField] TMP_Text tooltipText;
@@ -25,7 +26,8 @@ public class KeywordTooltip : MonoBehaviour
     private void Awake()
     {
         instance = this;
-        displace = tooltipText.rectTransform.sizeDelta.y * 1.5f;
+        XCap = tooltipText.rectTransform.sizeDelta.x / 2f;
+        Ydisplace = tooltipText.rectTransform.sizeDelta.y * 1.25f;
     }
 
     public string EditText(string text)
@@ -43,38 +45,70 @@ public class KeywordTooltip : MonoBehaviour
         return answer;
     }
 
+    public KeywordHover SearchForKeyword(string target)
+    {
+        foreach (KeywordHover link in linkedKeywords)
+        {
+            if (link.keyword.Equals(target))
+                return link;
+        }
+        foreach (KeywordHover link in spriteKeywords)
+        {
+            if (link.keyword.Equals(target))
+                return link;
+        }
+        Debug.LogError($"{target} couldn't be found");
+        return null;
+    }
+
     private void Update()
     {
         tooltipText.transform.parent.gameObject.SetActive(false);
     }
 
-    public void ActivateTextBox(string keyword, Vector3 mousePosition)
+    Vector2 CalculatePosition(Vector3 mousePosition)
+    {
+        return new Vector3
+            (Mathf.Clamp(mousePosition.x, XCap, Screen.width - XCap),
+            mousePosition.y > Ydisplace ? mousePosition.y + (-0.5f * Ydisplace) : mousePosition.y + (0.5f * Ydisplace));
+    }
+
+    void SetPosition(string description, Vector3 mousePosition, bool screenOverlay)
+    {
+        if (screenOverlay)
+        {
+            tooltipText.text = description;
+            Vector2 newPosition = CalculatePosition(mousePosition);
+            tooltipText.transform.parent.position = new Vector3(newPosition.x, newPosition.y, 100);
+        }
+        else
+        {
+            tooltipText.text = description;
+            Vector2 newPosition = (CalculatePosition(Camera.main.ScreenToWorldPoint(mousePosition)));
+            tooltipText.transform.parent.position = (new Vector3(newPosition.x, newPosition.y, 100));
+        }
+    }
+
+    public void ActivateTextBox(string target, Vector3 mousePosition, bool screenOverlay)
     {
         tooltipText.transform.parent.gameObject.SetActive(true);
         this.transform.SetAsLastSibling();
 
         foreach (KeywordHover entry in linkedKeywords)
         {
-            if (entry.keyword == keyword)
+            if (entry.keyword.Equals(target))
             {
-                tooltipText.text = entry.description;
-                tooltipText.transform.parent.position = mousePosition + (mousePosition.y > (displace)
-                    ? new Vector3(0, -0.5f*displace, 0)
-                    : new Vector3(0, 0.5f*displace, 0));
+                SetPosition(entry.description, mousePosition, screenOverlay);
                 return;
             }
         }
         foreach (KeywordHover entry in spriteKeywords)
         {
-            if (entry.keyword == keyword)
+            if (entry.keyword.Equals(target))
             {
-                tooltipText.text = entry.description;
-                tooltipText.transform.parent.position = mousePosition + (mousePosition.y > (displace)
-                    ? new Vector3(0, -0.5f * displace, 0)
-                    : new Vector3(0, 0.5f * displace, 0));
+                SetPosition(entry.description, mousePosition, screenOverlay);
                 return;
             }
         }
-
     }
 }
