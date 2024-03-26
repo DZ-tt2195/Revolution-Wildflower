@@ -17,6 +17,12 @@ public class TileData : MonoBehaviour
         [Tooltip("The entity on this tile")] [ReadOnly] public Entity myEntity;
         [Tooltip("What kind of tile this is")] [ReadOnly] public TileType myType;
         [Tooltip("Modifiers on this tile")][ReadOnly] public List<TileModifier> listOfModifiers = new();
+        [Tooltip("Container for all Children for movement")][SerializeField] GameObject childContainer;
+        [Tooltip("animation curve for mouseOver movement")][SerializeField] AnimationCurve mouseOverCurve;
+        [Tooltip("Timer for mouseOverCurve")][SerializeField] float mouseOverAnimTimerMax;
+        [Tooltip("internalTimer")] private float mouseOverAnimTimer = 0;
+        [Tooltip("height of mouseOver")][SerializeField] float mouseOverDisplace;
+        [Tooltip("Baseheight of the tile")] float baseHeight;
 
     [Foldout("Tile conditions", true)]
         [Tooltip("Defines whether you can click this tile")][ReadOnly] public bool clickable = false;
@@ -34,8 +40,8 @@ public class TileData : MonoBehaviour
     [Foldout("Colors", true)]
         [Tooltip("Tile's sprite renderer")] SpriteRenderer myRenderer;
         [Tooltip("Tile's materal")] [SerializeField] Renderer renderer3d;
-        [Tooltip("Glowing border's sprite renderer")] SpriteRenderer border;
-        [Tooltip("Indication arrow for forced tiles")] SpriteRenderer indicator;
+        [Tooltip("Glowing border's sprite renderer")][SerializeField] SpriteRenderer border;
+        [Tooltip("Indication arrow for forced tiles")][SerializeField] SpriteRenderer indicator;
         [Tooltip("Indication arrow transform")]private Transform indicatorTransform;
         [Tooltip("color used for unselected moused over tiles")][SerializeField] Color mouseOverColor = new Color(0.9f,0.9f,0.9f,1);
         [Tooltip("color used for selected tiles")][SerializeField] Color SelectedColor = new Color(0.6f, 0.6f, 0.6f, 1);
@@ -51,11 +57,10 @@ public class TileData : MonoBehaviour
     {
         myRenderer = GetComponent<SpriteRenderer>();
         myRenderer.sortingOrder = 0;
-        border = this.transform.GetChild(0).GetComponent<SpriteRenderer>();
         border.color = new Color(1f, 1f, 1f, 0);
-        indicator = this.transform.GetChild(1).GetComponent<SpriteRenderer>();
         indicatorTransform = indicator.transform;
         directionIndicator.enabled = false;
+        baseHeight = transform.position.y;
     }
 
     void FixedUpdate()
@@ -155,6 +160,9 @@ public class TileData : MonoBehaviour
 
     private void MouseOver()
     {
+        if (mouseOverAnimTimer < mouseOverAnimTimerMax) mouseOverAnimTimer += Time.deltaTime;
+        else mouseOverAnimTimer = mouseOverAnimTimerMax;
+
         if (clickable && Input.GetKeyDown(KeyCode.Mouse0) && !EventSystem.current.IsPointerOverGameObject())
         {
             if (moveable)
@@ -227,6 +235,8 @@ public class TileData : MonoBehaviour
 
     private void Update()
     {
+        transform.position = new Vector3(transform.position.x, baseHeight + (mouseOverDisplace * mouseOverCurve.Evaluate(mouseOverAnimTimer / mouseOverAnimTimerMax)), transform.position.z);
+
         Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         if (Physics.Raycast(mouseRay, out hit, Mathf.Infinity, mask) && hit.collider.gameObject == gameObject)
@@ -238,6 +248,8 @@ public class TileData : MonoBehaviour
         
         if (!moused)
         {
+            if (mouseOverAnimTimer > 0) mouseOverAnimTimer -= Time.deltaTime;
+            else mouseOverAnimTimer = 0;
             if (toolTipHoverTimer > 0)
             {
                 toolTipHoverTimer = 0;
