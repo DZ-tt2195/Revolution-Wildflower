@@ -29,6 +29,6 @@ public class EntityToolTip : MonoBehaviour
         {
             isActive = false;
         }
-        transform.position = Input.mousePosition + new Vector3(2, 2, 0);
+        transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
     }
 }

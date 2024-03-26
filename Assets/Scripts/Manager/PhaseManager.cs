@@ -329,13 +329,14 @@ public class PhaseManager : MonoBehaviour
     /// <returns></returns>
     public IEnumerator ChooseMovePlayer(PlayerEntity currentPlayer, int possibleMoves, bool freeMoves = false)
     {
+        LevelGenerator.instance.DisableAllTiles();
         foreach (TileData tile in Pathfinder.instance.FullPath)
             tile.directionIndicator.enabled = false;
         yield return new WaitForSeconds(0.15f);
 
-        List<TileData> possibleTiles = Pathfinder.instance.CalculateReachableGrids(currentPlayer.currentTile, possibleMoves, true);
-        WaitForDecisionMove(possibleTiles);
+        WaitForDecisionMove(Pathfinder.instance.CalculateReachableGrids(currentPlayer.currentTile, possibleMoves, true));
         LevelGenerator.instance.EnablePlayers();
+        selectedTile = currentPlayer.currentTile;
 
         if (!freeMoves)
         {
@@ -349,8 +350,7 @@ public class PhaseManager : MonoBehaviour
             {
                 lastSelectedPlayer = currentPlayer;
                 LevelUIManager.instance.UpdateStats(lastSelectedPlayer);
-            }
-
+            } 
             if (selectedTile != currentPlayer.currentTile || (!freeMoves && CurrentPhase != TurnSystem.WaitingOnPlayer))
             {
                 yield break;
