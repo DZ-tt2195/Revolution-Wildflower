@@ -8,7 +8,6 @@ using MyBox;
 public class SaveData
 {
     public bool freshFile;
-    public List<string> chosenDecks = new List<string>(); //0 = W.K., 1 = Frankie, 2 = Gail.
     public int currentLevel = 0;
 
     public SaveData()
@@ -23,7 +22,7 @@ public class SaveManager : MonoBehaviour
 
     public static SaveManager instance;
     [ReadOnly] public Canvas canvas;
-    [ReadOnly] public SaveData currentSaveData;
+    public SaveData currentSaveData;
     [ReadOnly] public string saveFileName;
     [Tooltip("Card prefab")][SerializeField] Card cardPrefab;
 
@@ -84,19 +83,6 @@ public class SaveManager : MonoBehaviour
         currentSaveData.freshFile = true;
         saveFileName = fileName;
         Debug.Log($"file loaded: {fileName}.es3");
-    }
-
-    public void SaveHand(List<string> decksToSave)
-    {
-        SaveHand(decksToSave, saveFileName);
-    }
-
-    public void SaveHand(List<string> decksToSave, string fileName)
-    {
-        currentSaveData.chosenDecks = decksToSave;
-        ES3.Save("saveData", currentSaveData, $"{Application.persistentDataPath}/{fileName}.es3");
-        currentSaveData.freshFile = false;
-        saveFileName = fileName;
     }
 
     public void DeleteData(string fileName)
