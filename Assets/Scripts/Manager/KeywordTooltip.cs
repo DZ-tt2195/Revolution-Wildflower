@@ -84,8 +84,7 @@ public class KeywordTooltip : MonoBehaviour
         else
         {
             tooltipText.text = description;
-            Vector2 newPosition = (CalculatePosition(Camera.main.ScreenToWorldPoint(mousePosition)));
-            tooltipText.transform.parent.position = (new Vector3(newPosition.x, newPosition.y, 100));
+            tooltipText.transform.parent.localPosition = (new Vector3(-600, -100, 0));
         }
     }
 

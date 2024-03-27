@@ -1,14 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine.SceneManagement;
-using UnityEngine.Audio;
-using System.IO;
 using MyBox;
 
 [Serializable]
@@ -29,7 +22,7 @@ public class SaveManager : MonoBehaviour
 #region Variables
 
     public static SaveManager instance;
-    Transform canvas;
+    [ReadOnly] public Canvas canvas;
     [ReadOnly] public SaveData currentSaveData;
     [ReadOnly] public string saveFileName;
     [Tooltip("Card prefab")][SerializeField] Card cardPrefab;
@@ -47,6 +40,7 @@ public class SaveManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
+            canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
             DontDestroyOnLoad(this.gameObject);
         }
         else
@@ -126,6 +120,7 @@ public class SaveManager : MonoBehaviour
 
     public List<Card> GenerateCards(string deck)
     {
+        canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
         List<Card> characterCards = new();
         List<CardData> data = CardDataLoader.ReadCardData(deck);
 
@@ -133,7 +128,7 @@ public class SaveManager : MonoBehaviour
         {
             for (int j = 0; j < data[i].maxInv; j++)
             {
-                Card nextCopy = Instantiate(cardPrefab, canvas);
+                Card nextCopy = Instantiate(cardPrefab, canvas.transform);
                 nextCopy.name = $"{data[i].name}";
                 nextCopy.transform.localPosition = new Vector3(10000, cardBaseHeight);
                 nextCopy.CardSetup(data[i]);
@@ -147,21 +142,21 @@ public class SaveManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        canvas = GameObject.Find("Canvas").transform;
+        canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
 
-        CardDisplay.instance.transform.SetParent(canvas);
+        CardDisplay.instance.transform.SetParent(canvas.transform);
         CardDisplay.instance.transform.localPosition = new Vector3(0, 0);
 
         //FPS.instance.transform.SetParent(canvas);
         //FPS.instance.transform.localPosition = new Vector3(-850, -500);
 
-        GameSettings.instance.transform.SetParent(canvas);
+        GameSettings.instance.transform.SetParent(canvas.transform);
         GameSettings.instance.transform.localPosition = Vector3.zero;
         GameSettings.instance.transform.localScale = Vector3.one;
         GameSettings.instance.transform.localEulerAngles = Vector3.one;
         GameSettings.instance.transform.GetChild(0).gameObject.SetActive(false);
 
-        KeywordTooltip.instance.transform.SetParent(canvas);
+        KeywordTooltip.instance.transform.SetParent(canvas.transform);
         KeywordTooltip.instance.transform.localPosition = Vector3.zero;
         KeywordTooltip.instance.transform.localScale = Vector3.one;
         KeywordTooltip.instance.transform.localEulerAngles = Vector3.one;
