@@ -160,10 +160,10 @@ public class PhaseManager : MonoBehaviour
             CurrentPhase = TurnSystem.WaitingOnPlayer;
             StopCoroutine(ChooseMovePlayer(lastSelectedPlayer, 0));
             StopCoroutine(ChooseCardPlay(lastSelectedPlayer));
-
+            /*
             LevelGenerator.instance.DisableAllTiles();
             LevelGenerator.instance.DisableAllCards();
-
+            */
             if (lastSelectedPlayer != null)
                 LevelUIManager.instance.UpdateStats(lastSelectedPlayer);
 
@@ -686,6 +686,7 @@ public class PhaseManager : MonoBehaviour
         chosenCard = null;
         LevelGenerator.instance.DisableAllCards();
 
+        Debug.LogError("enabling player cards");
         foreach (Card card in canBeChosen)
         {
             card.EnableCard();

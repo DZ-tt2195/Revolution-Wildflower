@@ -366,6 +366,7 @@ public class LevelGenerator : MonoBehaviour
     /// </summary>
     public void DisableAllCards()
     {
+        Debug.LogError("disabling player cards");
         foreach (Card card in SaveManager.instance.allCards)
         {
             card.DisableCard();
