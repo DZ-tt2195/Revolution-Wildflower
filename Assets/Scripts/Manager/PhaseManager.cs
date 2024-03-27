@@ -363,7 +363,7 @@ public class PhaseManager : MonoBehaviour
 
         movingPlayer = false;
         CurrentPhase = TurnSystem.ResolvingAction;
-        Collector confirmDecision = ConfirmDecision("Confirm movement?", new Vector2(0, 200));
+        Collector confirmDecision = ConfirmDecision("Confirm movement?", new Vector2(0, 400));
         if (confirmDecision != null)
         {
             selectedTile = chosenTile;
@@ -431,7 +431,7 @@ public class PhaseManager : MonoBehaviour
 
         Debug.Log($"chosen card no longer null");
         CurrentPhase = TurnSystem.ResolvingAction;
-        Collector confirmDecision = ConfirmDecision($"Play {chosenCard.name}?", new Vector2(0, -85));
+        Collector confirmDecision = ConfirmDecision($"Play {chosenCard.name}?", new Vector2(0, 400));
         if (confirmDecision != null)
         {
             yield return confirmDecision.WaitForChoice();
@@ -576,7 +576,7 @@ public class PhaseManager : MonoBehaviour
 
         if (lastSelectedPlayer != null && lastSelectedPlayer.adjacentObjective != null)
         {
-            Collector confirmDecision = ConfirmDecision($"Complete this objective?", new Vector2(0, -85));
+            Collector confirmDecision = ConfirmDecision($"Complete this objective?", new Vector2(0, 400));
             if (confirmDecision != null)
             {
                 yield return confirmDecision.WaitForChoice();
@@ -608,7 +608,7 @@ public class PhaseManager : MonoBehaviour
     {
         CurrentPhase = TurnSystem.ResolvingAction;
 
-        Collector confirmDecision = ConfirmDecision($"Spend 3 energy to draw a card?", new Vector2(0, -85));
+        Collector confirmDecision = ConfirmDecision($"Spend 3 energy to draw a card?", new Vector2(0, 400));
         if (confirmDecision != null)
         {
             yield return confirmDecision.WaitForChoice();

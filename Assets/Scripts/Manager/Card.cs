@@ -757,7 +757,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
             while (PhaseManager.instance.chosenTile == null)
                 yield return null;
 
-            Collector confirmDecision = PhaseManager.instance.ConfirmDecision("Confirm guard?", new Vector2(0, 200));
+            Collector confirmDecision = PhaseManager.instance.ConfirmDecision("Confirm guard?", new Vector2(0, 400));
             if (confirmDecision != null)
             {
                 PhaseManager.instance.selectedTile = PhaseManager.instance.chosenTile;
@@ -795,7 +795,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
             while (PhaseManager.instance.chosenTile == null)
                 yield return null;
 
-            Collector confirmDecision = PhaseManager.instance.ConfirmDecision("Confirm player?", new Vector2(0, 200));
+            Collector confirmDecision = PhaseManager.instance.ConfirmDecision("Confirm player?", new Vector2(0, 400));
             if (confirmDecision != null)
             {
                 PhaseManager.instance.selectedTile = PhaseManager.instance.chosenTile;
@@ -833,7 +833,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
             while (PhaseManager.instance.chosenTile == null)
                 yield return null;
 
-            Collector confirmDecision = PhaseManager.instance.ConfirmDecision("Confirm wall?", new Vector2(0, 200));
+            Collector confirmDecision = PhaseManager.instance.ConfirmDecision("Confirm wall?", new Vector2(0, 400));
             if (confirmDecision != null)
             {
                 PhaseManager.instance.selectedTile = PhaseManager.instance.chosenTile;
@@ -900,7 +900,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         while (PhaseManager.instance.chosenTile == null)
             yield return null;
 
-        Collector confirmDecision = PhaseManager.instance.ConfirmDecision("Confirm tile?", new Vector2(0, 200));
+        Collector confirmDecision = PhaseManager.instance.ConfirmDecision("Confirm tile?", new Vector2(0, 400));
         if (confirmDecision != null)
         {
             PhaseManager.instance.selectedTile = PhaseManager.instance.chosenTile;
@@ -928,7 +928,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         while (PhaseManager.instance.chosenTile == null)
             yield return null;
 
-        Collector confirmDecision = PhaseManager.instance.ConfirmDecision("Confirm tile?", new Vector2(0, 200));
+        Collector confirmDecision = PhaseManager.instance.ConfirmDecision("Confirm tile?", new Vector2(0, 400));
         if (confirmDecision != null)
         {
             PhaseManager.instance.selectedTile = PhaseManager.instance.chosenTile;
@@ -1003,7 +1003,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
                 while (PhaseManager.instance.chosenCard == null)
                     yield return null;
 
-                Collector confirmDecision = PhaseManager.instance.ConfirmDecision($"Discard {PhaseManager.instance.chosenCard.name}?", new Vector2(0, -85));
+                Collector confirmDecision = PhaseManager.instance.ConfirmDecision($"Discard {PhaseManager.instance.chosenCard.name}?", new Vector2(0, 400));
                 if (confirmDecision != null)
                 {
                     yield return confirmDecision.WaitForChoice();
@@ -1039,7 +1039,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
                 while (PhaseManager.instance.chosenCard == null)
                     yield return null;
 
-                Collector confirmDecision = PhaseManager.instance.ConfirmDecision($"Pass {PhaseManager.instance.chosenCard.name}?", new Vector2(0, -85));
+                Collector confirmDecision = PhaseManager.instance.ConfirmDecision($"Pass {PhaseManager.instance.chosenCard.name}?", new Vector2(0, 400));
                 if (confirmDecision != null)
                 {
                     yield return confirmDecision.WaitForChoice();
