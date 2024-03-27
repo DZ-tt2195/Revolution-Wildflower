@@ -42,6 +42,8 @@ public class TileData : MonoBehaviour
         [Tooltip("Tile's materal")] [SerializeField] Renderer renderer3d;
         [Tooltip("Glowing border's sprite renderer")][SerializeField] SpriteRenderer border;
         [Tooltip("Indication arrow for forced tiles")][SerializeField] SpriteRenderer indicator;
+        [Tooltip("Danger stripes for when under surveillance")] [SerializeField] SpriteRenderer dangerStripes;
+        [Tooltip("Material Property Block for this specific tile's danger stripe material")] MaterialPropertyBlock dangerStripesPropertyBlock; 
         [Tooltip("Indication arrow transform")]private Transform indicatorTransform;
         [Tooltip("color used for unselected moused over tiles")][SerializeField] Color mouseOverColor = new Color(0.9f,0.9f,0.9f,1);
         [Tooltip("color used for selected tiles")][SerializeField] Color SelectedColor = new Color(0.6f, 0.6f, 0.6f, 1);
@@ -61,6 +63,7 @@ public class TileData : MonoBehaviour
         indicatorTransform = indicator.transform;
         directionIndicator.enabled = false;
         baseHeight = transform.position.y;
+        dangerStripesPropertyBlock = new MaterialPropertyBlock();
     }
 
     void FixedUpdate()
@@ -229,8 +232,10 @@ public class TileData : MonoBehaviour
 
     public void SurveillanceState(bool underSurveillance)
     {
+        dangerStripes.gameObject.SetActive(!underSurveillance);
+        Debug.Log(dangerStripes.gameObject.activeSelf);
         //renderer3d.material.color = (underSurveillance) ? Color.red : Color.gray;
-        renderer3d.material.SetColor("_palette_color", underSurveillance ? Color.red : new Color(0, 0.3686275f, 0.2352941f));
+        //renderer3d.material.SetColor("_palette_color", underSurveillance ? Color.red : new Color(0, 0.3686275f, 0.2352941f));
     }
 
     private void Update()

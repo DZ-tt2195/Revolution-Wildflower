@@ -4,7 +4,7 @@ EXTERNAL FocusUI(elements)
 EXTERNAL UnfocusUI(elements)
 EXTERNAL FocusPlayer(name)
 EXTERNAL ForceSelectionTile(x, y)
-
+EXTERNAL ForceMovementTile(x, y)
 ~ FocusPlayer("WK")
 
 ~ DisableAllUI("")
@@ -35,7 +35,9 @@ Fortunately, the crew has come prepared with countermeasures.
 
 Each character has a unique hand of <b>Cards.</b> They have a variety of beneficial effects. Consider them a toolkit.
 
-You can right-click any the card to enlarge it and see it in more detail. You may also hover over the symbols and keywords to view tooltips that explain what they mean.
+You can right-click any the card to enlarge it and see it in more detail.
+
+You may also hover over the symbols and keywords to view tooltips that explain what they mean.
 
 ~ UnfocusUI("Player Hands")
 
@@ -52,6 +54,8 @@ Unlike most guards, the guard in WK’s path won’t budge. Heading straight for
 ~ UnfocusUI("Energy")
 
 ~ FocusUI("Player Hands")
+
+~ ForceMovementTile(3, 3)
 
 ~ ForceSelectionTile(7, 1)
 
