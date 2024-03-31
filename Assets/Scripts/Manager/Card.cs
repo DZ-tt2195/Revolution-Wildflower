@@ -757,19 +757,11 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
             while (PhaseManager.instance.chosenTile == null)
                 yield return null;
 
-            Collector confirmDecision = PhaseManager.instance.ConfirmDecision("Confirm guard?", new Vector2(0, 400));
-            if (confirmDecision != null)
+            yield return PhaseManager.instance.ConfirmUndo($"Confirm guard?", new Vector2(0, 400));
+            if (PhaseManager.instance.confirmChoice == 1)
             {
-                PhaseManager.instance.selectedTile = PhaseManager.instance.chosenTile;
-                yield return confirmDecision.WaitForChoice();
-                int decision = confirmDecision.chosenButton;
-                Destroy(confirmDecision.gameObject);
-
-                if (decision == 1)
-                {
-                    yield return (ChooseGuard());
-                    yield break;
-                }
+                yield return ChooseGuard();
+                yield break;
             }
 
             OnChoiceMade?.Invoke(this, EventArgs.Empty);
@@ -795,19 +787,11 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
             while (PhaseManager.instance.chosenTile == null)
                 yield return null;
 
-            Collector confirmDecision = PhaseManager.instance.ConfirmDecision("Confirm player?", new Vector2(0, 400));
-            if (confirmDecision != null)
+            yield return PhaseManager.instance.ConfirmUndo($"Confirm player?", new Vector2(0, 400));
+            if (PhaseManager.instance.confirmChoice == 1)
             {
-                PhaseManager.instance.selectedTile = PhaseManager.instance.chosenTile;
-                yield return confirmDecision.WaitForChoice();
-                int decision = confirmDecision.chosenButton;
-                Destroy(confirmDecision.gameObject);
-
-                if (decision == 1)
-                {
-                    yield return (ChoosePlayer());
-                    yield break;
-                }
+                yield return ChoosePlayer();
+                yield break;
             }
 
             OnChoiceMade?.Invoke(this, EventArgs.Empty);
@@ -833,19 +817,11 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
             while (PhaseManager.instance.chosenTile == null)
                 yield return null;
 
-            Collector confirmDecision = PhaseManager.instance.ConfirmDecision("Confirm wall?", new Vector2(0, 400));
-            if (confirmDecision != null)
+            yield return PhaseManager.instance.ConfirmUndo($"Confirm wall?", new Vector2(0, 400));
+            if (PhaseManager.instance.confirmChoice == 1)
             {
-                PhaseManager.instance.selectedTile = PhaseManager.instance.chosenTile;
-                yield return confirmDecision.WaitForChoice();
-                int decision = confirmDecision.chosenButton;
-                Destroy(confirmDecision.gameObject);
-
-                if (decision == 1)
-                {
-                    yield return (ChooseWall());
-                    yield break;
-                }
+                yield return ChooseWall();
+                yield break;
             }
 
             OnChoiceMade?.Invoke(this, EventArgs.Empty);
@@ -900,19 +876,11 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         while (PhaseManager.instance.chosenTile == null)
             yield return null;
 
-        Collector confirmDecision = PhaseManager.instance.ConfirmDecision("Confirm tile?", new Vector2(0, 400));
-        if (confirmDecision != null)
+        yield return PhaseManager.instance.ConfirmUndo($"Confirm tile?", new Vector2(0, 400));
+        if (PhaseManager.instance.confirmChoice == 1)
         {
-            PhaseManager.instance.selectedTile = PhaseManager.instance.chosenTile;
-            yield return confirmDecision.WaitForChoice();
-            int decision = confirmDecision.chosenButton;
-            Destroy(confirmDecision.gameObject);
-
-            if (decision == 1)
-            {
-                yield return (ChooseTileLOS());
-                yield break;
-            }
+            yield return ChooseTileLOS();
+            yield break;
         }
 
         OnChoiceMade?.Invoke(this, EventArgs.Empty);
@@ -928,19 +896,11 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         while (PhaseManager.instance.chosenTile == null)
             yield return null;
 
-        Collector confirmDecision = PhaseManager.instance.ConfirmDecision("Confirm tile?", new Vector2(0, 400));
-        if (confirmDecision != null)
+        yield return PhaseManager.instance.ConfirmUndo($"Confirm tile?", new Vector2(0, 400));
+        if (PhaseManager.instance.confirmChoice == 1)
         {
-            PhaseManager.instance.selectedTile = PhaseManager.instance.chosenTile;
-            yield return confirmDecision.WaitForChoice();
-            int decision = confirmDecision.chosenButton;
-            Destroy(confirmDecision.gameObject);
-
-            if (decision == 1)
-            {
-                yield return (ChooseTile());
-                yield break;
-            }
+            yield return ChooseTile();
+            yield break;
         }
 
         OnChoiceMade?.Invoke(this, EventArgs.Empty);
@@ -1003,18 +963,11 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
                 while (PhaseManager.instance.chosenCard == null)
                     yield return null;
 
-                Collector confirmDecision = PhaseManager.instance.ConfirmDecision($"Discard {PhaseManager.instance.chosenCard.name}?", new Vector2(0, 400));
-                if (confirmDecision != null)
+                yield return PhaseManager.instance.ConfirmUndo($"Discard {PhaseManager.instance.chosenCard.name}?", new Vector2(0, 400));
+                if (PhaseManager.instance.confirmChoice == 1)
                 {
-                    yield return confirmDecision.WaitForChoice();
-                    int decision = confirmDecision.chosenButton;
-                    Destroy(confirmDecision.gameObject);
-
-                    if (decision == 1)
-                    {
-                        i--;
-                        continue;
-                    }
+                    i--;
+                    continue;
                 }
 
                 yield return player.DiscardFromHand(PhaseManager.instance.chosenCard);
@@ -1039,18 +992,11 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
                 while (PhaseManager.instance.chosenCard == null)
                     yield return null;
 
-                Collector confirmDecision = PhaseManager.instance.ConfirmDecision($"Pass {PhaseManager.instance.chosenCard.name}?", new Vector2(0, 400));
-                if (confirmDecision != null)
+                yield return PhaseManager.instance.ConfirmUndo($"Play {PhaseManager.instance.chosenCard.name}?", new Vector2(0, 400));
+                if (PhaseManager.instance.confirmChoice == 1)
                 {
-                    yield return confirmDecision.WaitForChoice();
-                    int decision = confirmDecision.chosenButton;
-                    Destroy(confirmDecision.gameObject);
-
-                    if (decision == 1)
-                    {
-                        i--;
-                        continue;
-                    }
+                    i--;
+                    continue;
                 }
 
                 otherPlayer.PlusCards(PhaseManager.instance.chosenCard);

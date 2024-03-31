@@ -27,9 +27,6 @@ public class LevelGenerator : MonoBehaviour
     [Tooltip("Floor tile prefab")][SerializeField] TileData floorTilePrefab;
     [Tooltip("Player prefab")][SerializeField] PlayerEntity playerPrefab;
     [Tooltip("Wall prefab")][SerializeField] WallEntity wallPrefab;
-    [Tooltip("Wall T prefab")][SerializeField] WallEntity wallTSplitPrefab;
-    [Tooltip("Wall Corner prefab")][SerializeField] WallEntity wallCornerPrefab;
-    [Tooltip("Wall Plus prefab")][SerializeField] WallEntity wallPlusPrefab;
     [Tooltip("Guard prefab")][SerializeField] GuardEntity guardPrefab;
     [Tooltip("static guard prefab")][SerializeField] StaticGuard staticGuardPrefab;
     [Tooltip("Objective prefab")][SerializeField] ObjectiveEntity objectivePrefab;
@@ -85,65 +82,76 @@ public class LevelGenerator : MonoBehaviour
                     nextTile.gridPosition = new Vector2Int(i, j);
 
                     Entity thisTileEntity = null;
-                    string[] numberPlusAddition = newGrid[i, j].Split("|");
+                    string[] textPlusAddition = newGrid[i, j].Split("|");
 
-                    switch (int.Parse(numberPlusAddition[0]))
+                    switch (textPlusAddition[0])
                     {
-                        case 1: //create player
+                        case "Floor":
+                            if (textPlusAddition.Length>=2)
+                            {
+                                nextTile.transform.Find(textPlusAddition[1]).gameObject.SetActive(true);
+                                if (textPlusAddition[2] != "true")
+                                {
+                                    nextTile.transform.GetChild(0).transform.Find("Pointer").gameObject.SetActive(false);
+                                    nextTile.enabled = false;
+                                }
+                            }
+                            break;
+
+                        case "Player":
                             thisTileEntity = Instantiate(playerPrefab, nextTile.transform);
                             PlayerEntity player = thisTileEntity.GetComponent<PlayerEntity>();
                             player.SetEnergy(player.maxEnergy);
                             player.SetMovement(player.maxMovement);
                             listOfPlayers.Add(player);
-                            player.PlayerSetup(numberPlusAddition[1]);
+                            player.PlayerSetup(textPlusAddition[1]);
                             break;
 
-                        case 2: //create exit
+                        case "Exit":
                             nextTile.myType = TileData.TileType.Exit;
                             break;
 
-                        case 5: //create all exit
+                        case "All Exit":
                             nextTile.myType = TileData.TileType.AllExit;
                             break;
 
-                        case 3: //create objective
+                        case "Objective":
                             thisTileEntity = Instantiate(objectivePrefab, nextTile.transform);
-                            thisTileEntity.name = numberPlusAddition[1];
+                            thisTileEntity.name = textPlusAddition[1];
                             ObjectiveEntity defaultObjective = thisTileEntity.GetComponent<ObjectiveEntity>();
-                            defaultObjective.objective = numberPlusAddition[2];
+                            defaultObjective.objective = textPlusAddition[2];
 
-                            if (numberPlusAddition.Length > 3)
+                            if (textPlusAddition.Length > 3)
                             {
-                                Debug.Log(numberPlusAddition.Length);
-                                if (numberPlusAddition[3] != "null")
+                                Debug.Log(textPlusAddition.Length);
+                                if (textPlusAddition[3] != "null")
                                 {
-                                    defaultObjective.instructionsWhenCompleted = numberPlusAddition[3].ToUpper().Trim();
+                                    defaultObjective.instructionsWhenCompleted = textPlusAddition[3].ToUpper().Trim();
                                 }
                             }
 
-                            if (numberPlusAddition.Length > 4)
+                            if (textPlusAddition.Length > 4)
                             {
-                                if (numberPlusAddition[4] != "null")
+                                if (textPlusAddition[4] != "null")
                                 {
-                                    defaultObjective.textAssetFile = numberPlusAddition[4];
+                                    defaultObjective.textAssetFile = textPlusAddition[4];
                                 }
                             }
-
 
                             listOfObjectives.Add(defaultObjective);
                             break;
 
-                        case 4: //create toggle
+                        case "Toggle":
                             thisTileEntity = Instantiate(togglePrefab, nextTile.transform);
-                            thisTileEntity.name = numberPlusAddition[2];
+                            thisTileEntity.name = textPlusAddition[2];
                             ToggleEntity defaultToggle = thisTileEntity.GetComponent<ToggleEntity>();
-                            defaultToggle.interactCondition = numberPlusAddition[1].ToUpper().Trim();
-                            defaultToggle.interactInstructions = numberPlusAddition[2].ToUpper().Trim();
-                            defaultToggle.toggledOn = (numberPlusAddition[3] != "true");
+                            defaultToggle.interactCondition = textPlusAddition[1].ToUpper().Trim();
+                            defaultToggle.interactInstructions = textPlusAddition[2].ToUpper().Trim();
+                            defaultToggle.toggledOn = (textPlusAddition[3] != "true");
 
                             try
                             {
-                                string[] pointList = numberPlusAddition[4].Split('|');
+                                string[] pointList = textPlusAddition[4].Split('-');
                                 foreach (string patrol in pointList)
                                 {
                                     string[] points = patrol.Split(",");
@@ -157,55 +165,20 @@ public class LevelGenerator : MonoBehaviour
                                 Debug.Log("failed to get target points");
                                 continue;
                             }
-
                             StartCoroutine(defaultToggle.ObjectiveComplete(null));
-
                             break;
 
-                        case 10: //create wall
-                            thisTileEntity = Instantiate(wallPrefab, nextTile.transform);
-                            thisTileEntity.name = "Wall";
-                            WallEntity wall = thisTileEntity.GetComponent<WallEntity>();
-                            listOfWalls.Add(wall);
-                            wall.WallDirection(int.Parse(numberPlusAddition[1]), numberPlusAddition[2]);
-                            break;
-
-                        case 30: //create +
-                            thisTileEntity = Instantiate(wallPlusPrefab, nextTile.transform);
-                            thisTileEntity.name = "PlusWall";
-                            WallEntity PlusWall = thisTileEntity.GetComponent<WallEntity>();
-                            listOfWalls.Add(PlusWall);
-                            PlusWall.WallDirection(int.Parse(numberPlusAddition[1]), numberPlusAddition[2]);
-                            break;
-
-                        case 40: //create T
-                            thisTileEntity = Instantiate(wallTSplitPrefab, nextTile.transform);
-                            thisTileEntity.name = "T-Wall";
-                            WallEntity Twall = thisTileEntity.GetComponent<WallEntity>();
-                            listOfWalls.Add(Twall);
-                            Twall.WallDirection(int.Parse(numberPlusAddition[1]), numberPlusAddition[2]);
-                            break;
-
-                        case 50: //create corner
-                            thisTileEntity = Instantiate(wallCornerPrefab, nextTile.transform);
-                            thisTileEntity.name = "CornerWall";
-                            WallEntity CornerWall = thisTileEntity.GetComponent<WallEntity>();
-                            listOfWalls.Add(CornerWall);
-                            CornerWall.WallDirection(int.Parse(numberPlusAddition[1]), numberPlusAddition[2]);
-                            break;
-
-                        case 20: //create guard
+                        case "Moving Guard":
                             thisTileEntity = Instantiate(guardPrefab, nextTile.transform);
                             thisTileEntity.name = "Guard";
                             GuardEntity theGuard = thisTileEntity.GetComponent<GuardEntity>();
                             theGuard.movementLeft = theGuard.maxMovement;
-                            theGuard.direction = StringToDirection(numberPlusAddition[1]);
+                            theGuard.direction = StringToDirection(textPlusAddition[1]);
                             listOfGuards.Add(theGuard);
 
                             try
                             {
-                                Debug.Log(numberPlusAddition[2]);
-                                string[] patrolList = numberPlusAddition[2].Split('-');
+                                string[] patrolList = textPlusAddition[2].Split('-');
                                 foreach (string patrol in patrolList)
                                 {
                                     string[] points = patrol.Split(",");
@@ -217,17 +190,17 @@ public class LevelGenerator : MonoBehaviour
                             catch (IndexOutOfRangeException) { continue; }
                             break;
 
-                        case 21: //create static guard
+                        case "Static Guard":
                             thisTileEntity = Instantiate(staticGuardPrefab, nextTile.transform);
                             thisTileEntity.name = "Guard";
                             GuardEntity theStaticGuard = thisTileEntity.GetComponent<GuardEntity>();
                             theStaticGuard.movementLeft = theStaticGuard.maxMovement;
-                            theStaticGuard.direction = StringToDirection(numberPlusAddition[1]);
+                            theStaticGuard.direction = StringToDirection(textPlusAddition[1]);
                             listOfGuards.Add(theStaticGuard);
 
                             try
                             {
-                                string[] patrolList = numberPlusAddition[2].Split('|');
+                                string[] patrolList = textPlusAddition[2].Split('-');
                                 foreach (string patrol in patrolList)
                                 {
                                     string[] points = patrol.Split(",");
@@ -238,12 +211,21 @@ public class LevelGenerator : MonoBehaviour
                             }
                             catch (IndexOutOfRangeException) { continue; }
                             break;
+
+                        case "Wall":
+                            thisTileEntity = Instantiate(wallPrefab, nextTile.transform);
+                            thisTileEntity.name = "Wall";
+                            WallEntity wall = thisTileEntity.GetComponent<WallEntity>();
+                            listOfWalls.Add(wall);
+                            wall.WallSetup(int.Parse(textPlusAddition[1]), textPlusAddition[2]);
+                            thisTileEntity.transform.Find(textPlusAddition[3]).gameObject.SetActive(true);
+                            break;
                     }
 
                     try
                     {
                         StartCoroutine(thisTileEntity.MoveTile(nextTile));
-                        if (int.Parse(numberPlusAddition[0]) == 1)
+                        if (textPlusAddition[0] == "Player")
                             PhaseManager.instance.FocusOnTile(nextTile, false);
                     }
                     catch (NullReferenceException)

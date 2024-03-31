@@ -16,7 +16,7 @@ public class WallEntity : Entity
         return $"Current Health: {health}";
     }
 
-    public void WallDirection(int initialHealth, string data)
+    public void WallSetup(int initialHealth, string data)
     {
         maxHealth = initialHealth;
         health = initialHealth;
