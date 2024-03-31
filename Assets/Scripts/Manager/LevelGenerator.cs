@@ -80,15 +80,21 @@ public class LevelGenerator : MonoBehaviour
                     nextTile.name = $"Tile {i},{j}";
                     listOfTiles[i, j] = nextTile;
                     nextTile.gridPosition = new Vector2Int(i, j);
+                    foreach (Transform child in nextTile.transform.GetChild(1))
+                        child.gameObject.SetActive(false);
 
                     Entity thisTileEntity = null;
+                    Debug.Log($"{i},{j}: {newGrid[i,j]}");
                     string[] textPlusAddition = newGrid[i, j].Split("|");
 
-                    switch (textPlusAddition[0])
+                    switch (textPlusAddition[0].Trim())
                     {
                         case "Floor":
                             if (textPlusAddition.Length>=2)
                             {
+                                foreach (Transform child in nextTile.transform.GetChild(1))
+                                    child.gameObject.SetActive(child.name == textPlusAddition[1]);
+
                                 nextTile.transform.Find(textPlusAddition[1]).gameObject.SetActive(true);
                                 if (textPlusAddition[2] != "true")
                                 {
@@ -123,7 +129,6 @@ public class LevelGenerator : MonoBehaviour
 
                             if (textPlusAddition.Length > 3)
                             {
-                                Debug.Log(textPlusAddition.Length);
                                 if (textPlusAddition[3] != "null")
                                 {
                                     defaultObjective.instructionsWhenCompleted = textPlusAddition[3].ToUpper().Trim();
@@ -218,7 +223,8 @@ public class LevelGenerator : MonoBehaviour
                             WallEntity wall = thisTileEntity.GetComponent<WallEntity>();
                             listOfWalls.Add(wall);
                             wall.WallSetup(int.Parse(textPlusAddition[1]), textPlusAddition[2]);
-                            thisTileEntity.transform.Find(textPlusAddition[3]).gameObject.SetActive(true);
+                            foreach (Transform child in thisTileEntity.transform.GetChild(0))
+                                child.gameObject.SetActive(child.name == textPlusAddition[3]);
                             break;
                     }
 
@@ -348,7 +354,6 @@ public class LevelGenerator : MonoBehaviour
     /// </summary>
     public void DisableAllCards()
     {
-        Debug.LogError("disabling player cards");
         foreach (Card card in SaveManager.instance.allCards)
         {
             card.DisableCard();

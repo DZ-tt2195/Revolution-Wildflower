@@ -158,7 +158,7 @@
       "Floor",
       "Floor",
       "Floor",
-      "Wall|4|l|COrner",
+      "Wall|4|l|Corner",
       "Floor",
       "Wall|4|r|Corner",
       "Floor",
