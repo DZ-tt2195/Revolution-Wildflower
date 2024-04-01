@@ -363,6 +363,7 @@ public class DialogueManager : MonoBehaviour
 
     public void ForceMovementTile(int x, int y)
     {
+        Debug.Log("forced movement tile");
         TutorialManager.forcedMovementTile = new Vector2Int(x, y);
     }
 

@@ -55,9 +55,9 @@ Unlike most guards, the guard in WK’s path won’t budge. Heading straight for
 
 ~ FocusUI("Player Hands")
 
-~ ForceMovementTile(3, 3)
+~ ForceMovementTile(2, 4)
 
-~ ForceSelectionTile(7, 1)
+~ ForceSelectionTile(7, 2)
 
 Fortunately, WK has a Distraction Card in their hand. Distractions allow you to direct and mislead guards.
 

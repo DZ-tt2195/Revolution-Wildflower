@@ -34,6 +34,7 @@ public class Entity : MonoBehaviour
 
     public virtual IEnumerator MoveTile(TileData newTile)
     {
+        TutorialManager.forcedMovementTile = null;
         newTile = LevelGenerator.instance.listOfTiles[newTile.gridPosition.x, newTile.gridPosition.y];
         if (currentTile != null)
             currentTile.myEntity = null;
