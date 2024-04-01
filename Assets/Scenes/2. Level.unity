@@ -1428,6 +1428,7 @@ MonoBehaviour:
   chosenCard: {fileID: 0}
   selectedTile: {fileID: 0}
   confirmationCollector: {fileID: 7928303491963949573, guid: 0ce383b7ea8ca488c810cadf3b089e7e, type: 3}
+  confirmChoice: 0
   buttonSound:
     idInternal: 0
     valueGuidInternal: 
@@ -1504,9 +1505,6 @@ MonoBehaviour:
   floorTilePrefab: {fileID: 2642816440497754149, guid: 416081d422f0447bf81278803b96f973, type: 3}
   playerPrefab: {fileID: 6421295861255831564, guid: e68cbc9ff88a24d4d9abfef76230b41f, type: 3}
   wallPrefab: {fileID: 3780071206512033230, guid: dc8aa844dc4e549bbb30d8da98a75ea1, type: 3}
-  wallTSplitPrefab: {fileID: 22534131588069659, guid: 20dc37b4e68cb3042a1d5f3b3465b897, type: 3}
-  wallCornerPrefab: {fileID: 4990786732049469002, guid: 8e9dec9b025fb114c8702bddb184a4f0, type: 3}
-  wallPlusPrefab: {fileID: 4222996662149608765, guid: 6019f30927dd7aa48accd8d94cd2d463, type: 3}
   guardPrefab: {fileID: 127779131077801882, guid: 13d7840c131d341de8dbd9115b5fec71, type: 3}
   staticGuardPrefab: {fileID: 896374143579019613, guid: 11c148f9222d619469850a2568a477e3, type: 3}
   objectivePrefab: {fileID: 3366395209525496084, guid: 93e86e5b63f364f8dbfd4ab842b55d2b, type: 3}
@@ -14089,7 +14087,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.00018310547, y: 0}
+  m_AnchoredPosition: {x: 0.0012207031, y: 0}
   m_SizeDelta: {x: 0, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &805414193
@@ -34267,7 +34265,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 874926082}
   m_Direction: 0
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.99999875
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
