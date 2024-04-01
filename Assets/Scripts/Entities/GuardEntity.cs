@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
+//using System;
 using MyBox;
-using System;
 
 public class GuardEntity : MovingEntity
 {
