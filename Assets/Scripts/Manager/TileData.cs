@@ -140,11 +140,15 @@ public class TileData : MonoBehaviour
         if (moveable)
         {
             foreach (TileData tile in Pathfinder.instance.FullPath)
+            {
                 tile.directionIndicator.enabled = false;
+            }
 
             Pathfinder.instance.CalculatePathfinding(PhaseManager.instance.lastSelectedPlayer.currentTile,this, PhaseManager.instance.lastSelectedPlayer.movementLeft,false,false);
             foreach (TileData tile in Pathfinder.instance.FullPath)
+            {
                 tile.directionIndicator.enabled = true;
+            }
         }
     }
 
