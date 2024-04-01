@@ -82,7 +82,7 @@ public class PlayerEntity : MovingEntity
 
     void GetCards(int n)
     {
-        List<Card> addToDeck = SaveManager.instance.GenerateCards(SaveManager.instance.currentSaveData.chosenDecks[n]);
+        List<Card> addToDeck = SaveManager.instance.GenerateCards(SaveManager.instance.playerDecks[n]);
         foreach (Card card in addToDeck)
         {
             card.transform.SetParent(this.transform);

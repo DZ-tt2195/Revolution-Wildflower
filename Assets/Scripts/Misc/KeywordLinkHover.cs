@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -14,15 +12,15 @@ public class KeywordLinkHover : MonoBehaviour
     {
         myText = GetComponent<TMP_Text>();
         rectTrans = GetComponent<RectTransform>();
-        Canvas _canvasToCheck = GetComponentInParent<Canvas>();
-        if (_canvasToCheck.renderMode == RenderMode.ScreenSpaceOverlay)
-            _cameraToUse = null;
-        else
-            _cameraToUse = _canvasToCheck.worldCamera;
     }
 
     private void Update()
     {
+        if (SaveManager.instance.canvas.renderMode == RenderMode.ScreenSpaceOverlay)
+            _cameraToUse = null;
+        else
+            _cameraToUse = SaveManager.instance.canvas.worldCamera;
+
         this.transform.SetAsLastSibling();
         Vector3 mousePosition = new(Input.mousePosition.x, Input.mousePosition.y, 0);
 

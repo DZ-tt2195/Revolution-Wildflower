@@ -40,7 +40,7 @@ public class PhaseManager : MonoBehaviour
     [Tooltip("Complete an objective you're next to")][ReadOnly] public Button objectiveButton;
     [Tooltip("Exit the level if you're on the right tile")][ReadOnly] Button exitButton;
     [Tooltip("Spend 3 energy to draw a card")] Button spendToDrawButton;
-    [Tooltip("End the turn")] public Button endTurnButton;
+    [Tooltip("End the turn")] [ReadOnly] public Button endTurnButton;
     [Tooltip("End turn button's image")] Image endTurnImage;
 
     [Foldout("Choices", true)]
@@ -48,6 +48,7 @@ public class PhaseManager : MonoBehaviour
     [Tooltip("A card that the player chose as part of a decision")][ReadOnly] public Card chosenCard;
     [Tooltip("Current Selected Tile")][ReadOnly] public TileData selectedTile;
     [Tooltip("Confirm your decisions")] public Collector confirmationCollector;
+    [Tooltip("button chosen on confirmation collector")] [ReadOnly] public int confirmChoice;
 
     [Foldout("Sound Effects", true)]
     [SerializeField] AK.Wwise.Event buttonSound;
@@ -138,7 +139,12 @@ public class PhaseManager : MonoBehaviour
     /// <returns></returns>
     public IEnumerator StartPlayerTurn()
     {
+
         StartCoroutine(LevelUIManager.instance.FadeTurnBar("Player Turn"));
+        foreach (GuardEntity guard in LevelGenerator.instance.listOfGuards)
+        {
+            guard.CalculateTiles();
+        }
         Debug.Log("starting player turns");
         foreach (Card card in futureEffects)
             yield return card.NextRoundEffect();
@@ -160,10 +166,10 @@ public class PhaseManager : MonoBehaviour
             CurrentPhase = TurnSystem.WaitingOnPlayer;
             StopCoroutine(ChooseMovePlayer(lastSelectedPlayer, 0));
             StopCoroutine(ChooseCardPlay(lastSelectedPlayer));
-
+            /*
             LevelGenerator.instance.DisableAllTiles();
             LevelGenerator.instance.DisableAllCards();
-
+            */
             if (lastSelectedPlayer != null)
                 LevelUIManager.instance.UpdateStats(lastSelectedPlayer);
 
@@ -363,19 +369,13 @@ public class PhaseManager : MonoBehaviour
 
         movingPlayer = false;
         CurrentPhase = TurnSystem.ResolvingAction;
-        Collector confirmDecision = ConfirmDecision("Confirm movement?", new Vector2(0, 200));
-        if (confirmDecision != null)
-        {
-            selectedTile = chosenTile;
-            yield return confirmDecision.WaitForChoice();
-            int decision = confirmDecision.chosenButton;
-            Destroy(confirmDecision.gameObject);
+        selectedTile = chosenTile;
 
-            if (decision == 1)
-            {
-                yield return (ChooseMovePlayer(currentPlayer, possibleMoves, freeMoves));
-                yield break;
-            }
+        yield return ConfirmUndo("Confirm movement?", new Vector2(0, 400));
+        if (confirmChoice == 1)
+        {
+            yield return (ChooseMovePlayer(currentPlayer, possibleMoves, freeMoves));
+            yield break;
         }
 
         LevelGenerator.instance.DisableAllTiles();
@@ -431,18 +431,12 @@ public class PhaseManager : MonoBehaviour
 
         Debug.Log($"chosen card no longer null");
         CurrentPhase = TurnSystem.ResolvingAction;
-        Collector confirmDecision = ConfirmDecision($"Play {chosenCard.name}?", new Vector2(0, -85));
-        if (confirmDecision != null)
-        {
-            yield return confirmDecision.WaitForChoice();
-            int decision = confirmDecision.chosenButton;
-            Destroy(confirmDecision.gameObject);
 
-            if (decision == 1)
-            {
-                yield return ChooseCardPlay(currentPlayer);
-                yield break;
-            }
+        yield return ConfirmUndo($"Play {chosenCard.name}?", new Vector2(0, 400));
+        if (confirmChoice == 1)
+        {
+            yield return (ChooseCardPlay(currentPlayer));
+            yield break;
         }
 
         yield return currentPlayer.PlayCard(chosenCard, true);
@@ -576,18 +570,11 @@ public class PhaseManager : MonoBehaviour
 
         if (lastSelectedPlayer != null && lastSelectedPlayer.adjacentObjective != null)
         {
-            Collector confirmDecision = ConfirmDecision($"Complete this objective?", new Vector2(0, -85));
-            if (confirmDecision != null)
+            yield return ConfirmUndo($"Complete this objective?", new Vector2(0, 400));
+            if (confirmChoice == 1)
             {
-                yield return confirmDecision.WaitForChoice();
-                int decision = confirmDecision.chosenButton;
-                Destroy(confirmDecision.gameObject);
-
-                if (decision == 1)
-                {
-                    BackToStart(false);
-                    yield break;
-                }
+                BackToStart(false);
+                yield break;
             }
 
             yield return lastSelectedPlayer.adjacentObjective.ObjectiveComplete(lastSelectedPlayer);
@@ -607,19 +594,11 @@ public class PhaseManager : MonoBehaviour
     IEnumerator ResolveDraw()
     {
         CurrentPhase = TurnSystem.ResolvingAction;
-
-        Collector confirmDecision = ConfirmDecision($"Spend 3 energy to draw a card?", new Vector2(0, -85));
-        if (confirmDecision != null)
+        yield return ConfirmUndo($"Spend 3 energy to draw a card?", new Vector2(0, 400));
+        if (confirmChoice == 1)
         {
-            yield return confirmDecision.WaitForChoice();
-            int decision = confirmDecision.chosenButton;
-            Destroy(confirmDecision.gameObject);
-
-            if (decision == 1)
-            {
-                BackToStart(false);
-                yield break;
-            }
+            BackToStart(false);
+            yield break;
         }
 
         if (lastSelectedPlayer != null)
@@ -645,8 +624,9 @@ public class PhaseManager : MonoBehaviour
     /// <param name="header">the text in the box</param>
     /// <param name="position">the position of the box</param>
     /// <returns></returns>
-    public Collector ConfirmDecision(string header, Vector3 position)
+    public IEnumerator ConfirmUndo(string header, Vector3 position)
     {
+        confirmChoice = -1;
         if (PlayerPrefs.GetInt("Confirm Choices") == 1)
         {
             LevelGenerator.instance.DisableAllCards();
@@ -658,11 +638,14 @@ public class PhaseManager : MonoBehaviour
 
             collector.AddTextButton("Confirm");
             collector.AddTextButton("Go Back");
-            return collector;
+
+            yield return collector.WaitForChoice();
+            confirmChoice = collector.chosenButton;
+            Destroy(collector.gameObject);
         }
         else
         {
-            return null;
+            yield break;
         }
     }
 
@@ -686,6 +669,7 @@ public class PhaseManager : MonoBehaviour
         chosenCard = null;
         LevelGenerator.instance.DisableAllCards();
 
+        Debug.LogError("enabling player cards");
         foreach (Card card in canBeChosen)
         {
             card.EnableCard();

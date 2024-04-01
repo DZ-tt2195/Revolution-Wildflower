@@ -5,6 +5,13 @@ using MyBox;
 
 public class StaticGuard : GuardEntity
 {
+    private void Awake()
+    {
+        AttackLine = GetComponent<LineRenderer>();
+        DetectionRangeMax = DetectionRangePatrol;
+        alertStatus = Alert.Patrol;
+        PatrolTarget = 0;
+    }
 
     public override IEnumerator Patrol()
     {
