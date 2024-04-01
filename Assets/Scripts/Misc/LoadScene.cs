@@ -21,7 +21,6 @@ public class LoadScene : MonoBehaviour
     public void NextScene()
     {
         MoveCamera.ClearLocks();
-        SaveManager.instance.UnloadObjects();
-        SceneManager.LoadScene(scene);
+        StartCoroutine(SaveManager.instance.UnloadObjects(scene));
     }
 }
