@@ -113,7 +113,7 @@ public class GuardEntity : MovingEntity
                     Overlap = true;
                 }
             }
-            if(!Overlap) inDetection[i].SurveillanceState(false);
+            if(!Overlap) inDetection[i].SurveillanceState(this, false);
         }
         inDetection.Clear();
 
@@ -177,7 +177,7 @@ public class GuardEntity : MovingEntity
 
         foreach (TileData tile in inDetection)
         {
-            tile.SurveillanceState(true);
+            tile.SurveillanceState(this, true);
         }
 
         print(currentTile.gridPosition + " has " + SpacesToCheck.Count);
@@ -505,6 +505,14 @@ public class GuardEntity : MovingEntity
                 print("Persuing from attack");
                 yield return persue();
             }
+        }
+    }
+
+    public void ToggleSurveillingTileFlash(bool flash)
+    {
+        foreach (TileData tile in inDetection)
+        {
+            tile.SetSurveillanceFlash(flash);
         }
     }
 

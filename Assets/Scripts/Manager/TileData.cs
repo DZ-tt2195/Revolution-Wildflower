@@ -23,6 +23,7 @@ public class TileData : MonoBehaviour
         [Tooltip("internalTimer")] private float mouseOverAnimTimer = 0;
         [Tooltip("height of mouseOver")][SerializeField] float mouseOverDisplace;
         [Tooltip("Baseheight of the tile")] float baseHeight;
+    [Tooltip("Guard currently surveilling this area")] GuardEntity surveillingGuard;
 
     [Foldout("Tile conditions", true)]
         [Tooltip("Defines whether you can click this tile")][ReadOnly] public bool clickable = false;
@@ -55,6 +56,9 @@ public class TileData : MonoBehaviour
         [Tooltip("Base delay noise indecator")] [SerializeField] float BaseAlertDelay = 0.2f;
         [Tooltip("Variable indicating when tile should highlight for noise")][ReadOnly] bool noiseThrough = false;
     [SerializeField] bool underSurvey = false;
+    bool surveyFlashing;
+    [SerializeField] Color defaultDangerStripesColor;
+    [SerializeField] Color triggeredDangerStripesColor;
 
     private void Awake()
     {
@@ -65,6 +69,7 @@ public class TileData : MonoBehaviour
         directionIndicator.enabled = false;
         baseHeight = transform.position.y;
         dangerStripesPropertyBlock = new MaterialPropertyBlock();
+        defaultDangerStripesColor = dangerStripes.material.GetColor("_StripesColor");
     }
 
     void FixedUpdate()
@@ -148,6 +153,10 @@ public class TileData : MonoBehaviour
             foreach (TileData tile in Pathfinder.instance.FullPath)
             {
                 tile.directionIndicator.enabled = true;
+                if (underSurvey)
+                {
+                    surveillingGuard.ToggleSurveillingTileFlash(true);
+                }
             }
         }
     }
@@ -235,8 +244,17 @@ public class TileData : MonoBehaviour
         }
     }
 
-    public void SurveillanceState(bool underSurveillance)
+    public void SurveillanceState(GuardEntity guard, bool underSurveillance)
     {
+        if (underSurveillance)
+        {
+            surveillingGuard = guard;
+        }
+        else
+        {
+            surveillingGuard = null;
+        }
+
         underSurvey = underSurveillance;
         dangerStripes.gameObject.SetActive(underSurveillance);
         Debug.Log(dangerStripes.gameObject.activeSelf);
@@ -244,9 +262,21 @@ public class TileData : MonoBehaviour
         //renderer3d.material.SetColor("_palette_color", underSurveillance ? Color.red : new Color(0, 0.3686275f, 0.2352941f));
     }
 
+    public void SetSurveillanceFlash(bool flash)
+    {
+        surveyFlashing = flash;
+    }
+
     private void Update()
     {
         transform.position = new Vector3(transform.position.x, baseHeight + (mouseOverDisplace * mouseOverCurve.Evaluate(mouseOverAnimTimer / mouseOverAnimTimerMax)), transform.position.z);
+
+        if (surveyFlashing)
+        {
+            //  using that funky subtraction to only get the decimal part of the time.
+            dangerStripesPropertyBlock.SetColor("_StripeColor", Color.Lerp(defaultDangerStripesColor, triggeredDangerStripesColor, (Mathf.Sin(Time.time) / 2) + 0.5f));
+            dangerStripes.SetPropertyBlock(dangerStripesPropertyBlock);
+        }
 
         Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
