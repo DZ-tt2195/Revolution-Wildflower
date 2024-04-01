@@ -11,7 +11,7 @@ public class GuardEntity : MovingEntity
     [Foldout("Guard Entity",true)]
     [Header("Attacking")]
         [Tooltip("Times this attacks")] [ReadOnly] public int attacksPerTurn = 1;
-        [Tooltip("Current number of attacks")] [ReadOnly] int attacksLeft = 0;
+        [Tooltip("Current number of attacks")] [ReadOnly] protected int attacksLeft = 0;
         [Tooltip("Current Target to attack & persue")] [ReadOnly] public PlayerEntity CurrentTarget;
         [Tooltip("Guard Range")] int AttackRange = 1;
 
@@ -180,8 +180,6 @@ public class GuardEntity : MovingEntity
             tile.SurveillanceState(this, true);
         }
 
-        print(currentTile.gridPosition + " has " + SpacesToCheck.Count);
-        print("direction" + direction);
     }
 
     public void addDistraction(Vector2Int position)
@@ -293,7 +291,7 @@ public class GuardEntity : MovingEntity
         //print("New target, player at " + target.currentTile.gridPosition);
     }
 
-    IEnumerator persue()
+    virtual public IEnumerator persue()
     {
         print(DistractionPoints.Count);
         print(currentTile.gridPosition + "checking distraction");
@@ -404,7 +402,7 @@ public class GuardEntity : MovingEntity
         }
     }
 
-    IEnumerator Attack(PlayerEntity detectedPlayer)
+    protected IEnumerator Attack(PlayerEntity detectedPlayer)
     {
         print($"{currentTile.gridPosition} attacking player at {detectedPlayer.currentTile.gridPosition}");
         HashSet<Vector2Int> lineToPlayer = Pathfinder.instance.line(currentTile.gridPosition, detectedPlayer.currentTile.gridPosition);

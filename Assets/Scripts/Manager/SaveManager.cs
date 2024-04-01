@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using MyBox;
+using UnityEngine.UI;
 
 [Serializable]
 public class SaveData
@@ -26,11 +27,15 @@ public class SaveManager : MonoBehaviour
     [ReadOnly] public string saveFileName;
     [Tooltip("Card prefab")][SerializeField] Card cardPrefab;
 
+    [SerializeField] Image transitionImage;
+    [SerializeField] float transitionTime;
+
     [Tooltip("Put names of the card TSVs in here")] public List<string> playerDecks;
     [Tooltip("Put names of the level TSVs (in order)")] public List<string> levelSheets;
     [ReadOnly] public List<Card> allCards = new List<Card>();
     public float cardBaseHeight = -481;
-    #endregion
+
+#endregion
 
 #region Setup
 
@@ -92,7 +97,7 @@ public class SaveManager : MonoBehaviour
 
     #endregion
 
-#region Switching Scenes
+#region Scenes
 
     private void OnEnable()
     {
@@ -129,6 +134,13 @@ public class SaveManager : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
+        StartCoroutine(BringBackObjects());
+    }
+
+    IEnumerator BringBackObjects()
+    {
+        yield return SceneTransitionEffect(1);
+        transitionImage.gameObject.SetActive(false);
 
         CardDisplay.instance.transform.SetParent(canvas.transform);
         CardDisplay.instance.transform.localPosition = new Vector3(0, 0);
@@ -148,13 +160,34 @@ public class SaveManager : MonoBehaviour
         KeywordTooltip.instance.transform.localEulerAngles = Vector3.one;
     }
 
-    public void UnloadObjects()
+    public IEnumerator UnloadObjects(string nextScene)
     {
+        yield return SceneTransitionEffect(0);
+
         Preserve(CardDisplay.instance.gameObject);
         //Preserve(FPS.instance.gameObject);
         Preserve(GameSettings.instance.gameObject);
         Preserve(KeywordTooltip.instance.gameObject);
         allCards.Clear();
+
+        SceneManager.LoadScene(nextScene);
+    }
+
+    IEnumerator SceneTransitionEffect(float begin)
+    {
+        transitionImage.gameObject.SetActive(true);
+        transitionImage.SetAlpha(begin);
+
+        float waitTime = 0f;
+        while (waitTime < transitionTime)
+        {
+            transitionImage.SetAlpha(Mathf.Abs(begin - (waitTime / transitionTime)));
+            waitTime += Time.deltaTime;
+            yield return null;
+        }
+
+        transitionImage.SetAlpha(Mathf.Abs(begin - 1));
+        transitionImage.gameObject.SetActive(true);
     }
 
     void Preserve(GameObject next)
