@@ -720,7 +720,7 @@ public class PhaseManager : MonoBehaviour
         {
             foreach (TileData tile in canBeChosen)
             {
-                Debug.Log(tile.gridPosition + " " + TutorialManager.forcedMovementTile);
+                Debug.Log("MOVEMENT FORCED " + tile.gridPosition + " " + TutorialManager.forcedMovementTile);
                 if (tile.gridPosition == TutorialManager.forcedMovementTile)
                 {
                     tile.clickable = true;
