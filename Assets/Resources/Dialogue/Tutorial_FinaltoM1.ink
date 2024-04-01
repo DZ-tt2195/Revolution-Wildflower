@@ -11,3 +11,4 @@ Awesome, we’ll split up and meet there tomorrow morning.
 Gail, you said we’re meeting your contact. Right? #speaker: WK #portrait: WK
 
 I promise I’ll explain more when we do. #speaker: Gail #portrait: Gail
+    
