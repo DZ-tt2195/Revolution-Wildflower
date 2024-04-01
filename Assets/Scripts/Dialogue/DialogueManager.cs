@@ -49,7 +49,6 @@ public class DialogueManager : MonoBehaviour
     private const string LAYOUT_TAG  = "layout";
     private const string BACKGROUND_TAG = "bg";
 
-
     [HideInInspector] public static DialogueVariables dialogueVariables;
    
     private void Awake()
@@ -145,9 +144,11 @@ public class DialogueManager : MonoBehaviour
         dialogueVariables.VariablesToStory(currentStory);
         dialogueIsPlaying = true;
         dialoguePanel.SetActive(true);
+
         TutorialManager.TrySetActiveAll(false);
         TutorialManager.forcedMovementTile = null;
         TutorialManager.forcedSelectionTile = null; 
+
         MoveCamera.AddLock("Dialogue");
         dialoguePanel.SetActive(true);
         Debug.Log("Set active true");
@@ -157,6 +158,8 @@ public class DialogueManager : MonoBehaviour
         //portraitAnimator.Play("Default");
         //layoutAnimator.Play("Left");
         //backgroundAnimator.Play("Default");
+
+        //currentStory.BindExternalFunction("playSound", (string soundName) => { });
 
         ContinueStory();
 
@@ -179,6 +182,8 @@ public class DialogueManager : MonoBehaviour
 
         Debug.Log("Dialogue Completed");
         DialogueCompleted?.Invoke();
+
+        currentStory.UnbindExternalFunction("playSound");
     }
 
     private IEnumerator DisplayLine(string line)
