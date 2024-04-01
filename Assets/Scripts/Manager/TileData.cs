@@ -54,6 +54,7 @@ public class TileData : MonoBehaviour
         [Tooltip("Time for noise indecator to show")] [SerializeField] float AlertDelay = 0.2f;
         [Tooltip("Base delay noise indecator")] [SerializeField] float BaseAlertDelay = 0.2f;
         [Tooltip("Variable indicating when tile should highlight for noise")][ReadOnly] bool noiseThrough = false;
+    [SerializeField] bool underSurvey = false;
 
     private void Awake()
     {
@@ -232,7 +233,8 @@ public class TileData : MonoBehaviour
 
     public void SurveillanceState(bool underSurveillance)
     {
-        dangerStripes.gameObject.SetActive(!underSurveillance);
+        underSurvey = underSurveillance;
+        dangerStripes.gameObject.SetActive(underSurveillance);
         Debug.Log(dangerStripes.gameObject.activeSelf);
         //renderer3d.material.color = (underSurveillance) ? Color.red : Color.gray;
         //renderer3d.material.SetColor("_palette_color", underSurveillance ? Color.red : new Color(0, 0.3686275f, 0.2352941f));

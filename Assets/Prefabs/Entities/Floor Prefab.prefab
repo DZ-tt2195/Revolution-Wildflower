@@ -220,6 +220,7 @@ MonoBehaviour:
   CardSelectableColor: {r: 0.2064791, g: 0.8207547, b: 0.76090276, a: 1}
   AlertDelay: 0.05
   BaseAlertDelay: 0
+  underSurvey: 0
 --- !u!212 &6299431183525030124
 SpriteRenderer:
   m_ObjectHideFlags: 0

@@ -403,7 +403,7 @@ LineRenderer:
       atime6: 0
       atime7: 0
       m_Mode: 0
-      m_ColorSpace: 0
+      m_ColorSpace: -1
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
     numCornerVertices: 0
@@ -438,14 +438,14 @@ MonoBehaviour:
   Occlusion: 0
   direction: {x: 0, y: 0}
   movementLeft: 0
-  movesPerTurn: 4
+  maxMovement: 4
   stunned: 0
   stunObject: {fileID: 876491237150433223}
   stunText: {fileID: 5054512264928877908}
   attacksPerTurn: 1
   CurrentTarget: {fileID: 0}
   DetectionRangePatrol: 4
-  DetectionRangeMax: 3
+  DetectionRangeMax: 4
   DetectionAngle: 30
   alertStatus: 0
   PatrolPoints: []

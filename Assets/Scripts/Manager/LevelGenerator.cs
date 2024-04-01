@@ -179,6 +179,8 @@ public class LevelGenerator : MonoBehaviour
                             GuardEntity theGuard = thisTileEntity.GetComponent<GuardEntity>();
                             theGuard.movementLeft = theGuard.maxMovement;
                             theGuard.direction = StringToDirection(textPlusAddition[1]);
+                            print("The guard " + nextTile.gridPosition + " Has a direction of " + textPlusAddition[1] + " or " + theGuard.direction);
+
                             listOfGuards.Add(theGuard);
 
                             try
@@ -259,11 +261,6 @@ public class LevelGenerator : MonoBehaviour
             }
         }
 
-        foreach (GuardEntity curGuard in listOfGuards)
-        {
-            curGuard.CalculateTiles();
-            curGuard.CheckForPlayer();
-        }
     }
 
 #endregion

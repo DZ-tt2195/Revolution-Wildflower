@@ -34,7 +34,7 @@
       "Wall|4|l|Default",
       "Wall|4|l|Default",
       "Wall|4|l|Default",
-      "Wall|4|l|Default",
+      "Floor",
       "Wall|4|l|Default",
       "Wall|4|l|Default",
       "Wall|4|l|Default"

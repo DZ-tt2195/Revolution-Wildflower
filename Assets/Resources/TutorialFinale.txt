@@ -55,7 +55,7 @@
       "Wall|2|r|Default",
       "Wall|2|r|Default",
       "Floor",
-      "Moving Guard|u|3,4|3,7-1,10",
+      "Moving Guard|u|3,4-3,7-1,10",
       "Floor",
       "Floor",
       "Floor",

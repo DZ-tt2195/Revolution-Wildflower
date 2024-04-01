@@ -139,7 +139,12 @@ public class PhaseManager : MonoBehaviour
     /// <returns></returns>
     public IEnumerator StartPlayerTurn()
     {
+
         StartCoroutine(LevelUIManager.instance.FadeTurnBar("Player Turn"));
+        foreach (GuardEntity guard in LevelGenerator.instance.listOfGuards)
+        {
+            guard.CalculateTiles();
+        }
         Debug.Log("starting player turns");
         foreach (Card card in futureEffects)
             yield return card.NextRoundEffect();

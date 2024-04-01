@@ -35,7 +35,7 @@ public class GuardEntity : MovingEntity
         [Tooltip("offset used to spawn distraction notifications")] [SerializeField] float NotifOffset = 1;
 
     [Header("Colors")]
-        [Tooltip("Line renderer for showing the guard is attacking")] LineRenderer AttackLine = new LineRenderer();
+        [Tooltip("Line renderer for showing the guard is attacking")] protected LineRenderer AttackLine = new LineRenderer();
         [Tooltip("color for when the guard is chasing")] [SerializeField] Material chaseColor;
         [Tooltip("color for when the guard is chasing")] [SerializeField] Material attackColor;
         [Tooltip("duration of color switch when attacking")] [SerializeField] float attackEffectDuration = 0.2f;
@@ -175,6 +175,14 @@ public class GuardEntity : MovingEntity
                 }
             }
         }
+
+        foreach (TileData tile in inDetection)
+        {
+            tile.SurveillanceState(true);
+        }
+
+        print(currentTile.gridPosition + " has " + SpacesToCheck.Count);
+        print("direction" + direction);
     }
 
     public void addDistraction(Vector2Int position)
