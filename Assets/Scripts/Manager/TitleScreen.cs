@@ -23,6 +23,8 @@ public class TitleScreen : MonoBehaviour
     TMP_InputField newName;
     TMP_Dropdown fileChoose;
 
+    [Scene] [SerializeField] string scene;
+
     private void Awake()
     {
         deleteFile = GameObject.Find("Delete Deck").GetComponent<Button>();
@@ -91,8 +93,7 @@ public class TitleScreen : MonoBehaviour
         else
         { 
             SaveManager.instance.LoadFile(fileChoose.options[fileChoose.value].text);
-            SaveManager.instance.UnloadObjects();
-            SceneManager.LoadScene(1);
+            StartCoroutine(SaveManager.instance.UnloadObjects(scene));
         }
     }
 
@@ -109,8 +110,7 @@ public class TitleScreen : MonoBehaviour
         else
         {
             SaveManager.instance.NewFile(newName.text);
-            SaveManager.instance.UnloadObjects();
-            SceneManager.LoadScene(1);
+            StartCoroutine(SaveManager.instance.UnloadObjects(scene));
         }
     }
 

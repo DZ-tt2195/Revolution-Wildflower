@@ -82,7 +82,7 @@
       "Floor",
       "Floor",
       "Floor",
-      "Exit",
+      "Floor",
       "Exit",
       "Exit",
       "Exit"
