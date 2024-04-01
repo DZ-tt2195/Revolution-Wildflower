@@ -1,5 +1,6 @@
-#portrait: News Anchor #layout: News
-Disturbing events at Lake Flynn are shaking our town of Revelations to its core. #speaker: News Anchor #bg: NewsAnimation 1  
+EXTERNAL textBox(state)
+
+Disturbing events at Lake Flynn are shaking our town of Revelations to its core. #speaker: News Anchor #bg: NewsAnimation 1  #portrait: News Anchor #layout: News
 
 Seemingly overnight, the popular hang-out spot erupted with hundreds of dead fish. The water continues to turn a startling shade of blood red. #bg: NewsAnimation 2
 
@@ -19,16 +20,48 @@ They have begun donations to our medical centers, assisting local businesses, an
 
 Icarus Industries has only recently moved into our quiet town and is already receiving good graces from everyo–  
 
+<i>Psshkt #speaker: TV #bg: Default
+
+Revelations. A strong name. A strong history. A strong community. #speaker: Advertisment #bg: Default
+
+Icarus Industries thanks you, Revelations, for welcoming us with open arms.
+
+Thank you for allowing us to become members of your wonderful family.
+
+As a result of your warm welcome, we are excited to announce that we have new job openings at our offices and facilities.
+
+Please reach out to +1 ICA-RUS-INDS
+
+Together, we will bring a strong future to Revelations-
+
 That's bullshit. #speaker: Gail #layout: Right #bg: Default
 
+How does no one else see it?
 
-/* Imagine a future where you can enjoy fresh air. #Advertisement
 
-Imagine a future where the grass is ever greener. 
+... #speaker: #layout: News 
 
-Imagine a future where winters stay cold and summers stay hot. 
 
-Icarus Industries strives for this future, and we plan to bring the future to you. 
+Okay. Radio check. #speaker: Gail #layout: Right #portrait: Gail #bg: Forest
 
-We wish to give back to Revelations, Missouri bringing new jobs and new hope–*/
+Gail, you don’t have to be so seri- #speaker: Frankie #portrait: Frankie
 
+If we fuck up, we <i>will</i> get arrested and we’ll never get the answers we need. #speaker: Gail #portrait: Gail
+
+So forgive me for being serious.
+
+... #speaker: Frankie #portrait: Frankie
+
+You’re right. Sorry. I hear you loud and clear.
+
+I hear you. #speaker: WK #portrait: WK
+
+Alright. As much as I would like to plan a lot further ahead, the news hasn’t been too hopeful. #speaker: Gail #portrait: Gail
+
+Where are you right now?
+
+I’m outside the fence. There’s that hole that you mentioned. #speaker: Frankie #portrait: Frankie
+
+Good. Remember, we go one by one. Let’s try to keep it quiet. Keep us posted. #speaker: Gail #portrait: Gail
+
+Got it. #speaker: Frankie #portrait: Frankie

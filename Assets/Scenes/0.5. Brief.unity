@@ -138,12 +138,12 @@ GameObject:
   - component: {fileID: 82121678}
   - component: {fileID: 82121683}
   m_Layer: 5
-  m_Name: Build a Deck
+  m_Name: Skip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &82121678
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1317,15 +1317,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inkJSON:
-  - {fileID: 4900000, guid: 000716dc7e2cef94b899d23bf60472cc, type: 3}
-  - {fileID: 4900000, guid: 7022954f64d301e4fa59c092d1e9e418, type: 3}
-  - {fileID: 4900000, guid: c70b1a1decea8944fb687d09db4b39b7, type: 3}
-  - {fileID: 4900000, guid: 7c1022430615b0b41bd9dee45808d635, type: 3}
+  - {fileID: 4900000, guid: 492b4f2f0d8162e4eab6759837f70dfc, type: 3}
+  - {fileID: 4900000, guid: 7c13515baf4d8bc479ea9d8967d60771, type: 3}
+  - {fileID: 4900000, guid: 690a9f01c43807947b95cccc08d38342, type: 3}
   - {fileID: 4900000, guid: 25a4f86ff12dc0440baa91b305148d9a, type: 3}
+  - {fileID: 4900000, guid: 0065d75f4392587468788ed3836b391b, type: 3}
   - {fileID: 4900000, guid: bf2341bb44867f94f888242164770374, type: 3}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   - {fileID: 0}
   scene: 1. Build Deck
 --- !u!114 &1235627396
