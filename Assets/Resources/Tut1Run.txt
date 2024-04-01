@@ -1,52 +1,52 @@
 {
     [
-      "Floor",
-      "Floor",
-      "Floor"
+      "0",
+      "0",
+      "0"
     ],
     [
-      "Floor",
-      "Player|Frankie",
-      "Floor"
+      "0",
+      "1|Frankie",
+      "0"
     ],
     [
-      "Floor",
-      "Floor",
-      "Floor"
+      "0",
+      "0",
+      "0"
     ],
     [
-      "Floor",
-      "Floor",
-      "Floor"
+      "0",
+      "0",
+      "0"
     ],
     [
-      "Floor",
-      "Floor",
-      "Floor"
+      "0",
+      "0",
+      "0"
     ],
     [
-      "Floor",
-      "Floor",
-      "Floor",
-      "Floor",
-      "Floor",
-      "Exit"
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "2"
     ],
     [
-      "Floor",
-      "Objective|COMPLETE|real info|null|Tutorial Beats/Frankie_3",
-      "Floor",
-      "Floor",
-      "Floor",
-      "Exit"
+      "0",
+      "3|COMPLETE|real info|null|Tutorial Beats/Frankie_3",
+      "0",
+      "0",
+      "0",
+      "2"
     ],
     [
-      "Floor",
-      "Floor",
-      "Floor",
-      "Floor",
-      "Floor",
-      "Exit"
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "2"
     ]
   ]
 }

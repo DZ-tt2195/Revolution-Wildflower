@@ -1,0 +1,1 @@
+I’m through, and I don’t think I see anyone. I’ll wait for you guys nearby. #speaker: Frankie #portrait: Frankie #bg: Forest

@@ -193,7 +193,7 @@
     ],
     [
       "Hand-off",
-      "Pass a card from your hand to an adjacent character.",
+      "Pass a card from your hand to an adjacent player.",
       "draw",
       "",
       "1",

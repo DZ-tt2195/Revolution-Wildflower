@@ -1,5 +1,3 @@
-EXTERNAL textBox(state)
-
 That was way too close. #speaker: WK #portrait: WK #bg: Forest
 
 Yea. Frankie, are we still good to meet at your place tomorrow? #speaker: Gail #portrait: Gail

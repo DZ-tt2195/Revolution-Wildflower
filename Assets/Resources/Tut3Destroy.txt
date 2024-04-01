@@ -1,83 +1,83 @@
 {
     [
-      "Floor",
-      "Floor",
-      "Floor",
-      "Floor",
-      "Floor",
-      "Floor",
-      "Floor",
-      "Floor"
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0"
     ],
     [
-      "Floor",
-      "Player|Gail",
-      "Floor",
-      "Floor",
-      "Floor",
-      "Floor",
-      "Floor",
-      "Floor"
+      "0",
+      "1|Gail",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0"
     ],
     [
-      "Floor",
-      "Floor",
-      "Floor",
-      "Floor",
-      "Floor",
-      "Floor",
-      "Floor",
-      "Floor"
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0"
     ],
     [
-      "Wall|4|l|Default",
-      "Wall|4|l|Default",
-      "Wall|4|l|Default",
-      "Wall|4|l|Default",
-      "Wall|4|l|Default",
-      "Wall|4|l|Default",
-      "Wall|4|l|Default",
-      "Wall|4|l|Default"
+      "10|4|l",
+      "10|4|l",
+      "10|4|l",
+      "10|2|l",
+      "10|2|l",
+      "10|4|l",
+      "10|4|l",
+      "10|4|l"
     ],
     [
-      "Floor",
-      "Floor",
-      "Floor",
-      "Floor",
-      "Floor",
-      "Floor",
-      "Floor",
-      "Floor"
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0"
     ],
     [
-      "Floor",
-      "Floor",
-      "Floor",
-      "Floor",
-      "Floor",
-      "Floor",
-      "Floor",
-      "Floor"
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0"
     ],
     [
-      "Floor",
-      "Floor",
-      "Floor",
-      "Floor",
-      "Floor",
-      "Floor",
-      "Floor",
-      "Floor"
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0"
     ],
     [
-      "Floor",
-      "Floor",
-      "Floor",
-      "Floor",
-      "Floor",
-      "Exit",
-      "Exit",
-      "Exit"
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "2",
+      "2",
+      "2"
     ]
   ]
 }
