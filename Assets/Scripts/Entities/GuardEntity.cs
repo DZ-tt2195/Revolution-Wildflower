@@ -367,7 +367,7 @@ public class GuardEntity : MovingEntity
         }
     }
 
-    protected IEnumerator newAction()
+    virtual public IEnumerator newAction()
     {
         alertStatus = Alert.Patrol;
         if (DistractionPoints.Count > 0)
