@@ -46,6 +46,7 @@ public class SaveManager : MonoBehaviour
         {
             instance = this;
             canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
+            this.transform.GetChild(0).gameObject.SetActive(true);
             DontDestroyOnLoad(this.gameObject);
         }
         else
@@ -142,35 +143,12 @@ public class SaveManager : MonoBehaviour
     {
         yield return SceneTransitionEffect(1);
         transitionImage.gameObject.SetActive(false);
-
-        CardDisplay.instance.transform.SetParent(canvas.transform);
-        CardDisplay.instance.transform.localPosition = new Vector3(0, 0);
-
-        //FPS.instance.transform.SetParent(canvas);
-        //FPS.instance.transform.localPosition = new Vector3(-850, -500);
-
-        GameSettings.instance.transform.SetParent(canvas.transform);
-        GameSettings.instance.transform.localPosition = Vector3.zero;
-        GameSettings.instance.transform.localScale = Vector3.one;
-        GameSettings.instance.transform.localEulerAngles = Vector3.one;
-        GameSettings.instance.transform.GetChild(0).gameObject.SetActive(false);
-
-        KeywordTooltip.instance.transform.SetParent(canvas.transform);
-        KeywordTooltip.instance.transform.localPosition = Vector3.zero;
-        KeywordTooltip.instance.transform.localScale = Vector3.one;
-        KeywordTooltip.instance.transform.localEulerAngles = Vector3.one;
     }
 
     public IEnumerator UnloadObjects(string nextScene)
     {
         yield return SceneTransitionEffect(0);
-
-        Preserve(CardDisplay.instance.gameObject);
-        //Preserve(FPS.instance.gameObject);
-        Preserve(GameSettings.instance.gameObject);
-        Preserve(KeywordTooltip.instance.gameObject);
         allCards.Clear();
-
         SceneManager.LoadScene(nextScene);
     }
 
