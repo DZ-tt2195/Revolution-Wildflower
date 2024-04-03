@@ -352,6 +352,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 0}
+  permanentCanvas: {fileID: 2464416953096385327}
   currentSaveData:
     freshFile: 0
     currentLevel: 0
@@ -610,7 +611,7 @@ GameObject:
   - component: {fileID: 7903760733490533471}
   - component: {fileID: 7320772497379235739}
   m_Layer: 0
-  m_Name: Transition Canvas
+  m_Name: Permanent Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

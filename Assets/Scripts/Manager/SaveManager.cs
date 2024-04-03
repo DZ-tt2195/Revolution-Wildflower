@@ -24,6 +24,7 @@ public class SaveManager : MonoBehaviour
 
     public static SaveManager instance;
     [ReadOnly] public Canvas canvas;
+    [SerializeField] Canvas permanentCanvas;
     public SaveData currentSaveData;
     [ReadOnly] public string saveFileName;
     [Tooltip("Card prefab")][SerializeField] Card cardPrefab;
@@ -46,7 +47,6 @@ public class SaveManager : MonoBehaviour
         {
             instance = this;
             canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
-            this.transform.GetChild(0).gameObject.SetActive(true);
             DontDestroyOnLoad(this.gameObject);
         }
         else
@@ -57,6 +57,7 @@ public class SaveManager : MonoBehaviour
 
     private void Start()
     {
+        permanentCanvas.gameObject.SetActive(true);
         #if UNITY_EDITOR
         foreach (string deck in playerDecks)
         {
