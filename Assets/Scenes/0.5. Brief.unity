@@ -264,11 +264,11 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 303774378}
-  m_Father: {fileID: 731058365}
+  m_Father: {fileID: 1661522027}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 706, y: 395}
+  m_AnchoredPosition: {x: 453, y: 551.94995}
   m_SizeDelta: {x: 350, y: 65}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &82121683
@@ -401,7 +401,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: start game
+  m_text: 'Skip '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e3bd36c77ed76f04db4de5fada3497a8, type: 2}
   m_sharedMaterial: {fileID: -281100048849148216, guid: e3bd36c77ed76f04db4de5fada3497a8, type: 2}
@@ -1474,7 +1474,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 69669181047153935, guid: 014659a00c657f749a426f895d7df2f4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 82121682}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 014659a00c657f749a426f895d7df2f4, type: 3}
 --- !u!95 &1404842813 stripped

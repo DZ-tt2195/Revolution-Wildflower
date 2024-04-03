@@ -263,7 +263,7 @@ public class TileData : MonoBehaviour
 
         underSurvey = underSurveillance;
         dangerStripes.gameObject.SetActive(underSurveillance);
-        Debug.Log(dangerStripes.gameObject.activeSelf);
+        //Debug.Log(dangerStripes.gameObject.activeSelf);
         //renderer3d.material.color = (underSurveillance) ? Color.red : Color.gray;
         //renderer3d.material.SetColor("_palette_color", underSurveillance ? Color.red : new Color(0, 0.3686275f, 0.2352941f));
     }

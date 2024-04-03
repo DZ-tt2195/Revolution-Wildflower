@@ -16,11 +16,15 @@ public class StaticGuard : GuardEntity
 
     public override IEnumerator Patrol()
     {
-        if (currentTile == LevelGenerator.instance.listOfTiles[PatrolPoints[0].x, PatrolPoints[0].y])
+        print("current tile" + currentTile.gridPosition);
+        print("Target " + PatrolPoints[0]);
+        if (currentTile.gridPosition == PatrolPoints[0])
         {
+            print("Break patrol on target");
+            StopAllCoroutines();
             yield break;
         }
-        Pathfinder.instance.CalculatePathfinding(currentTile, LevelGenerator.instance.listOfTiles[PatrolPoints[PatrolTarget].x, PatrolPoints[PatrolTarget].y], movementLeft, true, true);
+        Pathfinder.instance.CalculatePathfinding(currentTile, LevelGenerator.instance.listOfTiles[PatrolPoints[0].x, PatrolPoints[0].y], movementLeft, true, true);
         TileData nextTile = Pathfinder.instance.CurrentAvailableMoveTarget;  //moves towards the next patrol point
         Vector2Int nextDirection = nextTile.gridPosition - currentTile.gridPosition;
 
@@ -44,6 +48,43 @@ public class StaticGuard : GuardEntity
         yield return newAction();
     }
 
+    public override IEnumerator newAction()
+    {
+        alertStatus = Alert.Patrol;
+        if (DistractionPoints.Count > 0)
+        {
+            alertStatus = Alert.Persue;
+            LevelGenerator.instance.FindTile(DistractionPoints[^1]).currentGuardTarget = true;
+        }
+        foreach (GuardEntity guard in LevelGenerator.instance.listOfGuards)
+            guard.CheckForPlayer();
+
+        print("New Action" + alertStatus);
+
+        if (alertStatus == Alert.Attack)
+        {
+            if (movementLeft > 0 || attacksLeft > 0)
+            {
+                yield return Attack(CurrentTarget);
+            }
+        }
+        else if (alertStatus == Alert.Persue)
+        {
+            if (movementLeft > 0)
+            {
+                print("New Action starting persue");
+                yield return persue();
+            }
+        }
+        else if (alertStatus == Alert.Patrol)
+        {
+            if (movementLeft > 0)
+            {
+                yield return Patrol();
+            }
+        }
+    }
+
     public override IEnumerator persue()
     {
         print(DistractionPoints.Count);
@@ -51,7 +92,7 @@ public class StaticGuard : GuardEntity
         if (DistractionPoints.Count == 0)
         {
             print("False Distraction");
-            yield return (newAction());
+            yield return newAction();
             yield break;
         }
         if (currentTile.gridPosition == DistractionPoints[^1])
@@ -93,6 +134,7 @@ public class StaticGuard : GuardEntity
         {
             //print(movementLeft);
             TileData nextTile;
+            print(DistractionPoints.Count);
             Pathfinder.instance.CalculatePathfinding(currentTile, LevelGenerator.instance.FindTile(DistractionPoints[^1]), movementLeft, true, true);
             nextTile = Pathfinder.instance.CurrentAvailableMoveTarget;  //moves towards the next patrol point
             Vector2Int nextDirection = nextTile.gridPosition - currentTile.gridPosition;
