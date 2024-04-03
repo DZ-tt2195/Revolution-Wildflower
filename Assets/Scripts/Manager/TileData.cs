@@ -59,6 +59,7 @@ public class TileData : MonoBehaviour
     bool surveyFlashing;
     [SerializeField] Color defaultDangerStripesColor;
     [SerializeField] Color triggeredDangerStripesColor;
+    [SerializeField] float dangerStripesSpeed = 3;
 
     private void Awake()
     {
@@ -69,7 +70,7 @@ public class TileData : MonoBehaviour
         directionIndicator.enabled = false;
         baseHeight = transform.position.y;
         dangerStripesPropertyBlock = new MaterialPropertyBlock();
-        defaultDangerStripesColor = dangerStripes.material.GetColor("_StripesColor");
+        defaultDangerStripesColor = dangerStripes.material.GetColor("_StripeColor");
     }
 
     void FixedUpdate()
@@ -156,6 +157,11 @@ public class TileData : MonoBehaviour
                 if (underSurvey)
                 {
                     surveillingGuard.ToggleSurveillingTileFlash(true);
+                }
+
+                else
+                {
+                    surveillingGuard.ToggleSurveillingTileFlash(false);
                 }
             }
         }
@@ -265,6 +271,11 @@ public class TileData : MonoBehaviour
     public void SetSurveillanceFlash(bool flash)
     {
         surveyFlashing = flash;
+        if (!surveyFlashing)
+        {
+            dangerStripesPropertyBlock.SetColor("_StripeColor", defaultDangerStripesColor);
+            dangerStripes.SetPropertyBlock(dangerStripesPropertyBlock);
+        }
     }
 
     private void Update()
@@ -274,7 +285,7 @@ public class TileData : MonoBehaviour
         if (surveyFlashing)
         {
             //  using that funky subtraction to only get the decimal part of the time.
-            dangerStripesPropertyBlock.SetColor("_StripeColor", Color.Lerp(defaultDangerStripesColor, triggeredDangerStripesColor, (Mathf.Sin(Time.time) / 2) + 0.5f));
+            dangerStripesPropertyBlock.SetColor("_StripeColor", Color.Lerp(defaultDangerStripesColor, triggeredDangerStripesColor, (Mathf.Sin(Time.time * dangerStripesSpeed) / 2) + 0.5f));
             dangerStripes.SetPropertyBlock(dangerStripesPropertyBlock);
         }
 

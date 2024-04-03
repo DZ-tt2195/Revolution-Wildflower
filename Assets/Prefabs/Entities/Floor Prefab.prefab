@@ -223,6 +223,7 @@ MonoBehaviour:
   underSurvey: 0
   defaultDangerStripesColor: {r: 0, g: 0, b: 0, a: 0}
   triggeredDangerStripesColor: {r: 1, g: 0, b: 0.30203104, a: 0}
+  dangerStripesSpeed: 5
 --- !u!212 &6299431183525030124
 SpriteRenderer:
   m_ObjectHideFlags: 0
