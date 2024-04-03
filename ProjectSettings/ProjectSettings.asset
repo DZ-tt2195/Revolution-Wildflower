@@ -14,7 +14,7 @@ PlayerSettings:
   accelerometerFrequency: 60
   companyName: Shelter Studios
   productName: Ivy Underground
-  defaultCursor: {fileID: 2800000, guid: 81b02747544b9544b8ad0336a03fa05b, type: 3}
+  defaultCursor: {fileID: 2800000, guid: 70476d96540048e45b9340d0bd4f3983, type: 3}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
   m_ShowUnitySplashScreen: 1
@@ -40,7 +40,7 @@ PlayerSettings:
     width: 1
     height: 1
   m_SplashScreenLogos:
-  - logo: {fileID: 21300000, guid: b0860e97524464eb784bac30025b50f2, type: 3}
+  - logo: {fileID: 21300000, guid: 4086e891278b1da43815b857f0a5c55d, type: 3}
     duration: 2
   m_VirtualRealitySplashScreen: {fileID: 0}
   m_HolographicTrackingLossScreen: {fileID: 0}
@@ -281,7 +281,7 @@ PlayerSettings:
   - m_BuildTarget: 
     m_Icons:
     - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: 79d472a1a4289d24cac6998c7ed823c5, type: 3}
+      m_Icon: {fileID: 2800000, guid: b84d920cd4d97fa4084c36566351a17d, type: 3}
       m_Width: 128
       m_Height: 128
       m_Kind: 0
