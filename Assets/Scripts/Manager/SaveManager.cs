@@ -24,6 +24,7 @@ public class SaveManager : MonoBehaviour
 
     public static SaveManager instance;
     [ReadOnly] public Canvas canvas;
+    [SerializeField] Canvas permanentCanvas;
     public SaveData currentSaveData;
     [ReadOnly] public string saveFileName;
     [Tooltip("Card prefab")][SerializeField] Card cardPrefab;
@@ -56,6 +57,7 @@ public class SaveManager : MonoBehaviour
 
     private void Start()
     {
+        permanentCanvas.gameObject.SetActive(true);
         #if UNITY_EDITOR
         foreach (string deck in playerDecks)
         {
@@ -142,35 +144,12 @@ public class SaveManager : MonoBehaviour
     {
         yield return SceneTransitionEffect(1);
         transitionImage.gameObject.SetActive(false);
-
-        CardDisplay.instance.transform.SetParent(canvas.transform);
-        CardDisplay.instance.transform.localPosition = new Vector3(0, 0);
-
-        //FPS.instance.transform.SetParent(canvas);
-        //FPS.instance.transform.localPosition = new Vector3(-850, -500);
-
-        GameSettings.instance.transform.SetParent(canvas.transform);
-        GameSettings.instance.transform.localPosition = Vector3.zero;
-        GameSettings.instance.transform.localScale = Vector3.one;
-        GameSettings.instance.transform.localEulerAngles = Vector3.one;
-        GameSettings.instance.transform.GetChild(0).gameObject.SetActive(false);
-
-        KeywordTooltip.instance.transform.SetParent(canvas.transform);
-        KeywordTooltip.instance.transform.localPosition = Vector3.zero;
-        KeywordTooltip.instance.transform.localScale = Vector3.one;
-        KeywordTooltip.instance.transform.localEulerAngles = Vector3.one;
     }
 
     public IEnumerator UnloadObjects(string nextScene)
     {
         yield return SceneTransitionEffect(0);
-
-        Preserve(CardDisplay.instance.gameObject);
-        //Preserve(FPS.instance.gameObject);
-        Preserve(GameSettings.instance.gameObject);
-        Preserve(KeywordTooltip.instance.gameObject);
         allCards.Clear();
-
         SceneManager.LoadScene(nextScene);
     }
 
