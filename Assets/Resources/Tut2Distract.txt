@@ -59,10 +59,10 @@
       "Floor",
       "Floor",
       "Floor",
+      "Floor",
+      "Floor",
+      "Floor",
       "Static Guard|u|5,4",
-      "Floor",
-      "Floor",
-      "Floor",
       "Floor"
     ],
     [

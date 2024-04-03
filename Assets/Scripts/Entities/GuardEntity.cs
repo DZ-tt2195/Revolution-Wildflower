@@ -298,11 +298,25 @@ public class GuardEntity : MovingEntity
         if (DistractionPoints.Count == 0)
         {
             print("False Distraction");
-            yield return (newAction());
+            yield return newAction();
             yield break;
         }
-        if (currentTile.gridPosition == DistractionPoints[^1])
+
+        //if (currentTile.gridPosition == DistractionPoints[^1])
+        // Checks to see if the player is one tile away
+        if (Pathfinder.instance.GetDistance(currentTile.gridPosition, DistractionPoints[^1]) <= 1)
         {
+            Vector2Int distractionDirection = DistractionPoints[^1] - currentTile.gridPosition;
+            if (distractionDirection != direction)
+            {
+                direction = distractionDirection;
+                foreach (GuardEntity guard in LevelGenerator.instance.listOfGuards)
+                {
+                    guard.CalculateTiles();
+                }
+            }
+            yield return new WaitForSeconds(movePauseTime);
+
             print("on distraction point");
             LevelGenerator.instance.FindTile(DistractionPoints[^1]).currentGuardTarget = false;
             DistractionPoints.RemoveAt(DistractionPoints.Count - 1);
