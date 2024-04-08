@@ -468,7 +468,7 @@ MonoBehaviour:
   CurrentTarget: {fileID: 0}
   DetectionRangePatrol: 4
   DetectionRangeMax: 4
-  DetectionAngle: 30
+  DetectionAngle: 45
   alertStatus: 0
   PatrolPoints: []
   PatrolTarget: 1
