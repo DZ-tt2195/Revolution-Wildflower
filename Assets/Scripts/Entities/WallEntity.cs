@@ -47,6 +47,7 @@ public class WallEntity : Entity
         if (health <= 0)
         {
             LevelGenerator.instance.listOfWalls.Remove(this);
+            currentTile.myEntity = null;
             Destroy(this.gameObject);
         }
         else if (health <= maxHealth*(1/3))

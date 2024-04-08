@@ -352,30 +352,33 @@ public class GuardEntity : MovingEntity
         }
         if (movementLeft > 0)
         {
-            //print(movementLeft);
-            TileData nextTile;
-            Pathfinder.instance.CalculatePathfinding(currentTile, LevelGenerator.instance.FindTile(DistractionPoints[^1]), movementLeft, true, true);
-            nextTile = Pathfinder.instance.CurrentAvailableMoveTarget;  //moves towards the next patrol point
-            Vector2Int nextDirection = nextTile.gridPosition - currentTile.gridPosition;
-
-            if (nextDirection != direction)
+            if (DistractionPoints.Count > 0)
             {
-                direction = nextDirection;
-                foreach (GuardEntity guard in LevelGenerator.instance.listOfGuards)
-                {
-                    guard.CalculateTiles();
-                }
-            }
-            else
-            {
-                //print("moving too " + nextTile.gridPosition);
-                if (nextTile.myEntity == null)
-                {
-                    StartCoroutine(MoveTile(nextTile)); //footsteps.Post(gameObject);
-                }
-                movementLeft--;
-            }
+                //print(movementLeft);
+                TileData nextTile;
+                Pathfinder.instance.CalculatePathfinding(currentTile, LevelGenerator.instance.FindTile(DistractionPoints[^1]), movementLeft, true, true);
+                nextTile = Pathfinder.instance.CurrentAvailableMoveTarget;  //moves towards the next patrol point
+                Vector2Int nextDirection = nextTile.gridPosition - currentTile.gridPosition;
 
+                if (nextDirection != direction)
+                {
+                    direction = nextDirection;
+                    foreach (GuardEntity guard in LevelGenerator.instance.listOfGuards)
+                    {
+                        guard.CalculateTiles();
+                    }
+                }
+                else
+                {
+                    //print("moving too " + nextTile.gridPosition);
+                    if (nextTile.myEntity == null)
+                    {
+                        StartCoroutine(MoveTile(nextTile)); //footsteps.Post(gameObject);
+                    }
+                    movementLeft--;
+                }
+
+            }
             yield return new WaitForSeconds(movePauseTime);
             yield return newAction();
         }
