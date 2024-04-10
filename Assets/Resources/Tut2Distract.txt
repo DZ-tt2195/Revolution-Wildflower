@@ -59,9 +59,9 @@
       "Floor",
       "Floor",
       "Floor",
-      "Static Guard|u|5,4",
       "Floor",
       "Floor",
+      "Static Guard|u|5,6",
       "Floor",
       "Floor"
     ],

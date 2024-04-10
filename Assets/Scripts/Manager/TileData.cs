@@ -23,7 +23,7 @@ public class TileData : MonoBehaviour
         [Tooltip("internalTimer")] private float mouseOverAnimTimer = 0;
         [Tooltip("height of mouseOver")][SerializeField] float mouseOverDisplace;
         [Tooltip("Baseheight of the tile")] float baseHeight;
-    [Tooltip("Guard currently surveilling this area")] GuardEntity surveillingGuard;
+    [Tooltip("Guard currently surveilling this area")] public GuardEntity surveillingGuard;
 
     [Foldout("Tile conditions", true)]
         [Tooltip("Defines whether you can click this tile")][ReadOnly] public bool clickable = false;
@@ -60,6 +60,7 @@ public class TileData : MonoBehaviour
     [SerializeField] Color defaultDangerStripesColor;
     [SerializeField] Color triggeredDangerStripesColor;
     [SerializeField] float dangerStripesSpeed = 3;
+    private Color currentStripesColor;
 
     private void Awake()
     {
@@ -71,6 +72,7 @@ public class TileData : MonoBehaviour
         baseHeight = transform.position.y;
         dangerStripesPropertyBlock = new MaterialPropertyBlock();
         defaultDangerStripesColor = dangerStripes.material.GetColor("_StripeColor");
+        currentStripesColor = defaultDangerStripesColor;
     }
 
     void FixedUpdate()
@@ -145,23 +147,45 @@ public class TileData : MonoBehaviour
         //generates a visible path the player is going to take to get to the space (clearing the last list and ignoring the first and last tile)
         if (moveable)
         {
+            GuardEntity tileSurveillingGuard = null;
             foreach (TileData tile in Pathfinder.instance.FullPath)
             {
                 tile.directionIndicator.enabled = false;
+                if (tile.underSurvey)
+                {
+                    Debug.Log("Previous list had a tile under surveillance; disabling flash, then erasing list.");
+                    tileSurveillingGuard = tile.surveillingGuard;
+                }
             }
+
+            bool containsSurveilledTile = false;
 
             Pathfinder.instance.CalculatePathfinding(PhaseManager.instance.lastSelectedPlayer.currentTile,this, PhaseManager.instance.lastSelectedPlayer.movementLeft,false,false);
             foreach (TileData tile in Pathfinder.instance.FullPath)
             {
                 tile.directionIndicator.enabled = true;
-                if (underSurvey)
+                if (tile.underSurvey)
                 {
-                    surveillingGuard.ToggleSurveillingTileFlash(true);
+                    tileSurveillingGuard = tile.surveillingGuard;
+                    containsSurveilledTile = true;
                 }
+            }
 
-                else
+            if (containsSurveilledTile)
+            {
+                if (tileSurveillingGuard != null)
                 {
-                    surveillingGuard.ToggleSurveillingTileFlash(false);
+                    Debug.Log("Path contains surveilled tile, enabling flash.");
+                    tileSurveillingGuard.ToggleSurveillingTileFlash(true);
+                }
+            }
+
+            else
+            {
+                if (tileSurveillingGuard != null)
+                {
+                    Debug.Log("Path does not contain surveilled tile, disabling flash.");
+                    tileSurveillingGuard.ToggleSurveillingTileFlash(false);
                 }
             }
         }
@@ -256,6 +280,7 @@ public class TileData : MonoBehaviour
         {
             surveillingGuard = guard;
         }
+
         else
         {
             surveillingGuard = null;
@@ -284,8 +309,13 @@ public class TileData : MonoBehaviour
 
         if (surveyFlashing)
         {
-            //  using that funky subtraction to only get the decimal part of the time.
             dangerStripesPropertyBlock.SetColor("_StripeColor", Color.Lerp(defaultDangerStripesColor, triggeredDangerStripesColor, (Mathf.Sin(Time.time * dangerStripesSpeed) / 2) + 0.5f));
+            dangerStripes.SetPropertyBlock(dangerStripesPropertyBlock);
+        }
+
+        else
+        {
+            dangerStripesPropertyBlock.SetColor("_StripeColor", currentStripesColor);
             dangerStripes.SetPropertyBlock(dangerStripesPropertyBlock);
         }
 
@@ -306,7 +336,9 @@ public class TileData : MonoBehaviour
             {
                 toolTipHoverTimer = 0;
                 foreach (TileData tile in Pathfinder.instance.FullPath)
+                {
                     tile.directionIndicator.enabled = false;
+                }
             }
         }
     }

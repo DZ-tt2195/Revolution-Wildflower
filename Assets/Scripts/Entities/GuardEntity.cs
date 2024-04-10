@@ -113,8 +113,12 @@ public class GuardEntity : MovingEntity
                     Overlap = true;
                 }
             }
-            if(!Overlap) inDetection[i].SurveillanceState(this, false);
+            if (!Overlap)
+            {
+                inDetection[i].SurveillanceState(this, false);
+            }
         }
+        ToggleSurveillingTileFlash(false);
         inDetection.Clear();
 
         List<HashSet<Vector2Int>> DetectLines = new List<HashSet<Vector2Int>>();

@@ -6,6 +6,7 @@ using Ink.Runtime;
 using System.Runtime.CompilerServices;
 using System;
 using System.Text.RegularExpressions;
+using System.IO.Enumeration;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -134,7 +135,7 @@ public class DialogueManager : MonoBehaviour
         currentStory.BindExternalFunction("ForceMovementTile",  (int x, int y) =>           { ForceMovementTile(x, y); });
         currentStory.BindExternalFunction("ForceSelectionTile", (int x, int y) =>           { ForceSelectionTile(x, y); });
 
-
+        currentStory.BindExternalFunction("ChainTutorial", (string fileName, string className, string eventName) => { ChainTutorial(fileName, className, eventName); });
 
         //currentStory.BindExternalFunction("ForceCardDraw", (string playerName) => { CameraFocusPlayer(playerName); });
         //currentStory.BindExternalFunction("ToggleUIElement", (string playerName) => { CameraFocusPlayer(playerName); });
@@ -316,6 +317,14 @@ public class DialogueManager : MonoBehaviour
         runningFunction = false;
         MoveCamera.OnFocusComplete -= FunctionFinished;
         ContinueStory();
+    }
+
+    public void ChainTutorial(string fileName, string className, string eventName)
+    {
+        Tutorial tutorial = Resources.Load<Tutorial>("TutorialObjects/" + fileName);
+        object obj = Type.GetType(className);
+        Debug.Log(obj);
+        tutorial.Setup(className, eventName);
     }
 
     public void CameraFocusPlayer(string playerName)

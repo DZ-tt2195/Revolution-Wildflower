@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.XR;
 
 public class TutorialManager : MonoBehaviour
 {
@@ -260,6 +261,7 @@ public class TutorialManager : MonoBehaviour
         }
 
         instance.ForceCharacterHand(parameters);
+        instance.ForceCharacterDeck(parameters);
 
         if (parameters.dialogueOnStart)
         {
@@ -317,7 +319,21 @@ public class TutorialManager : MonoBehaviour
         {
             PlayerEntity player = LevelGenerator.instance.listOfPlayers.Find(x => x.name == hand.CharacterName);
             if (player != null)
+            {
                 player.ForceHand(hand.CardNames);
+            }
+        }
+    }
+
+    public void ForceCharacterDeck(LevelStartParameters parameters)
+    {
+        foreach (ForceCharacterDeck deck in  parameters.forcedDecks)
+        {
+            PlayerEntity player = LevelGenerator.instance.listOfPlayers.Find(x => x.name == deck.CharacterName);
+            if (player != null)
+            {
+                player.ForceTopDeck(deck.CardNames);
+            }
         }
     }
 }
@@ -327,6 +343,14 @@ public class ForceCharacterHand
 {
     public string CharacterName;
     public bool ForceHand;
+    public string[] CardNames; 
+}
+
+[System.Serializable]
+public class ForceCharacterDeck
+{
+    public string CharacterName;
+    public bool ForceDeck;
     public string[] CardNames; 
 }
 
