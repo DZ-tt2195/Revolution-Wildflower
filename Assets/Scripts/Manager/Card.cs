@@ -81,8 +81,8 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
 
     private EventHandler[] events;
 
-    public event EventHandler OnCardResolved;
-    public event EventHandler OnChoiceMade; 
+    public static event EventHandler OnCardResolved;
+    public static event EventHandler OnChoiceMade; 
 
 #endregion
 
