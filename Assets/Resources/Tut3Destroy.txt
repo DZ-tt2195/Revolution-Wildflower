@@ -30,14 +30,14 @@
       "Floor"
     ],
     [
-      "Wall|4|l|Default",
-      "Wall|4|l|Default",
-      "Wall|4|l|Default",
-      "Wall|4|l|Default",
-      "Wall|4|l|Default",
-      "Wall|4|l|Default",
-      "Wall|4|l|Default",
-      "Wall|4|l|Default"
+      "Wall|2|l|Default",
+      "Wall|2|l|Default",
+      "Wall|2|l|Default",
+      "Wall|2|l|Default",
+      "Wall|2|l|Default",
+      "Wall|2|l|Default",
+      "Wall|2|l|Default",
+      "Wall|2|l|Default"
     ],
     [
       "Floor",

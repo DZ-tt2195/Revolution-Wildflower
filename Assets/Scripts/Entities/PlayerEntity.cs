@@ -13,7 +13,7 @@ public class PlayerEntity : MovingEntity
 #region Variables
 
     [Foldout("Player Entity", true)]
-        [Tooltip("The bar on screen")] [ReadOnly] public PlayerBar myBar;
+        [Tooltip("The bar on screen")] public PlayerBar myBar;
         [Tooltip("Where this player's located in the list")] [ReadOnly] public int myPosition;
         [Tooltip("amount of health before dying")] [ReadOnly] public int health = 3;
         [Tooltip("turns where you can't be caught")] [ReadOnly] public int hidden = 0;

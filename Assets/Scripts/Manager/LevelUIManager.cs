@@ -18,6 +18,7 @@ public class LevelUIManager : MonoBehaviour
     [Tooltip("Text for current level's objective")] TMP_Text lvlObjective;
     [Tooltip("Text for the turn count")] TMP_Text turnCountTxt;
     [Tooltip("Tracks number of cards in draw pile")] TMP_Text drawPile;
+    [Tooltip("Last player button that mouse was hovered over")] GameObject lastHoveredBar;
 
     [Foldout("Top left", true)]
     [Tooltip("Current player selected")] TMP_Text currentCharacter;
@@ -103,10 +104,39 @@ public class LevelUIManager : MonoBehaviour
         }
         turnAlertBar.alpha = 0f;
     }
+/*
+    public void PlayerBarSelect()
+    {
+        Debug.Log(PhaseManager.instance.lastSelectedPlayer);
+
+        lastHoveredBar = gameObject;
+        lastHoveredBar.GetComponent<Animator>().SetBool("selected", true);
+        
+        PlayerBarDeselect();
+    }
+
+    public void PlayerBarDeselect()
+    {
+        foreach(PlayerEntity player in LevelGenerator.instance.listOfPlayers)
+        {
+            if ((PhaseManager.instance.lastSelectedPlayer == null || PhaseManager.instance.lastSelectedPlayer.myBar.playerName == lastHoveredBar.transform.GetChild(0).GetComponent<TMP_Text>()) && (player.myBar.playerName != lastHoveredBar.transform.GetChild(0).GetComponent<TMP_Text>()))
+            {
+                lastHoveredBar.GetComponent<Animator>().SetBool("selected", false);
+               
+            }
+            else if(player.myBar.playerName != PhaseManager.instance.lastSelectedPlayer.myBar.playerName) 
+            { 
+                PhaseManager.instance.lastSelectedPlayer.myBar.animator.SetBool("selected", false);
+            }
+
+
+        }
+        
+    }*/
 
     #endregion
 
-#region Stats
+    #region Stats
 
     public void UpdateStats(PlayerEntity player)
     {

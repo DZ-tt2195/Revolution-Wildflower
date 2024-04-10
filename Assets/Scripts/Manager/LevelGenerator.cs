@@ -12,7 +12,7 @@ public class LevelGenerator : MonoBehaviour
     public static LevelGenerator instance;
 
     [Foldout("Lists of things", true)]
-    [Tooltip("Reference to players")][ReadOnly] public List<PlayerEntity> listOfPlayers = new();
+    [Tooltip("Reference to players")] public List<PlayerEntity> listOfPlayers = new();
     [Tooltip("Reference to walls")][ReadOnly] public List<WallEntity> listOfWalls = new();
     [Tooltip("Reference to guards")][ReadOnly] public List<GuardEntity> listOfGuards = new();
     [Tooltip("Reference to active environmental objects")][ReadOnly] public List<EnvironmentalEntity> listOfEnvironmentals = new();

@@ -30,7 +30,7 @@ public class PhaseManager : MonoBehaviour
         set { _CurrentPhase = value; Debug.Log($"changed turn to {value}"); }
     }
     PlayerEntity _LastSelectedPlayer;
-    [Tooltip("last selected player")][ReadOnly] public PlayerEntity lastSelectedPlayer
+    [Tooltip("last selected player")] public PlayerEntity lastSelectedPlayer          // this is also current player ig?
     {
         get { return _LastSelectedPlayer; }
         set { _LastSelectedPlayer = value; LevelUIManager.instance.UpdateStats(value); }
