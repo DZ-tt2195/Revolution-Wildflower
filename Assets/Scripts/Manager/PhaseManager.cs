@@ -5,6 +5,7 @@ using MyBox;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
+using System;
 
 public class PhaseManager : MonoBehaviour
 {
@@ -56,6 +57,8 @@ public class PhaseManager : MonoBehaviour
     [SerializeField] AK.Wwise.Event footsteps;
     [SerializeField] AK.Wwise.Event characterSelectSound;
     [SerializeField] AK.Wwise.Event beginTurnSound;
+
+    public static event EventHandler MovementCompleted;
 
     #endregion
 
@@ -391,6 +394,7 @@ public class PhaseManager : MonoBehaviour
             if (currentPlayer.movementLeft == -1)
             {
                 currentPlayer.movementLeft = 0;
+                MovementCompleted?.Invoke(this, EventArgs.Empty);
                 break;
             }
         }

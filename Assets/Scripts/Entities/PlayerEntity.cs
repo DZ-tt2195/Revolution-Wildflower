@@ -247,6 +247,24 @@ public class PlayerEntity : MovingEntity
         }
     }
 
+    public void ForceTopDeck(string[] cards)
+    {
+        if (cards.Length > 0)
+        {
+            for (int i = cards.Length - 1; i >= 0; i--)
+            {
+                Card card = myDrawPile.Find(x => x.textName.text == cards[i]);
+                if (card == null)
+                {
+                    continue;
+                }
+
+                myDrawPile.Remove(card);
+                myDrawPile.Insert(0, card);
+            }
+        }
+    }
+
 
     internal void PlusCards(Card card)
     {

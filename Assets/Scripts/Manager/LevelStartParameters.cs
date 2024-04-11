@@ -9,6 +9,7 @@ public class LevelStartParameters : ScriptableObject
     public TextAsset dialogueAsset;
     public LevelStartDialogueVariable[] dialogueVariables;
     public ForceCharacterHand[] forcedHands;
+    public ForceCharacterDeck[] forcedDecks; 
 
     private void OnEnable()
     {

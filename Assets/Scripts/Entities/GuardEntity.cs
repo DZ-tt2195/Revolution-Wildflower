@@ -113,8 +113,12 @@ public class GuardEntity : MovingEntity
                     Overlap = true;
                 }
             }
-            if(!Overlap) inDetection[i].SurveillanceState(false);
+            if (!Overlap)
+            {
+                inDetection[i].SurveillanceState(this, false);
+            }
         }
+        ToggleSurveillingTileFlash(false);
         inDetection.Clear();
 
         List<HashSet<Vector2Int>> DetectLines = new List<HashSet<Vector2Int>>();
@@ -177,7 +181,7 @@ public class GuardEntity : MovingEntity
 
         foreach (TileData tile in inDetection)
         {
-            tile.SurveillanceState(true);
+            tile.SurveillanceState(this, true);
         }
 
     }
@@ -520,6 +524,14 @@ public class GuardEntity : MovingEntity
                 print("Persuing from attack");
                 yield return persue();
             }
+        }
+    }
+
+    public void ToggleSurveillingTileFlash(bool flash)
+    {
+        foreach (TileData tile in inDetection)
+        {
+            tile.SetSurveillanceFlash(flash);
         }
     }
 
