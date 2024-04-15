@@ -93,7 +93,7 @@
       "5",
       "",
       "",
-      "ThrowEnvironmental/TargetDistraction",
+      "ThrowEnvironmental",
       "End/DamageWalls/StunPlayers/StunGuards"
     ],
     [
@@ -140,7 +140,7 @@
       "7",
       "",
       "",
-      "ThrowEnvironmental/TargetDistraction",
+      "ThrowEnvironmental",
       "End/DamageWalls"
     ],
     [

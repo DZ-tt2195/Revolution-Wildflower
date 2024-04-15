@@ -315,6 +315,10 @@ public class TutorialManager : MonoBehaviour
 
     public void ForceCharacterHand(LevelStartParameters parameters)
     {
+        if (parameters.forcedHands.Length == 0)
+        {
+            return;
+        }
         foreach (ForceCharacterHand hand in parameters.forcedHands)
         {
             PlayerEntity player = LevelGenerator.instance.listOfPlayers.Find(x => x.name == hand.CharacterName);
@@ -327,6 +331,11 @@ public class TutorialManager : MonoBehaviour
 
     public void ForceCharacterDeck(LevelStartParameters parameters)
     {
+        if (parameters.forcedDecks.Length == 0)
+        {
+            return; 
+        }
+         
         foreach (ForceCharacterDeck deck in  parameters.forcedDecks)
         {
             PlayerEntity player = LevelGenerator.instance.listOfPlayers.Find(x => x.name == deck.CharacterName);
