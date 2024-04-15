@@ -458,7 +458,7 @@ public class PhaseManager : MonoBehaviour
     {
         if (tile != null)
         {
-            Debug.Log(tile.transform.position);
+            //Debug.Log(tile.transform.position);
             MoveCamera.Focus(tile.transform.position);
             //Camera.main.transform.position = new Vector3(tile.transform.position.x, Camera.main.transform.position.y, tile.transform.position.z);
             if (moveMe && CurrentPhase == TurnSystem.WaitingOnPlayer)
@@ -673,7 +673,6 @@ public class PhaseManager : MonoBehaviour
         chosenCard = null;
         LevelGenerator.instance.DisableAllCards();
 
-        Debug.LogError("enabling player cards");
         foreach (Card card in canBeChosen)
         {
             card.EnableCard();
