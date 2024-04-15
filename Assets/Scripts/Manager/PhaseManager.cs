@@ -374,7 +374,7 @@ public class PhaseManager : MonoBehaviour
         CurrentPhase = TurnSystem.ResolvingAction;
         selectedTile = chosenTile;
 
-        yield return ConfirmUndo("Confirm movement?", new Vector2(0, 400));
+        yield return ConfirmUndo("Confirm movement?", new Vector2(0, 350));
         if (confirmChoice == 1)
         {
             yield return (ChooseMovePlayer(currentPlayer, possibleMoves, freeMoves));
@@ -436,7 +436,7 @@ public class PhaseManager : MonoBehaviour
         Debug.Log($"chosen card no longer null");
         CurrentPhase = TurnSystem.ResolvingAction;
 
-        yield return ConfirmUndo($"Play {chosenCard.name}?", new Vector2(0, 400));
+        yield return ConfirmUndo($"Play {chosenCard.name}?", new Vector2(0, 350));
         if (confirmChoice == 1)
         {
             yield return (ChooseCardPlay(currentPlayer));
@@ -575,7 +575,8 @@ public class PhaseManager : MonoBehaviour
 
         if (lastSelectedPlayer != null && lastSelectedPlayer.adjacentObjective != null)
         {
-            yield return ConfirmUndo($"Complete this objective?", new Vector2(0, 400));
+            FocusOnTile(lastSelectedPlayer.adjacentObjective.currentTile, false);
+            yield return ConfirmUndo($"Complete this objective?", new Vector2(0, 350));
             if (confirmChoice == 1)
             {
                 BackToStart(false);
@@ -599,7 +600,7 @@ public class PhaseManager : MonoBehaviour
     IEnumerator ResolveDraw()
     {
         CurrentPhase = TurnSystem.ResolvingAction;
-        yield return ConfirmUndo($"Spend 3 energy to draw a card?", new Vector2(0, 400));
+        yield return ConfirmUndo($"Spend 3 energy to draw a card?", new Vector2(0, 350));
         if (confirmChoice == 1)
         {
             BackToStart(false);

@@ -757,7 +757,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
             while (PhaseManager.instance.chosenTile == null)
                 yield return null;
 
-            yield return PhaseManager.instance.ConfirmUndo($"Confirm guard?", new Vector2(0, 400));
+            yield return PhaseManager.instance.ConfirmUndo($"Confirm guard?", new Vector2(0, 350));
             if (PhaseManager.instance.confirmChoice == 1)
             {
                 yield return ChooseGuard();
@@ -787,7 +787,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
             while (PhaseManager.instance.chosenTile == null)
                 yield return null;
 
-            yield return PhaseManager.instance.ConfirmUndo($"Confirm player?", new Vector2(0, 400));
+            yield return PhaseManager.instance.ConfirmUndo($"Confirm player?", new Vector2(0, 350));
             if (PhaseManager.instance.confirmChoice == 1)
             {
                 yield return ChoosePlayer();
@@ -817,7 +817,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
             while (PhaseManager.instance.chosenTile == null)
                 yield return null;
 
-            yield return PhaseManager.instance.ConfirmUndo($"Confirm wall?", new Vector2(0, 400));
+            yield return PhaseManager.instance.ConfirmUndo($"Confirm wall?", new Vector2(0, 350));
             if (PhaseManager.instance.confirmChoice == 1)
             {
                 yield return ChooseWall();
@@ -876,7 +876,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         while (PhaseManager.instance.chosenTile == null)
             yield return null;
 
-        yield return PhaseManager.instance.ConfirmUndo($"Confirm tile?", new Vector2(0, 400));
+        yield return PhaseManager.instance.ConfirmUndo($"Confirm tile?", new Vector2(0, 350));
         if (PhaseManager.instance.confirmChoice == 1)
         {
             yield return ChooseTileLOS();
@@ -896,7 +896,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         while (PhaseManager.instance.chosenTile == null)
             yield return null;
 
-        yield return PhaseManager.instance.ConfirmUndo($"Confirm tile?", new Vector2(0, 400));
+        yield return PhaseManager.instance.ConfirmUndo($"Confirm tile?", new Vector2(0, 350));
         if (PhaseManager.instance.confirmChoice == 1)
         {
             yield return ChooseTile();
@@ -963,7 +963,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
                 while (PhaseManager.instance.chosenCard == null)
                     yield return null;
 
-                yield return PhaseManager.instance.ConfirmUndo($"Discard {PhaseManager.instance.chosenCard.name}?", new Vector2(0, 400));
+                yield return PhaseManager.instance.ConfirmUndo($"Discard {PhaseManager.instance.chosenCard.name}?", new Vector2(0, 350));
                 if (PhaseManager.instance.confirmChoice == 1)
                 {
                     i--;
@@ -992,7 +992,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
                 while (PhaseManager.instance.chosenCard == null)
                     yield return null;
 
-                yield return PhaseManager.instance.ConfirmUndo($"Play {PhaseManager.instance.chosenCard.name}?", new Vector2(0, 400));
+                yield return PhaseManager.instance.ConfirmUndo($"Play {PhaseManager.instance.chosenCard.name}?", new Vector2(0, 350));
                 if (PhaseManager.instance.confirmChoice == 1)
                 {
                     i--;
