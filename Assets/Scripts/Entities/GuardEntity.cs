@@ -238,6 +238,9 @@ public class GuardEntity : MovingEntity
 
     public override IEnumerator EndOfTurn()
     {
+
+        yield return new WaitForSeconds(movePauseTime);
+
         print("start of turn");
         if (stunned > 0)
         {
