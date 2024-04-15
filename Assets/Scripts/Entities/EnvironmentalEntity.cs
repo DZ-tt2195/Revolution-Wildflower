@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using MyBox;
 using System;
+using TMPro;
 
 public class EnvironmentalEntity : MovingEntity
 {
     [Foldout("Enviromental Entity", true)]
     [Tooltip("Store this entity's instructions")][ReadOnly] public Card card;
     [Tooltip("Store this entity's delay time")][ReadOnly] public int delay;
+    [SerializeField] GameObject TimeRim;
+    [SerializeField] public TMP_Text ValueDisplay;
 
-#region Entity Stuff
+    #region Entity Stuff
 
     public override IEnumerator EndOfTurn()
     {
@@ -19,6 +22,7 @@ public class EnvironmentalEntity : MovingEntity
             yield return ResolveList("CONTINUOUS");
         }
         delay--;
+        ValueDisplay.text = delay.ToString();
         if (delay == 0)
         {
             yield return ResolveList("END");
@@ -62,8 +66,10 @@ public class EnvironmentalEntity : MovingEntity
         List<PlayerEntity> playersInRange = FindPlayersInRange();
         List<WallEntity> wallsInRange = FindWallsInRange();
 
+        yield return card.CalculateDistraction(this.currentTile);
         switch (methodName)
         {
+
             case "SETVISION":
                 foreach (GuardEntity guard in guardsInRange)
                     guard.DetectionRangePatrol = card.data.vision;
@@ -96,6 +102,7 @@ public class EnvironmentalEntity : MovingEntity
                 Debug.LogError($"{methodName} isn't a method");
                 yield return null;
                 break;
+
         }
     }
 

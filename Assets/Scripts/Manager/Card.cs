@@ -677,6 +677,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
                 case "THROWENVIRONMENTAL":
                     yield return ChooseTile();
                     EnvironmentalEntity newEnviro = LevelGenerator.instance.CreateEnvironmental();
+                    newEnviro.ValueDisplay.text = data.delay.ToString();
                     newEnviro.currentTile = currentTarget;
                     newEnviro.spriteRenderer.sortingOrder = 10;
                     newEnviro.transform.SetParent(newEnviro.currentTile.transform);
