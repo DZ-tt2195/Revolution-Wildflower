@@ -73,22 +73,14 @@ public class KeywordTooltip : MonoBehaviour
             mousePosition.y > Ydisplace ? mousePosition.y + (-0.5f * Ydisplace) : mousePosition.y + (0.5f * Ydisplace));
     }
 
-    void SetPosition(string description, Vector3 mousePosition, bool screenOverlay)
+    void SetPosition(string description, Vector3 mousePosition)
     {
-        if (screenOverlay)
-        {
-            tooltipText.text = description;
-            Vector2 newPosition = CalculatePosition(mousePosition);
-            tooltipText.transform.parent.position = new Vector3(newPosition.x, newPosition.y, 100);
-        }
-        else
-        {
-            tooltipText.text = description;
-            tooltipText.transform.parent.localPosition = (new Vector3(-600, -100, 0));
-        }
+        tooltipText.text = description;
+        Vector2 newPosition = CalculatePosition(mousePosition);
+        tooltipText.transform.parent.position = new Vector3(newPosition.x, newPosition.y, 100);
     }
 
-    public void ActivateTextBox(string target, Vector3 mousePosition, bool screenOverlay)
+    public void ActivateTextBox(string target, Vector3 mousePosition)
     {
         tooltipText.transform.parent.gameObject.SetActive(true);
         this.transform.SetAsLastSibling();
@@ -97,7 +89,7 @@ public class KeywordTooltip : MonoBehaviour
         {
             if (entry.keyword.Equals(target))
             {
-                SetPosition(entry.description, mousePosition, screenOverlay);
+                SetPosition(entry.description, mousePosition);
                 return;
             }
         }
@@ -105,7 +97,7 @@ public class KeywordTooltip : MonoBehaviour
         {
             if (entry.keyword.Equals(target))
             {
-                SetPosition(entry.description, mousePosition, screenOverlay);
+                SetPosition(entry.description, mousePosition);
                 return;
             }
         }

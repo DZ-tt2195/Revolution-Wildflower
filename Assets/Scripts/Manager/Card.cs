@@ -677,6 +677,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
                 case "THROWENVIRONMENTAL":
                     yield return ChooseTile();
                     EnvironmentalEntity newEnviro = LevelGenerator.instance.CreateEnvironmental();
+                    newEnviro.ValueDisplay.text = data.delay.ToString();
                     newEnviro.currentTile = currentTarget;
                     newEnviro.spriteRenderer.sortingOrder = 10;
                     newEnviro.transform.SetParent(newEnviro.currentTile.transform);
@@ -841,6 +842,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
             float lineAngle = (i * Mathf.Deg2Rad);
             Vector2 newVector = new Vector2(Mathf.Cos(lineAngle), Mathf.Sin(lineAngle));
             DetectLines.Add(Pathfinder.instance.line(currentPlayer.currentTile.gridPosition, currentPlayer.currentTile.gridPosition + Vector2Int.RoundToInt(newVector.normalized * data.range)));
+            //Debug.DrawRay(currentPlayer.transform.position, new Vector3(Vector2Int.RoundToInt(newVector.normalized * data.range).x, 0, Vector2Int.RoundToInt(newVector.normalized * data.range).y),Color.green);
         }
         for (int i = 0; i < DetectLines.Count; i++)
         {
@@ -851,6 +853,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
                 {
                     break;
                 }
+                tilesInRange.Add(point);
                 if (TileToAdd.myEntity != null)
                 {
                     if (TileToAdd.myEntity.Occlusion && point != currentPlayer.currentTile.gridPosition)
@@ -858,7 +861,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
                         break;
                     }
                 }
-                tilesInRange.Add(point);
+
             }
         }
         List<TileData> tilesToSelect = new List<TileData>();

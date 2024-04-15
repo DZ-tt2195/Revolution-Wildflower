@@ -238,6 +238,9 @@ public class GuardEntity : MovingEntity
 
     public override IEnumerator EndOfTurn()
     {
+
+        yield return new WaitForSeconds(movePauseTime);
+
         print("start of turn");
         if (stunned > 0)
         {
@@ -302,11 +305,25 @@ public class GuardEntity : MovingEntity
         if (DistractionPoints.Count == 0)
         {
             print("False Distraction");
-            yield return (newAction());
+            yield return newAction();
             yield break;
         }
-        if (currentTile.gridPosition == DistractionPoints[^1])
+
+        //if (currentTile.gridPosition == DistractionPoints[^1])
+        // Checks to see if the player is one tile away
+        if (Pathfinder.instance.GetDistance(currentTile.gridPosition, DistractionPoints[^1]) <= 1)
         {
+            Vector2Int distractionDirection = DistractionPoints[^1] - currentTile.gridPosition;
+            if (distractionDirection != direction)
+            {
+                direction = distractionDirection;
+                foreach (GuardEntity guard in LevelGenerator.instance.listOfGuards)
+                {
+                    guard.CalculateTiles();
+                }
+            }
+            yield return new WaitForSeconds(movePauseTime);
+
             print("on distraction point");
             LevelGenerator.instance.FindTile(DistractionPoints[^1]).currentGuardTarget = false;
             DistractionPoints.RemoveAt(DistractionPoints.Count - 1);
@@ -342,30 +359,33 @@ public class GuardEntity : MovingEntity
         }
         if (movementLeft > 0)
         {
-            //print(movementLeft);
-            TileData nextTile;
-            Pathfinder.instance.CalculatePathfinding(currentTile, LevelGenerator.instance.FindTile(DistractionPoints[^1]), movementLeft, true, true);
-            nextTile = Pathfinder.instance.CurrentAvailableMoveTarget;  //moves towards the next patrol point
-            Vector2Int nextDirection = nextTile.gridPosition - currentTile.gridPosition;
-
-            if (nextDirection != direction)
+            if (DistractionPoints.Count > 0)
             {
-                direction = nextDirection;
-                foreach (GuardEntity guard in LevelGenerator.instance.listOfGuards)
-                {
-                    guard.CalculateTiles();
-                }
-            }
-            else
-            {
-                //print("moving too " + nextTile.gridPosition);
-                if (nextTile.myEntity == null)
-                {
-                    StartCoroutine(MoveTile(nextTile)); //footsteps.Post(gameObject);
-                }
-                movementLeft--;
-            }
+                //print(movementLeft);
+                TileData nextTile;
+                Pathfinder.instance.CalculatePathfinding(currentTile, LevelGenerator.instance.FindTile(DistractionPoints[^1]), movementLeft, true, true);
+                nextTile = Pathfinder.instance.CurrentAvailableMoveTarget;  //moves towards the next patrol point
+                Vector2Int nextDirection = nextTile.gridPosition - currentTile.gridPosition;
 
+                if (nextDirection != direction)
+                {
+                    direction = nextDirection;
+                    foreach (GuardEntity guard in LevelGenerator.instance.listOfGuards)
+                    {
+                        guard.CalculateTiles();
+                    }
+                }
+                else
+                {
+                    //print("moving too " + nextTile.gridPosition);
+                    if (nextTile.myEntity == null)
+                    {
+                        StartCoroutine(MoveTile(nextTile)); //footsteps.Post(gameObject);
+                    }
+                    movementLeft--;
+                }
+
+            }
             yield return new WaitForSeconds(movePauseTime);
             yield return newAction();
         }

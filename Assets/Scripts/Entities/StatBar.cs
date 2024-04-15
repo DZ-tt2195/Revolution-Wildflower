@@ -19,6 +19,7 @@ public class StatBar : MonoBehaviour
     
     [SerializeField] private Image barImage;
     [SerializeField] private GameObject segments;
+    [SerializeField] private GameObject previewObject;
     public Material segmentMaterial; 
 
     public void SetMaximumValue(float maxValue)
@@ -59,6 +60,11 @@ public class StatBar : MonoBehaviour
 
         currentValue = newValue;
         sliding = false;
+    }
+
+    public void Preview(float change)
+    {
+        
     }
 
     public void Shake(float duration = -1f)

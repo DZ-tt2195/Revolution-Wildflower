@@ -127,6 +127,7 @@ public class PhaseManager : MonoBehaviour
 
                 movingPlayer = false;
                 lastSelectedPlayer = null;
+                LevelGenerator.instance.DisableAllTiles();
                 BackToStart(false);
             }
         }
@@ -169,10 +170,7 @@ public class PhaseManager : MonoBehaviour
             CurrentPhase = TurnSystem.WaitingOnPlayer;
             StopCoroutine(ChooseMovePlayer(lastSelectedPlayer, 0));
             StopCoroutine(ChooseCardPlay(lastSelectedPlayer));
-            /*
-            LevelGenerator.instance.DisableAllTiles();
-            LevelGenerator.instance.DisableAllCards();
-            */
+
             if (lastSelectedPlayer != null)
                 LevelUIManager.instance.UpdateStats(lastSelectedPlayer);
 
