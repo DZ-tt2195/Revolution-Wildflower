@@ -155,6 +155,8 @@ public class MoveCamera : MonoBehaviour
             //Debug.Log(instance.transform.position + " " + target);
             yield return null;
         }
+
+        instance.transform.position = focusedPosition;
         focused = false;
         focusedEntity = null;
         focusedPosition = Vector3.zero;
