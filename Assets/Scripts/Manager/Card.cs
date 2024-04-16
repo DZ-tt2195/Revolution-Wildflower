@@ -677,6 +677,9 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
                 case "THROWENVIRONMENTAL":
                     yield return ChooseTile();
                     EnvironmentalEntity newEnviro = LevelGenerator.instance.CreateEnvironmental();
+                    MaterialPropertyBlock matBlock = new();
+                    matBlock.SetFloat("_Fill", 1);
+                    newEnviro.timerRen.SetPropertyBlock(matBlock);
                     newEnviro.ValueDisplay.text = data.delay.ToString();
                     newEnviro.currentTile = currentTarget;
                     newEnviro.spriteRenderer.sortingOrder = 10;
@@ -685,6 +688,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
                     newEnviro.name = this.name;
                     newEnviro.card = this;
                     newEnviro.delay = data.delay;
+                    newEnviro.delayMax = data.delay;
                     LevelGenerator.instance.listOfEnvironmentals.Add(newEnviro);
                     break;
                 case "THROWMODIFIER":

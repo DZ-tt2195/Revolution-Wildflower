@@ -10,8 +10,12 @@ public class EnvironmentalEntity : MovingEntity
     [Foldout("Enviromental Entity", true)]
     [Tooltip("Store this entity's instructions")][ReadOnly] public Card card;
     [Tooltip("Store this entity's delay time")][ReadOnly] public int delay;
+    public int delayMax;
     [SerializeField] GameObject TimeRim;
     [SerializeField] public TMP_Text ValueDisplay;
+    [SerializeField] public SpriteRenderer timerRen;
+    [SerializeField] float timeTick = 0.2f;
+    public Material radial;
 
     #region Entity Stuff
 
@@ -21,8 +25,23 @@ public class EnvironmentalEntity : MovingEntity
         {
             yield return ResolveList("CONTINUOUS");
         }
+        float oldValue = delay;
         delay--;
-        ValueDisplay.text = delay.ToString();
+        ValueDisplay.text = (delay).ToString();
+        float elapsedTime = 0f;
+        while (elapsedTime < timeTick)
+        {
+            elapsedTime += Time.deltaTime;
+            float lerpValue = Mathf.Lerp(oldValue, delay, elapsedTime / timeTick);
+            MaterialPropertyBlock matBlock = new();
+            Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAA" + lerpValue / delayMax);
+            matBlock.SetFloat("_Fill", lerpValue / delayMax);
+            timerRen.SetPropertyBlock(matBlock);
+            yield return null;
+        }
+
+
+
         if (delay == 0)
         {
             yield return ResolveList("END");
