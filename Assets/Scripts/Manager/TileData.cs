@@ -12,6 +12,7 @@ public class TileData : MonoBehaviour
     [Foldout("Tile information", true)]
         [Tooltip("Attached arrow")] public SpriteRenderer directionIndicator;
         [Tooltip("arrow sprites")] public List<Sprite> arrowSprites = new();
+        [Tooltip("Exit tile graphic")] public GameObject exitGraphic;
         [Tooltip("All adjacent tiles")] [ReadOnly] public List<TileData> adjacentTiles;
         [Tooltip("Position in the grid")] [ReadOnly] public Vector2Int gridPosition;
         [Tooltip("The entity on this tile")] [ReadOnly] public Entity myEntity;
@@ -75,6 +76,14 @@ public class TileData : MonoBehaviour
         currentStripesColor = defaultDangerStripesColor;
     }
 
+    private void Start()
+    {
+        if (myType != TileType.Regular)
+        {
+            exitGraphic.SetActive(true);
+        }
+    }
+
     void FixedUpdate()
     {
         if (border == null)
@@ -112,10 +121,6 @@ public class TileData : MonoBehaviour
         {
             border.color = ClickableColor;
             border.SetAlpha(LevelUIManager.instance.opacity);
-        }
-        else if (myType != TileType.Regular)
-        {
-            border.color = new Color(0, 1, 0, 1);
         }
         else
         {
