@@ -16,6 +16,7 @@ public class EnvironmentalEntity : MovingEntity
     [SerializeField] public SpriteRenderer timerRen;
     [SerializeField] float timeTick = 0.2f;
     public Material radial;
+    [SerializeField] public string actionSound;
 
     #region Entity Stuff
 
@@ -85,7 +86,9 @@ public class EnvironmentalEntity : MovingEntity
         List<PlayerEntity> playersInRange = FindPlayersInRange();
         List<WallEntity> wallsInRange = FindWallsInRange();
 
+        AkSoundEngine.PostEvent(actionSound,this.gameObject);
         yield return card.CalculateDistraction(this.currentTile);
+
         switch (methodName)
         {
 

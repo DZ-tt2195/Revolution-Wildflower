@@ -692,6 +692,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
                     newEnviro.card = this;
                     newEnviro.delay = data.delay;
                     newEnviro.delayMax = data.delay;
+                    newEnviro.actionSound = data.sound;
                     LevelGenerator.instance.listOfEnvironmentals.Add(newEnviro);
                     break;
                 case "THROWMODIFIER":
