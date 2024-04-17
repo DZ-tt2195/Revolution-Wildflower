@@ -1020,9 +1020,9 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         StartCoroutine(thisPlayer.SortHandCoroutine());
         LevelUIManager.instance.UpdateStats(currentPlayer);
     }
-}
 
-    #endregion
+
+#endregion
 
 #region Helper Methods
 
