@@ -217,7 +217,6 @@ public class PlayerEntity : MovingEntity
 
     public IEnumerator SortHandCoroutine()
     {
-        Debug.LogError("sorting hand");
         myHand = myHand.OrderBy(o => o.energyCost).ToList();
 
         for (int i = 0; i < myHand.Count; i++)
@@ -228,8 +227,11 @@ public class PlayerEntity : MovingEntity
             Vector3 newPosition = new(startingX + difference * i, SaveManager.instance.cardBaseHeight, 0);
             nextCard.transform.SetSiblingIndex(i);
 
-            StartCoroutine(nextCard.RevealCard(PlayerPrefs.GetFloat("Animation Speed")));
-            yield return nextCard.MoveCard(newPosition, newPosition, PlayerPrefs.GetFloat("Animation Speed"));
+            var group = new CoroutineGroup(this);
+            group.StartCoroutine(nextCard.RevealCard(PlayerPrefs.GetFloat("Animation Speed")));
+            group.StartCoroutine(nextCard.MoveCard(newPosition, newPosition, PlayerPrefs.GetFloat("Animation Speed")));
+            while (group.AnyProcessing)
+                yield return null;
         }
     }
 
