@@ -15,6 +15,7 @@
 						<ObjectRef Name="Play_dialogue_text_write" ID="{78E1AFE8-F3D5-4419-96AB-9F44F825373D}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Play_gunshot_placeholder" ID="{C1F8F92B-A27E-4532-A697-1756B54EF79C}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Play_ui_button_hover" ID="{0E31DAE5-2865-455B-823C-E19EAB5983C6}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Play_Generic_Explosion" ID="{BD964BF8-3D53-46AD-A22F-4F10EE2AD6D1}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Play_LevelMusic" ID="{56A51A5B-0B33-46B8-BE58-8050F2D5627B}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Play_bottle_placeholder" ID="{379E62DA-7CE3-47AC-918A-6BD2CB6F6AE7}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Play_guard_notice_placeholder" ID="{D29D02B2-F63F-48FA-A65E-7312E9B1F4A8}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>

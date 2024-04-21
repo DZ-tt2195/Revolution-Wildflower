@@ -125,6 +125,17 @@
 								</Action>
 							</ChildrenList>
 						</Event>
+						<Event Name="Play_Generic_Explosion" ID="{BD964BF8-3D53-46AD-A22F-4F10EE2AD6D1}">
+							<ChildrenList>
+								<Action Name="" ID="{B4E92EA8-394B-4052-B371-E31BD14C1438}" ShortID="235772058">
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="Generic Explosion" ID="{642DF03C-4898-4F58-875D-4C7DE017001F}" WorkUnitID="{1BC092A5-567E-4219-B9A1-7F41A7E3F1D8}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
 					</ChildrenList>
 				</Folder>
 				<Folder Name="Characters" ID="{B82D5746-8BDD-47D6-8EF0-BAD04D6AB354}" ShortID="246083658">
