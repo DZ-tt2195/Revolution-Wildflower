@@ -52,7 +52,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: -876546973899608171, guid: e04248de27a0460488b076966290f1a8, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -319,8 +319,12 @@ MonoBehaviour:
   stunText: {fileID: 0}
   card: {fileID: 0}
   delay: 0
+  delayMax: 0
   TimeRim: {fileID: 316969678549619408}
   ValueDisplay: {fileID: 3004660282916731646}
+  timerRen: {fileID: 3114430546558925361}
+  timeTick: 0.7
+  radial: {fileID: 0}
 --- !u!212 &6266375953143218470
 SpriteRenderer:
   m_ObjectHideFlags: 0

@@ -37,6 +37,7 @@ public class CardData
     public string action;  //action to do
     public string enviroaction;  //environmental effect to do
     public string nextAct; //action to do next turn
+    public string sound; //sound played when card is played
 }
 
 //Uses TSVReader class to translate values from the CardData CSV.
@@ -87,6 +88,7 @@ public class CardDataLoader
             newCard.action = line[20];
             try { newCard.enviroaction = line[21]; } catch (IndexOutOfRangeException) { newCard.nextAct = ""; }
             try { newCard.nextAct = line[22]; } catch (IndexOutOfRangeException) { newCard.nextAct = ""; }
+            try { newCard.sound = line[23]; } catch (IndexOutOfRangeException) { newCard.sound = ""; }
         }
         return cardData;
     }

@@ -56,6 +56,7 @@ public class WallEntity : Entity
         }
         else if (health <= maxHealth*(2/3))
         {
+            MoveCamera.instance.Shake();
             spriteRenderer.sprite = damagedSprite;
         }
     }

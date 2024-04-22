@@ -408,6 +408,28 @@
 								<ActiveSource Name="view-deck" ID="{A22BB6A6-2126-4F58-A431-91C02FB37F2B}" Platform="Linked"/>
 							</ActiveSourceList>
 						</Sound>
+						<Sound Name="Generic Explosion" ID="{642DF03C-4898-4F58-875D-4C7DE017001F}" ShortID="29541393">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{100BE001-2367-43C2-97F3-A212E8B5F1FD}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{7426D2B4-AE1E-46BF-A735-554A72E4A279}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="Generic Explosion" ID="{4CE171DD-C892-4A67-B326-C1D60C1C68DC}">
+									<Language>SFX</Language>
+									<AudioFile>Generic Explosion.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="496075703"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="Generic Explosion" ID="{4CE171DD-C892-4A67-B326-C1D60C1C68DC}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
 					</ChildrenList>
 				</Folder>
 				<Folder Name="Guards-Security" ID="{34EB58EA-35BB-4D69-A1C3-DA5B5B7BF34E}" ShortID="98906450">

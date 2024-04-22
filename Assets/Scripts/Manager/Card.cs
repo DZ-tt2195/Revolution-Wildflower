@@ -680,6 +680,9 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
                 case "THROWENVIRONMENTAL":
                     yield return ChooseTile();
                     EnvironmentalEntity newEnviro = LevelGenerator.instance.CreateEnvironmental();
+                    MaterialPropertyBlock matBlock = new();
+                    matBlock.SetFloat("_Fill", 1);
+                    newEnviro.timerRen.SetPropertyBlock(matBlock);
                     newEnviro.ValueDisplay.text = data.delay.ToString();
                     newEnviro.currentTile = currentTarget;
                     newEnviro.spriteRenderer.sortingOrder = 10;
@@ -688,6 +691,8 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
                     newEnviro.name = this.name;
                     newEnviro.card = this;
                     newEnviro.delay = data.delay;
+                    newEnviro.delayMax = data.delay;
+                    newEnviro.actionSound = data.sound;
                     LevelGenerator.instance.listOfEnvironmentals.Add(newEnviro);
                     break;
                 case "THROWMODIFIER":
@@ -750,8 +755,8 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         if (adjacentTilesWithGuards.Count == 0)
             yield break;
 
-        if (adjacentTilesWithGuards.Count != 1)
-        {
+        //if (adjacentTilesWithGuards.Count != 1)
+        //{
             InstructionsManager.UpdateInstructions(this,
                 new string[] { "OnChoiceMade" },
                 new string[] { "Choose a guard in range." }
@@ -771,7 +776,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
             OnChoiceMade?.Invoke(this, EventArgs.Empty);
             adjacentTilesWithGuards.Clear();
             adjacentTilesWithGuards.Add(PhaseManager.instance.chosenTile);
-        }
+        //}
     }
 
     IEnumerator ChoosePlayer()
@@ -780,8 +785,8 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         if (adjacentTilesWithPlayers.Count == 0)
             yield break;
 
-        if (adjacentTilesWithPlayers.Count != 1)
-        {
+        //if (adjacentTilesWithPlayers.Count != 1)
+        //{
             InstructionsManager.UpdateInstructions(this,
                 new string[] { "OnChoiceMade", "OnCardResolved" },
                 new string[] { "Choose a player in range, ", "then resolve the card." }
@@ -801,7 +806,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
             OnChoiceMade?.Invoke(this, EventArgs.Empty);
             adjacentTilesWithPlayers.Clear();
             adjacentTilesWithPlayers.Add(PhaseManager.instance.chosenTile);
-        }
+        //}
     }
 
     IEnumerator ChooseWall()
@@ -810,8 +815,8 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         if (adjacentTilesWithWalls.Count == 0)
             yield break;
 
-        if (adjacentTilesWithWalls.Count != 1)
-        {
+        //if (adjacentTilesWithWalls.Count != 1)
+        //{
             InstructionsManager.UpdateInstructions(this,
                 new string[] { "OnChoiceMade" },
                 new string[] { "Choose a wall in range." }
@@ -831,7 +836,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
             OnChoiceMade?.Invoke(this, EventArgs.Empty);
             adjacentTilesWithWalls.Clear();
             adjacentTilesWithWalls.Add(PhaseManager.instance.chosenTile);
-        }
+        //}
     }
 
     //selects a tile, using line of sight around the player,
@@ -963,8 +968,8 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
                 new string[] { "OnChoiceMade" },
                 new string[] { $"Discard a card from your hand ({data.chooseHand - i} more)." }
             );
-            if (player.myHand.Count >= 2)
-            {
+            //if (player.myHand.Count >= 2)
+            //{
                 PhaseManager.instance.WaitForDecision(player.myHand);
                 while (PhaseManager.instance.chosenCard == null)
                     yield return null;
@@ -977,11 +982,11 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
                 }
 
                 yield return player.DiscardFromHand(PhaseManager.instance.chosenCard);
-            }
-            else if (player.myHand.Count == 1)
-            {
-                yield return player.DiscardFromHand(player.myHand[0]);
-            }
+            //}
+            //else if (player.myHand.Count == 1)
+            //{
+            //    yield return player.DiscardFromHand(player.myHand[0]);
+            //}
             LevelUIManager.instance.UpdateStats(currentPlayer);
             OnChoiceMade?.Invoke(this, EventArgs.Empty);
         }
@@ -992,33 +997,33 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         for (int i = 0; i < data.chooseHand; i++)
         {
             InstructionsManager.UpdateInstructions(this, new string[] { "OnChoiceMade" }, new string[] { $"Give {otherPlayer.name} a card from your hand." });
-            if (thisPlayer.myHand.Count >= 2)
-            {
-                PhaseManager.instance.WaitForDecision(thisPlayer.myHand);
-                while (PhaseManager.instance.chosenCard == null)
-                    yield return null;
+            //if (thisPlayer.myHand.Count >= 2)
+            //{
+            PhaseManager.instance.WaitForDecision(thisPlayer.myHand);
+            while (PhaseManager.instance.chosenCard == null)
+                yield return null;
 
-                yield return PhaseManager.instance.ConfirmUndo($"Play {PhaseManager.instance.chosenCard.name}?", new Vector2(0, 350));
-                if (PhaseManager.instance.confirmChoice == 1)
-                {
-                    i--;
-                    continue;
-                }
-
-                otherPlayer.PlusCards(PhaseManager.instance.chosenCard);
-            }
-            else if (thisPlayer.myHand.Count == 1)
+            yield return PhaseManager.instance.ConfirmUndo($"Play {PhaseManager.instance.chosenCard.name}?", new Vector2(0, 350));
+            if (PhaseManager.instance.confirmChoice == 1)
             {
-                otherPlayer.PlusCards(thisPlayer.myHand[0]);
+                i--;
+                continue;
             }
 
-            OnChoiceMade?.Invoke(this, EventArgs.Empty);
-            StartCoroutine(thisPlayer.SortHandCoroutine());
-            LevelUIManager.instance.UpdateStats(currentPlayer);
+            otherPlayer.PlusCards(PhaseManager.instance.chosenCard);
+
+            //else if (thisPlayer.myHand.Count == 1)
+            //{
+            //    otherPlayer.PlusCards(thisPlayer.myHand[0]);
+            //}
         }
+        OnChoiceMade?.Invoke(this, EventArgs.Empty);
+        StartCoroutine(thisPlayer.SortHandCoroutine());
+        LevelUIManager.instance.UpdateStats(currentPlayer);
     }
 
-    #endregion
+
+#endregion
 
 #region Helper Methods
 

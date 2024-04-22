@@ -49,7 +49,7 @@ public class TitleScreen : MonoBehaviour
         string[] currentFileNames = ES3.GetFiles(Application.persistentDataPath);
         foreach(string name in currentFileNames)
         {
-            if (name != ".DS_Store")
+            if (!name.Equals(".DS_Store") || !name.Equals("Player") || !name.Equals("Player-prev"))
             {
                 fileChoose.options.Add(new TMP_Dropdown.OptionData(name[..^4]));
                 fileChoose.RefreshShownValue();

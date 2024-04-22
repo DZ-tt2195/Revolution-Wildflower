@@ -32,7 +32,7 @@
 				</StateGroup>
 			</StateGroups>
 		</SoundBank>
-		<SoundBank Id="1605876511" Type="User" Language="SFX" Hash="{5C515637-DECA-F738-1DFE-3526AD1947CD}">
+		<SoundBank Id="1605876511" Type="User" Language="SFX" Hash="{CBDED08E-A7EF-0720-50BF-E7D50306A25C}">
 			<ShortName>SFX_Bank</ShortName>
 			<Path>SFX_Bank.bnk</Path>
 			<Media>
@@ -83,6 +83,10 @@
 				<File Id="410281469" Language="SFX" Streaming="false" Location="Memory">
 					<ShortName>wildflower-frankie-1-intro.wav</ShortName>
 					<CachePath>SFX/wildflower-frankie-1-intro_D79FB2B7.wem</CachePath>
+				</File>
+				<File Id="496075703" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>Generic Explosion.wav</ShortName>
+					<CachePath>SFX/Generic Explosion_10C4C929.wem</CachePath>
 				</File>
 				<File Id="509925270" Language="SFX" Streaming="false" Location="Memory">
 					<ShortName>wildflower-frankie-2-intro.wav</ShortName>
@@ -192,6 +196,11 @@
 						<MediaRef Id="940959831"/>
 					</MediaRefs>
 				</Event>
+				<Event Id="2617410325" Name="Play_Generic_Explosion" DurationType="OneShot" DurationMin="3.5760999" DurationMax="3.5760999">
+					<MediaRefs>
+						<MediaRef Id="496075703"/>
+					</MediaRefs>
+				</Event>
 				<Event Id="1673056553" Name="Play_guard_investigate" DurationType="OneShot" DurationMin="1.33" DurationMax="1.33">
 					<MediaRefs>
 						<MediaRef Id="149796096"/>
@@ -281,5 +290,5 @@
 			</StateGroups>
 		</SoundBank>
 	</SoundBanks>
-	<FileHash>{45528697-806B-B00A-661B-C59F2CFC8D9C}</FileHash>
+	<FileHash>{DFC8FEA3-84BE-9A91-57ED-B3E803F55FC3}</FileHash>
 </SoundBanksInfo>
