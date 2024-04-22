@@ -123,7 +123,7 @@ public class PhaseManager : MonoBehaviour
             {
                 StopCoroutine(ChooseMovePlayer(lastSelectedPlayer, 0));
                 StopCoroutine(ChooseCardPlay(lastSelectedPlayer));
-                Debug.LogError("deselect");
+                Debug.Log("deselect");
 
                 movingPlayer = false;
                 lastSelectedPlayer = null;
@@ -316,10 +316,6 @@ public class PhaseManager : MonoBehaviour
                 spendToDrawButton.gameObject.SetActive(false);
 
             exitButton.gameObject.SetActive(CanExit(currentPlayer.currentTile));
-
-            var foundCanvasObjects = FindObjectsOfType<Collector>();
-            foreach (Collector collector in foundCanvasObjects)
-                Destroy(collector.gameObject);
 
             objectiveButton.gameObject.SetActive(currentPlayer.CheckForObjectives());
             if (currentPlayer.adjacentObjective != null)
@@ -634,6 +630,10 @@ public class PhaseManager : MonoBehaviour
     /// <returns></returns>
     public IEnumerator ConfirmUndo(string header, Vector3 position)
     {
+        var foundCanvasObjects = FindObjectsOfType<Collector>();
+        foreach (Collector collector in foundCanvasObjects)
+            Destroy(collector.gameObject);
+
         confirmChoice = -1;
         if (PlayerPrefs.GetInt("Confirm Choices") == 1)
         {
