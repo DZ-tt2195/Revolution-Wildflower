@@ -350,7 +350,7 @@ RectTransform:
   m_GameObject: {fileID: 275911235}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: -77, y: 77, z: 77}
+  m_LocalScale: {x: -60, y: 60, z: 60}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 866875534}
@@ -358,7 +358,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 858.44, y: 292}
+  m_AnchoredPosition: {x: 858.44, y: 300}
   m_SizeDelta: {x: 8, y: 5.179}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &275911237
@@ -905,7 +905,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'StART
+  m_text: 'START
 
 '
   m_isRightToLeft: 0
@@ -934,12 +934,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 37.6
+  m_fontSize: 50.9
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 50.9
   m_fontStyle: 16
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -1060,8 +1060,8 @@ MonoBehaviour:
   m_fontColorGradient:
     topLeft: {r: 1, g: 1, b: 1, a: 1}
     topRight: {r: 1, g: 1, b: 1, a: 1}
-    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
-    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 0.67458487, g: 1, b: 0.6273585, a: 1}
+    bottomRight: {r: 0.6745098, g: 1, b: 0.627451, a: 1}
   m_fontColorGradientPreset: {fileID: 0}
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
@@ -1148,7 +1148,7 @@ RectTransform:
   m_GameObject: {fileID: 645330049}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: -77, y: 77, z: 77}
+  m_LocalScale: {x: -60, y: 60, z: 60}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1933774257}
@@ -1156,7 +1156,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 858.44, y: -323}
+  m_AnchoredPosition: {x: 858.44, y: -200}
   m_SizeDelta: {x: 8, y: 5.179}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &645330051
@@ -1235,8 +1235,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -0.053}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 733.14, y: -470.4}
-  m_SizeDelta: {x: 195.695, y: 62.1}
+  m_AnchoredPosition: {x: 657, y: -423.8}
+  m_SizeDelta: {x: 276.69, y: 105.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &651566365
 MonoBehaviour:
@@ -1522,7 +1522,7 @@ RectTransform:
   m_GameObject: {fileID: 927810998}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: -77, y: 77, z: 77}
+  m_LocalScale: {x: -60, y: 60, z: 60}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 973325642}
@@ -1530,7 +1530,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 858.44, y: -14.99999}
+  m_AnchoredPosition: {x: 858.44, y: 50}
   m_SizeDelta: {x: 8, y: 5.179}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &927811000
@@ -1882,7 +1882,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -5.28, y: 66.44}
+  m_AnchoredPosition: {x: -5.28, y: 51.7}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1119461518 stripped
@@ -2543,7 +2543,7 @@ MonoBehaviour:
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
   m_Cameras: []
-  m_RendererIndex: -1
+  m_RendererIndex: 1
   m_VolumeLayerMask:
     serializedVersion: 2
     m_Bits: 1
@@ -2943,8 +2943,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.3137255}
+  m_Material: {fileID: -876546973899608171, guid: ad391fed92f93b14e9fac0aea7edb37b, type: 3}
+  m_Color: {r: 0.3726415, g: 1, b: 0.64322746, a: 0.3137255}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
