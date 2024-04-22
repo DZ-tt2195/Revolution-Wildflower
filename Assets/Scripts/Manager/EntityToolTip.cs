@@ -10,10 +10,10 @@ public class EntityToolTip : MonoBehaviour
     private RectTransform CanvasTransform;
     [SerializeField] RectTransform EntityNameTransform;
     [SerializeField] RectTransform EntityToolTipTransform;
-    [SerializeField] public TMP_Text EntityName;
-    [SerializeField] public TMP_Text EntityInfo;
+    [SerializeField] TMP_Text EntityName;
+    [SerializeField] TMP_Text EntityInfo;
     [SerializeField] float margin = 25;
-    public bool isActive = false;
+    bool isActive = false;
 
     private void Awake()
     {
@@ -21,14 +21,20 @@ public class EntityToolTip : MonoBehaviour
         CanvasTransform = GetComponent<RectTransform>();
     }
 
+    public void SetInfo(string entityName, string entityInfo)
+    {
+        EntityName.text = entityName;
+        EntityInfo.text = entityInfo;
+        this.gameObject.SetActive(true);
+        isActive = true;
+    }
+
     private void Update()
     {
         CanvasTransform.SetHeight((margin * 3) + EntityNameTransform.rect.height + EntityToolTipTransform.rect.height);
         this.gameObject.SetActive(isActive);
         if (isActive)
-        {
             isActive = false;
-        }
-        transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        transform.position = Vector3.Lerp(transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition), 5*Time.deltaTime);
     }
 }
