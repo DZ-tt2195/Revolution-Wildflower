@@ -123,7 +123,7 @@ public class PhaseManager : MonoBehaviour
             {
                 StopCoroutine(ChooseMovePlayer(lastSelectedPlayer, 0));
                 StopCoroutine(ChooseCardPlay(lastSelectedPlayer));
-                Debug.LogError("deselect");
+                Debug.Log("deselect");
 
                 movingPlayer = false;
                 lastSelectedPlayer = null;
@@ -317,10 +317,6 @@ public class PhaseManager : MonoBehaviour
 
             exitButton.gameObject.SetActive(CanExit(currentPlayer.currentTile));
 
-            var foundCanvasObjects = FindObjectsOfType<Collector>();
-            foreach (Collector collector in foundCanvasObjects)
-                Destroy(collector.gameObject);
-
             objectiveButton.gameObject.SetActive(currentPlayer.CheckForObjectives());
             if (currentPlayer.adjacentObjective != null)
                 objectiveButton.GetComponentInChildren<TMP_Text>().text = currentPlayer.adjacentObjective.name;
@@ -337,6 +333,7 @@ public class PhaseManager : MonoBehaviour
     public IEnumerator ChooseMovePlayer(PlayerEntity currentPlayer, int possibleMoves, bool freeMoves = false)
     {
         LevelGenerator.instance.DisableAllTiles();
+        LevelUIManager.instance.movementBar.StopPreview();
         foreach (TileData tile in Pathfinder.instance.FullPath)
             tile.directionIndicator.enabled = false;
         yield return new WaitForSeconds(0.15f);
@@ -433,10 +430,11 @@ public class PhaseManager : MonoBehaviour
 
         Debug.Log($"chosen card no longer null");
         CurrentPhase = TurnSystem.ResolvingAction;
-
+        LevelUIManager.instance.energyBar.Preview(-chosenCard.energyCost);
         yield return ConfirmUndo($"Play {chosenCard.name}?", new Vector2(0, 350));
         if (confirmChoice == 1)
         {
+            LevelUIManager.instance.energyBar.StopPreview();
             yield return (ChooseCardPlay(currentPlayer));
             yield break;
         }
@@ -598,9 +596,11 @@ public class PhaseManager : MonoBehaviour
     IEnumerator ResolveDraw()
     {
         CurrentPhase = TurnSystem.ResolvingAction;
+        LevelUIManager.instance.energyBar.Preview(-3);
         yield return ConfirmUndo($"Spend 3 energy to draw a card?", new Vector2(0, 350));
         if (confirmChoice == 1)
         {
+            LevelUIManager.instance.energyBar.StopPreview();
             BackToStart(false);
             yield break;
         }
@@ -630,6 +630,10 @@ public class PhaseManager : MonoBehaviour
     /// <returns></returns>
     public IEnumerator ConfirmUndo(string header, Vector3 position)
     {
+        var foundCanvasObjects = FindObjectsOfType<Collector>();
+        foreach (Collector collector in foundCanvasObjects)
+            Destroy(collector.gameObject);
+
         confirmChoice = -1;
         if (PlayerPrefs.GetInt("Confirm Choices") == 1)
         {

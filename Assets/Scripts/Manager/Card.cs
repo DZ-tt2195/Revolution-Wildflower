@@ -48,6 +48,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
     [SerializeField] private float animationSpeed;
     [SerializeField] private float moveAmount = 250;
     [SerializeField] private float growthAmount;
+    [SerializeField] private Image cardArtImage; 
 
     [Foldout("Types", true)]
     [SerializeField] Sprite attackSprite;
@@ -135,6 +136,8 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
     {
         this.data = data;
         textName.text = data.name;
+        cardArtImage.sprite = Resources.Load<Sprite>("CardArt/" + data.name.ToLower());
+        Debug.Log("CardArt/" + data.name.ToLower());
         textDescr.text = KeywordTooltip.instance.EditText(data.desc);
 
         typeOne = ConvertToType(data.cat1);

@@ -36,7 +36,7 @@ public class TileData : MonoBehaviour
 
     [Foldout("Mouse", true)]
         [Tooltip("Layer mask that mouse raycasts ignore")] [SerializeField] LayerMask mask;
-        [Tooltip("timer that controls how long until a tool tip appears on hover")] float timeTillToolTip = 0.5f;
+        [Tooltip("timer that controls how long until a tool tip appears on hover")] float timeTillToolTip = 0.25f;
         [Tooltip("timer that controls how long until a tool tip appears on hover")] float toolTipHoverTimer = 0;
 
     [Foldout("Colors", true)]
@@ -165,7 +165,8 @@ public class TileData : MonoBehaviour
 
             bool containsSurveilledTile = false;
 
-            Pathfinder.instance.CalculatePathfinding(PhaseManager.instance.lastSelectedPlayer.currentTile,this, PhaseManager.instance.lastSelectedPlayer.movementLeft,false,false);
+            Pathfinder.instance.CalculatePathfinding(PhaseManager.instance.lastSelectedPlayer.currentTile, this, PhaseManager.instance.lastSelectedPlayer.movementLeft, false, false);
+
             foreach (TileData tile in Pathfinder.instance.FullPath)
             {
                 tile.directionIndicator.enabled = true;
@@ -175,6 +176,9 @@ public class TileData : MonoBehaviour
                     containsSurveilledTile = true;
                 }
             }
+
+            LevelUIManager.instance.movementBar.Preview(-Pathfinder.instance.FullPath.Count);
+
 
             if (containsSurveilledTile)
             {
@@ -245,11 +249,13 @@ public class TileData : MonoBehaviour
             toolTipHoverTimer += Time.deltaTime;
             if (toolTipHoverTimer >= timeTillToolTip)
             {
+                EntityToolTip.instance.SetInfo(myEntity.name, myEntity.HoverBoxText());
+                /*
                 EntityToolTip.instance.EntityName.text = myEntity.name;
                 EntityToolTip.instance.EntityInfo.text = myEntity.HoverBoxText();
                 EntityToolTip.instance.gameObject.SetActive(true);
                 EntityToolTip.instance.isActive = true;
-
+                */
                 //if the tile entity is a guard, show their path to their current target
                 if (myEntity.CompareTag("Enemy"))
                 {
