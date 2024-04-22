@@ -17,6 +17,7 @@ public class EnvironmentalEntity : MovingEntity
     [SerializeField] float timeTick = 0.2f;
     public Material radial;
     [SerializeField] public string actionSound;
+    [SerializeField] AK.Wwise.Event tickingSound;
 
     #region Entity Stuff
 
@@ -56,6 +57,15 @@ public class EnvironmentalEntity : MovingEntity
 
     IEnumerator ResolveList(string condition)
     {
+        if (condition == "END")
+        {
+            AkSoundEngine.PostEvent(actionSound, this.gameObject);
+        }
+        else
+        {
+            tickingSound.Post(this.gameObject);
+        }
+        
         string divide = card.data.enviroaction.Replace(" ", "");
         divide = divide.ToUpper().Trim();
         string[] methodsInStrings = divide.Split('/');
@@ -86,7 +96,6 @@ public class EnvironmentalEntity : MovingEntity
         List<PlayerEntity> playersInRange = FindPlayersInRange();
         List<WallEntity> wallsInRange = FindWallsInRange();
 
-        AkSoundEngine.PostEvent(actionSound,this.gameObject);
         yield return card.CalculateDistraction(this.currentTile);
 
         switch (methodName)

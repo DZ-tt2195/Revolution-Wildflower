@@ -5,6 +5,7 @@
 			<ChildrenList>
 				<SoundBank Name="SFX_Bank" ID="{D3455C5D-AEC5-4259-BE5F-72BE6B5D9F73}">
 					<ObjectInclusionList>
+						<ObjectRef Name="Play_Ticking" ID="{72E9B319-5609-4034-ACC9-ED65544B32CD}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Play_guard_ko_placeholder" ID="{876B5843-80A3-4094-BA07-A9AE9150D8CF}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Play_CharacterFootsteps" ID="{93C9C64A-F1E8-40BC-A3D6-A05848F84CA7}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Play_guard_investigate" ID="{E3FC8F85-EF46-40EB-BFA9-6A19B56AE4F5}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>

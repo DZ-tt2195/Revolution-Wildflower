@@ -325,6 +325,11 @@ MonoBehaviour:
   timerRen: {fileID: 3114430546558925361}
   timeTick: 0.7
   radial: {fileID: 0}
+  actionSound: 
+  tickingSound:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 11400000, guid: 11ffc2a7573d6c444b8c2a4e1e514538, type: 2}
 --- !u!212 &6266375953143218470
 SpriteRenderer:
   m_ObjectHideFlags: 0

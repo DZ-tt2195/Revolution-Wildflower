@@ -2,6 +2,7 @@ Event	ID	Name			Wwise Object Path	Notes
 	310530060	Play_ui_button_hover			\Default Work Unit\UI-Interactions\Play_ui_button_hover	
 	510162235	Play_view_deck			\Default Work Unit\Cards-Actions\Play_view_deck	
 	547032497	Play_begin_turn			\Default Work Unit\UI-Interactions\Play_begin_turn	
+	1266668823	Play_Ticking			\Default Work Unit\Cards-Actions\Play_Ticking	
 	1662486726	Play_distraction			\Default Work Unit\Cards-Actions\Play_distraction	
 	1673056553	Play_guard_investigate			\Default Work Unit\Guards-Security\Play_guard_investigate	
 	1790008526	Play_dialogue_text_write			\Default Work Unit\UI-Interactions\Play_dialogue_text_write	
@@ -56,6 +57,7 @@ In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
 	789745676	wildflower-gail-1	C:\Users\coles\OneDrive\Documents\GitHub\Revolution-Wildflower2\Revolution-Wildflower_WwiseProject\.cache\Mac\SFX\wildflower-gail-1_D79FB2B7.wem		\Interactive Music Hierarchy\Default Work Unit\LevelMusic\Gail\wildflower-gail-1\wildflower-gail-1		13970976
 	823904576	wildflower-frankie-1	C:\Users\coles\OneDrive\Documents\GitHub\Revolution-Wildflower2\Revolution-Wildflower_WwiseProject\.cache\Mac\SFX\wildflower-frankie-1_D79FB2B7.wem		\Interactive Music Hierarchy\Default Work Unit\LevelMusic\Frankie\wildflower-frankie-1\wildflower-frankie-1		13970976
 	850579775	wildflower-wk-1	C:\Users\coles\OneDrive\Documents\GitHub\Revolution-Wildflower2\Revolution-Wildflower_WwiseProject\.cache\Mac\SFX\wildflower-wk-1_D79FB2B7.wem		\Interactive Music Hierarchy\Default Work Unit\LevelMusic\WK\wildflower-wk-1\wildflower-wk-1		13970976
+	929319270	Ticking	C:\Users\coles\OneDrive\Documents\GitHub\Revolution-Wildflower2\Revolution-Wildflower_WwiseProject\.cache\Mac\SFX\Ticking_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\Cards-Actions\Ticking		294652
 	940959831	end-turn-placeholder	C:\Users\coles\OneDrive\Documents\GitHub\Revolution-Wildflower2\Revolution-Wildflower_WwiseProject\.cache\Mac\SFX\end-turn-placeholder_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\UI-Interactions\end-turn-placeholder		161646
 	997200349	view-deck	C:\Users\coles\OneDrive\Documents\GitHub\Revolution-Wildflower2\Revolution-Wildflower_WwiseProject\.cache\Mac\SFX\view-deck_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\Cards-Actions\view-deck		264300
 	1041520263	button-base-placeholder	C:\Users\coles\OneDrive\Documents\GitHub\Revolution-Wildflower2\Revolution-Wildflower_WwiseProject\.cache\Mac\SFX\button-base-placeholder_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\UI-Interactions\button-base-placeholder		36886

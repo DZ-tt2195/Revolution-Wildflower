@@ -32,7 +32,7 @@
 				</StateGroup>
 			</StateGroups>
 		</SoundBank>
-		<SoundBank Id="1605876511" Type="User" Language="SFX" Hash="{CBDED08E-A7EF-0720-50BF-E7D50306A25C}">
+		<SoundBank Id="1605876511" Type="User" Language="SFX" Hash="{56EBA297-5692-E785-6D60-3804A7B8FA72}">
 			<ShortName>SFX_Bank</ShortName>
 			<Path>SFX_Bank.bnk</Path>
 			<Media>
@@ -131,6 +131,10 @@
 				<File Id="850579775" Language="SFX" Streaming="false" Location="Memory">
 					<ShortName>wildflower-wk-1.wav</ShortName>
 					<CachePath>SFX/wildflower-wk-1_D79FB2B7.wem</CachePath>
+				</File>
+				<File Id="929319270" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>Ticking.wav</ShortName>
+					<CachePath>SFX/Ticking_10C4C929.wem</CachePath>
 				</File>
 				<File Id="940959831" Language="SFX" Streaming="false" Location="Memory">
 					<ShortName>end-turn-placeholder.wav</ShortName>
@@ -265,6 +269,11 @@
 						<MediaRef Id="574353506"/>
 					</MediaRefs>
 				</Event>
+				<Event Id="1266668823" Name="Play_Ticking" DurationType="OneShot" DurationMin="1.6698186" DurationMax="1.6698186">
+					<MediaRefs>
+						<MediaRef Id="929319270"/>
+					</MediaRefs>
+				</Event>
 				<Event Id="310530060" Name="Play_ui_button_hover" DurationType="OneShot" DurationMin="2" DurationMax="2">
 					<MediaRefs>
 						<MediaRef Id="272861178"/>
@@ -290,5 +299,5 @@
 			</StateGroups>
 		</SoundBank>
 	</SoundBanks>
-	<FileHash>{DFC8FEA3-84BE-9A91-57ED-B3E803F55FC3}</FileHash>
+	<FileHash>{1FE974A4-44DF-BDDD-0829-D0FB5BBD5BF6}</FileHash>
 </SoundBanksInfo>
