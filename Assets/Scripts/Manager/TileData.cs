@@ -165,7 +165,8 @@ public class TileData : MonoBehaviour
 
             bool containsSurveilledTile = false;
 
-            Pathfinder.instance.CalculatePathfinding(PhaseManager.instance.lastSelectedPlayer.currentTile,this, PhaseManager.instance.lastSelectedPlayer.movementLeft,false,false);
+            Pathfinder.instance.CalculatePathfinding(PhaseManager.instance.lastSelectedPlayer.currentTile, this, PhaseManager.instance.lastSelectedPlayer.movementLeft, false, false);
+
             foreach (TileData tile in Pathfinder.instance.FullPath)
             {
                 tile.directionIndicator.enabled = true;
@@ -175,6 +176,9 @@ public class TileData : MonoBehaviour
                     containsSurveilledTile = true;
                 }
             }
+
+            LevelUIManager.instance.movementBar.Preview(-Pathfinder.instance.FullPath.Count);
+
 
             if (containsSurveilledTile)
             {

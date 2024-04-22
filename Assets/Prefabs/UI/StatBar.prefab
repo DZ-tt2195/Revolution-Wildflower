@@ -321,6 +321,8 @@ MonoBehaviour:
   segments: {fileID: 3482770517167083817}
   previewObject: {fileID: 241726107805314689}
   segmentMaterial: {fileID: 2100000, guid: 3d5b68e05363a11499de438a16d19b11, type: 2}
+  previewGainColor: {r: 0.48315, g: 1, b: 0, a: 1}
+  previewLossColor: {r: 0.7735849, g: 0.014274209, b: 0, a: 1}
 --- !u!1 &8053958418147542893
 GameObject:
   m_ObjectHideFlags: 0
@@ -339,7 +341,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3239966045176203248
 RectTransform:
   m_ObjectHideFlags: 0

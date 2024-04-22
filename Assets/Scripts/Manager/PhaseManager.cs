@@ -337,6 +337,7 @@ public class PhaseManager : MonoBehaviour
     public IEnumerator ChooseMovePlayer(PlayerEntity currentPlayer, int possibleMoves, bool freeMoves = false)
     {
         LevelGenerator.instance.DisableAllTiles();
+        LevelUIManager.instance.movementBar.StopPreview();
         foreach (TileData tile in Pathfinder.instance.FullPath)
             tile.directionIndicator.enabled = false;
         yield return new WaitForSeconds(0.15f);
@@ -599,9 +600,11 @@ public class PhaseManager : MonoBehaviour
     IEnumerator ResolveDraw()
     {
         CurrentPhase = TurnSystem.ResolvingAction;
+        LevelUIManager.instance.energyBar.Preview(-3);
         yield return ConfirmUndo($"Spend 3 energy to draw a card?", new Vector2(0, 350));
         if (confirmChoice == 1)
         {
+            LevelUIManager.instance.energyBar.StopPreview();
             BackToStart(false);
             yield break;
         }
