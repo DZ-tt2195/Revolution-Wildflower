@@ -319,6 +319,7 @@ MonoBehaviour:
   defaultShakeDuration: 1
   barImage: {fileID: 8790134722559858775}
   segments: {fileID: 3482770517167083817}
+  previewObject: {fileID: 241726107805314689}
   segmentMaterial: {fileID: 2100000, guid: 3d5b68e05363a11499de438a16d19b11, type: 2}
 --- !u!1 &8053958418147542893
 GameObject:

@@ -19,7 +19,7 @@ public class StatBar : MonoBehaviour
     
     [SerializeField] private Image barImage;
     [SerializeField] private GameObject segments;
-    [SerializeField] private GameObject previewObject;
+    [SerializeField] private Image previewObject;
     public Material segmentMaterial; 
 
     public void SetMaximumValue(float maxValue)
@@ -64,8 +64,23 @@ public class StatBar : MonoBehaviour
 
     public void Preview(float change)
     {
-        
+        previewObject.gameObject.SetActive(true);
+        float difference = currentValue + change;
+        if (difference < currentValue)
+        {
+            float amount = barImage.rectTransform.rect.width * Mathf.Abs(change / maxValue);
+            float position = barImage.rectTransform.rect.width - (barImage.rectTransform.rect.width * ((difference - 1) / maxValue));
+
+            previewObject.rectTransform.SetWidth(amount);
+            previewObject.rectTransform.anchoredPosition = new Vector2(position, previewObject.rectTransform.anchoredPosition.y);
+        }   
     }
+
+    public void StopPreview()
+    {
+        previewObject.gameObject.SetActive(false);
+    }
+
 
     public void Shake(float duration = -1f)
     {
@@ -99,9 +114,9 @@ public class StatBar : MonoBehaviour
                 restartShake = false;
             }
 
-            elapsedTime += Time.deltaTime;
-            float strength = shakeCurve.Evaluate(elapsedTime / duration);
-            transform.position = startPosition + Random.insideUnitSphere * strength;
+            //elapsedTime += Time.deltaTime;
+            //float strength = shakeCurve.Evaluate(elapsedTime / duration);
+            //transform.position = startPosition + Random.insideUnitSphere * strength;
             yield return null;
         }
 

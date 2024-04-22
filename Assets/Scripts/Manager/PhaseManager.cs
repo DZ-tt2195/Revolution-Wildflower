@@ -433,10 +433,11 @@ public class PhaseManager : MonoBehaviour
 
         Debug.Log($"chosen card no longer null");
         CurrentPhase = TurnSystem.ResolvingAction;
-
+        LevelUIManager.instance.energyBar.Preview(-chosenCard.energyCost);
         yield return ConfirmUndo($"Play {chosenCard.name}?", new Vector2(0, 350));
         if (confirmChoice == 1)
         {
+            LevelUIManager.instance.energyBar.StopPreview();
             yield return (ChooseCardPlay(currentPlayer));
             yield break;
         }

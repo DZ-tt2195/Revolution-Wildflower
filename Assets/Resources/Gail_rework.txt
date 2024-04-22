@@ -22,7 +22,8 @@
       "any extra condition needed to select a card",
       "the function to call when card is played",
       "the function to call when using the environmental",
-      "the function to call at start of next round"
+      "the function to call at start of next round",
+      "Sound called when action ends"
     ],
     [
       "name",
@@ -47,7 +48,8 @@
       "selectable",
       "act",
       "enviroAct",
-      "nextAct"
+      "nextAct",
+      "Sound"
     ],
     [
       "Hammer",
@@ -94,7 +96,9 @@
       "",
       "",
       "ThrowEnvironmental",
-      "End/DamageWalls/StunPlayers/StunGuards"
+      "End/DamageWalls/StunPlayers/StunGuards",
+      "",
+      "Play_Generic_Explosion"
     ],
     [
       "Demolitions",
@@ -186,7 +190,7 @@
       "2",
       "",
       "",
-      "",
+      "1",
       "",
       "ThrowEnvironmental",
       "Continuous/SetVision"
