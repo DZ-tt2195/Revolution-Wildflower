@@ -787,7 +787,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  animationSpeed: 3
+  animationSpeed: 5
   moveAmount: 250
   growthAmount: 1.77
   cardArtImage: {fileID: 8390607869068102680}
