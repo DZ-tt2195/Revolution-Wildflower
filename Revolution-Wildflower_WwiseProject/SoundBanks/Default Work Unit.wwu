@@ -27,6 +27,7 @@
 						<ObjectRef Name="Play_distraction" ID="{EE74AAA2-5811-4E48-861D-D658083FB4F7}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Play_button_base_placeholder" ID="{CE0DD96D-3402-4E54-8DB9-12B3B4C88F9B}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Stop_OfficeAmbientNoise" ID="{6677A665-3BDE-4E6A-BAAB-69211BCDA66B}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Play_Flashbang" ID="{D8FD5FFB-B86C-4EF6-9EF1-E3209E9C1DEB}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Play_movement_select_placeholder" ID="{31BCE2DE-D081-4F25-B390-FE3F0745BC1D}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
 					</ObjectInclusionList>
 					<ObjectExclusionList/>

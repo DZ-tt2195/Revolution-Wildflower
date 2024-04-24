@@ -119,7 +119,9 @@
       "",
       "",
       "ThrowEnvironmental",
-      "End/SlowPlayerMovement/SlowGuardMovement"
+      "End/SlowPlayerMovement/SlowGuardMovement",
+      "",
+      "Play_Flashbang"
     ],
     [
       "Stone",

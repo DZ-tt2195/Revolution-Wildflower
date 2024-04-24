@@ -452,6 +452,28 @@
 								<ActiveSource Name="Ticking" ID="{60185ECB-7635-4BA0-825F-CA0D23358F35}" Platform="Linked"/>
 							</ActiveSourceList>
 						</Sound>
+						<Sound Name="Flashbang" ID="{C14869B6-47B8-4890-A1B8-B2D1EC3563F8}" ShortID="98982164">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{100BE001-2367-43C2-97F3-A212E8B5F1FD}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{7426D2B4-AE1E-46BF-A735-554A72E4A279}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="Flashbang" ID="{5391AC74-954C-425C-BE6B-05EB104DEEBE}">
+									<Language>SFX</Language>
+									<AudioFile>Flashbang.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="310102099"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="Flashbang" ID="{5391AC74-954C-425C-BE6B-05EB104DEEBE}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
 					</ChildrenList>
 				</Folder>
 				<Folder Name="Guards-Security" ID="{34EB58EA-35BB-4D69-A1C3-DA5B5B7BF34E}" ShortID="98906450">

@@ -32,7 +32,7 @@
 				</StateGroup>
 			</StateGroups>
 		</SoundBank>
-		<SoundBank Id="1605876511" Type="User" Language="SFX" Hash="{56EBA297-5692-E785-6D60-3804A7B8FA72}">
+		<SoundBank Id="1605876511" Type="User" Language="SFX" Hash="{9D22A0E5-5115-CE5E-CED7-ECBC37DA22ED}">
 			<ShortName>SFX_Bank</ShortName>
 			<Path>SFX_Bank.bnk</Path>
 			<Media>
@@ -71,6 +71,10 @@
 				<File Id="297005450" Language="SFX" Streaming="false" Location="Memory">
 					<ShortName>gunshot-placeholder.wav</ShortName>
 					<CachePath>SFX/gunshot-placeholder_10C4C929.wem</CachePath>
+				</File>
+				<File Id="310102099" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>Flashbang.wav</ShortName>
+					<CachePath>SFX/Flashbang_10C4C929.wem</CachePath>
 				</File>
 				<File Id="342955723" Language="SFX" Streaming="false" Location="Memory">
 					<ShortName>distraction.wav</ShortName>
@@ -200,6 +204,11 @@
 						<MediaRef Id="940959831"/>
 					</MediaRefs>
 				</Event>
+				<Event Id="1579094162" Name="Play_Flashbang" DurationType="OneShot" DurationMin="2.63" DurationMax="2.63">
+					<MediaRefs>
+						<MediaRef Id="310102099"/>
+					</MediaRefs>
+				</Event>
 				<Event Id="2617410325" Name="Play_Generic_Explosion" DurationType="OneShot" DurationMin="3.5760999" DurationMax="3.5760999">
 					<MediaRefs>
 						<MediaRef Id="496075703"/>
@@ -299,5 +308,5 @@
 			</StateGroups>
 		</SoundBank>
 	</SoundBanks>
-	<FileHash>{011EC486-4D31-D826-7AA4-89FB72C1A31F}</FileHash>
+	<FileHash>{661619C8-A023-21BA-2C1C-6DB943A2E7C5}</FileHash>
 </SoundBanksInfo>
