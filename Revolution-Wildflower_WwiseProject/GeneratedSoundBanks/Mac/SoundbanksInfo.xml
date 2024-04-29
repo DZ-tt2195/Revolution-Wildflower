@@ -32,7 +32,7 @@
 				</StateGroup>
 			</StateGroups>
 		</SoundBank>
-		<SoundBank Id="1605876511" Type="User" Language="SFX" Hash="{DBB95C47-DC65-DD16-7CB9-5FEF29680698}">
+		<SoundBank Id="1605876511" Type="User" Language="SFX" Hash="{77CCED74-79E6-677B-1EE1-5E0564626EE3}">
 			<ShortName>SFX_Bank</ShortName>
 			<Path>SFX_Bank.bnk</Path>
 			<Media>
@@ -80,9 +80,17 @@
 					<ShortName>GuardMelee2.wav</ShortName>
 					<CachePath>SFX/GuardMelee2_10C4C929.wem</CachePath>
 				</File>
+				<File Id="313345054" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>WireFenceBreak.wav</ShortName>
+					<CachePath>SFX/WireFenceBreak_10C4C929.wem</CachePath>
+				</File>
 				<File Id="342955723" Language="SFX" Streaming="false" Location="Memory">
 					<ShortName>distraction.wav</ShortName>
 					<CachePath>SFX/distraction_10C4C929.wem</CachePath>
+				</File>
+				<File Id="366841119" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>GlassBreak1.wav</ShortName>
+					<CachePath>SFX/GlassBreak1_10C4C929.wem</CachePath>
 				</File>
 				<File Id="393097027" Language="SFX" Streaming="false" Location="Memory">
 					<ShortName>wildflower-wk-1-intro.wav</ShortName>
@@ -107,6 +115,10 @@
 				<File Id="561021390" Language="SFX" Streaming="false" Location="Memory">
 					<ShortName>character_select.wav</ShortName>
 					<CachePath>SFX/character_select_10C4C929.wem</CachePath>
+				</File>
+				<File Id="570136488" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>GlassBreak2.wav</ShortName>
+					<CachePath>SFX/GlassBreak2_10C4C929.wem</CachePath>
 				</File>
 				<File Id="574353506" Language="SFX" Streaming="false" Location="Memory">
 					<ShortName>noise-with-hum.wav</ShortName>
@@ -226,6 +238,12 @@
 						<MediaRef Id="496075703"/>
 					</MediaRefs>
 				</Event>
+				<Event Id="2908883070" Name="Play_glass_Break" DurationType="OneShot" DurationMin="1.5" DurationMax="1.5">
+					<MediaRefs>
+						<MediaRef Id="366841119"/>
+						<MediaRef Id="570136488"/>
+					</MediaRefs>
+				</Event>
 				<Event Id="1484041637" Name="Play_guard_attack_melee" DurationType="OneShot" DurationMin="1.9990022" DurationMax="1.9990022">
 					<MediaRefs>
 						<MediaRef Id="310213041"/>
@@ -312,6 +330,11 @@
 						<MediaRef Id="997200349"/>
 					</MediaRefs>
 				</Event>
+				<Event Id="1404088001" Name="Play_WireFenceBreak" DurationType="OneShot" DurationMin="3.443152" DurationMax="3.443152">
+					<MediaRefs>
+						<MediaRef Id="313345054"/>
+					</MediaRefs>
+				</Event>
 				<Event Id="2518039975" Name="Stop_LevelMusic" MaxAttenuation="0" DurationType="OneShot" DurationMin="0" DurationMax="0"/>
 				<Event Id="3265032750" Name="Stop_OfficeAmbientNoise" MaxAttenuation="0" DurationType="OneShot" DurationMin="0" DurationMax="0"/>
 			</Events>
@@ -327,5 +350,5 @@
 			</StateGroups>
 		</SoundBank>
 	</SoundBanks>
-	<FileHash>{C22C3ACD-6788-6B31-0D9E-F83BA4012747}</FileHash>
+	<FileHash>{42A244BD-4C43-DABE-6C25-204E5AFF3D05}</FileHash>
 </SoundBanksInfo>

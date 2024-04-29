@@ -2,6 +2,7 @@ using MyBox;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using AK.Wwise;
 
 public class WallEntity : Entity
 {
@@ -9,6 +10,8 @@ public class WallEntity : Entity
     [Tooltip("Health a wall has")] [ReadOnly] public int health;
     [Tooltip("semi damaged wall sprite")] [SerializeField] Sprite damagedSprite;
     [Tooltip("heavily damaged wall sprite")][SerializeField] Sprite heavilyDamagedSprite;
+    public static int wallsCurrentlyBreaking = 0;
+    [SerializeField] AK.Wwise.Event breakSound;
     int maxHealth;
 
     public override string HoverBoxText()
@@ -40,6 +43,15 @@ public class WallEntity : Entity
         }
     }
 
+    void CallBackHitFunction(object in_cookie, AkCallbackType callType, object in_info)
+    {
+        if (callType == AkCallbackType.AK_EndOfEvent)
+        {
+            wallsCurrentlyBreaking--;
+            Destroy(this.gameObject);
+        }
+    }
+
     public void AffectWall(int effect)
     {
         health += effect;
@@ -48,7 +60,16 @@ public class WallEntity : Entity
         {
             LevelGenerator.instance.listOfWalls.Remove(this);
             currentTile.myEntity = null;
-            Destroy(this.gameObject);
+            if (wallsCurrentlyBreaking == 0)
+            {
+                wallsCurrentlyBreaking++;
+                breakSound.Post(gameObject, (uint)AkCallbackType.AK_EndOfEvent, CallBackHitFunction);
+
+            }
+            else
+            {
+                Destroy(this.gameObject);
+            }
         }
         else if (health <= maxHealth*(1/3))
         {

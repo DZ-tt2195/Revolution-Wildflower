@@ -3,6 +3,7 @@ Event	ID	Name			Wwise Object Path	Notes
 	510162235	Play_view_deck			\Default Work Unit\Cards-Actions\Play_view_deck	
 	547032497	Play_begin_turn			\Default Work Unit\UI-Interactions\Play_begin_turn	
 	1266668823	Play_Ticking			\Default Work Unit\Cards-Actions\Play_Ticking	
+	1404088001	Play_WireFenceBreak			\Default Work Unit\Misc\Play_WireFenceBreak	
 	1484041637	Play_guard_attack_melee			\Default Work Unit\Guards-Security\Play_guard_attack_melee	
 	1579094162	Play_Flashbang			\Default Work Unit\Cards-Actions\Play_Flashbang	
 	1662486726	Play_distraction			\Default Work Unit\Cards-Actions\Play_distraction	
@@ -17,6 +18,7 @@ Event	ID	Name			Wwise Object Path	Notes
 	2603299628	Play_CharacterFootsteps			\Default Work Unit\Characters\Play_CharacterFootsteps	
 	2617410325	Play_Generic_Explosion			\Default Work Unit\Cards-Actions\Play_Generic_Explosion	
 	2671044069	Play_LevelMusic			\Default Work Unit\Ambience-Music\Play_LevelMusic	
+	2908883070	Play_glass_Break			\Default Work Unit\Cards-Actions\Play_glass_Break	
 	3136084898	Play_guard_notice_placeholder			\Default Work Unit\Guards-Security\Play_guard_notice_placeholder	
 	3265032750	Stop_OfficeAmbientNoise			\Default Work Unit\Ambience-Music\Stop_OfficeAmbientNoise	
 	3274460198	Play_movement_select_placeholder			\Default Work Unit\Characters\Play_movement_select_placeholder	
@@ -46,13 +48,16 @@ In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
 	297005450	gunshot-placeholder	C:\Users\coles\OneDrive\Documents\GitHub\Revolution-Wildflower2\Revolution-Wildflower_WwiseProject\.cache\Mac\SFX\gunshot-placeholder_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\Guards-Security\gunshot-placeholder		72212
 	310102099	Flashbang	C:\Users\coles\OneDrive\Documents\GitHub\Revolution-Wildflower2\Revolution-Wildflower_WwiseProject\.cache\Mac\SFX\Flashbang_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\Cards-Actions\Flashbang		464028
 	310213041	GuardMelee2	C:\Users\coles\OneDrive\Documents\GitHub\Revolution-Wildflower2\Revolution-Wildflower_WwiseProject\.cache\Mac\SFX\GuardMelee2_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\Guards-Security\guard-attack-Melee\GuardMelee2		352720
+	313345054	WireFenceBreak	C:\Users\coles\OneDrive\Documents\GitHub\Revolution-Wildflower2\Revolution-Wildflower_WwiseProject\.cache\Mac\SFX\WireFenceBreak_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\Misc\WireFenceBreak		607468
 	342955723	distraction	C:\Users\coles\OneDrive\Documents\GitHub\Revolution-Wildflower2\Revolution-Wildflower_WwiseProject\.cache\Mac\SFX\distraction_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\Cards-Actions\distraction		186600
+	366841119	GlassBreak1	C:\Users\coles\OneDrive\Documents\GitHub\Revolution-Wildflower2\Revolution-Wildflower_WwiseProject\.cache\Mac\SFX\GlassBreak1_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\Cards-Actions\glass-Break\GlassBreak1		264696
 	393097027	wildflower-wk-1-intro	C:\Users\coles\OneDrive\Documents\GitHub\Revolution-Wildflower2\Revolution-Wildflower_WwiseProject\.cache\Mac\SFX\wildflower-wk-1-intro_D79FB2B7.wem		\Interactive Music Hierarchy\Default Work Unit\LevelMusic\WK\wildflower-wk-1-intro\wildflower-wk-1-intro		3810336
 	410281469	wildflower-frankie-1-intro	C:\Users\coles\OneDrive\Documents\GitHub\Revolution-Wildflower2\Revolution-Wildflower_WwiseProject\.cache\Mac\SFX\wildflower-frankie-1-intro_D79FB2B7.wem		\Interactive Music Hierarchy\Default Work Unit\LevelMusic\Frankie\wildflower-frankie-1-intro\wildflower-frankie-1-intro		3810336
 	496075703	Generic Explosion	C:\Users\coles\OneDrive\Documents\GitHub\Revolution-Wildflower2\Revolution-Wildflower_WwiseProject\.cache\Mac\SFX\Generic Explosion_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\Cards-Actions\Generic Explosion		630920
 	509925270	wildflower-frankie-2-intro	C:\Users\coles\OneDrive\Documents\GitHub\Revolution-Wildflower2\Revolution-Wildflower_WwiseProject\.cache\Mac\SFX\wildflower-frankie-2-intro_D79FB2B7.wem		\Interactive Music Hierarchy\Default Work Unit\LevelMusic\Frankie\wildflower-frankie-2-intro\wildflower-frankie-2-intro		3598656
 	540079207	guard-notice-placeholder	C:\Users\coles\OneDrive\Documents\GitHub\Revolution-Wildflower2\Revolution-Wildflower_WwiseProject\.cache\Mac\SFX\guard-notice-placeholder_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\Guards-Security\guard-notice-placeholder		247056
 	561021390	movement-select-placeholder	C:\Users\coles\OneDrive\Documents\GitHub\Revolution-Wildflower2\Revolution-Wildflower_WwiseProject\.cache\Mac\SFX\character_select_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\Character\movement-select-placeholder		88296
+	570136488	GlassBreak2	C:\Users\coles\OneDrive\Documents\GitHub\Revolution-Wildflower2\Revolution-Wildflower_WwiseProject\.cache\Mac\SFX\GlassBreak2_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\Cards-Actions\glass-Break\GlassBreak2		264696
 	574353506	OfficeAmbientNoise	C:\Users\coles\OneDrive\Documents\GitHub\Revolution-Wildflower2\Revolution-Wildflower_WwiseProject\.cache\Mac\SFX\noise-with-hum_D79FB2B7.wem		\Actor-Mixer Hierarchy\Default Work Unit\Ambience\OfficeAmbientNoise		4145500
 	585565765	dialogue-box-stop	C:\Users\coles\OneDrive\Documents\GitHub\Revolution-Wildflower2\Revolution-Wildflower_WwiseProject\.cache\Mac\SFX\dialogue-box-stop_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\UI-Interactions\dialogue-box-stop		110348
 	601800368	begin-turn	C:\Users\coles\OneDrive\Documents\GitHub\Revolution-Wildflower2\Revolution-Wildflower_WwiseProject\.cache\Mac\SFX\begin-turn_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\UI-Interactions\begin-turn		250224

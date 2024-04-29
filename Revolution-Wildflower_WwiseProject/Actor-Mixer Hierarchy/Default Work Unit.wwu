@@ -474,6 +474,62 @@
 								<ActiveSource Name="Flashbang" ID="{5391AC74-954C-425C-BE6B-05EB104DEEBE}" Platform="Linked"/>
 							</ActiveSourceList>
 						</Sound>
+						<RandomSequenceContainer Name="glass-Break" ID="{8587EC6E-3A58-4CE8-B889-92FAB6910449}" ShortID="803609695">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{100BE001-2367-43C2-97F3-A212E8B5F1FD}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{7426D2B4-AE1E-46BF-A735-554A72E4A279}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<Sound Name="GlassBreak1" ID="{B3C83E78-7778-4146-9D41-61F545BE046D}" ShortID="702808318">
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{100BE001-2367-43C2-97F3-A212E8B5F1FD}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{7426D2B4-AE1E-46BF-A735-554A72E4A279}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="GlassBreak1" ID="{69DB8276-481F-4442-81C8-B54C09E406C5}">
+											<Language>SFX</Language>
+											<AudioFile>GlassBreak1.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="366841119"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="GlassBreak1" ID="{69DB8276-481F-4442-81C8-B54C09E406C5}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+								<Sound Name="GlassBreak2" ID="{29E65D59-7F26-45A2-B263-A0B9380C3292}" ShortID="319428487">
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{100BE001-2367-43C2-97F3-A212E8B5F1FD}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{7426D2B4-AE1E-46BF-A735-554A72E4A279}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="GlassBreak2" ID="{901DA06A-E85D-4271-B311-D91CF1234C62}">
+											<Language>SFX</Language>
+											<AudioFile>GlassBreak2.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="570136488"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="GlassBreak2" ID="{901DA06A-E85D-4271-B311-D91CF1234C62}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+							</ChildrenList>
+						</RandomSequenceContainer>
 					</ChildrenList>
 				</Folder>
 				<Folder Name="Guards-Security" ID="{34EB58EA-35BB-4D69-A1C3-DA5B5B7BF34E}" ShortID="98906450">
@@ -658,6 +714,32 @@
 								</Sound>
 							</ChildrenList>
 						</RandomSequenceContainer>
+					</ChildrenList>
+				</Folder>
+				<Folder Name="Misc" ID="{09B90937-FE5C-43B4-B4EE-873F61C573F7}" ShortID="382075885">
+					<ChildrenList>
+						<Sound Name="WireFenceBreak" ID="{78C7AA74-4916-4DD6-A9FA-07FDBB0DE9D6}" ShortID="807168484">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{100BE001-2367-43C2-97F3-A212E8B5F1FD}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{7426D2B4-AE1E-46BF-A735-554A72E4A279}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="WireFenceBreak" ID="{2036AF23-FB65-401E-BBE5-95CAB447955A}">
+									<Language>SFX</Language>
+									<AudioFile>WireFenceBreak.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="313345054"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="WireFenceBreak" ID="{2036AF23-FB65-401E-BBE5-95CAB447955A}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
 					</ChildrenList>
 				</Folder>
 			</ChildrenList>

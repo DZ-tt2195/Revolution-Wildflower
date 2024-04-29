@@ -118,7 +118,10 @@
       "8",
       "",
       "",
-      "ChooseDistraction"
+      "ChooseDistraction",
+      "",
+      "",
+      "Play_glass_Break"
     ],
     [
       "Mastery",

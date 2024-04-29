@@ -180,6 +180,10 @@ MonoBehaviour:
   health: 3
   damagedSprite: {fileID: 0}
   heavilyDamagedSprite: {fileID: 0}
+  breakSound:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 11400000, guid: c5b02ca0d0855764f890ce9504b48389, type: 2}
 --- !u!212 &6830348260838998610
 SpriteRenderer:
   m_ObjectHideFlags: 0
