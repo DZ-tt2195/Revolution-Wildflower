@@ -120,6 +120,7 @@ public class PlayerEntity : MovingEntity
 
     public IEnumerator TakeDamage(int damage)
     {
+
         damageTaken += damage;
         HazardBox.alpha = 0;
         while (HazardBox.alpha < 1)

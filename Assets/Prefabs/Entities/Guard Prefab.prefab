@@ -489,7 +489,7 @@ MonoBehaviour:
   meleeHit:
     idInternal: 0
     valueGuidInternal: 
-    WwiseObjectReference: {fileID: 11400000, guid: 4543201dda2cb72408636f74dd19d0b9, type: 2}
+    WwiseObjectReference: {fileID: 11400000, guid: 799bf94cdddae2e43b337bf1c9d6a328, type: 2}
   investigateSound:
     idInternal: 0
     valueGuidInternal: 

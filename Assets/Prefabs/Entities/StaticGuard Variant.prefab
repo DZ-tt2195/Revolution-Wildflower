@@ -96,7 +96,7 @@ MonoBehaviour:
   Occlusion: 1
   direction: {x: 0, y: 0}
   movementLeft: 0
-  movesPerTurn: 4
+  maxMovement: 4
   stunned: 0
   stunObject: {fileID: 4106010143336781022}
   stunText: {fileID: 8284277255540414029}
@@ -125,7 +125,7 @@ MonoBehaviour:
   meleeHit:
     idInternal: 0
     valueGuidInternal: 
-    WwiseObjectReference: {fileID: 11400000, guid: 4543201dda2cb72408636f74dd19d0b9, type: 2}
+    WwiseObjectReference: {fileID: 11400000, guid: 799bf94cdddae2e43b337bf1c9d6a328, type: 2}
   investigateSound:
     idInternal: 0
     valueGuidInternal: 
@@ -134,6 +134,7 @@ MonoBehaviour:
     idInternal: 0
     valueGuidInternal: 
     WwiseObjectReference: {fileID: 11400000, guid: 3a0be6cc37c56b146a00b03bf493461f, type: 2}
+  StartDirection: {x: 0, y: 0}
 --- !u!114 &8284277255540414029 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5054512264928877908, guid: 13d7840c131d341de8dbd9115b5fec71, type: 3}

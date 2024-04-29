@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 //using System;
 using MyBox;
+using AK.Wwise;
 
 public class GuardEntity : MovingEntity
 {
@@ -287,7 +288,10 @@ public class GuardEntity : MovingEntity
         if (alertStatus != Alert.Attack)
         {
             alertStatus = Alert.Attack;
-            alertedSound.Post(gameObject);
+            if (CurrentTarget != target)
+            {
+                alertedSound.Post(gameObject);
+            }
             foreach (Vector2Int pos in DistractionPoints)
             {
                 TileData tile = LevelGenerator.instance.FindTile(pos);
@@ -463,13 +467,15 @@ public class GuardEntity : MovingEntity
         {
             if (distance <= AttackRange)
             {
-                print("within range, attacking");
-                attacksLeft--;
-                StartCoroutine(detectedPlayer.TakeDamage(1));
-                StartCoroutine(attackEffectRoutine());
-                meleeHit.Post(gameObject);
-                yield return new WaitForSeconds(movePauseTime);
-
+                if (attacksLeft > 0)
+                {
+                    print("within range, attacking");
+                    attacksLeft--;
+                    StartCoroutine(detectedPlayer.TakeDamage(1));
+                    StartCoroutine(attackEffectRoutine());
+                    meleeHit.Post(gameObject);
+                    yield return new WaitForSeconds(movePauseTime);
+                }
             }
             else
             {
@@ -522,7 +528,7 @@ public class GuardEntity : MovingEntity
             DistractionPoints.Add(detectedPlayer.currentTile.gridPosition);
             alertStatus = Alert.Persue;
             LevelGenerator.instance.FindTile(DistractionPoints[^1]).currentGuardTarget = true;
-            if (movementLeft > 0)
+            if (movementLeft > 0 && distance > AttackRange)
             {
                 print("Persuing from attack");
                 yield return persue();

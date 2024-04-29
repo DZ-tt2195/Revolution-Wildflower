@@ -424,7 +424,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
             {
                 Vector3 nextStep = Vector3.Lerp(Vector3.zero, newRot, elapsedTime / totalTime);
                 transform.localEulerAngles = nextStep;
-                Debug.Log($"{nextStep} - {transform.localEulerAngles}");
+                //Debug.Log($"{nextStep} - {transform.localEulerAngles}");
 
                 elapsedTime += Time.deltaTime;
                 yield return null;
@@ -556,6 +556,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
     IEnumerator ResolveMethod(string methodName)
     {
         methodName = methodName.Replace("]", "").Trim();
+        bool isEnviron = false;
 
         if (methodName.Contains("CHOOSEBUTTON("))
         {
@@ -682,6 +683,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
                     break;
 
                 case "THROWENVIRONMENTAL":
+                    isEnviron = true;
                     yield return ChooseTile();
                     EnvironmentalEntity newEnviro = LevelGenerator.instance.CreateEnvironmental();
                     MaterialPropertyBlock matBlock = new();
@@ -710,6 +712,10 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
                     Debug.LogError($"{methodName} isn't a method");
                     yield return null;
                     break;
+            }
+            if (!isEnviron)
+            {
+                AkSoundEngine.PostEvent(data.sound, this.gameObject);
             }
         }
     }
