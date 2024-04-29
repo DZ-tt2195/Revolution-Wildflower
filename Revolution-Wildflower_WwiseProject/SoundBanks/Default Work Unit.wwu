@@ -14,6 +14,7 @@
 						<ObjectRef Name="Play_card_move" ID="{8830F802-91A4-43E2-BD77-DB583AB8663B}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Play_OfficeAmbientNoise" ID="{139C58A2-9C3B-43F6-88D7-6B1CC85E4D78}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Play_dialogue_text_write" ID="{78E1AFE8-F3D5-4419-96AB-9F44F825373D}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Play_guard_attack_melee" ID="{0DBEC783-E672-44E9-AEEC-C311C748EC9E}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Play_gunshot_placeholder" ID="{C1F8F92B-A27E-4532-A697-1756B54EF79C}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Play_ui_button_hover" ID="{0E31DAE5-2865-455B-823C-E19EAB5983C6}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Play_Generic_Explosion" ID="{BD964BF8-3D53-46AD-A22F-4F10EE2AD6D1}" WorkUnitID="{6DB79CAA-A7D7-4DB9-B368-AAABD6160F55}" Origin="Manual" Filter="7"/>

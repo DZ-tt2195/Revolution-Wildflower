@@ -32,7 +32,7 @@
 				</StateGroup>
 			</StateGroups>
 		</SoundBank>
-		<SoundBank Id="1605876511" Type="User" Language="SFX" Hash="{9D22A0E5-5115-CE5E-CED7-ECBC37DA22ED}">
+		<SoundBank Id="1605876511" Type="User" Language="SFX" Hash="{DBB95C47-DC65-DD16-7CB9-5FEF29680698}">
 			<ShortName>SFX_Bank</ShortName>
 			<Path>SFX_Bank.bnk</Path>
 			<Media>
@@ -75,6 +75,10 @@
 				<File Id="310102099" Language="SFX" Streaming="false" Location="Memory">
 					<ShortName>Flashbang.wav</ShortName>
 					<CachePath>SFX/Flashbang_10C4C929.wem</CachePath>
+				</File>
+				<File Id="310213041" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>GuardMelee2.wav</ShortName>
+					<CachePath>SFX/GuardMelee2_10C4C929.wem</CachePath>
 				</File>
 				<File Id="342955723" Language="SFX" Streaming="false" Location="Memory">
 					<ShortName>distraction.wav</ShortName>
@@ -127,6 +131,14 @@
 				<File Id="789745676" Language="SFX" Streaming="false" Location="Memory">
 					<ShortName>wildflower-gail-1.wav</ShortName>
 					<CachePath>SFX/wildflower-gail-1_D79FB2B7.wem</CachePath>
+				</File>
+				<File Id="794677804" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>GuardMelee1.wav</ShortName>
+					<CachePath>SFX/GuardMelee1_10C4C929.wem</CachePath>
+				</File>
+				<File Id="801808018" Language="SFX" Streaming="false" Location="Memory">
+					<ShortName>GuardMelee3.wav</ShortName>
+					<CachePath>SFX/GuardMelee3_10C4C929.wem</CachePath>
 				</File>
 				<File Id="823904576" Language="SFX" Streaming="false" Location="Memory">
 					<ShortName>wildflower-frankie-1.wav</ShortName>
@@ -212,6 +224,13 @@
 				<Event Id="2617410325" Name="Play_Generic_Explosion" DurationType="OneShot" DurationMin="3.5760999" DurationMax="3.5760999">
 					<MediaRefs>
 						<MediaRef Id="496075703"/>
+					</MediaRefs>
+				</Event>
+				<Event Id="1484041637" Name="Play_guard_attack_melee" DurationType="OneShot" DurationMin="1.9990022" DurationMax="1.9990022">
+					<MediaRefs>
+						<MediaRef Id="310213041"/>
+						<MediaRef Id="794677804"/>
+						<MediaRef Id="801808018"/>
 					</MediaRefs>
 				</Event>
 				<Event Id="1673056553" Name="Play_guard_investigate" DurationType="OneShot" DurationMin="1.33" DurationMax="1.33">
@@ -308,5 +327,5 @@
 			</StateGroups>
 		</SoundBank>
 	</SoundBanks>
-	<FileHash>{661619C8-A023-21BA-2C1C-6DB943A2E7C5}</FileHash>
+	<FileHash>{C22C3ACD-6788-6B31-0D9E-F83BA4012747}</FileHash>
 </SoundBanksInfo>

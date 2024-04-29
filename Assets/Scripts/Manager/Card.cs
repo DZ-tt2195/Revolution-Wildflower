@@ -424,7 +424,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
             {
                 Vector3 nextStep = Vector3.Lerp(Vector3.zero, newRot, elapsedTime / totalTime);
                 transform.localEulerAngles = nextStep;
-                Debug.Log($"{nextStep} - {transform.localEulerAngles}");
+                //Debug.Log($"{nextStep} - {transform.localEulerAngles}");
 
                 elapsedTime += Time.deltaTime;
                 yield return null;

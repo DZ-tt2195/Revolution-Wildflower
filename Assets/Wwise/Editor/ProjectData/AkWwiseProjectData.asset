@@ -66,7 +66,7 @@ MonoBehaviour:
     ParentPath: SoundBanks\Default Work Unit
     guid: 45c008903f9bc0458acdfbd56132c8c3
     GuidInternal: 
-    m_lastTime: -8584877817933792938
+    m_lastTime: -8584872398993572845
     List:
     - name: SFX_Bank
       guid: 5d5c45d3c5ae5942be5f72be6b5d9f73
@@ -94,7 +94,7 @@ MonoBehaviour:
     ParentPath: Events\Default Work Unit
     guid: aa9cb76dd7a7b94db368aaabd6160f55
     GuidInternal: 
-    m_lastTime: -8584877817934052942
+    m_lastTime: -8584872398993386573
     List:
     - name: Ambience-Music
       guid: 6a004c3abf552b49b35335caca9cf2f2
@@ -404,6 +404,26 @@ MonoBehaviour:
       maxAttenuation: 0
       maxDuration: 3.5760999
       minDuration: 3.5760999
+    - name: Play_guard_attack_melee
+      guid: 83c7be0d72e6e944aeecc311c748ec9e
+      id: 1484041637
+      PathAndIcons:
+      - ElementName: Events
+        ObjectType: 5
+        guid: 00000000000000000000000000000000
+      - ElementName: Default Work Unit
+        ObjectType: 12
+        guid: aa9cb76dd7a7b94db368aaabd6160f55
+      - ElementName: Guards-Security
+        ObjectType: 4
+        guid: 89086d2046efa8498ec8b82c717bc4e0
+      - ElementName: Play_guard_attack_melee
+        ObjectType: 3
+        guid: 83c7be0d72e6e944aeecc311c748ec9e
+      Path: Events\Default Work Unit\Guards-Security\Play_guard_attack_melee
+      maxAttenuation: 0
+      maxDuration: 1.9990022
+      minDuration: 1.9990022
     - name: Play_guard_investigate
       guid: 858ffce346efeb40bfa96a19b56ae4f5
       id: 1673056553
@@ -820,7 +840,7 @@ MonoBehaviour:
     m_lastTime: -8584908061534224617
     List: []
   ExpandedFileSystemItemIds: 
-  ExpandedWaapiItemIds: 
+  ExpandedWaapiItemIds: 05000000060000000a000000
   AutoSyncSelection: 0
   autoPopulateEnabled: 1
   currentDataSource: 0
