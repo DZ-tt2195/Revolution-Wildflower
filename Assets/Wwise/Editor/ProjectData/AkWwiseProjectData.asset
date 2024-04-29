@@ -66,7 +66,7 @@ MonoBehaviour:
     ParentPath: SoundBanks\Default Work Unit
     guid: 45c008903f9bc0458acdfbd56132c8c3
     GuidInternal: 
-    m_lastTime: -8584877906458342075
+    m_lastTime: -8584877817933792938
     List:
     - name: SFX_Bank
       guid: 5d5c45d3c5ae5942be5f72be6b5d9f73
@@ -94,7 +94,7 @@ MonoBehaviour:
     ParentPath: Events\Default Work Unit
     guid: aa9cb76dd7a7b94db368aaabd6160f55
     GuidInternal: 
-    m_lastTime: -8584877906458511604
+    m_lastTime: -8584877817934052942
     List:
     - name: Ambience-Music
       guid: 6a004c3abf552b49b35335caca9cf2f2
@@ -364,6 +364,26 @@ MonoBehaviour:
       maxAttenuation: 0
       maxDuration: 1.6828125
       minDuration: 1.6828125
+    - name: Play_Flashbang
+      guid: fb5ffdd86cb8f64e9ef1e3209e9c1deb
+      id: 1579094162
+      PathAndIcons:
+      - ElementName: Events
+        ObjectType: 5
+        guid: 00000000000000000000000000000000
+      - ElementName: Default Work Unit
+        ObjectType: 12
+        guid: aa9cb76dd7a7b94db368aaabd6160f55
+      - ElementName: Cards-Actions
+        ObjectType: 4
+        guid: 96485ddc19541b4f88e1aa37878ff02f
+      - ElementName: Play_Flashbang
+        ObjectType: 3
+        guid: fb5ffdd86cb8f64e9ef1e3209e9c1deb
+      Path: Events\Default Work Unit\Cards-Actions\Play_Flashbang
+      maxAttenuation: 0
+      maxDuration: 2.63
+      minDuration: 2.63
     - name: Play_Generic_Explosion
       guid: f84b96bd533dad46a22f4f10ee2ad6d1
       id: 2617410325
