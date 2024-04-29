@@ -548,6 +548,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         }
 
         OnCardResolved?.Invoke(this, EventArgs.Empty);
+        LevelUIManager.instance.energyBar.StopPreview();
         PhaseManager.instance.selectedTile = currentPlayer.currentTile;
         PhaseManager.instance.violentCards += (data.isViolent) ? 1 : 0;
     }

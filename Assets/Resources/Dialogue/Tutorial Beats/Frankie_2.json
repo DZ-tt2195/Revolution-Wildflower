@@ -1,1 +1,1 @@
-﻿{"inkVersion":21,"root":[["^Now that you’re next to the tile. Click complete objective to… well, complete it.","\n",["done",{"#f":5,"#n":"g-0"}],null],"done",{"#f":1}],"listDefs":{}}
+﻿{"inkVersion":21,"root":[["ev","str","^Objective Button","/str",{"x()":"FocusUI","exArgs":1},"pop","/ev","\n","^Now that you’re next to the tile. Click complete objective to… well, complete it.","\n",["done",{"#f":5,"#n":"g-0"}],null],"done",{"#f":1}],"listDefs":{}}

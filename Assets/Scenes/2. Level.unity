@@ -257,7 +257,6 @@ MonoBehaviour:
   EntityName: {fileID: 561974562}
   EntityInfo: {fileID: 169171964}
   margin: 15
-  isActive: 0
 --- !u!114 &10563919
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13897,7 +13896,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.00030517578, y: 0}
+  m_AnchoredPosition: {x: -0.0005493164, y: 0}
   m_SizeDelta: {x: 0, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &762532064
@@ -14087,7 +14086,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.0012207031, y: 0}
+  m_AnchoredPosition: {x: -0.00024414062, y: 0}
   m_SizeDelta: {x: 0, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &805414193
@@ -16405,7 +16404,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.00030517578, y: 0}
+  m_AnchoredPosition: {x: -0.0014038086, y: 0}
   m_SizeDelta: {x: 0, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1130775889
@@ -22792,7 +22791,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1488315173}
   m_HandleRect: {fileID: 1488315172}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -34264,7 +34263,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 874926083}
   m_HandleRect: {fileID: 874926082}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -45200,12 +45199,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2127590711930634859, guid: 6f085459fbe18274f9af4d477be04729, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 57.099976
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 3056933445804367802, guid: 6f085459fbe18274f9af4d477be04729, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+      objectReference: {fileID: 1498653495, guid: 3c7449893052d4b4d81ce1a1bc5ad227, type: 3}
     - target: {fileID: 3056933445804367802, guid: 6f085459fbe18274f9af4d477be04729, type: 3}
       propertyPath: m_Color.a
       value: 0.89411765

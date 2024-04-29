@@ -315,7 +315,7 @@ public class TutorialManager : MonoBehaviour
 
     public void ForceCharacterHand(LevelStartParameters parameters)
     {
-        if (parameters.forcedHands.Length == 0)
+        if (parameters.forcedHands is null)
         {
             return;
         }
@@ -331,7 +331,7 @@ public class TutorialManager : MonoBehaviour
 
     public void ForceCharacterDeck(LevelStartParameters parameters)
     {
-        if (parameters.forcedDecks.Length == 0)
+        if (parameters.forcedDecks is null)
         {
             return; 
         }

@@ -334,6 +334,7 @@ GameObject:
   - component: {fileID: 275911238}
   - component: {fileID: 275911237}
   - component: {fileID: 275911239}
+  - component: {fileID: 275911240}
   m_Layer: 0
   m_Name: gailBar
   m_TagString: Untagged
@@ -409,7 +410,7 @@ Animator:
   m_GameObject: {fileID: 275911235}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: fc3f51be4aedfd046a56b47b2f238a52, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -420,6 +421,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &275911240
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 275911235}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73f2cbc709b76a0409e1cf690a72575f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &339519036
 GameObject:
   m_ObjectHideFlags: 0
@@ -1132,6 +1145,8 @@ GameObject:
   - component: {fileID: 645330050}
   - component: {fileID: 645330052}
   - component: {fileID: 645330051}
+  - component: {fileID: 645330054}
+  - component: {fileID: 645330053}
   m_Layer: 0
   m_Name: frankieBar
   m_TagString: Untagged
@@ -1197,6 +1212,39 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 645330049}
   m_CullTransparentMesh: 1
+--- !u!114 &645330053
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 645330049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73f2cbc709b76a0409e1cf690a72575f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!95 &645330054
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 645330049}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: fc3f51be4aedfd046a56b47b2f238a52, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &651566363
 GameObject:
   m_ObjectHideFlags: 0
@@ -1506,6 +1554,8 @@ GameObject:
   - component: {fileID: 927810999}
   - component: {fileID: 927811001}
   - component: {fileID: 927811000}
+  - component: {fileID: 927811003}
+  - component: {fileID: 927811002}
   m_Layer: 0
   m_Name: wkBar
   m_TagString: Untagged
@@ -1571,6 +1621,39 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 927810998}
   m_CullTransparentMesh: 1
+--- !u!114 &927811002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 927810998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73f2cbc709b76a0409e1cf690a72575f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!95 &927811003
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 927810998}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: fc3f51be4aedfd046a56b47b2f238a52, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &973325641
 GameObject:
   m_ObjectHideFlags: 0
