@@ -66,7 +66,7 @@ MonoBehaviour:
     ParentPath: SoundBanks\Default Work Unit
     guid: 45c008903f9bc0458acdfbd56132c8c3
     GuidInternal: 
-    m_lastTime: -8584876226654539406
+    m_lastTime: -8584871926391569922
     List:
     - name: SFX_Bank
       guid: 5d5c45d3c5ae5942be5f72be6b5d9f73
@@ -94,7 +94,7 @@ MonoBehaviour:
     ParentPath: Events\Default Work Unit
     guid: aa9cb76dd7a7b94db368aaabd6160f55
     GuidInternal: 
-    m_lastTime: -8584876226677254197
+    m_lastTime: -8584871926406941063
     List:
     - name: Ambience-Music
       guid: 6a004c3abf552b49b35335caca9cf2f2
@@ -161,6 +161,23 @@ MonoBehaviour:
         ObjectType: 4
         guid: 89086d2046efa8498ec8b82c717bc4e0
       Path: Events\Default Work Unit\Guards-Security
+      maxAttenuation: 0
+      maxDuration: -1
+      minDuration: -1
+    - name: Misc
+      guid: eaaee2131aea2942a898cdb2c1962a51
+      id: 3062523257
+      PathAndIcons:
+      - ElementName: Events
+        ObjectType: 5
+        guid: 00000000000000000000000000000000
+      - ElementName: Default Work Unit
+        ObjectType: 12
+        guid: aa9cb76dd7a7b94db368aaabd6160f55
+      - ElementName: Misc
+        ObjectType: 4
+        guid: eaaee2131aea2942a898cdb2c1962a51
+      Path: Events\Default Work Unit\Misc
       maxAttenuation: 0
       maxDuration: -1
       minDuration: -1
@@ -404,6 +421,46 @@ MonoBehaviour:
       maxAttenuation: 0
       maxDuration: 3.5760999
       minDuration: 3.5760999
+    - name: Play_glass_Break
+      guid: 19c5519e73af624392320aa0fffc4230
+      id: 2908883070
+      PathAndIcons:
+      - ElementName: Events
+        ObjectType: 5
+        guid: 00000000000000000000000000000000
+      - ElementName: Default Work Unit
+        ObjectType: 12
+        guid: aa9cb76dd7a7b94db368aaabd6160f55
+      - ElementName: Cards-Actions
+        ObjectType: 4
+        guid: 96485ddc19541b4f88e1aa37878ff02f
+      - ElementName: Play_glass_Break
+        ObjectType: 3
+        guid: 19c5519e73af624392320aa0fffc4230
+      Path: Events\Default Work Unit\Cards-Actions\Play_glass_Break
+      maxAttenuation: 0
+      maxDuration: 1.5
+      minDuration: 1.5
+    - name: Play_guard_attack_melee
+      guid: 83c7be0d72e6e944aeecc311c748ec9e
+      id: 1484041637
+      PathAndIcons:
+      - ElementName: Events
+        ObjectType: 5
+        guid: 00000000000000000000000000000000
+      - ElementName: Default Work Unit
+        ObjectType: 12
+        guid: aa9cb76dd7a7b94db368aaabd6160f55
+      - ElementName: Guards-Security
+        ObjectType: 4
+        guid: 89086d2046efa8498ec8b82c717bc4e0
+      - ElementName: Play_guard_attack_melee
+        ObjectType: 3
+        guid: 83c7be0d72e6e944aeecc311c748ec9e
+      Path: Events\Default Work Unit\Guards-Security\Play_guard_attack_melee
+      maxAttenuation: 0
+      maxDuration: 1.9990022
+      minDuration: 1.9990022
     - name: Play_guard_investigate
       guid: 858ffce346efeb40bfa96a19b56ae4f5
       id: 1673056553
@@ -624,6 +681,26 @@ MonoBehaviour:
       maxAttenuation: 0
       maxDuration: 1.497755
       minDuration: 1.497755
+    - name: Play_WireFenceBreak
+      guid: ae786ef463948345b467a6038ca34c31
+      id: 1404088001
+      PathAndIcons:
+      - ElementName: Events
+        ObjectType: 5
+        guid: 00000000000000000000000000000000
+      - ElementName: Default Work Unit
+        ObjectType: 12
+        guid: aa9cb76dd7a7b94db368aaabd6160f55
+      - ElementName: Misc
+        ObjectType: 4
+        guid: eaaee2131aea2942a898cdb2c1962a51
+      - ElementName: Play_WireFenceBreak
+        ObjectType: 3
+        guid: ae786ef463948345b467a6038ca34c31
+      Path: Events\Default Work Unit\Misc\Play_WireFenceBreak
+      maxAttenuation: 0
+      maxDuration: 3.443152
+      minDuration: 3.443152
     - name: Stop_LevelMusic
       guid: 219538dc4beecb4189c5da90186b6cb3
       id: 2518039975
