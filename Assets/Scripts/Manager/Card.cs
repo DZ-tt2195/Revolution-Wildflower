@@ -48,7 +48,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
     [SerializeField] private float animationSpeed;
     [SerializeField] private float moveAmount = 250;
     [SerializeField] private float growthAmount;
-    [SerializeField] private Image cardArtImage; 
+    public Image cardArtImage; 
 
     [Foldout("Types", true)]
     [SerializeField] Sprite attackSprite;
