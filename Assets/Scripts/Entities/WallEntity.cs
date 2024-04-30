@@ -10,6 +10,7 @@ public class WallEntity : Entity
     [Tooltip("Health a wall has")] [ReadOnly] public int health;
     [Tooltip("semi damaged wall sprite")] [SerializeField] Sprite damagedSprite;
     [Tooltip("heavily damaged wall sprite")][SerializeField] Sprite heavilyDamagedSprite;
+    [SerializeField] List<GameObject> wallList = new();
     public static int wallsCurrentlyBreaking = 0;
     [SerializeField] AK.Wwise.Event breakSound;
     int maxHealth;
@@ -62,6 +63,10 @@ public class WallEntity : Entity
             currentTile.myEntity = null;
             if (wallsCurrentlyBreaking == 0)
             {
+                foreach (GameObject wall in wallList)
+                {
+                    wall.SetActive(false);
+                }
                 wallsCurrentlyBreaking++;
                 breakSound.Post(gameObject, (uint)AkCallbackType.AK_EndOfEvent, CallBackHitFunction);
 
