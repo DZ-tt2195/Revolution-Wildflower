@@ -267,6 +267,7 @@ GameObject:
   - component: {fileID: 3367193512638715697}
   - component: {fileID: 6266375953143218470}
   - component: {fileID: 8055643067497425237}
+  - component: {fileID: 5540682637540932522}
   m_Layer: 0
   m_Name: Environmental Entity
   m_TagString: Untagged
@@ -320,6 +321,7 @@ MonoBehaviour:
   card: {fileID: 0}
   delay: 0
   delayMax: 0
+  animator: {fileID: 5540682637540932522}
   TimeRim: {fileID: 316969678549619408}
   ValueDisplay: {fileID: 3004660282916731646}
   timerRen: {fileID: 3114430546558925361}
@@ -394,6 +396,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b3909108cd174d0ba80d3316b4860a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!95 &5540682637540932522
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2748100207366239466}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &7676999064949945597
 GameObject:
   m_ObjectHideFlags: 0

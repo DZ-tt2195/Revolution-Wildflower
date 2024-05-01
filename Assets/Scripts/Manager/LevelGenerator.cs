@@ -32,6 +32,7 @@ public class LevelGenerator : MonoBehaviour
     [Tooltip("Objective prefab")][SerializeField] ObjectiveEntity objectivePrefab;
     [Tooltip("Toggle prefab")][SerializeField] ToggleEntity togglePrefab;
     [Tooltip("Environmental prefab")][SerializeField] EnvironmentalEntity environmentPrefab;
+    [Tooltip("Tile modifier")][SerializeField] TileModifier tileModifierPrefab;
 
     #endregion
 
@@ -382,6 +383,12 @@ public class LevelGenerator : MonoBehaviour
     {
         EnvironmentalEntity newEnviro = Instantiate(environmentPrefab);
         return newEnviro;
+    }
+
+    public TileModifier CreateTileModifier()
+    {
+        TileModifier newModifier = Instantiate(tileModifierPrefab);
+        return newModifier;
     }
 
     #endregion

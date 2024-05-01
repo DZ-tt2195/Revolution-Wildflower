@@ -137,7 +137,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         this.data = data;
         textName.text = data.name;
         cardArtImage.sprite = Resources.Load<Sprite>("CardArt/" + data.name.ToLower());
-        Debug.Log("CardArt/" + data.name.ToLower());
+        //Debug.Log("CardArt/" + data.name.ToLower());
         textDescr.text = KeywordTooltip.instance.EditText(data.desc);
 
         typeOne = ConvertToType(data.cat1);
@@ -688,6 +688,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
                     EnvironmentalEntity newEnviro = LevelGenerator.instance.CreateEnvironmental();
                     MaterialPropertyBlock matBlock = new();
                     matBlock.SetFloat("_Fill", 1);
+                    newEnviro.animator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>($"CardTileDrops/{data.name.Replace(".","")}/{data.name} Controller");
                     newEnviro.timerRen.SetPropertyBlock(matBlock);
                     newEnviro.ValueDisplay.text = data.delay.ToString();
                     newEnviro.currentTile = currentTarget;
@@ -701,9 +702,14 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
                     newEnviro.actionSound = data.sound;
                     LevelGenerator.instance.listOfEnvironmentals.Add(newEnviro);
                     break;
+
                 case "THROWMODIFIER":
                     yield return ChooseTile();
-                    TileModifier newModifier = currentTarget.gameObject.AddComponent<TileModifier>();
+                    TileModifier newModifier = LevelGenerator.instance.CreateTileModifier();
+                    newModifier.animator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>($"CardTileDrops/{data.name.Replace(".", "")}/{data.name} Controller");
+                    newModifier.spriteRenderer.sortingOrder = 10;
+                    newModifier.transform.SetParent(currentTarget.transform);
+                    newModifier.transform.localPosition = new Vector3(0, 1, 0);
                     currentTarget.listOfModifiers.Add(newModifier);
                     newModifier.card = this;
                     break;

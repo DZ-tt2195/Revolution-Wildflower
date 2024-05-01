@@ -11,6 +11,7 @@ public class EnvironmentalEntity : MovingEntity
     [Tooltip("Store this entity's instructions")][ReadOnly] public Card card;
     [Tooltip("Store this entity's delay time")][ReadOnly] public int delay;
     public int delayMax;
+    [Tooltip("Animator component")] public Animator animator;
     [SerializeField] GameObject TimeRim;
     [SerializeField] public TMP_Text ValueDisplay;
     [SerializeField] public SpriteRenderer timerRen;
@@ -19,7 +20,7 @@ public class EnvironmentalEntity : MovingEntity
     [SerializeField] public string actionSound;
     [SerializeField] AK.Wwise.Event tickingSound;
 
-    #region Entity Stuff
+#region Entity Stuff
 
     public override IEnumerator EndOfTurn()
     {
