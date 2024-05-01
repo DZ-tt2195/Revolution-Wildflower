@@ -1013,13 +1013,14 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
             while (PhaseManager.instance.chosenCard == null)
                 yield return null;
 
-            yield return PhaseManager.instance.ConfirmUndo($"Play {PhaseManager.instance.chosenCard.name}?", new Vector2(0, 350));
+            yield return PhaseManager.instance.ConfirmUndo($"Pass {PhaseManager.instance.chosenCard.name}?", new Vector2(0, 350));
             if (PhaseManager.instance.confirmChoice == 1)
             {
                 i--;
                 continue;
             }
 
+            thisPlayer.myHand.Remove(PhaseManager.instance.chosenCard);
             otherPlayer.PlusCards(PhaseManager.instance.chosenCard);
 
             //else if (thisPlayer.myHand.Count == 1)
