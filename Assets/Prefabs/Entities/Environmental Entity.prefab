@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2520977648872316983}
   - component: {fileID: 3114430546558925361}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: TimeRim
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 316969678549619408}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.86, z: 0}
+  m_LocalPosition: {x: 0, y: 2.86, z: 11}
   m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -72,7 +72,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 600
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 8921977162952701517}
   - component: {fileID: 4818289434548383124}
   - component: {fileID: 3004660282916731646}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Time
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -110,7 +110,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1326979201133403213}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -2}
+  m_LocalPosition: {x: 0, y: 0, z: 0.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -139,7 +139,7 @@ MeshRenderer:
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
-  m_RendererPriority: 0
+  m_RendererPriority: 3
   m_Materials:
   - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_StaticBatchInfo:
@@ -161,7 +161,7 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 726
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &3004660282916731646
 MonoBehaviour:
@@ -249,9 +249,9 @@ MonoBehaviour:
   m_margin: {x: 9.097725, y: 1.5304799, z: 8.903364, w: 1.4609277}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  _SortingLayer: 0
-  _SortingLayerID: 0
-  _SortingOrder: 0
+  _SortingLayer: 751
+  _SortingLayerID: 7
+  _SortingOrder: 5
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 4818289434548383124}
   m_maskType: 0
@@ -267,7 +267,7 @@ GameObject:
   - component: {fileID: 3367193512638715697}
   - component: {fileID: 6266375953143218470}
   - component: {fileID: 8055643067497425237}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Environmental Entity
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -287,9 +287,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 8921977162952701517}
   - {fileID: 3705684157683751026}
   - {fileID: 2520977648872316983}
-  - {fileID: 8921977162952701517}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3367193512638715697
@@ -370,7 +370,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 200
+  m_SortingOrder: 627
   m_Sprite: {fileID: 21300000, guid: b0860e97524464eb784bac30025b50f2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -404,7 +404,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3705684157683751026}
   - component: {fileID: 2870565373222169828}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: TimerCore
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -420,7 +420,7 @@ Transform:
   m_GameObject: {fileID: 7676999064949945597}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.86, z: -0.14}
+  m_LocalPosition: {x: 0, y: 2.86, z: 10}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -466,7 +466,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 640
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FlipX: 0

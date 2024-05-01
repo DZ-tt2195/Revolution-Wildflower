@@ -691,7 +691,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
                     newEnviro.timerRen.SetPropertyBlock(matBlock);
                     newEnviro.ValueDisplay.text = data.delay.ToString();
                     newEnviro.currentTile = currentTarget;
-                    newEnviro.spriteRenderer.sortingOrder = 10;
+                    newEnviro.spriteRenderer.sortingOrder = 600;
                     newEnviro.transform.SetParent(newEnviro.currentTile.transform);
                     newEnviro.transform.localPosition = new Vector3(0, 1, 0);
                     newEnviro.name = this.name;
