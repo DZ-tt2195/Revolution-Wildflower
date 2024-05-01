@@ -15,7 +15,7 @@
       "Static Guard|u|2,2"
     ],
     [
-      "Floor|Banana|false",
+      "Floor",
       "Floor",
       "Floor"
     ],
