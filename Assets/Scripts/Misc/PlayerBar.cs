@@ -28,11 +28,24 @@ public class PlayerBar : MonoBehaviour
 
     private void OnMouseOver()
     {
+        animator.SetBool("idle", false);
         animator.SetBool("selected", true);
     }
 
     private void OnMouseExit()
     {
+        animator.SetBool("idle", false);
         animator.SetBool("selected", false);
+    }
+
+    public void AnimIdleTrigger()
+    {
+        animator.SetBool("idle", true);
+    }
+
+    private void Update()
+    {
+        Debug.Log("is selected: " + animator.GetBool("selected"));
+        Debug.Log("is idle: " + animator.GetBool("idle"));
     }
 }

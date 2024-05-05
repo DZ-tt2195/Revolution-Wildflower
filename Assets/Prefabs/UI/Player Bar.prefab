@@ -34,8 +34,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -16.4, y: 15}
-  m_SizeDelta: {x: 160.5, y: 47}
+  m_AnchoredPosition: {x: -44.5109, y: 14.3}
+  m_SizeDelta: {x: 109.0782, y: 36.7156}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7955808792127965659
 CanvasRenderer:
@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: W.K.
+  m_text: Frankie
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9ba7972e567566a418f120252ba2bd54, type: 2}
   m_sharedMaterial: {fileID: -3748262559127383154, guid: 9ba7972e567566a418f120252ba2bd54, type: 2}
@@ -92,15 +92,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 47
+  m_fontSize: 40
   m_fontSizeBase: 45
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 47
+  m_fontSizeMin: 40
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 4096
+  m_VerticalAlignment: 8192
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -149,7 +149,7 @@ GameObject:
   - component: {fileID: 5172911438228318698}
   - component: {fileID: 7570410714472688311}
   - component: {fileID: 966899359359760046}
-  - component: {fileID: 8276366314064135411}
+  - component: {fileID: 1045041257609614664}
   m_Layer: 5
   m_Name: Player Bar
   m_TagString: Untagged
@@ -339,7 +339,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &8276366314064135411
+--- !u!114 &1045041257609614664
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -386,7 +386,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -38.7, y: -34.6}
+  m_AnchoredPosition: {x: -45.4, y: -34}
   m_SizeDelta: {x: 104.8448, y: 25.8366}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5124716054759068676
@@ -446,7 +446,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 11.25
+  m_fontSize: 10.85
   m_fontSizeBase: 45
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -482,7 +482,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -5.546707, y: -9.363464, z: -3.865036, w: 4.17041}
+  m_margin: {x: -0.9662857, y: -8.220032, z: -3.865036, w: 4.17041}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -522,7 +522,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 20, y: -16.9}
+  m_AnchoredPosition: {x: 20, y: -12.58}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4579065680826716635
@@ -553,7 +553,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -1984934782, guid: 20c0900995c06a04da8d554dabdd67ef, type: 3}
+  m_Sprite: {fileID: 363942148, guid: 20c0900995c06a04da8d554dabdd67ef, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1

@@ -15367,21 +15367,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7570410714472688311, guid: 5bd37c67f67424e7c913ee350c219bb8, type: 3}
-      propertyPath: m_Delegates.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7570410714472688311, guid: 5bd37c67f67424e7c913ee350c219bb8, type: 3}
-      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7570410714472688311, guid: 5bd37c67f67424e7c913ee350c219bb8, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1116849947}
-    - target: {fileID: 7831629536898019289, guid: 5bd37c67f67424e7c913ee350c219bb8, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7831629536898019289, guid: 5bd37c67f67424e7c913ee350c219bb8, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -33708,6 +33696,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 614887783}
     m_Modifications:
+    - target: {fileID: 2879224160831583952, guid: 5bd37c67f67424e7c913ee350c219bb8, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 807269234, guid: 20c0900995c06a04da8d554dabdd67ef, type: 3}
     - target: {fileID: 4424960169049243229, guid: 5bd37c67f67424e7c913ee350c219bb8, type: 3}
       propertyPath: m_Name
       value: Player Bar (2)
@@ -33792,6 +33784,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7037080075349328211, guid: 5bd37c67f67424e7c913ee350c219bb8, type: 3}
+      propertyPath: m_text
+      value: Gail
+      objectReference: {fileID: 0}
     - target: {fileID: 7570410714472688311, guid: 5bd37c67f67424e7c913ee350c219bb8, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -33823,6 +33819,18 @@ PrefabInstance:
     - target: {fileID: 7831629536898019289, guid: 5bd37c67f67424e7c913ee350c219bb8, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
       value: PlayerBarSelect
+      objectReference: {fileID: 0}
+    - target: {fileID: 8093921653297319502, guid: 5bd37c67f67424e7c913ee350c219bb8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8093921653297319502, guid: 5bd37c67f67424e7c913ee350c219bb8, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 8093921653297319502, guid: 5bd37c67f67424e7c913ee350c219bb8, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -17
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
