@@ -6,6 +6,7 @@ using Ink.Runtime;
 using System.Runtime.CompilerServices;
 using System;
 using System.Text.RegularExpressions;
+using System.IO.Enumeration;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -48,7 +49,6 @@ public class DialogueManager : MonoBehaviour
     private const string PORTRAIT_TAG = "portrait";
     private const string LAYOUT_TAG  = "layout";
     private const string BACKGROUND_TAG = "bg";
-
 
     [HideInInspector] public static DialogueVariables dialogueVariables;
    
@@ -135,7 +135,7 @@ public class DialogueManager : MonoBehaviour
         currentStory.BindExternalFunction("ForceMovementTile",  (int x, int y) =>           { ForceMovementTile(x, y); });
         currentStory.BindExternalFunction("ForceSelectionTile", (int x, int y) =>           { ForceSelectionTile(x, y); });
 
-
+        currentStory.BindExternalFunction("ChainTutorial", (string fileName, string className, string eventName) => { ChainTutorial(fileName, className, eventName); });
 
         //currentStory.BindExternalFunction("ForceCardDraw", (string playerName) => { CameraFocusPlayer(playerName); });
         //currentStory.BindExternalFunction("ToggleUIElement", (string playerName) => { CameraFocusPlayer(playerName); });
@@ -145,9 +145,11 @@ public class DialogueManager : MonoBehaviour
         dialogueVariables.VariablesToStory(currentStory);
         dialogueIsPlaying = true;
         dialoguePanel.SetActive(true);
+
         TutorialManager.TrySetActiveAll(false);
         TutorialManager.forcedMovementTile = null;
         TutorialManager.forcedSelectionTile = null; 
+
         MoveCamera.AddLock("Dialogue");
         dialoguePanel.SetActive(true);
         Debug.Log("Set active true");
@@ -157,6 +159,8 @@ public class DialogueManager : MonoBehaviour
         //portraitAnimator.Play("Default");
         //layoutAnimator.Play("Left");
         //backgroundAnimator.Play("Default");
+
+        //currentStory.BindExternalFunction("playSound", (string soundName) => { });
 
         ContinueStory();
 
@@ -179,6 +183,8 @@ public class DialogueManager : MonoBehaviour
 
         Debug.Log("Dialogue Completed");
         DialogueCompleted?.Invoke();
+
+        currentStory.UnbindExternalFunction("playSound");
     }
 
     private IEnumerator DisplayLine(string line)
@@ -313,6 +319,14 @@ public class DialogueManager : MonoBehaviour
         ContinueStory();
     }
 
+    public void ChainTutorial(string fileName, string className, string eventName)
+    {
+        Tutorial tutorial = Resources.Load<Tutorial>("TutorialObjects/" + fileName);
+        object obj = Type.GetType(className);
+        Debug.Log(obj);
+        tutorial.Setup(className, eventName);
+    }
+
     public void CameraFocusPlayer(string playerName)
     {
         runningFunction = true;
@@ -363,6 +377,7 @@ public class DialogueManager : MonoBehaviour
 
     public void ForceMovementTile(int x, int y)
     {
+        Debug.Log("forced movement tile");
         TutorialManager.forcedMovementTile = new Vector2Int(x, y);
     }
 

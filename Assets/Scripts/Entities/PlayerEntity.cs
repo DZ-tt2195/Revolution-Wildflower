@@ -13,34 +13,34 @@ public class PlayerEntity : MovingEntity
 #region Variables
 
     [Foldout("Player Entity", true)]
-        [Tooltip("The bar on screen")] public PlayerBar myBar;
-        [Tooltip("Where this player's located in the list")] [ReadOnly] public int myPosition;
-        [Tooltip("amount of health before dying")] [ReadOnly] public int health = 3;
-        [Tooltip("turns where you can't be caught")] [ReadOnly] public int hidden = 0;
-        [Tooltip("highest energy you can have")][ReadOnly] public int maxEnergy = 5;
-        [Tooltip("damage taken during guard turn")][ReadOnly] public int damageTaken = 0;
+    [Tooltip("The bar on screen")][ReadOnly] public PlayerBar myBar;
+    [Tooltip("Where this player's located in the list")][ReadOnly] public int myPosition;
+    [Tooltip("amount of health before dying")][ReadOnly] public int health = 3;
+    [Tooltip("turns where you can't be caught")][ReadOnly] public int hidden = 0;
+    [Tooltip("highest energy you can have")][ReadOnly] public int maxEnergy = 5;
+    [Tooltip("damage taken during guard turn")][ReadOnly] public int damageTaken = 0;
 
     //[Tooltip("normal player appearance")] [SerializeField] Material DefaultPlayerMaterial;
     //[Tooltip("appearance when hidden")] [SerializeField] Material HiddenPlayerMaterial;
-    [Tooltip("adjacent objective")] [ReadOnly] public ObjectiveEntity adjacentObjective;
-        //[Tooltip("delay inbetween each movement")][SerializeField] public float moveDelay = 0.75f;
+    [Tooltip("adjacent objective")][ReadOnly] public ObjectiveEntity adjacentObjective;
+    //[Tooltip("delay inbetween each movement")][SerializeField] public float moveDelay = 0.75f;
 
     [Foldout("Sprites", true)]
-        [Tooltip("Gail's sprite")][SerializeField] Sprite gailSprite;
-        [Tooltip("Frankie's sprite")][SerializeField] Sprite frankieSprite;
-        [Tooltip("WK's sprite")][SerializeField] Sprite wkSprite;
-        [Tooltip("HazardBox Sprite")][ReadOnly] CanvasGroup HazardBox;
-        [Tooltip("HazardBox fade speed")][SerializeField] float FadeSpeed = 0.08f;
+    [Tooltip("Gail's sprite")][SerializeField] Sprite gailSprite;
+    [Tooltip("Frankie's sprite")][SerializeField] Sprite frankieSprite;
+    [Tooltip("WK's sprite")][SerializeField] Sprite wkSprite;
+    [Tooltip("HazardBox Sprite")][ReadOnly] CanvasGroup HazardBox;
+    [Tooltip("HazardBox fade speed")][SerializeField] float FadeSpeed = 0.08f;
 
     [Foldout("Player's Cards", true)]
-        [Tooltip("energy count")][ReadOnly] public int myEnergy;
-        [Tooltip("keep cards in hand here")] Transform handTransform;
-        [Tooltip("list of cards in hand")][ReadOnly] public List<Card> myHand;
-        [Tooltip("list of cards in draw pile")][ReadOnly] public List<Card> myDrawPile;
-        [Tooltip("list of cards in discard pile")][ReadOnly] public List<Card> myDiscardPile;
-        //[Tooltip("list of cards that're exhausted")][ReadOnly] public List<Card> myExhaust;
-        [Tooltip("list of cards played this turn")][ReadOnly] public List<Card> cardsPlayed;
-        [Tooltip("list of cost reduction effects")][ReadOnly] public List<Card> costChange;
+    [Tooltip("energy count")][ReadOnly] public int myEnergy;
+    [Tooltip("keep cards in hand here")] Transform handTransform;
+    [Tooltip("list of cards in hand")][ReadOnly] public List<Card> myHand;
+    [Tooltip("list of cards in draw pile")][ReadOnly] public List<Card> myDrawPile;
+    [Tooltip("list of cards in discard pile")][ReadOnly] public List<Card> myDiscardPile;
+    //[Tooltip("list of cards that're exhausted")][ReadOnly] public List<Card> myExhaust;
+    [Tooltip("list of cards played this turn")][ReadOnly] public List<Card> cardsPlayed;
+    [Tooltip("list of cost reduction effects")][ReadOnly] public List<Card> costChange;
 
     #endregion
 
@@ -120,6 +120,7 @@ public class PlayerEntity : MovingEntity
 
     public IEnumerator TakeDamage(int damage)
     {
+
         damageTaken += damage;
         HazardBox.alpha = 0;
         while (HazardBox.alpha < 1)
@@ -167,7 +168,7 @@ public class PlayerEntity : MovingEntity
     /// </summary>
     /// <param name="player">the player</param>
     /// <param name="n">to change to 2, n = 2</param>
-    public void SetHealth( int n)
+    public void SetHealth(int n)
     {
         ChangeHealth(n - health);
     }
@@ -211,26 +212,28 @@ public class PlayerEntity : MovingEntity
             this.movementLeft += n;
     }
 
-#endregion
+    #endregion
 
 #region Card Stuff
 
-    public void SortHand()
+    public IEnumerator SortHandCoroutine()
     {
         myHand = myHand.OrderBy(o => o.energyCost).ToList();
 
         for (int i = 0; i < myHand.Count; i++)
         {
             Card nextCard = myHand[i];
-            float startingX = (myHand.Count-1)*-(300/2);
+            float startingX = (myHand.Count - 1) * -(300 / 2);
             float difference = 300;
             Vector3 newPosition = new(startingX + difference * i, SaveManager.instance.cardBaseHeight, 0);
             nextCard.transform.SetSiblingIndex(i);
-            StartCoroutine(nextCard.MoveCard(newPosition, newPosition, Vector3.zero, PlayerPrefs.GetFloat("Animation Speed")));
-        }
 
-        foreach (Card card in myHand)
-            StartCoroutine(card.RevealCard(PlayerPrefs.GetFloat("Animation Speed")));
+            var group = new CoroutineGroup(this);
+            group.StartCoroutine(nextCard.RevealCard(PlayerPrefs.GetFloat("Animation Speed")));
+            group.StartCoroutine(nextCard.MoveCard(newPosition, newPosition, PlayerPrefs.GetFloat("Animation Speed")));
+            while (group.AnyProcessing)
+                yield return null;
+        }
     }
 
     public void ForceHand(string[] cards)
@@ -238,7 +241,7 @@ public class PlayerEntity : MovingEntity
         ShuffleIntoDeck(new List<Card>(myHand));
         foreach (string cardName in cards)
         {
-            Card card = myDrawPile.Find(x =>  x.textName.text == cardName);
+            Card card = myDrawPile.Find(x => x.textName.text == cardName);
             if (card == null)
             {
                 continue;
@@ -247,6 +250,23 @@ public class PlayerEntity : MovingEntity
         }
     }
 
+    public void ForceTopDeck(string[] cards)
+    {
+        if (cards.Length > 0)
+        {
+            for (int i = cards.Length - 1; i >= 0; i--)
+            {
+                Card card = myDrawPile.Find(x => x.textName.text == cards[i]);
+                if (card == null)
+                {
+                    continue;
+                }
+
+                myDrawPile.Remove(card);
+                myDrawPile.Insert(0, card);
+            }
+        }
+    }
 
     internal void PlusCards(Card card)
     {
@@ -255,7 +275,7 @@ public class PlayerEntity : MovingEntity
         myDrawPile.Remove(card);
         myDiscardPile.Remove(card);
         PutIntoHand(card);
-        SortHand();
+        StartCoroutine(SortHandCoroutine());
     }
 
     internal void PlusCards(int num)
@@ -273,7 +293,7 @@ public class PlayerEntity : MovingEntity
                 catch (NullReferenceException) { break; }
             }
         }
-        SortHand();
+        StartCoroutine(SortHandCoroutine());
     }
 
     internal Card GetTopCard()
@@ -322,7 +342,8 @@ public class PlayerEntity : MovingEntity
             card.transform.SetParent(null);
             card.transform.localPosition = new Vector3(10000, 10000, 0);
         }
-        SortHand();
+
+        StartCoroutine(SortHandCoroutine());
         myDrawPile.Shuffle();
         Debug.Log(myHand.Count);
     }
@@ -333,9 +354,8 @@ public class PlayerEntity : MovingEntity
         {
             myHand.Remove(discardMe);
             discardMe.transform.SetAsLastSibling();
-            StartCoroutine(discardMe.MoveCard(new Vector2(1200, -440), new Vector2(0, -1000), Vector3.zero, PlayerPrefs.GetFloat("Animation Speed")));
-            SortHand();
-            yield return new WaitForSeconds(PlayerPrefs.GetFloat("Animation Speed"));
+            StartCoroutine(discardMe.MoveCard(new Vector2(1200, -440), new Vector2(0, -1000), PlayerPrefs.GetFloat("Animation Speed")));
+            yield return SortHandCoroutine();
 
             myDiscardPile.Add(discardMe);
             discardMe.transform.SetParent(null);
@@ -343,37 +363,18 @@ public class PlayerEntity : MovingEntity
         }
     }
 
-    /*
-    internal IEnumerator ExhaustFromHand(Card exhaustMe)
-    {
-        myHand.Remove(exhaustMe);
-        myDrawPile.Remove(exhaustMe);
-        myDiscardPile.Remove(exhaustMe);
-
-        float zRot = UnityEngine.Random.Range(-45f, 45f);
-        exhaustMe.transform.SetAsLastSibling();
-        StartCoroutine(exhaustMe.MoveCard(new Vector2(exhaustMe.transform.localPosition.x, -700), new Vector2(0, -1000), new Vector3(0, 0, zRot), PlayerPrefs.GetFloat("Animation Speed")));
-        StartCoroutine(exhaustMe.FadeAway(PlayerPrefs.GetFloat("Animation Speed")));
-        SortHand();
-        yield return NewManager.Wait(PlayerPrefs.GetFloat("Animation Speed"));
-
-        myExhaust.Add(exhaustMe);
-        exhaustMe.transform.SetParent(null);
-    }
-    */
-
     internal IEnumerator PlayCard(Card playMe, bool payEnergy)
     {
         LevelGenerator.instance.DisableAllCards();
         playMe.cardPlay.Post(playMe.gameObject);
-        StartCoroutine(playMe.MoveCard(new Vector2(playMe.transform.localPosition.x, -200), new Vector2(playMe.transform.localPosition.x, -200), new Vector3(0, 0, 0), PlayerPrefs.GetFloat("Animation Speed")));
+        StartCoroutine(playMe.MoveCard(new Vector2(playMe.transform.localPosition.x, -200), new Vector2(playMe.transform.localPosition.x, -200), PlayerPrefs.GetFloat("Animation Speed")));
         yield return playMe.FadeAway(PlayerPrefs.GetFloat("Animation Speed"));
 
         StartCoroutine(playMe.Unfade(0f));
         StartCoroutine(this.DiscardFromHand(playMe));
 
         if (payEnergy)
-            ChangeEnergy(int.Parse(playMe.textCost.text)*-1);
+            ChangeEnergy(int.Parse(playMe.textCost.text) * -1);
 
         LevelUIManager.instance.UpdateStats(this);
         yield return playMe.OnPlayEffect();
@@ -385,12 +386,12 @@ public class PlayerEntity : MovingEntity
 
     internal void MyTurn()
     {
-        foreach (Card card in myHand)
+        foreach (Card nextCard in myHand)
         {
-            card.transform.localPosition = new Vector3(0, -1000, 0);
-            card.HideCard();
+            nextCard.transform.localPosition = new Vector3(0, -1000, 0);
+            nextCard.HideCard();
         }
-        SortHand();
+        StartCoroutine(SortHandCoroutine());
     }
 
     #endregion

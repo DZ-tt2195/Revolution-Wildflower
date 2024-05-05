@@ -38,8 +38,7 @@ public class DialogueBriefingTrigger : MonoBehaviour
     public void NextScene()
     {
         MoveCamera.ClearLocks();
-        SaveManager.instance.UnloadObjects();
-        SceneManager.LoadScene(scene);
+        StartCoroutine(SaveManager.instance.UnloadObjects(scene));
     }
 
 }

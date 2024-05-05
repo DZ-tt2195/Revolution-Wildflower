@@ -19,7 +19,19 @@ public class StatBar : MonoBehaviour
     
     [SerializeField] private Image barImage;
     [SerializeField] private GameObject segments;
-    public Material segmentMaterial; 
+    [SerializeField] private Image previewObject;
+    public Material segmentMaterial;
+
+    [SerializeField] private Color previewGainColor;
+    [SerializeField] private Color previewLossColor;
+
+    private void Update()
+    {
+        if (previewObject.IsActive())
+        {
+            previewObject.SetAlpha(LevelUIManager.instance.opacity);
+        }
+    }
 
     public void SetMaximumValue(float maxValue)
     {
@@ -61,6 +73,29 @@ public class StatBar : MonoBehaviour
         sliding = false;
     }
 
+    public void Preview(float change)
+    {
+        previewObject.gameObject.SetActive(true);
+        float difference = currentValue + change;
+        if (difference < currentValue)
+        {
+            previewObject.color = previewLossColor;
+            float amount = barImage.rectTransform.rect.width * Mathf.Abs(change / maxValue);
+            //float position = barImage.rectTransform.rect.width - (barImage.rectTransform.rect.width * ((difference - 1) / maxValue));
+            float position = barImage.rectTransform.rect.width - (barImage.rectTransform.rect.width * Mathf.Abs((maxValue - currentValue) / maxValue)) - amount;
+
+            previewObject.rectTransform.SetWidth(amount);
+            previewObject.rectTransform.anchoredPosition = new Vector2(position, previewObject.rectTransform.anchoredPosition.y);
+        }   
+    }
+
+    public void StopPreview()
+    {
+        previewObject.gameObject.SetActive(false);
+        previewObject.color = Color.white;
+    }
+
+
     public void Shake(float duration = -1f)
     {
         //  If you call the shake function while the shake is already happening, it just restarts the current shake from the beginning.
@@ -93,9 +128,9 @@ public class StatBar : MonoBehaviour
                 restartShake = false;
             }
 
-            elapsedTime += Time.deltaTime;
-            float strength = shakeCurve.Evaluate(elapsedTime / duration);
-            transform.position = startPosition + Random.insideUnitSphere * strength;
+            //elapsedTime += Time.deltaTime;
+            //float strength = shakeCurve.Evaluate(elapsedTime / duration);
+            //transform.position = startPosition + Random.insideUnitSphere * strength;
             yield return null;
         }
 

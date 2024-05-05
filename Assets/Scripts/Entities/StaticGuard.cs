@@ -5,6 +5,7 @@ using MyBox;
 
 public class StaticGuard : GuardEntity
 {
+    public Vector2Int StartDirection;
     private void Awake()
     {
         AttackLine = GetComponent<LineRenderer>();
@@ -15,11 +16,15 @@ public class StaticGuard : GuardEntity
 
     public override IEnumerator Patrol()
     {
-        if (currentTile == LevelGenerator.instance.listOfTiles[PatrolPoints[0].x, PatrolPoints[0].y])
+        print("current tile" + currentTile.gridPosition);
+        print("Target " + PatrolPoints[0]);
+        if (currentTile.gridPosition == PatrolPoints[0])
         {
+            print("Break patrol on target");
+            StopAllCoroutines();
             yield break;
         }
-        Pathfinder.instance.CalculatePathfinding(currentTile, LevelGenerator.instance.listOfTiles[PatrolPoints[PatrolTarget].x, PatrolPoints[PatrolTarget].y], movementLeft, true, true);
+        Pathfinder.instance.CalculatePathfinding(currentTile, LevelGenerator.instance.listOfTiles[PatrolPoints[0].x, PatrolPoints[0].y], movementLeft, true, true);
         TileData nextTile = Pathfinder.instance.CurrentAvailableMoveTarget;  //moves towards the next patrol point
         Vector2Int nextDirection = nextTile.gridPosition - currentTile.gridPosition;
 
@@ -41,5 +46,42 @@ public class StaticGuard : GuardEntity
         yield return new WaitForSeconds(movePauseTime);
         print("Checking New Action");
         yield return newAction();
+    }
+
+    public override IEnumerator newAction()
+    {
+        alertStatus = Alert.Patrol;
+        if (DistractionPoints.Count > 0)
+        {
+            alertStatus = Alert.Persue;
+            LevelGenerator.instance.FindTile(DistractionPoints[^1]).currentGuardTarget = true;
+        }
+        foreach (GuardEntity guard in LevelGenerator.instance.listOfGuards)
+            guard.CheckForPlayer();
+
+        print("New Action" + alertStatus);
+
+        if (alertStatus == Alert.Attack)
+        {
+            if (movementLeft > 0 || attacksLeft > 0)
+            {
+                yield return Attack(CurrentTarget);
+            }
+        }
+        else if (alertStatus == Alert.Persue)
+        {
+            if (movementLeft > 0)
+            {
+                print("New Action starting persue");
+                yield return persue();
+            }
+        }
+        else if (alertStatus == Alert.Patrol)
+        {
+            if (movementLeft > 0)
+            {
+                yield return Patrol();
+            }
+        }
     }
 }

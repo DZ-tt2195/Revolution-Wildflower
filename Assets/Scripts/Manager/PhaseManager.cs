@@ -5,6 +5,7 @@ using MyBox;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
+using System;
 
 public class PhaseManager : MonoBehaviour
 {
@@ -56,6 +57,8 @@ public class PhaseManager : MonoBehaviour
     [SerializeField] AK.Wwise.Event footsteps;
     [SerializeField] AK.Wwise.Event characterSelectSound;
     [SerializeField] AK.Wwise.Event beginTurnSound;
+
+    public static event EventHandler MovementCompleted;
 
     #endregion
 
@@ -120,10 +123,11 @@ public class PhaseManager : MonoBehaviour
             {
                 StopCoroutine(ChooseMovePlayer(lastSelectedPlayer, 0));
                 StopCoroutine(ChooseCardPlay(lastSelectedPlayer));
-                Debug.LogError("deselect");
+                Debug.Log("deselect");
 
                 movingPlayer = false;
                 lastSelectedPlayer = null;
+                LevelGenerator.instance.DisableAllTiles();
                 BackToStart(false);
             }
         }
@@ -166,10 +170,7 @@ public class PhaseManager : MonoBehaviour
             CurrentPhase = TurnSystem.WaitingOnPlayer;
             StopCoroutine(ChooseMovePlayer(lastSelectedPlayer, 0));
             StopCoroutine(ChooseCardPlay(lastSelectedPlayer));
-            /*
-            LevelGenerator.instance.DisableAllTiles();
-            LevelGenerator.instance.DisableAllCards();
-            */
+
             if (lastSelectedPlayer != null)
                 LevelUIManager.instance.UpdateStats(lastSelectedPlayer);
 
@@ -316,10 +317,6 @@ public class PhaseManager : MonoBehaviour
 
             exitButton.gameObject.SetActive(CanExit(currentPlayer.currentTile));
 
-            var foundCanvasObjects = FindObjectsOfType<Collector>();
-            foreach (Collector collector in foundCanvasObjects)
-                Destroy(collector.gameObject);
-
             objectiveButton.gameObject.SetActive(currentPlayer.CheckForObjectives());
             if (currentPlayer.adjacentObjective != null)
                 objectiveButton.GetComponentInChildren<TMP_Text>().text = currentPlayer.adjacentObjective.name;
@@ -336,6 +333,7 @@ public class PhaseManager : MonoBehaviour
     public IEnumerator ChooseMovePlayer(PlayerEntity currentPlayer, int possibleMoves, bool freeMoves = false)
     {
         LevelGenerator.instance.DisableAllTiles();
+        LevelUIManager.instance.movementBar.StopPreview();
         foreach (TileData tile in Pathfinder.instance.FullPath)
             tile.directionIndicator.enabled = false;
         yield return new WaitForSeconds(0.15f);
@@ -371,7 +369,7 @@ public class PhaseManager : MonoBehaviour
         CurrentPhase = TurnSystem.ResolvingAction;
         selectedTile = chosenTile;
 
-        yield return ConfirmUndo("Confirm movement?", new Vector2(0, 400));
+        yield return ConfirmUndo("Confirm movement?", new Vector2(0, 350));
         if (confirmChoice == 1)
         {
             yield return (ChooseMovePlayer(currentPlayer, possibleMoves, freeMoves));
@@ -393,6 +391,7 @@ public class PhaseManager : MonoBehaviour
             if (currentPlayer.movementLeft == -1)
             {
                 currentPlayer.movementLeft = 0;
+                MovementCompleted?.Invoke(this, EventArgs.Empty);
                 break;
             }
         }
@@ -431,10 +430,11 @@ public class PhaseManager : MonoBehaviour
 
         Debug.Log($"chosen card no longer null");
         CurrentPhase = TurnSystem.ResolvingAction;
-
-        yield return ConfirmUndo($"Play {chosenCard.name}?", new Vector2(0, 400));
+        LevelUIManager.instance.energyBar.Preview(-chosenCard.energyCost);
+        yield return ConfirmUndo($"Play {chosenCard.name}?", new Vector2(0, 350));
         if (confirmChoice == 1)
         {
+            LevelUIManager.instance.energyBar.StopPreview();
             yield return (ChooseCardPlay(currentPlayer));
             yield break;
         }
@@ -456,6 +456,7 @@ public class PhaseManager : MonoBehaviour
     {
         if (tile != null)
         {
+            //Debug.Log(tile.transform.position);
             MoveCamera.Focus(tile.transform.position);
             //Camera.main.transform.position = new Vector3(tile.transform.position.x, Camera.main.transform.position.y, tile.transform.position.z);
             if (moveMe && CurrentPhase == TurnSystem.WaitingOnPlayer)
@@ -570,7 +571,8 @@ public class PhaseManager : MonoBehaviour
 
         if (lastSelectedPlayer != null && lastSelectedPlayer.adjacentObjective != null)
         {
-            yield return ConfirmUndo($"Complete this objective?", new Vector2(0, 400));
+            FocusOnTile(lastSelectedPlayer.adjacentObjective.currentTile, false);
+            yield return ConfirmUndo($"Complete this objective?", new Vector2(0, 350));
             if (confirmChoice == 1)
             {
                 BackToStart(false);
@@ -594,9 +596,11 @@ public class PhaseManager : MonoBehaviour
     IEnumerator ResolveDraw()
     {
         CurrentPhase = TurnSystem.ResolvingAction;
-        yield return ConfirmUndo($"Spend 3 energy to draw a card?", new Vector2(0, 400));
+        LevelUIManager.instance.energyBar.Preview(-3);
+        yield return ConfirmUndo($"Spend 3 energy to draw a card?", new Vector2(0, 350));
         if (confirmChoice == 1)
         {
+            LevelUIManager.instance.energyBar.StopPreview();
             BackToStart(false);
             yield break;
         }
@@ -626,6 +630,10 @@ public class PhaseManager : MonoBehaviour
     /// <returns></returns>
     public IEnumerator ConfirmUndo(string header, Vector3 position)
     {
+        var foundCanvasObjects = FindObjectsOfType<Collector>();
+        foreach (Collector collector in foundCanvasObjects)
+            Destroy(collector.gameObject);
+
         confirmChoice = -1;
         if (PlayerPrefs.GetInt("Confirm Choices") == 1)
         {
@@ -669,7 +677,6 @@ public class PhaseManager : MonoBehaviour
         chosenCard = null;
         LevelGenerator.instance.DisableAllCards();
 
-        Debug.LogError("enabling player cards");
         foreach (Card card in canBeChosen)
         {
             card.EnableCard();
@@ -725,7 +732,7 @@ public class PhaseManager : MonoBehaviour
         {
             foreach (TileData tile in canBeChosen)
             {
-                Debug.Log(tile.gridPosition + " " + TutorialManager.forcedMovementTile);
+                Debug.Log("MOVEMENT FORCED " + tile.gridPosition + " " + TutorialManager.forcedMovementTile);
                 if (tile.gridPosition == TutorialManager.forcedMovementTile)
                 {
                     tile.clickable = true;

@@ -6,6 +6,8 @@ using MyBox;
 public class TileModifier : MonoBehaviour
 {
     [Tooltip("Store this modifier's instructions")][ReadOnly] public Card card;
+    [Tooltip("Animator component")] public Animator animator;
+    [Tooltip("Sprite renderer component")] public SpriteRenderer spriteRenderer;
 
     public IEnumerator ResolveList(Entity entity)
     {

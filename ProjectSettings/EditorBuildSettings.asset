@@ -8,7 +8,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/0. Title Screen.unity
     guid: d73339b3731b8ea40951f350cbe14bfa
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/0.1 NewsRoom.unity
     guid: 0da1879208dee1f4b9f87a3d789b1bfd
   - enabled: 1

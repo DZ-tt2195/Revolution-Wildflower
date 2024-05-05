@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 //using System;
 using MyBox;
+using AK.Wwise;
 
 public class GuardEntity : MovingEntity
 {
@@ -11,7 +12,7 @@ public class GuardEntity : MovingEntity
     [Foldout("Guard Entity",true)]
     [Header("Attacking")]
         [Tooltip("Times this attacks")] [ReadOnly] public int attacksPerTurn = 1;
-        [Tooltip("Current number of attacks")] [ReadOnly] int attacksLeft = 0;
+        [Tooltip("Current number of attacks")] [ReadOnly] protected int attacksLeft = 0;
         [Tooltip("Current Target to attack & persue")] [ReadOnly] public PlayerEntity CurrentTarget;
         [Tooltip("Guard Range")] int AttackRange = 1;
 
@@ -113,8 +114,12 @@ public class GuardEntity : MovingEntity
                     Overlap = true;
                 }
             }
-            if(!Overlap) inDetection[i].SurveillanceState(false);
+            if (!Overlap)
+            {
+                inDetection[i].SurveillanceState(this, false);
+            }
         }
+        ToggleSurveillingTileFlash(false);
         inDetection.Clear();
 
         List<HashSet<Vector2Int>> DetectLines = new List<HashSet<Vector2Int>>();
@@ -177,11 +182,9 @@ public class GuardEntity : MovingEntity
 
         foreach (TileData tile in inDetection)
         {
-            tile.SurveillanceState(true);
+            tile.SurveillanceState(this, true);
         }
 
-        print(currentTile.gridPosition + " has " + SpacesToCheck.Count);
-        print("direction" + direction);
     }
 
     public void addDistraction(Vector2Int position)
@@ -236,6 +239,9 @@ public class GuardEntity : MovingEntity
 
     public override IEnumerator EndOfTurn()
     {
+
+        yield return new WaitForSeconds(movePauseTime);
+
         print("start of turn");
         if (stunned > 0)
         {
@@ -282,7 +288,10 @@ public class GuardEntity : MovingEntity
         if (alertStatus != Alert.Attack)
         {
             alertStatus = Alert.Attack;
-            alertedSound.Post(gameObject);
+            if (CurrentTarget != target)
+            {
+                alertedSound.Post(gameObject);
+            }
             foreach (Vector2Int pos in DistractionPoints)
             {
                 TileData tile = LevelGenerator.instance.FindTile(pos);
@@ -293,18 +302,32 @@ public class GuardEntity : MovingEntity
         //print("New target, player at " + target.currentTile.gridPosition);
     }
 
-    IEnumerator persue()
+    virtual public IEnumerator persue()
     {
         print(DistractionPoints.Count);
         print(currentTile.gridPosition + "checking distraction");
         if (DistractionPoints.Count == 0)
         {
             print("False Distraction");
-            yield return (newAction());
+            yield return newAction();
             yield break;
         }
-        if (currentTile.gridPosition == DistractionPoints[^1])
+
+        //if (currentTile.gridPosition == DistractionPoints[^1])
+        // Checks to see if the player is one tile away
+        if (Pathfinder.instance.GetDistance(currentTile.gridPosition, DistractionPoints[^1]) <= 1)
         {
+            Vector2Int distractionDirection = DistractionPoints[^1] - currentTile.gridPosition;
+            if (distractionDirection != direction)
+            {
+                direction = distractionDirection;
+                foreach (GuardEntity guard in LevelGenerator.instance.listOfGuards)
+                {
+                    guard.CalculateTiles();
+                }
+            }
+            yield return new WaitForSeconds(movePauseTime);
+
             print("on distraction point");
             LevelGenerator.instance.FindTile(DistractionPoints[^1]).currentGuardTarget = false;
             DistractionPoints.RemoveAt(DistractionPoints.Count - 1);
@@ -340,36 +363,39 @@ public class GuardEntity : MovingEntity
         }
         if (movementLeft > 0)
         {
-            //print(movementLeft);
-            TileData nextTile;
-            Pathfinder.instance.CalculatePathfinding(currentTile, LevelGenerator.instance.FindTile(DistractionPoints[^1]), movementLeft, true, true);
-            nextTile = Pathfinder.instance.CurrentAvailableMoveTarget;  //moves towards the next patrol point
-            Vector2Int nextDirection = nextTile.gridPosition - currentTile.gridPosition;
-
-            if (nextDirection != direction)
+            if (DistractionPoints.Count > 0)
             {
-                direction = nextDirection;
-                foreach (GuardEntity guard in LevelGenerator.instance.listOfGuards)
-                {
-                    guard.CalculateTiles();
-                }
-            }
-            else
-            {
-                //print("moving too " + nextTile.gridPosition);
-                if (nextTile.myEntity == null)
-                {
-                    StartCoroutine(MoveTile(nextTile)); //footsteps.Post(gameObject);
-                }
-                movementLeft--;
-            }
+                //print(movementLeft);
+                TileData nextTile;
+                Pathfinder.instance.CalculatePathfinding(currentTile, LevelGenerator.instance.FindTile(DistractionPoints[^1]), movementLeft, true, true);
+                nextTile = Pathfinder.instance.CurrentAvailableMoveTarget;  //moves towards the next patrol point
+                Vector2Int nextDirection = nextTile.gridPosition - currentTile.gridPosition;
 
+                if (nextDirection != direction)
+                {
+                    direction = nextDirection;
+                    foreach (GuardEntity guard in LevelGenerator.instance.listOfGuards)
+                    {
+                        guard.CalculateTiles();
+                    }
+                }
+                else
+                {
+                    //print("moving too " + nextTile.gridPosition);
+                    if (nextTile.myEntity == null)
+                    {
+                        StartCoroutine(MoveTile(nextTile)); //footsteps.Post(gameObject);
+                    }
+                    movementLeft--;
+                }
+
+            }
             yield return new WaitForSeconds(movePauseTime);
             yield return newAction();
         }
     }
 
-    protected IEnumerator newAction()
+    virtual public IEnumerator newAction()
     {
         alertStatus = Alert.Patrol;
         if (DistractionPoints.Count > 0)
@@ -404,7 +430,7 @@ public class GuardEntity : MovingEntity
         }
     }
 
-    IEnumerator Attack(PlayerEntity detectedPlayer)
+    protected IEnumerator Attack(PlayerEntity detectedPlayer)
     {
         print($"{currentTile.gridPosition} attacking player at {detectedPlayer.currentTile.gridPosition}");
         HashSet<Vector2Int> lineToPlayer = Pathfinder.instance.line(currentTile.gridPosition, detectedPlayer.currentTile.gridPosition);
@@ -441,13 +467,15 @@ public class GuardEntity : MovingEntity
         {
             if (distance <= AttackRange)
             {
-                print("within range, attacking");
-                attacksLeft--;
-                StartCoroutine(detectedPlayer.TakeDamage(1));
-                StartCoroutine(attackEffectRoutine());
-                meleeHit.Post(gameObject);
-                yield return new WaitForSeconds(movePauseTime);
-
+                if (attacksLeft > 0)
+                {
+                    print("within range, attacking");
+                    attacksLeft--;
+                    StartCoroutine(detectedPlayer.TakeDamage(1));
+                    StartCoroutine(attackEffectRoutine());
+                    meleeHit.Post(gameObject);
+                    yield return new WaitForSeconds(movePauseTime);
+                }
             }
             else
             {
@@ -500,11 +528,19 @@ public class GuardEntity : MovingEntity
             DistractionPoints.Add(detectedPlayer.currentTile.gridPosition);
             alertStatus = Alert.Persue;
             LevelGenerator.instance.FindTile(DistractionPoints[^1]).currentGuardTarget = true;
-            if (movementLeft > 0)
+            if (movementLeft > 0 && distance > AttackRange)
             {
                 print("Persuing from attack");
                 yield return persue();
             }
+        }
+    }
+
+    public void ToggleSurveillingTileFlash(bool flash)
+    {
+        foreach (TileData tile in inDetection)
+        {
+            tile.SetSurveillanceFlash(flash);
         }
     }
 

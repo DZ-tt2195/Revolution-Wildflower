@@ -15,4 +15,17 @@ MonoBehaviour:
   dialogueOnStart: 1
   dialogueAsset: {fileID: 4900000, guid: 3b2cea848b2b3e647b5bf63ae42aa032, type: 3}
   dialogueVariables: []
-  forcedHands: []
+  forcedHands:
+  - CharacterName: Gail
+    ForceHand: 1
+    CardNames:
+    - Hand-Off
+    - Emergency Fund
+    - Counterattack
+  forcedDecks:
+  - CharacterName: Gail
+    ForceDeck: 1
+    CardNames:
+    - Hammer
+    - Time Bomb
+    - Flashbang

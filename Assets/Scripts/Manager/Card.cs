@@ -13,78 +13,79 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
 #region Variables
 
     [Foldout("Choices", true)]
-        [ReadOnly] public Image image;
-        [ReadOnly] public Image background;
-        bool enableBorder;
-        [ReadOnly] public Image border;
-        [ReadOnly] public Button button;
-        [SerializeField] Collector buttonCollector;
-        [SerializeField] SliderChoice sliderChoice;
-        [Tooltip("the front of a card")][SerializeField] Sprite cardFront;
-        [Tooltip("the back of a card")][SerializeField] Sprite cardBack;
+    [ReadOnly] public Image image;
+    [ReadOnly] public Image background;
+    bool enableBorder;
+    [ReadOnly] public Image border;
+    [ReadOnly] public Button button;
+    [SerializeField] Collector buttonCollector;
+    [SerializeField] SliderChoice sliderChoice;
+    [Tooltip("the front of a card")][SerializeField] Sprite cardFront;
+    [Tooltip("the back of a card")][SerializeField] Sprite cardBack;
 
     [Foldout("Texts", true)]
-        public CanvasGroup canvasgroup;
-        public TMP_Text textName;
-        public TMP_Text textCost;
-        public TMP_Text textDescr;
+    public CanvasGroup canvasgroup;
+    public TMP_Text textName;
+    public TMP_Text textCost;
+    public TMP_Text textDescr;
 
     [Foldout("Card Presentation", true)]
-        [SerializeField] Color AttackColor = Color.red;
-        [SerializeField] Color DrawColor = Color.green;
-        [SerializeField] Color DistractionColor = Color.blue;
-        [SerializeField] Color EnergyColor = Color.cyan;
-        [SerializeField] Color MovementColor = Color.yellow;
-        [SerializeField] Color MiscColor = Color.gray;
-        [SerializeField] Color FallbackColor = Color.white;
-        private Material material;
-        private MaterialPropertyBlock materialPropertyBlock;
-        bool mouseOver = false;
-        float growthTimer = 0;
-        Vector3 cardSize;
-        [SerializeField] AnimationCurve growthCurve;
-        [SerializeField] AnimationCurve moveCurve;
-        private Canvas canvas;
-        [SerializeField] private float animationSpeed;
-        [SerializeField] private float moveAmount = 250;
-        [SerializeField] private float growthAmount;
+    [SerializeField] Color AttackColor = Color.red;
+    [SerializeField] Color DrawColor = Color.green;
+    [SerializeField] Color DistractionColor = Color.blue;
+    [SerializeField] Color EnergyColor = Color.cyan;
+    [SerializeField] Color MovementColor = Color.yellow;
+    [SerializeField] Color MiscColor = Color.gray;
+    [SerializeField] Color FallbackColor = Color.white;
+    private Material material;
+    private MaterialPropertyBlock materialPropertyBlock;
+    bool mouseOver = false;
+    float growthTimer = 0;
+    Vector3 cardSize;
+    [SerializeField] AnimationCurve growthCurve;
+    [SerializeField] AnimationCurve moveCurve;
+    private Canvas canvas;
+    [SerializeField] private float animationSpeed;
+    [SerializeField] private float moveAmount = 250;
+    [SerializeField] private float growthAmount;
+    public Image cardArtImage; 
 
     [Foldout("Types", true)]
-        [SerializeField] Sprite attackSprite;
-        [SerializeField] Sprite distractSprite;
-        [SerializeField] Sprite drawSprite;
-        [SerializeField] Sprite energySprite;
-        [SerializeField] Sprite moveSprite;
-        public Image typeOneSprite { get; private set; }
-        public Image typeTwoSprite { get; private set; }
+    [SerializeField] Sprite attackSprite;
+    [SerializeField] Sprite distractSprite;
+    [SerializeField] Sprite drawSprite;
+    [SerializeField] Sprite energySprite;
+    [SerializeField] Sprite moveSprite;
+    public Image typeOneSprite { get; private set; }
+    public Image typeTwoSprite { get; private set; }
 
     public enum CardType { Attack, Draw, Distraction, Energy, Movement, Misc, None };
     [Foldout("Card stats", true)]
-        [ReadOnly] public int energyCost;
-        [ReadOnly] public CardType typeOne { get; private set; }
-        [ReadOnly] public CardType typeTwo { get; private set; }
-        [ReadOnly] public string costChangeCondition { get; private set; }
+    [ReadOnly] public int energyCost;
+    [ReadOnly] public CardType typeOne { get; private set; }
+    [ReadOnly] public CardType typeTwo { get; private set; }
+    [ReadOnly] public string costChangeCondition { get; private set; }
 
     [Foldout("Saved information", true)]
-        [ReadOnly] public CardData data;
-        [ReadOnly] int sliderData;
-        [ReadOnly] PlayerEntity currentPlayer;
-        [ReadOnly] TileData currentTarget;
-        [ReadOnly] List<TileData> adjacentTilesWithPlayers = new();
-        [ReadOnly] List<TileData> adjacentTilesWithGuards = new();
-        [ReadOnly] List<TileData> adjacentTilesWithWalls = new();
+    [ReadOnly] public CardData data;
+    [ReadOnly] int sliderData;
+    [ReadOnly] PlayerEntity currentPlayer;
+    [ReadOnly] TileData currentTarget;
+    [ReadOnly] List<TileData> adjacentTilesWithPlayers = new();
+    [ReadOnly] List<TileData> adjacentTilesWithGuards = new();
+    [ReadOnly] List<TileData> adjacentTilesWithWalls = new();
 
     [Foldout("Audio files", true)]
-        public AK.Wwise.Event cardMove;
-        public AK.Wwise.Event cardPlay;
-        [SerializeField] AK.Wwise.Event addDistractionSound;
+    public AK.Wwise.Event cardMove;
+    public AK.Wwise.Event cardPlay;
+    [SerializeField] AK.Wwise.Event addDistractionSound;
 
     private EventHandler[] events;
 
-    public event EventHandler OnCardResolved;
-    public event EventHandler OnChoiceMade; 
+    public static event EventHandler OnCardResolved;
+    public static event EventHandler OnChoiceMade;
 
-#endregion
+    #endregion
 
 #region Setup
 
@@ -135,6 +136,8 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
     {
         this.data = data;
         textName.text = data.name;
+        cardArtImage.sprite = Resources.Load<Sprite>("CardArt/" + data.name.ToLower());
+        //Debug.Log("CardArt/" + data.name.ToLower());
         textDescr.text = KeywordTooltip.instance.EditText(data.desc);
 
         typeOne = ConvertToType(data.cat1);
@@ -221,7 +224,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         };
     }
 
-#endregion
+    #endregion
 
 #region Play Condition
 
@@ -380,75 +383,78 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
 
     public void Update()
     {
-        if (mouseOver)
+        if (this.transform.localPosition.y >= SaveManager.instance.cardBaseHeight)
         {
-            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -1);
-            if (growthTimer + Time.deltaTime < growthCurve.keys[^1].time) growthTimer += Time.deltaTime * animationSpeed;
-            else growthTimer = growthCurve.keys[^1].time;
-            canvas.sortingOrder = 1;
+            if (mouseOver)
+            {
+                transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -1);
+                if (growthTimer + Time.deltaTime < growthCurve.keys[^1].time) growthTimer += Time.deltaTime * animationSpeed;
+                else growthTimer = growthCurve.keys[^1].time;
+                canvas.sortingOrder = 1;
+            }
+            else
+            {
+                transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, 0);
+                if (growthTimer - Time.deltaTime > 0) growthTimer -= Time.deltaTime * animationSpeed;
+                else growthTimer = 0;
+                canvas.sortingOrder = 0;
+            }
+            float sizeValue = growthCurve.Evaluate(growthTimer);
+            float positionValue = moveCurve.Evaluate(growthTimer);
+            transform.localScale = Vector3.Lerp(cardSize, cardSize * growthAmount, sizeValue);
+            transform.localPosition = new Vector3(transform.localPosition.x, SaveManager.instance.cardBaseHeight + Mathf.Lerp(0, moveAmount, positionValue), transform.localPosition.z);
         }
-        else
-        {
-            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, 0);
-            if (growthTimer - Time.deltaTime > 0) growthTimer -= Time.deltaTime * animationSpeed;
-            else growthTimer = 0;
-            canvas.sortingOrder = 0;
-        }
-        float sizeValue = growthCurve.Evaluate(growthTimer);
-        float positionValue = moveCurve.Evaluate(growthTimer);
-        transform.localScale = Vector3.Lerp(cardSize, cardSize * growthAmount, sizeValue);
-        transform.localPosition = new Vector3(transform.localPosition.x, SaveManager.instance.cardBaseHeight + Mathf.Lerp(0, moveAmount, positionValue), transform.localPosition.z);
     }
 
     public void HideCard()
     {
         image.sprite = cardBack;
-        //canvasgroup.alpha = 0;
+        canvasgroup.alpha = 0;
     }
 
     public IEnumerator RevealCard(float totalTime)
     {
         if (image.sprite != cardFront)
         {
-            transform.localEulerAngles = new Vector3(0, 0, 0);
+            transform.localEulerAngles = Vector3.zero;
             float elapsedTime = 0f;
-
-            Vector3 originalRot = transform.localEulerAngles;
             Vector3 newRot = new(0, 90, 0);
 
             while (elapsedTime < totalTime)
             {
-                transform.localEulerAngles = Vector3.Lerp(originalRot, newRot, elapsedTime / totalTime);
+                Vector3 nextStep = Vector3.Lerp(Vector3.zero, newRot, elapsedTime / totalTime);
+                transform.localEulerAngles = nextStep;
+                //Debug.Log($"{nextStep} - {transform.localEulerAngles}");
+
                 elapsedTime += Time.deltaTime;
                 yield return null;
             }
 
             image.sprite = cardFront;
-            //canvasgroup.alpha = 1;
+            canvasgroup.alpha = 1;
             elapsedTime = 0f;
 
             while (elapsedTime < totalTime)
             {
-                transform.localEulerAngles = Vector3.Lerp(newRot, originalRot, elapsedTime / totalTime);
+                Vector3 nextStep = Vector3.Lerp(newRot, Vector3.zero, elapsedTime / totalTime);
+                transform.localEulerAngles = nextStep;
+
                 elapsedTime += Time.deltaTime;
                 yield return null;
             }
 
-            transform.localEulerAngles = originalRot;
+            transform.localEulerAngles = Vector3.zero;
         }
     }
 
-    public IEnumerator MoveCard(Vector3 newPos, Vector3 finalPos, Vector3 newRot, float waitTime)
+    public IEnumerator MoveCard(Vector3 newPos, Vector3 finalPos, float waitTime)
     {
         float elapsedTime = 0;
         Vector3 originalPos = transform.localPosition;
-        Vector3 originalRot = transform.localEulerAngles;
 
         while (elapsedTime < waitTime)
         {
             transform.localPosition = Vector3.Lerp(originalPos, newPos, elapsedTime / waitTime);
-            transform.localEulerAngles = Vector3.zero;
-            transform.localEulerAngles = Vector3.Lerp(originalRot, new Vector3(0, 0, newRot.z), elapsedTime / waitTime);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
@@ -485,7 +491,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         float elapsedTime = 0;
         while (elapsedTime < totalTime)
         {
-            this.image.SetAlpha(1f-(elapsedTime/totalTime));
+            this.image.SetAlpha(1f - (elapsedTime / totalTime));
             this.canvasgroup.alpha = 1f - (elapsedTime / totalTime);
             elapsedTime += Time.deltaTime;
             yield return null;
@@ -504,7 +510,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         canvasgroup.alpha = 1;
     }
 
-#endregion
+    #endregion
 
 #region Play Effect
 
@@ -542,6 +548,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         }
 
         OnCardResolved?.Invoke(this, EventArgs.Empty);
+        LevelUIManager.instance.energyBar.StopPreview();
         PhaseManager.instance.selectedTile = currentPlayer.currentTile;
         PhaseManager.instance.violentCards += (data.isViolent) ? 1 : 0;
     }
@@ -549,10 +556,11 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
     IEnumerator ResolveMethod(string methodName)
     {
         methodName = methodName.Replace("]", "").Trim();
+        bool isEnviron = false;
 
         if (methodName.Contains("CHOOSEBUTTON("))
         {
-            string[] choices = methodName.Replace("CHOOSEBUTTON(", "").Replace(")", "").Replace("]","").Trim().Split('|');
+            string[] choices = methodName.Replace("CHOOSEBUTTON(", "").Replace(")", "").Replace("]", "").Trim().Split('|');
             yield return ChooseOptions(choices);
         }
         else
@@ -601,13 +609,13 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
                     break;
 
                 case "CHANGEHP":
-                    currentPlayer.ChangeHealth( data.chHP);
+                    currentPlayer.ChangeHealth(data.chHP);
                     break;
                 case "CHANGEADJACENTHP":
                     yield return ChoosePlayer();
                     PlayerEntity player = adjacentTilesWithPlayers[0].myEntity.GetComponent<PlayerEntity>();
                     currentTarget = currentPlayer.currentTile;
-                    player.ChangeHealth( data.chHP);
+                    player.ChangeHealth(data.chHP);
                     break;
 
                 case "CHANGEEP":
@@ -617,25 +625,25 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
                     currentPlayer.maxEnergy += data.chEP;
                     break;
                 case "ZEROENERGY":
-                    currentPlayer.SetEnergy( 0);
+                    currentPlayer.SetEnergy(0);
                     break;
                 case "CONVERTMOVEMENTTOENERGY":
                     yield return ChooseFromSlider("Pay how much movement?", 0, currentPlayer.movementLeft);
-                    currentPlayer.ChangeMovement( -1 * sliderData);
-                    currentPlayer.ChangeEnergy( sliderData);
+                    currentPlayer.ChangeMovement(-1 * sliderData);
+                    currentPlayer.ChangeEnergy(sliderData);
                     break;
 
                 case "FREEMOVE":
                     yield return PhaseManager.instance.ChooseMovePlayer(currentPlayer, 3, true);
                     break;
                 case "CHANGEMP":
-                    currentPlayer.ChangeMovement( data.chMP);
+                    currentPlayer.ChangeMovement(data.chMP);
                     break;
                 case "MAXMOVEMENT":
                     currentPlayer.maxMovement += data.chMP;
                     break;
                 case "ZEROMOVEMENT":
-                    currentPlayer.SetMovement( 0);
+                    currentPlayer.SetMovement(0);
                     break;
 
                 case "CHANGECOST":
@@ -675,20 +683,33 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
                     break;
 
                 case "THROWENVIRONMENTAL":
+                    isEnviron = true;
                     yield return ChooseTile();
                     EnvironmentalEntity newEnviro = LevelGenerator.instance.CreateEnvironmental();
+                    MaterialPropertyBlock matBlock = new();
+                    matBlock.SetFloat("_Fill", 1);
+                    newEnviro.animator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>($"CardTileDrops/{data.name.Replace(".","")}/{data.name} Controller");
+                    newEnviro.timerRen.SetPropertyBlock(matBlock);
+                    newEnviro.ValueDisplay.text = data.delay.ToString();
                     newEnviro.currentTile = currentTarget;
-                    newEnviro.spriteRenderer.sortingOrder = 10;
+                    newEnviro.spriteRenderer.sortingOrder = 600;
                     newEnviro.transform.SetParent(newEnviro.currentTile.transform);
                     newEnviro.transform.localPosition = new Vector3(0, 1, 0);
                     newEnviro.name = this.name;
                     newEnviro.card = this;
                     newEnviro.delay = data.delay;
+                    newEnviro.delayMax = data.delay;
+                    newEnviro.actionSound = data.sound;
                     LevelGenerator.instance.listOfEnvironmentals.Add(newEnviro);
                     break;
+
                 case "THROWMODIFIER":
                     yield return ChooseTile();
-                    TileModifier newModifier = currentTarget.gameObject.AddComponent<TileModifier>();
+                    TileModifier newModifier = LevelGenerator.instance.CreateTileModifier();
+                    newModifier.animator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>($"CardTileDrops/{data.name.Replace(".", "")}/{data.name} Controller");
+                    newModifier.spriteRenderer.sortingOrder = 10;
+                    newModifier.transform.SetParent(currentTarget.transform);
+                    newModifier.transform.localPosition = new Vector3(0, 1, 0);
                     currentTarget.listOfModifiers.Add(newModifier);
                     newModifier.card = this;
                     break;
@@ -697,6 +718,10 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
                     Debug.LogError($"{methodName} isn't a method");
                     yield return null;
                     break;
+            }
+            if (!isEnviron)
+            {
+                AkSoundEngine.PostEvent(data.sound, this.gameObject);
             }
         }
     }
@@ -736,7 +761,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         yield return ResolveList(data.nextAct);
     }
 
-#endregion
+    #endregion
 
 #region Choose Options
 
@@ -746,8 +771,8 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         if (adjacentTilesWithGuards.Count == 0)
             yield break;
 
-        if (adjacentTilesWithGuards.Count != 1)
-        {
+        //if (adjacentTilesWithGuards.Count != 1)
+        //{
             InstructionsManager.UpdateInstructions(this,
                 new string[] { "OnChoiceMade" },
                 new string[] { "Choose a guard in range." }
@@ -757,7 +782,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
             while (PhaseManager.instance.chosenTile == null)
                 yield return null;
 
-            yield return PhaseManager.instance.ConfirmUndo($"Confirm guard?", new Vector2(0, 400));
+            yield return PhaseManager.instance.ConfirmUndo($"Confirm guard?", new Vector2(0, 350));
             if (PhaseManager.instance.confirmChoice == 1)
             {
                 yield return ChooseGuard();
@@ -767,7 +792,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
             OnChoiceMade?.Invoke(this, EventArgs.Empty);
             adjacentTilesWithGuards.Clear();
             adjacentTilesWithGuards.Add(PhaseManager.instance.chosenTile);
-        }
+        //}
     }
 
     IEnumerator ChoosePlayer()
@@ -776,18 +801,18 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         if (adjacentTilesWithPlayers.Count == 0)
             yield break;
 
-        if (adjacentTilesWithPlayers.Count != 1)
-        {
-            InstructionsManager.UpdateInstructions(this, 
-                new string[] {"OnChoiceMade", "OnCardResolved"}, 
-                new string[] { "Choose a player in range, ", "then resolve the card."}  
+        //if (adjacentTilesWithPlayers.Count != 1)
+        //{
+            InstructionsManager.UpdateInstructions(this,
+                new string[] { "OnChoiceMade", "OnCardResolved" },
+                new string[] { "Choose a player in range, ", "then resolve the card." }
                 );
             PhaseManager.instance.WaitForDecision(adjacentTilesWithPlayers);
 
             while (PhaseManager.instance.chosenTile == null)
                 yield return null;
 
-            yield return PhaseManager.instance.ConfirmUndo($"Confirm player?", new Vector2(0, 400));
+            yield return PhaseManager.instance.ConfirmUndo($"Confirm player?", new Vector2(0, 350));
             if (PhaseManager.instance.confirmChoice == 1)
             {
                 yield return ChoosePlayer();
@@ -797,7 +822,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
             OnChoiceMade?.Invoke(this, EventArgs.Empty);
             adjacentTilesWithPlayers.Clear();
             adjacentTilesWithPlayers.Add(PhaseManager.instance.chosenTile);
-        }
+        //}
     }
 
     IEnumerator ChooseWall()
@@ -806,8 +831,8 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         if (adjacentTilesWithWalls.Count == 0)
             yield break;
 
-        if (adjacentTilesWithWalls.Count != 1)
-        {
+        //if (adjacentTilesWithWalls.Count != 1)
+        //{
             InstructionsManager.UpdateInstructions(this,
                 new string[] { "OnChoiceMade" },
                 new string[] { "Choose a wall in range." }
@@ -817,7 +842,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
             while (PhaseManager.instance.chosenTile == null)
                 yield return null;
 
-            yield return PhaseManager.instance.ConfirmUndo($"Confirm wall?", new Vector2(0, 400));
+            yield return PhaseManager.instance.ConfirmUndo($"Confirm wall?", new Vector2(0, 350));
             if (PhaseManager.instance.confirmChoice == 1)
             {
                 yield return ChooseWall();
@@ -827,7 +852,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
             OnChoiceMade?.Invoke(this, EventArgs.Empty);
             adjacentTilesWithWalls.Clear();
             adjacentTilesWithWalls.Add(PhaseManager.instance.chosenTile);
-        }
+        //}
     }
 
     //selects a tile, using line of sight around the player,
@@ -841,6 +866,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
             float lineAngle = (i * Mathf.Deg2Rad);
             Vector2 newVector = new Vector2(Mathf.Cos(lineAngle), Mathf.Sin(lineAngle));
             DetectLines.Add(Pathfinder.instance.line(currentPlayer.currentTile.gridPosition, currentPlayer.currentTile.gridPosition + Vector2Int.RoundToInt(newVector.normalized * data.range)));
+            //Debug.DrawRay(currentPlayer.transform.position, new Vector3(Vector2Int.RoundToInt(newVector.normalized * data.range).x, 0, Vector2Int.RoundToInt(newVector.normalized * data.range).y),Color.green);
         }
         for (int i = 0; i < DetectLines.Count; i++)
         {
@@ -851,6 +877,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
                 {
                     break;
                 }
+                tilesInRange.Add(point);
                 if (TileToAdd.myEntity != null)
                 {
                     if (TileToAdd.myEntity.Occlusion && point != currentPlayer.currentTile.gridPosition)
@@ -858,7 +885,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
                         break;
                     }
                 }
-                tilesInRange.Add(point);
+
             }
         }
         List<TileData> tilesToSelect = new List<TileData>();
@@ -876,7 +903,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         while (PhaseManager.instance.chosenTile == null)
             yield return null;
 
-        yield return PhaseManager.instance.ConfirmUndo($"Confirm tile?", new Vector2(0, 400));
+        yield return PhaseManager.instance.ConfirmUndo($"Confirm tile?", new Vector2(0, 350));
         if (PhaseManager.instance.confirmChoice == 1)
         {
             yield return ChooseTileLOS();
@@ -896,7 +923,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         while (PhaseManager.instance.chosenTile == null)
             yield return null;
 
-        yield return PhaseManager.instance.ConfirmUndo($"Confirm tile?", new Vector2(0, 400));
+        yield return PhaseManager.instance.ConfirmUndo($"Confirm tile?", new Vector2(0, 350));
         if (PhaseManager.instance.confirmChoice == 1)
         {
             yield return ChooseTile();
@@ -957,13 +984,13 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
                 new string[] { "OnChoiceMade" },
                 new string[] { $"Discard a card from your hand ({data.chooseHand - i} more)." }
             );
-            if (player.myHand.Count >= 2)
-            {
+            //if (player.myHand.Count >= 2)
+            //{
                 PhaseManager.instance.WaitForDecision(player.myHand);
                 while (PhaseManager.instance.chosenCard == null)
                     yield return null;
 
-                yield return PhaseManager.instance.ConfirmUndo($"Discard {PhaseManager.instance.chosenCard.name}?", new Vector2(0, 400));
+                yield return PhaseManager.instance.ConfirmUndo($"Discard {PhaseManager.instance.chosenCard.name}?", new Vector2(0, 350));
                 if (PhaseManager.instance.confirmChoice == 1)
                 {
                     i--;
@@ -971,11 +998,11 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
                 }
 
                 yield return player.DiscardFromHand(PhaseManager.instance.chosenCard);
-            }
-            else if (player.myHand.Count == 1)
-            {
-                yield return player.DiscardFromHand(player.myHand[0]);
-            }
+            //}
+            //else if (player.myHand.Count == 1)
+            //{
+            //    yield return player.DiscardFromHand(player.myHand[0]);
+            //}
             LevelUIManager.instance.UpdateStats(currentPlayer);
             OnChoiceMade?.Invoke(this, EventArgs.Empty);
         }
@@ -986,33 +1013,34 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         for (int i = 0; i < data.chooseHand; i++)
         {
             InstructionsManager.UpdateInstructions(this, new string[] { "OnChoiceMade" }, new string[] { $"Give {otherPlayer.name} a card from your hand." });
-            if (thisPlayer.myHand.Count >= 2)
-            {
-                PhaseManager.instance.WaitForDecision(thisPlayer.myHand);
-                while (PhaseManager.instance.chosenCard == null)
-                    yield return null;
+            //if (thisPlayer.myHand.Count >= 2)
+            //{
+            PhaseManager.instance.WaitForDecision(thisPlayer.myHand);
+            while (PhaseManager.instance.chosenCard == null)
+                yield return null;
 
-                yield return PhaseManager.instance.ConfirmUndo($"Play {PhaseManager.instance.chosenCard.name}?", new Vector2(0, 400));
-                if (PhaseManager.instance.confirmChoice == 1)
-                {
-                    i--;
-                    continue;
-                }
-
-                otherPlayer.PlusCards(PhaseManager.instance.chosenCard);
-            }
-            else if (thisPlayer.myHand.Count == 1)
+            yield return PhaseManager.instance.ConfirmUndo($"Pass {PhaseManager.instance.chosenCard.name}?", new Vector2(0, 350));
+            if (PhaseManager.instance.confirmChoice == 1)
             {
-                otherPlayer.PlusCards(thisPlayer.myHand[0]);
+                i--;
+                continue;
             }
 
-            OnChoiceMade?.Invoke(this, EventArgs.Empty);
-            thisPlayer.SortHand();
-            LevelUIManager.instance.UpdateStats(currentPlayer);
+            thisPlayer.myHand.Remove(PhaseManager.instance.chosenCard);
+            otherPlayer.PlusCards(PhaseManager.instance.chosenCard);
+
+            //else if (thisPlayer.myHand.Count == 1)
+            //{
+            //    otherPlayer.PlusCards(thisPlayer.myHand[0]);
+            //}
         }
+        OnChoiceMade?.Invoke(this, EventArgs.Empty);
+        StartCoroutine(thisPlayer.SortHandCoroutine());
+        LevelUIManager.instance.UpdateStats(currentPlayer);
     }
 
-    #endregion
+
+#endregion
 
 #region Helper Methods
 

@@ -3,12 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using MyBox;
 using System;
+using TMPro;
 
 public class EnvironmentalEntity : MovingEntity
 {
     [Foldout("Enviromental Entity", true)]
     [Tooltip("Store this entity's instructions")][ReadOnly] public Card card;
     [Tooltip("Store this entity's delay time")][ReadOnly] public int delay;
+    public int delayMax;
+    [Tooltip("Animator component")] public Animator animator;
+    [SerializeField] GameObject TimeRim;
+    [SerializeField] public TMP_Text ValueDisplay;
+    [SerializeField] public SpriteRenderer timerRen;
+    [SerializeField] float timeTick = 0.2f;
+    public Material radial;
+    [SerializeField] public string actionSound;
+    [SerializeField] AK.Wwise.Event tickingSound;
 
 #region Entity Stuff
 
@@ -18,7 +28,23 @@ public class EnvironmentalEntity : MovingEntity
         {
             yield return ResolveList("CONTINUOUS");
         }
+        float oldValue = delay;
         delay--;
+        ValueDisplay.text = (delay).ToString();
+        float elapsedTime = 0f;
+        while (elapsedTime < timeTick)
+        {
+            elapsedTime += Time.deltaTime;
+            float lerpValue = Mathf.Lerp(oldValue, delay, elapsedTime / timeTick);
+            MaterialPropertyBlock matBlock = new();
+            Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAA" + lerpValue / delayMax);
+            matBlock.SetFloat("_Fill", lerpValue / delayMax);
+            timerRen.SetPropertyBlock(matBlock);
+            yield return null;
+        }
+
+
+
         if (delay == 0)
         {
             yield return ResolveList("END");
@@ -32,6 +58,15 @@ public class EnvironmentalEntity : MovingEntity
 
     IEnumerator ResolveList(string condition)
     {
+        if (condition == "END")
+        {
+            AkSoundEngine.PostEvent(actionSound, this.gameObject);
+        }
+        else
+        {
+            tickingSound.Post(this.gameObject);
+        }
+        
         string divide = card.data.enviroaction.Replace(" ", "");
         divide = divide.ToUpper().Trim();
         string[] methodsInStrings = divide.Split('/');
@@ -62,8 +97,11 @@ public class EnvironmentalEntity : MovingEntity
         List<PlayerEntity> playersInRange = FindPlayersInRange();
         List<WallEntity> wallsInRange = FindWallsInRange();
 
+        yield return card.CalculateDistraction(this.currentTile);
+
         switch (methodName)
         {
+
             case "SETVISION":
                 foreach (GuardEntity guard in guardsInRange)
                     guard.DetectionRangePatrol = card.data.vision;
@@ -96,6 +134,7 @@ public class EnvironmentalEntity : MovingEntity
                 Debug.LogError($"{methodName} isn't a method");
                 yield return null;
                 break;
+
         }
     }
 

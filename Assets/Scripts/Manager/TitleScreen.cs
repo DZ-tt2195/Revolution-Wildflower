@@ -23,6 +23,8 @@ public class TitleScreen : MonoBehaviour
     TMP_InputField newName;
     TMP_Dropdown fileChoose;
 
+    [Scene] [SerializeField] string scene;
+
     private void Awake()
     {
         deleteFile = GameObject.Find("Delete Deck").GetComponent<Button>();
@@ -47,7 +49,7 @@ public class TitleScreen : MonoBehaviour
         string[] currentFileNames = ES3.GetFiles(Application.persistentDataPath);
         foreach(string name in currentFileNames)
         {
-            if (name != ".DS_Store")
+            if (!name.Equals(".DS_Store") || !name.Equals("Player") || !name.Equals("Player-prev"))
             {
                 fileChoose.options.Add(new TMP_Dropdown.OptionData(name[..^4]));
                 fileChoose.RefreshShownValue();
@@ -91,8 +93,7 @@ public class TitleScreen : MonoBehaviour
         else
         { 
             SaveManager.instance.LoadFile(fileChoose.options[fileChoose.value].text);
-            SaveManager.instance.UnloadObjects();
-            SceneManager.LoadScene(1);
+            StartCoroutine(SaveManager.instance.UnloadObjects(scene));
         }
     }
 
@@ -109,8 +110,7 @@ public class TitleScreen : MonoBehaviour
         else
         {
             SaveManager.instance.NewFile(newName.text);
-            SaveManager.instance.UnloadObjects();
-            SceneManager.LoadScene(1);
+            StartCoroutine(SaveManager.instance.UnloadObjects(scene));
         }
     }
 

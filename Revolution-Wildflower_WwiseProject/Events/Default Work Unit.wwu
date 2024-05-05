@@ -125,6 +125,50 @@
 								</Action>
 							</ChildrenList>
 						</Event>
+						<Event Name="Play_Generic_Explosion" ID="{BD964BF8-3D53-46AD-A22F-4F10EE2AD6D1}">
+							<ChildrenList>
+								<Action Name="" ID="{B4E92EA8-394B-4052-B371-E31BD14C1438}" ShortID="235772058">
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="Generic Explosion" ID="{642DF03C-4898-4F58-875D-4C7DE017001F}" WorkUnitID="{1BC092A5-567E-4219-B9A1-7F41A7E3F1D8}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+						<Event Name="Play_Ticking" ID="{72E9B319-5609-4034-ACC9-ED65544B32CD}">
+							<ChildrenList>
+								<Action Name="" ID="{6B5EA256-E33B-48E6-9BA7-567EEEC422EE}" ShortID="854514387">
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="Ticking" ID="{9ACB92D9-2AB9-4BDF-A378-289830D5E10E}" WorkUnitID="{1BC092A5-567E-4219-B9A1-7F41A7E3F1D8}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+						<Event Name="Play_Flashbang" ID="{D8FD5FFB-B86C-4EF6-9EF1-E3209E9C1DEB}">
+							<ChildrenList>
+								<Action Name="" ID="{D6EABA88-7BAC-491C-98A7-4195A84ECE4D}" ShortID="823353332">
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="Flashbang" ID="{C14869B6-47B8-4890-A1B8-B2D1EC3563F8}" WorkUnitID="{1BC092A5-567E-4219-B9A1-7F41A7E3F1D8}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+						<Event Name="Play_glass_Break" ID="{9E51C519-AF73-4362-9232-0AA0FFFC4230}">
+							<ChildrenList>
+								<Action Name="" ID="{9E6EB67A-4B6A-4BA5-921A-C3FDC9059227}" ShortID="144647954">
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="glass-Break" ID="{8587EC6E-3A58-4CE8-B889-92FAB6910449}" WorkUnitID="{1BC092A5-567E-4219-B9A1-7F41A7E3F1D8}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
 					</ChildrenList>
 				</Folder>
 				<Folder Name="Characters" ID="{B82D5746-8BDD-47D6-8EF0-BAD04D6AB354}" ShortID="246083658">
@@ -199,6 +243,17 @@
 								</Action>
 							</ChildrenList>
 						</Event>
+						<Event Name="Play_guard_attack_melee" ID="{0DBEC783-E672-44E9-AEEC-C311C748EC9E}">
+							<ChildrenList>
+								<Action Name="" ID="{1FB51E86-9074-47E7-8507-86352105D958}" ShortID="505782948">
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="guard-attack-Melee" ID="{0F0656E1-28A9-4A31-B0B3-30F7E36A8A1A}" WorkUnitID="{1BC092A5-567E-4219-B9A1-7F41A7E3F1D8}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
 					</ChildrenList>
 				</Folder>
 				<Folder Name="UI-Interactions" ID="{01DCC1D2-2367-4FC1-A44C-BDDAB0E50D0B}" ShortID="677053679">
@@ -264,6 +319,21 @@
 									<ReferenceList>
 										<Reference Name="Target">
 											<ObjectRef Name="dialogue-box-stop" ID="{B0836968-7639-4D9F-94C0-94A6C0C2D906}" WorkUnitID="{1BC092A5-567E-4219-B9A1-7F41A7E3F1D8}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+					</ChildrenList>
+				</Folder>
+				<Folder Name="Misc" ID="{13E2AEEA-EA1A-4229-A898-CDB2C1962A51}" ShortID="191406171">
+					<ChildrenList>
+						<Event Name="Play_WireFenceBreak" ID="{F46E78AE-9463-4583-B467-A6038CA34C31}">
+							<ChildrenList>
+								<Action Name="" ID="{5F288234-395F-49F0-A062-2D1DFC5BD0FC}" ShortID="688359600">
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="WireFenceBreak" ID="{78C7AA74-4916-4DD6-A9FA-07FDBB0DE9D6}" WorkUnitID="{1BC092A5-567E-4219-B9A1-7F41A7E3F1D8}"/>
 										</Reference>
 									</ReferenceList>
 								</Action>

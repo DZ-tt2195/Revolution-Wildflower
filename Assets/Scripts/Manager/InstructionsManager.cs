@@ -117,8 +117,7 @@ public class InstructionsManager : MonoBehaviour
         public void Setup(object obj, string thisEvent, string text)
         {
             MethodInfo method = GetType().GetMethod("CompleteInstruction", BindingFlags.NonPublic | BindingFlags.Instance);
-
-            EventInfo eventInfo = obj.GetType().GetEvent(thisEvent);
+            EventInfo eventInfo = obj.GetType().GetEvent(thisEvent,  BindingFlags.Public | BindingFlags.Static);
             Type type = eventInfo.EventHandlerType;
             Delegate handler = Delegate.CreateDelegate(type, this, method);
 
