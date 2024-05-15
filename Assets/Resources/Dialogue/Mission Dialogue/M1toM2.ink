@@ -1,4 +1,4 @@
-Holy fuck! #layout: left #speaker: Frankie #portrait: Frankie  bg: Buidling
+Holy fuck! #layout: left #speaker: Frankie #portrait: Frankie  bg: Building
 
 I can’t believe we got away with that!
 
