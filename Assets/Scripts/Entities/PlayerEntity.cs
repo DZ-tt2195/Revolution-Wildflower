@@ -15,7 +15,7 @@ public class PlayerEntity : MovingEntity
     [Foldout("Player Entity", true)]
     [Tooltip("The bar on screen")][ReadOnly] public PlayerBar myBar;
     [Tooltip("Where this player's located in the list")][ReadOnly] public int myPosition;
-    [Tooltip("amount of health before dying")][ReadOnly] public int health = 3;
+    [Tooltip("amount of health before dying")][ReadOnly] public int health = 4;
     [Tooltip("turns where you can't be caught")][ReadOnly] public int hidden = 0;
     [Tooltip("highest energy you can have")][ReadOnly] public int maxEnergy = 5;
     [Tooltip("damage taken during guard turn")][ReadOnly] public int damageTaken = 0;
