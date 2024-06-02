@@ -17,7 +17,7 @@ public class PhaseManager : MonoBehaviour
     [Foldout("Misc", true)]
     [Tooltip("Text that gets displayed when you game over")] [SerializeField] TMP_Text gameOverText;
     [Tooltip("Number of violent cards used")][ReadOnly] public int violentCards;
-    [Tooltip("Amount of turns before a game over")] [ReadOnly] public int turnCount = 10;
+    [Tooltip("Amount of turns before a game over")] public int turnCount = 10;
     [Tooltip("Effects to do on future turns")][ReadOnly] public List<Card> futureEffects = new();
 
     public enum TurnSystem { WaitingOnPlayer, ResolvingAction, Environmentals, WaitingOnGuard };

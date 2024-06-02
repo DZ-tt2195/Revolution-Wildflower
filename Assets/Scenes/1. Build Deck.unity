@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1054,10 +1054,19 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "The FitnessGram Pacer test is a multistage aerobic capacity test that
-    progressively gets more difficult as it continues. \n\nThe 20 meter Pacer test
-    will begin in 30 seconds. Line up at the start. The running speed starts slowly,
-    but gets faster each minute after you hear this signal *boop*. \n\n"
+  m_text: 'Don''t doubt what you need to do.
+
+
+    You are doing what needs to be
+    done.
+
+
+    What others say is your weakness, is your strength.
+
+
+
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fe334edbe06c57244836f3d6f46033cb, type: 2}
   m_sharedMaterial: {fileID: 8487921021216611616, guid: fe334edbe06c57244836f3d6f46033cb, type: 2}

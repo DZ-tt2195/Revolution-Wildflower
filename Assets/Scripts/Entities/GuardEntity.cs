@@ -471,7 +471,7 @@ public class GuardEntity : MovingEntity
                 {
                     print("within range, attacking");
                     attacksLeft--;
-                    StartCoroutine(detectedPlayer.TakeDamage(1));
+                    StartCoroutine(detectedPlayer.TakeDamage(2));
                     StartCoroutine(attackEffectRoutine());
                     meleeHit.Post(gameObject);
                     yield return new WaitForSeconds(movePauseTime);

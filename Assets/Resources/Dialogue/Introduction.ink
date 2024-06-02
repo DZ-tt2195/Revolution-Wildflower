@@ -12,27 +12,27 @@ Both St. Lawrence Hospital and the Mayor have not issued a statement. #bg: NewsA
 
 Rumors are circling that there is a connection between the surge of sick citizens and the dead fish.
 
-We will keep you posted, Revelations, as we learn more about the situation. #bg: NewsAnimation 6
+We will keep you posted, Revelations, as we learn more about the situation. #bg: NewsAnimation 1
 
-In light of the situation, newcomer Icarus Industries has vowed to assist our town in any way possible. #bg: NewsAnimation 7
+In light of the situation, newcomer Icarus Industries has vowed to assist our town in any way possible. #bg: NewsAnimation 6
 
-They have begun donations to our medical centers, assisting local businesses, and hiring environmental specialists to look into the issue. #bg: NewsAnimation 8
+They have begun donations to our medical centers, assisting local businesses, and hiring environmental specialists to look into the issue. 
 
 Icarus Industries has only recently moved into our quiet town and is already receiving good graces from everyo–  
 
 <i>Psshkt #speaker: TV #bg: Default
 
-Revelations. A strong name. A strong history. A strong community. #speaker: Advertisment #bg: Default
+Revelations. A strong name. A strong history. A strong community. #speaker: Advertisment #bg: Advert1
 
-Icarus Industries thanks you, Revelations, for welcoming us with open arms.
+Icarus Industries thanks you, Revelations, for welcoming us with open arms. #bg: Advert2
 
-Thank you for allowing us to become members of your wonderful family.
+Thank you for allowing us to become members of your wonderful family. #bg: Advert3
 
-As a result of your warm welcome, we are excited to announce that we have new job openings at our offices and facilities.
+As a result of your warm welcome, we are excited to announce that we have new job openings at our offices and facilities. #bg: Advert4
 
-Please reach out to +1 ICA-RUS-INDS
+Please reach out to +1 ICA-RUS-INDS #bg: Advert5
 
-Together, we will bring a strong future to Revelations-
+Together, we will bring a strong future to Revelations- #bg: Advert2
 
 That's bullshit. #speaker: Gail #layout: Right #bg: Default
 
