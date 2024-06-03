@@ -201,10 +201,13 @@ public class MoveCamera : MonoBehaviour
 
     public static void AddLock(string lockName)
     {
-        if (locks.Contains(lockName))
+        if (instance)
         {
-            Debug.LogWarning(instance.GetType().Name + ": locklist already contains lock called " + lockName);
-            return;
+            if (locks.Contains(lockName))
+            {
+                Debug.LogWarning(instance.GetType().Name + ": locklist already contains lock called " + lockName);
+                return;
+            }
         }
 
         locks.Add(lockName);

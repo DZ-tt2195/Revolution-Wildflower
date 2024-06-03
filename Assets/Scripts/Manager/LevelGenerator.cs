@@ -51,11 +51,10 @@ public class LevelGenerator : MonoBehaviour
         PlayerEntity defaultPlayer = playerPrefab;
         LevelUIManager.instance.healthBar.SetMaximumValue(defaultPlayer.health);
         LevelUIManager.instance.movementBar.SetMaximumValue(defaultPlayer.maxMovement);
-        LevelUIManager.instance.energyBar.SetMaximumValue(defaultPlayer.maxEnergy);
-
+        LevelUIManager.instance.energyBar.SetMaximumValue(defaultPlayer.maxEnergy); 
         GenerateTiles(levelToLoad);
-
         TutorialManager.SetLevelStartParameters(SaveManager.instance.levelSheets[levelToLoad]);
+
     }
 
     /// <summary>
@@ -63,6 +62,20 @@ public class LevelGenerator : MonoBehaviour
     /// </summary>
     void GenerateTiles(int levelToLoad)
     {
+        LevelStartParameters levelStartParameters = Resources.Load<LevelStartParameters>($"LevelStartParameters/{SaveManager.instance.levelSheets[levelToLoad]}");
+        WallGraphicsData wallGraphics = levelStartParameters.wallGraphicsData;
+        FloorGraphicsData floorGraphics = levelStartParameters.floorGraphicsData;
+
+        MaterialPropertyBlock materialPropertyBlock = new MaterialPropertyBlock();
+        materialPropertyBlock.SetTexture(   "_base_texture",        floorGraphics.baseTexture);
+        materialPropertyBlock.SetColor(     "_texture_color",       floorGraphics.textureColor);
+        materialPropertyBlock.SetColor(     "_palette_color",        floorGraphics.paletteColor);
+        if (floorGraphics.normalMap) { materialPropertyBlock.SetTexture("_normal_map", floorGraphics.normalMap); } //   These parameter are optional!
+        if (floorGraphics.printOverlay) { materialPropertyBlock.SetTexture("_print_overlay", floorGraphics.printOverlay); } //  These parameters are optional!
+        materialPropertyBlock.SetFloat(     "_overlay_intensity",   floorGraphics.overlayIntensity);
+        materialPropertyBlock.SetFloat(     "_metallic",            floorGraphics.metallic);
+        materialPropertyBlock.SetFloat(     "_smoothness",          floorGraphics.smoothness);
+
         string[,] newGrid = LevelLoader.LoadLevelGrid(SaveManager.instance.levelSheets[levelToLoad]);
         listOfTiles = new TileData[newGrid.GetLength(0), newGrid.GetLength(1)];
 
@@ -83,7 +96,8 @@ public class LevelGenerator : MonoBehaviour
                     nextTile.gridPosition = new Vector2Int(i, j);
                     foreach (Transform child in nextTile.transform.GetChild(1))
                         child.gameObject.SetActive(false);
-
+                    MeshRenderer renderer = nextTile.transform.GetChild(0).transform.Find("Cube").gameObject.GetComponent<MeshRenderer>();
+                    renderer.SetPropertyBlock(materialPropertyBlock);
                     Entity thisTileEntity = null;
                     Debug.Log($"{i},{j}: {newGrid[i,j]}");
                     string[] textPlusAddition = newGrid[i, j].Split("|");

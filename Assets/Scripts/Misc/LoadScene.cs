@@ -10,17 +10,23 @@ public class LoadScene : MonoBehaviour
     [Scene]
     [SerializeField] string scene;
 
+    private static LoadScene instance;
+
     Button button;
 
     private void Awake()
     {
+        instance = this;
         button = GetComponent<Button>();
         button.onClick.AddListener(NextScene);
     }
 
-    public void NextScene()
+    public static void NextScene()
     {
+        Debug.Log("NEXTSCENE TRIGGERED, REMOVING ITSELF");
         MoveCamera.ClearLocks();
-        StartCoroutine(SaveManager.instance.UnloadObjects(scene));
+        SceneTransitionManager.Transition("AlphaFade", instance.scene);
+        DialogueManager.DialogueCompleted -= NextScene;
+        //StartCoroutine(SaveManager.instance.UnloadObjects(scene));
     }
 }

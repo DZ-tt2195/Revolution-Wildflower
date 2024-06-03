@@ -298,10 +298,15 @@ public class TutorialManager : MonoBehaviour
     public void ExitTutorial()
     {
         DialogueManager.DialogueCompleted -= ExitTutorial;
+    }
 
+    public static void OnAnimationFinished()
+    {
+        Debug.Log("bleh");
+        DialogueManager.GetInstance().dialoguePanel.SetActive(false);
         MoveCamera.RemoveLock("Tutorial");
 
-        foreach(GameObject ui in levelStartUI)
+        foreach (GameObject ui in instance.levelStartUI)
         {
             if (ui.TryGetComponent(out Button button))
             {

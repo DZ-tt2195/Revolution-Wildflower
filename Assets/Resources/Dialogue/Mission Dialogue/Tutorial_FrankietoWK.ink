@@ -1,10 +1,10 @@
 I’m through, and I don’t think I see anyone. I’ll wait for you guys nearby. #speaker: Frankie #portrait: Frankie #bg: Forest
 
-Alright, I'll start heading towards you. #speaker: WK #protrait: WK
+Alright, I'll start heading towards you. #speaker: WK #portrait: WK
 
-Awesome. #speaker: Frankie #protrait: Frankie #bg: Forest
+Awesome. #speaker: Frankie #portrait: Frankie #bg: Forest
 
-Wow, W.K., hold up! 
+Wow, W.K., hold up!
 
 I think I see a guard.
 

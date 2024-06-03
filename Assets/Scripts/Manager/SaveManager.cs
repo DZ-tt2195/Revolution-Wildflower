@@ -77,7 +77,8 @@ public class SaveManager : MonoBehaviour
 
     public void LoadFile(string fileName)
     {
-        string path = $"{Application.persistentDataPath}/{fileName}.es3";
+        Debug.Log(Application.persistentDataPath);
+        string path = $"{Application.persistentDataPath}/Saves/{fileName}.es3";
         currentSaveData = ES3.Load<SaveData>("saveData", path);
         currentSaveData.freshFile = false;
         saveFileName = fileName;
@@ -87,7 +88,7 @@ public class SaveManager : MonoBehaviour
     public void NewFile(string fileName)
     {
         currentSaveData = new SaveData();
-        ES3.Save("saveData", currentSaveData, $"{Application.persistentDataPath}/{fileName}.es3");
+        ES3.Save("saveData", currentSaveData, $"{Application.persistentDataPath}/Saves/{fileName}.es3");
         currentSaveData.freshFile = true;
         saveFileName = fileName;
         Debug.Log($"file loaded: {fileName}.es3");
@@ -95,7 +96,7 @@ public class SaveManager : MonoBehaviour
 
     public void DeleteData(string fileName)
     {
-        ES3.DeleteFile($"{Application.persistentDataPath}/{fileName}.es3");
+        ES3.DeleteFile($"{Application.persistentDataPath}/Saves/{fileName}.es3");
     }
 
     #endregion
@@ -105,11 +106,13 @@ public class SaveManager : MonoBehaviour
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
+        SceneTransitionManager.OnTransitionOutCompleted += allCards.Clear;
     }
 
     private void OnDisable()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
+        SceneTransitionManager.OnTransitionOutCompleted -= allCards.Clear;
     }
 
     public List<Card> GenerateCards(string deck)
@@ -136,20 +139,11 @@ public class SaveManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
-        StartCoroutine(BringBackObjects());
-    }
+        canvas = GameObject.Find("Canvas").GetComponent<Canvas>();    }
 
-    IEnumerator BringBackObjects()
-    {
-        yield return SceneTransitionEffect(1);
-        transitionImage.gameObject.SetActive(false);
-    }
-
-    public IEnumerator UnloadObjects(string nextScene)
+    /*public IEnumerator UnloadObjects(string nextScene)
     {
         yield return SceneTransitionEffect(0);
-        allCards.Clear();
         SceneManager.LoadScene(nextScene);
     }
 
@@ -174,7 +168,7 @@ public class SaveManager : MonoBehaviour
     {
         next.transform.SetParent(null);
         DontDestroyOnLoad(next);
-    }
+    }*/
 
 #endregion
 

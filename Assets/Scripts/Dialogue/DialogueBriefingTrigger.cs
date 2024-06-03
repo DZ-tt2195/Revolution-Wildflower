@@ -9,6 +9,7 @@ public class DialogueBriefingTrigger : MonoBehaviour
 {
     [Header("Ink JSON")]
     [SerializeField] private TextAsset[] inkJSON;
+    [SerializeField] private DialogueBriefingData[] briefingData;
 
     [Scene]
     [SerializeField] string scene;
@@ -20,25 +21,39 @@ public class DialogueBriefingTrigger : MonoBehaviour
 
         if (!DialogueManager.GetInstance().dialogueIsPlaying)
         {
+            DialogueBriefingData data = briefingData[SaveManager.instance.currentSaveData.currentLevel];
+            DialogueManager.GetInstance().AnimatorSetup(data.backgroundAnimation, data.portraitAnimation, data.layoutAnimation);
             DialogueManager.GetInstance().StartStory(inkJSON[SaveManager.instance.currentSaveData.currentLevel]);
-            DialogueManager.GetInstance().EnterDialogueMode();
-            
+
+            SceneTransitionManager.OnTransitionInCompleted += EnterDialogueMode;
+            DialogueManager.DialogueCompleted += LoadScene.NextScene;
+            Debug.Log("ADDING NEXTSCENE TO DIALOGUECOMPLETE");
         }
     }
 
-    private void Update()
+    public void EnterDialogueMode()
+    {
+        DialogueManager.GetInstance().EnterDialogueMode();
+        SceneTransitionManager.OnTransitionInCompleted -= EnterDialogueMode;
+    }
+
+    /*private void Update()
     {
     
         if (!DialogueManager.GetInstance().dialogueIsPlaying)
             {
                 NextScene();
             }
-    }
+    }*/
 
-    public void NextScene()
+    [System.Serializable]
+    public class DialogueBriefingData
     {
-        MoveCamera.ClearLocks();
-        StartCoroutine(SaveManager.instance.UnloadObjects(scene));
+        public TextAsset inkJson;
+        public string backgroundAnimation;
+        public string layoutAnimation;
+        public string portraitAnimation;
     }
-
 }
+
+

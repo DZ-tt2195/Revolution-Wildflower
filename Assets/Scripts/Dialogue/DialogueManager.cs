@@ -16,13 +16,13 @@ public class DialogueManager : MonoBehaviour
     [Header("Load Globals JSON")]
     [SerializeField] private TextAsset loadGlobalsJSON;
 
-    [Header("Dialouge UI")]
-
+    [Header("Dialogue UI")]
     [SerializeField] public GameObject dialoguePanel;
     [SerializeField] private GameObject continueIcon;
     [SerializeField] private TextMeshProUGUI dialogueText;
 
     [SerializeField] private TextMeshProUGUI displayNameText;
+    [SerializeField] private Animator textBoxAnimator;
     [SerializeField] private Animator portraitAnimator;
     [SerializeField] private Animator layoutAnimator;
     [SerializeField] private Animator backgroundAnimator;
@@ -35,9 +35,6 @@ public class DialogueManager : MonoBehaviour
 
     public bool dialogueIsPlaying { get; private set; }
     private bool runningFunction = false;
-
-    private int currentVisibleCharacterIndex;
-
     private bool canContinueToNextLine = false;
 
     private Coroutine displayLineCoroutine;
@@ -65,7 +62,7 @@ public class DialogueManager : MonoBehaviour
             dialogueVariables = new DialogueVariables(loadGlobalsJSON);
         }
 
-        dialoguePanel.SetActive(false);
+        //dialoguePanel.SetActive(false);
         dialogueIsPlaying = false;
 
     }
@@ -103,22 +100,11 @@ public class DialogueManager : MonoBehaviour
                 ContinueStory();
             }
         }
-
-        // handle continuine to the next line in dialogue when submite is pressed
-       /*if (canContinueToNextLine  
-            && currentStory.currentChoices.Count == 0
-            && !runningFunction
-            && Input.GetKeyDown(KeyCode.Space))
-       {
-           ContinueStory();
-       }*/
     }
 
     public void StartStory(TextAsset inkJSON)
     {
-        Debug.Log(inkJSON.text);
         currentStory = new Story(inkJSON.text);
-        Debug.Log(currentStory.currentText);
         dialogueVariables.StartListening(currentStory);
 
         currentStory.BindExternalFunction("CameraFocusPlayer",  (string playerName) =>      { CameraFocusPlayer(playerName); });
@@ -131,39 +117,51 @@ public class DialogueManager : MonoBehaviour
         currentStory.BindExternalFunction("FocusUI",            (string elements) =>        { FocusUI(elements); });
         currentStory.BindExternalFunction("UnfocusUI",          (string elements) =>        { UnfocusUI(elements); });
         currentStory.BindExternalFunction("FocusPlayer",        (string name) =>            { FocusPlayer(name); });
-
         currentStory.BindExternalFunction("ForceMovementTile",  (int x, int y) =>           { ForceMovementTile(x, y); });
         currentStory.BindExternalFunction("ForceSelectionTile", (int x, int y) =>           { ForceSelectionTile(x, y); });
-
-        currentStory.BindExternalFunction("ChainTutorial", (string fileName, string className, string eventName) => { ChainTutorial(fileName, className, eventName); });
-
-        //currentStory.BindExternalFunction("ForceCardDraw", (string playerName) => { CameraFocusPlayer(playerName); });
-        //currentStory.BindExternalFunction("ToggleUIElement", (string playerName) => { CameraFocusPlayer(playerName); });
+        currentStory.BindExternalFunction("ChainTutorial",      (string fileName, string className, string eventName) => { ChainTutorial(fileName, className, eventName); });
     }
+
     public void EnterDialogueMode()
     {
+        Debug.Log("Entered dialogue mode");
+        dialoguePanel.SetActive(true);
         dialogueVariables.VariablesToStory(currentStory);
         dialogueIsPlaying = true;
-        dialoguePanel.SetActive(true);
+        //dialoguePanel.SetActive(true);
 
         TutorialManager.TrySetActiveAll(false);
         TutorialManager.forcedMovementTile = null;
         TutorialManager.forcedSelectionTile = null; 
 
         MoveCamera.AddLock("Dialogue");
-        dialoguePanel.SetActive(true);
-        Debug.Log("Set active true");
 
-        // reset portrait, layout, background, and speaker
-        //displayNameText.text = "???";
-        //portraitAnimator.Play("Default");
-        //layoutAnimator.Play("Left");
-        //backgroundAnimator.Play("Default");
+        if (textBoxAnimator)
+        {
+            textBoxAnimator.SetTrigger("In");
+        }
 
-        //currentStory.BindExternalFunction("playSound", (string soundName) => { });
+        else
+        {
+            OnAnimationFinished();
+        }
+        //ContinueStory();
+    }
 
+    public void OnAnimationFinished()
+    {
         ContinueStory();
+    }
 
+    public void AnimatorSetup(string backgroundAnimationName, string portraitAnimationName, string layoutAnimationName)
+    {
+        backgroundAnimator.Play(backgroundAnimationName);
+        portraitAnimator.Play(portraitAnimationName);
+        layoutAnimator.Play(layoutAnimationName);
+
+        displayNameText.text = "";
+        dialogueText.text = "";
+        continueIcon.SetActive(false);
     }
 
     private IEnumerator ExitDialogueMode()
@@ -173,18 +171,17 @@ public class DialogueManager : MonoBehaviour
         dialogueVariables.StopListening(currentStory);
 
         dialogueIsPlaying = false;
-        dialoguePanel.SetActive(false);
+        //dialoguePanel.SetActive(false);
         dialogueText.text = "";
         TutorialManager.TrySetActiveAll(true);
         TutorialManager.UnfocusAllUI();
         MoveCamera.RemoveLock("Dialogue");
+        textBoxAnimator.SetTrigger("Out");
 
         textboxStopSound.Post(gameObject);
 
         Debug.Log("Dialogue Completed");
         DialogueCompleted?.Invoke();
-
-        currentStory.UnbindExternalFunction("playSound");
     }
 
     private IEnumerator DisplayLine(string line)

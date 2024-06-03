@@ -268,7 +268,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 706, y: 395}
+  m_AnchoredPosition: {x: 706, y: 430}
   m_SizeDelta: {x: 350, y: 65}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &82121683
@@ -544,9 +544,10 @@ MonoBehaviour:
   typingSpeed: 0.01
   loadGlobalsJSON: {fileID: 4900000, guid: 970cadc979ef2e9428a77652034c8951, type: 3}
   dialoguePanel: {fileID: 1661522023}
-  continueIcon: {fileID: 648985469}
+  continueIcon: {fileID: 1404842816}
   dialogueText: {fileID: 207870869}
   displayNameText: {fileID: 1572797248}
+  textBoxAnimator: {fileID: 1404842815}
   portraitAnimator: {fileID: 1834697303}
   layoutAnimator: {fileID: 1661522024}
   backgroundAnimator: {fileID: 1404842813}
@@ -815,11 +816,6 @@ MonoBehaviour:
     mipBias: 0
     varianceClampScale: 0.9
     contrastAdaptiveSharpening: 0
---- !u!1 &648985469 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6142120085551114582, guid: 014659a00c657f749a426f895d7df2f4, type: 3}
-  m_PrefabInstance: {fileID: 1404842812}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &731058361
 GameObject:
   m_ObjectHideFlags: 0
@@ -1324,6 +1320,15 @@ MonoBehaviour:
   - {fileID: 4900000, guid: 0065d75f4392587468788ed3836b391b, type: 3}
   - {fileID: 4900000, guid: bf2341bb44867f94f888242164770374, type: 3}
   - {fileID: 0}
+  briefingData:
+  - inkJson: {fileID: 4900000, guid: 492b4f2f0d8162e4eab6759837f70dfc, type: 3}
+    backgroundAnimation: NewsAnimation 1
+    layoutAnimation: News
+    portraitAnimation: News Anchor
+  - inkJson: {fileID: 4900000, guid: 7c13515baf4d8bc479ea9d8967d60771, type: 3}
+    backgroundAnimation: Forest
+    layoutAnimation: 
+    portraitAnimation: Frankie
   scene: 1. Build Deck
 --- !u!114 &1235627396
 MonoBehaviour:
@@ -1440,38 +1445,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1288026152260169250, guid: 014659a00c657f749a426f895d7df2f4, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2589236089983466918, guid: 014659a00c657f749a426f895d7df2f4, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4530119787475756141, guid: 014659a00c657f749a426f895d7df2f4, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6047398761037117062, guid: 014659a00c657f749a426f895d7df2f4, type: 3}
       propertyPath: m_Name
-      value: Objective Dialogue Panel
+      value: DialoguePanel
       objectReference: {fileID: 0}
-    - target: {fileID: 6047398761037117062, guid: 014659a00c657f749a426f895d7df2f4, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6142120085551114582, guid: 014659a00c657f749a426f895d7df2f4, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7742422598210202029, guid: 014659a00c657f749a426f895d7df2f4, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8585686814393006032, guid: 014659a00c657f749a426f895d7df2f4, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
+    - target: {fileID: 8612787713888992522, guid: 014659a00c657f749a426f895d7df2f4, type: 3}
+      propertyPath: dialogueManager
+      value: 
+      objectReference: {fileID: 358631090}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1480,6 +1461,16 @@ PrefabInstance:
 --- !u!95 &1404842813 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 1268956718465191375, guid: 014659a00c657f749a426f895d7df2f4, type: 3}
+  m_PrefabInstance: {fileID: 1404842812}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1404842815 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 301776857343656024, guid: 014659a00c657f749a426f895d7df2f4, type: 3}
+  m_PrefabInstance: {fileID: 1404842812}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1404842816 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6553526851316167678, guid: 014659a00c657f749a426f895d7df2f4, type: 3}
   m_PrefabInstance: {fileID: 1404842812}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &1572797248 stripped

@@ -46,14 +46,11 @@ public class TitleScreen : MonoBehaviour
 
     private void Start()
     {
-        string[] currentFileNames = ES3.GetFiles(Application.persistentDataPath);
+        string[] currentFileNames = ES3.GetFiles(Application.persistentDataPath + "/Saves");
         foreach(string name in currentFileNames)
         {
-            if (!name.Equals(".DS_Store") || !name.Equals("Player") || !name.Equals("Player-prev"))
-            {
-                fileChoose.options.Add(new TMP_Dropdown.OptionData(name[..^4]));
-                fileChoose.RefreshShownValue();
-            }
+            fileChoose.options.Add(new TMP_Dropdown.OptionData(name[..^4]));
+            fileChoose.RefreshShownValue();
         }
     }
 
@@ -93,7 +90,7 @@ public class TitleScreen : MonoBehaviour
         else
         { 
             SaveManager.instance.LoadFile(fileChoose.options[fileChoose.value].text);
-            StartCoroutine(SaveManager.instance.UnloadObjects(scene));
+            SceneTransitionManager.Transition("AlphaFade", scene);
         }
     }
 
@@ -110,7 +107,7 @@ public class TitleScreen : MonoBehaviour
         else
         {
             SaveManager.instance.NewFile(newName.text);
-            StartCoroutine(SaveManager.instance.UnloadObjects(scene));
+            SceneTransitionManager.Transition("AlphaFade", scene);
         }
     }
 
