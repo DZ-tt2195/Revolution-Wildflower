@@ -1,17 +1,19 @@
+using Ink.Runtime;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using TMPro;
-using Ink.Runtime;
-using System.Runtime.CompilerServices;
-using System;
 using System.Text.RegularExpressions;
-using System.IO.Enumeration;
+using TMPro;
+using Unity.VisualScripting;
+using UnityEditor.Rendering;
+using UnityEngine;
 
 public class DialogueManager : MonoBehaviour
 {
-    [Header("Params")]
+    [Header("Parameters")]
     [SerializeField] private float typingSpeed = 0.02f;
+    [SerializeField] AK.Wwise.Event textCrawlSound;
+    [SerializeField] AK.Wwise.Event textboxStopSound;
 
     [Header("Load Globals JSON")]
     [SerializeField] private TextAsset loadGlobalsJSON;
@@ -27,9 +29,6 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private Animator layoutAnimator;
     [SerializeField] private Animator backgroundAnimator;
 
-    [Header("Sounds")]
-    [SerializeField] AK.Wwise.Event textCrawlSound;
-    [SerializeField] AK.Wwise.Event textboxStopSound;
 
     public Story currentStory;
 
@@ -85,7 +84,6 @@ public class DialogueManager : MonoBehaviour
         {
             return;
         }
-
         if (Input.GetKeyDown(KeyCode.Space))
         {
             if (dialogueText.maxVisibleCharacters > 0 && dialogueText.maxVisibleCharacters < dialogueText.text.Length) 
@@ -208,22 +206,22 @@ public class DialogueManager : MonoBehaviour
             }*/
 
             // check for rich text tag, if found, add it without warning
-            if (letter == '<' || isAddingRichTextTag)
-            {
-                isAddingRichTextTag = true;
-                if(letter == '>')
-                {
-                    isAddingRichTextTag = false;
-                }
-            }
+            //if (letter == '<' || isAddingRichTextTag)
+           // {
+            //    isAddingRichTextTag = true;
+             //   if(letter == '>')
+              //  {
+               //     isAddingRichTextTag = false;
+                //}
+            //}
             // if not rich text, add the next letter and wait a small time
-            else
-            {
+            //else
+            //{
                 dialogueText.maxVisibleCharacters++;
                 //dialogueText.text += letter;
                 textCrawlSound.Post(gameObject);
                 yield return new WaitForSeconds(typingSpeed);
-            }
+            //}
         }
 
         // actions to take after the line has finished displaying

@@ -27,7 +27,6 @@ public class DialogueBriefingTrigger : MonoBehaviour
 
             SceneTransitionManager.OnTransitionInCompleted += EnterDialogueMode;
             DialogueManager.DialogueCompleted += LoadScene.NextScene;
-            Debug.Log("ADDING NEXTSCENE TO DIALOGUECOMPLETE");
         }
     }
 

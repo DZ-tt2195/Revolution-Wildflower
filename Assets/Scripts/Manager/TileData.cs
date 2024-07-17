@@ -32,7 +32,7 @@ public class TileData : MonoBehaviour
         [Tooltip("if a guard is looking at this tile")][ReadOnly] public bool currentGuardTarget = false;
         [Tooltip("Defines whether an arrow should be hovering over this tile.")][ReadOnly] public bool indicatorArrow = false;
         [Tooltip("Defines whether you can select this tile for a card action")][ReadOnly] public bool CardSelectable = false;
-        [Tooltip("If your mouse is over this")] private bool moused = false;
+        [Tooltip("If your mouse is over this")] public bool moused = false;
 
     [Foldout("Mouse", true)]
         [Tooltip("Layer mask that mouse raycasts ignore")] [SerializeField] LayerMask mask;

@@ -1,7 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEditor.Rendering.LookDev;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 using Input = UnityEngine.Input;
 
 public class MoveCamera : MonoBehaviour
@@ -36,6 +39,13 @@ public class MoveCamera : MonoBehaviour
     private static Vector3 focusedPosition = Vector3.zero;
     private static float focusTime = 0.5f;
     private static float focusZoom;
+
+    private static float minX;
+    private static float maxX;
+    private static float minZ;
+    private static float maxZ;
+    private static Vector2 mapCenter;
+    private static float mapFactor = 3;
 
     private static List<string> locks = new();
 
@@ -72,6 +82,21 @@ public class MoveCamera : MonoBehaviour
         maxDragSpeed = dragSpeed / 4f;
     }
 
+    private void Start()
+    {
+        int tileLength = LevelGenerator.instance.listOfTiles.GetLength(0);
+        int tileWidth = LevelGenerator.instance.listOfTiles.GetLength(1);
+
+        mapCenter = new Vector2(-(tileLength * mapFactor) / 2f, -(tileWidth * mapFactor) / 2f);
+
+        minX = mapCenter.x - 20f;
+        maxX = mapCenter.x + 20f;
+        minZ = mapCenter.y - 20f;
+        maxZ = mapCenter.y + 20f;
+
+        Debug.Log($"{minX}, {maxX}, {minZ}, {maxZ}, {mapCenter.x}, {mapCenter.y}");
+    }
+
     private void Update()
     {
         if (!focused)
@@ -100,7 +125,7 @@ public class MoveCamera : MonoBehaviour
             float vertical = (input.x - input.z);
             float horizontal = (input.x + input.z);
 
-            instance.transform.position = new Vector3(instance.transform.position.x + vertical, instance.transform.position.y, instance.transform.position.z + horizontal);
+            instance.transform.position = ClampCamera(new Vector3(instance.transform.position.x + vertical, instance.transform.position.y, instance.transform.position.z + horizontal));
         }
 
         CalculateScroll();
@@ -124,7 +149,7 @@ public class MoveCamera : MonoBehaviour
                     newPosition = new Vector3(LevelGenerator.instance.listOfTiles.GetLength(0) * -2, 0, LevelGenerator.instance.listOfTiles.GetLength(1) * -2);
                 }
 
-                instance.transform.position = Vector3.Lerp(instance.transform.position, new Vector3(newPosition.x, 0, newPosition.z), Time.deltaTime * 3);
+                instance.transform.position = ClampCamera(Vector3.Lerp(instance.transform.position, new Vector3(newPosition.x, 0, newPosition.z), Time.deltaTime * 3));
             }
 
             foreach (Camera camera in cameras)
@@ -145,7 +170,7 @@ public class MoveCamera : MonoBehaviour
 
         while (currentFrame < focusTime)
         {
-            Vector3 target = new Vector3(focusedPosition.x, instance.transform.position.y, focusedPosition.z);
+            Vector3 target = ClampCamera(new Vector3(focusedPosition.x, instance.transform.position.y, focusedPosition.z));
             instance.transform.position = Vector3.Lerp(startPosition, target, (currentFrame / focusTime));
             if (instance.transform.position == target)
             {
@@ -243,6 +268,22 @@ public class MoveCamera : MonoBehaviour
         }
 
         locks.Clear(); 
+    }
+
+    private static Vector3 ClampCamera(Vector3 targetPosition)
+    {
+        float camLength = cameras[0].orthographicSize;
+        float camWidth = cameras[0].orthographicSize * cameras[0].aspect;
+
+        float newMinX = minX + (camWidth / 8);
+        float newMaxX = maxX - (camWidth / 8);
+        float newMinZ = minZ + (camLength / 8);
+        float newMaxZ = maxZ - (camLength / 8);
+
+        float newX = Mathf.Clamp(targetPosition.x, newMinX, newMaxX);
+        float newZ = Mathf.Clamp(targetPosition.z, newMinZ, newMaxZ);
+
+        return new Vector3(newX, targetPosition.y, newZ);
     }
 
     //code shamelessly stolen from Noah and uh that youtube video

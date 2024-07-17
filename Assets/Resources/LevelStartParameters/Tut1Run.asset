@@ -12,7 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78c7db91023423946b9c34d04e4ef7c7, type: 3}
   m_Name: Tut1Run
   m_EditorClassIdentifier: 
+  floorGraphicsData:
+    baseTexture: {fileID: 2800000, guid: 3beecc02044e2a941a6fb57a7e27c573, type: 3}
+    textureColor: {r: 0.8313726, g: 0.8313726, b: 0.8313726, a: 0}
+    paletteColor: {r: 0.08627451, g: 0.32941177, b: 0.10980393, a: 0}
+    normalMap: {fileID: 0}
+    printOverlay: {fileID: 2800000, guid: c4fe22bf08cd05742817b40b85728f96, type: 3}
+    overlayIntensity: 0.96
+    metallic: 0
+    smoothness: 0.31
+  wallGraphicsData:
+    plusWall: {fileID: 7672434567460290831, guid: 50018512994ce2a46959d2678e716139, type: 3}
+    tWall: {fileID: 204424842492985546, guid: eaa2a2744a74b6047b41dbef758c3a1c, type: 3}
+    cornerWall: {fileID: 8998119009806325823, guid: f0b062aeabf4327479657b69a73d9bc3, type: 3}
+    defaultWall: {fileID: 4891246832969911396, guid: aefc0f14c6c36ce4097d0ae8df3602b8, type: 3}
   dialogueOnStart: 1
   dialogueAsset: {fileID: 4900000, guid: 6cac60f4a7a45ef4f824c3c2ac2f6b51, type: 3}
   dialogueVariables: []
   forcedHands: []
+  forcedDecks: []

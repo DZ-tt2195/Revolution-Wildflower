@@ -108,7 +108,7 @@ GameObject:
   - component: {fileID: 4013834212910240176}
   - component: {fileID: 7627750433311110182}
   - component: {fileID: 204503159424896343}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Border
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -208,7 +208,7 @@ GameObject:
   - component: {fileID: 6299431183525030124}
   m_Layer: 0
   m_Name: Floor Prefab
-  m_TagString: Untagged
+  m_TagString: Floor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -304,6 +304,7 @@ MonoBehaviour:
   currentGuardTarget: 0
   indicatorArrow: 0
   CardSelectable: 0
+  moused: 0
   mask:
     serializedVersion: 2
     m_Bits: 59

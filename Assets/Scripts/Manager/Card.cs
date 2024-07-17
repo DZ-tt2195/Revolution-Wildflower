@@ -84,6 +84,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
 
     public static event EventHandler OnCardResolved;
     public static event EventHandler OnChoiceMade;
+    public static event EventHandler OnChoosingTile;
 
     #endregion
 
@@ -916,6 +917,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
 
     IEnumerator ChooseTile()
     {
+        OnChoosingTile?.Invoke(this, EventArgs.Empty);  
         List<TileData> tilesInRange = Pathfinder.instance.CalculateReachableGrids(currentPlayer.currentTile, data.range, false);
         InstructionsManager.UpdateInstructions(this, new string[] { "OnChoiceMade" }, new string[] { "Choose a tile in range." });
         PhaseManager.instance.WaitForDecision(tilesInRange);
