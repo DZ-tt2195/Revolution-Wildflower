@@ -2,7 +2,7 @@
 using System;
 
 [System.Serializable]
-public class DialogueTagAnimation : IDialogueTag
+public class DialogueTagAnimation : ITextTag
 {
     public string Tag { 
         get

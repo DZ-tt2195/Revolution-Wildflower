@@ -16,12 +16,12 @@ public class Dialogue : ITextHandler
 
 
     private DialogueRenderer _renderer;
-    private DialogueParser _parser;
+    private DialogueTagParser _parser;
     private TypewriterTextRenderStyle _typewriter;
 
     private Story _currentStory;
 
-
+    private TextMeshProUGUI _speakerGUI; 
     private TextMeshProUGUI _gui;
 
     private float _typingSpeed;
@@ -42,7 +42,7 @@ public class Dialogue : ITextHandler
     /// <param name="animations"></param>
     /// <param name="dialogueObject"></param>
     /// <param name="animator"></param>
-    public Dialogue(TextMeshProUGUI gui, TextAsset inkJSON, List<DialogueTagAnimation> animations, ITextTrigger trigger, GameObject dialogueObject = null, Animator animator = null)
+    public Dialogue(TextMeshProUGUI gui, TextAsset inkJSON, DialogueTagSpeaker speaker, List<DialogueTagAnimation> animations, ITextTrigger trigger, GameObject dialogueObject = null, Animator animator = null)
     {
         Debug.Log("Dialogue created");
         _gui = gui;
@@ -54,7 +54,7 @@ public class Dialogue : ITextHandler
         _typewriter.RenderComplete += OnRenderComplete;
 
         _animations = animations;
-        _parser = new DialogueParser(_gui, _animations);
+        _parser = new DialogueTagParser(speaker, _animations);
 
         _dialogueObject = dialogueObject;
         _animator = animator;

@@ -15,9 +15,9 @@ public class DialogueTriggerOnSceneStart : MonoBehaviour, ITextTrigger
         get => _textAsset;
     }
 
-    public List<DialogueTagAnimation> Animations
+    public List<DialogueTagAnimation> TagAnimations
     {
-        get => _animations;
+        get => _tagAnimations;
     }
 
     public MonoBehaviour Mono
@@ -27,7 +27,8 @@ public class DialogueTriggerOnSceneStart : MonoBehaviour, ITextTrigger
 
     [SerializeField] private TextAsset _textAsset;
     [SerializeField] private TextMeshProUGUI _textGUI;
-    [SerializeField] private List<DialogueTagAnimation> _animations;
+    [SerializeField] private DialogueTagSpeaker _speaker = new DialogueTagSpeaker("speaker", null);
+    [SerializeField] private List<DialogueTagAnimation> _tagAnimations;
     [SerializeField] private GameObject _dialogueObject;
     [SerializeField] private Animator _animator;
     private MonoBehaviour _mono;
@@ -37,12 +38,12 @@ public class DialogueTriggerOnSceneStart : MonoBehaviour, ITextTrigger
     public void Start()
     {
         _mono = this;
-        StartDialogue();
+        StartText();
     }
 
-    public void StartDialogue()
+    public void StartText()
     {
-        _dialogue = new Dialogue(_textGUI, _textAsset, _animations, this, _dialogueObject, _animator);
+        _dialogue = new Dialogue(_textGUI, _textAsset, _speaker, _tagAnimations, this, _dialogueObject, _animator);
         StartCoroutine(_dialogue.StartStory());
     }
 
