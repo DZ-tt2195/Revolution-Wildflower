@@ -34,7 +34,7 @@
     ],
     [
       "Floor",
-      "Objective|COMPLETE|real info|null|Tutorial Beats/Frankie_3",
+      "Objective|COMPLETE|real info|null|Tutorials/Frankie_3",
       "Floor",
       "Floor",
       "Floor",

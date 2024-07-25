@@ -3,15 +3,60 @@ using System.Collections.Generic;
 using UnityEngine;
 using MyBox;
 using TMPro;
+using System;
 
-public class ObjectiveEntity : Entity
+public class ObjectiveEntity : Entity, ITextTrigger
 {
-    [Header("Ink JSON")]
-    [SerializeField] private TextAsset inkJSON;
+    public TextMeshProUGUI TextMeshPro
+    {
+        get => _gui;
+    }
+    public TextAsset InkJSON
+    {
+        get => _inkJSON;
+    }
+
+    public List<ITextFunction> TextCompleteOrders
+    {
+        get => _textFunctions;
+    }
+
+    private TextMeshProUGUI _gui;
+    private TextAsset _inkJSON;
+    private List<ITextFunction> _textFunctions;
     [ReadOnly] [HideInInspector] public string textAssetFile;
     [ReadOnly] public string objective;
     [ReadOnly] public string instructionsWhenCompleted;
 
+    private Tutorial _tutorial;
+
+    public void StartText()
+    {
+        TextAsset text = Resources.Load<TextAsset>($"Dialogue/{textAssetFile}");
+        if (!text)
+        {
+            Debug.LogError($"Objective entity could not find text asset at Dialogue/{textAssetFile}");
+        }
+        _inkJSON = text;
+        TutorialSceneData sceneData = TutorialManager.GetTutorialSceneData();
+        _tutorial = new Tutorial(sceneData.GUI, _inkJSON, this as MonoBehaviour, sceneData.ContinueObject, sceneData.TutorialObject, sceneData.Animator);
+        _tutorial.OnStoryEndAnimationFinished += OnTextFinished;
+        StartCoroutine(_tutorial.StartStory());
+    }
+
+    private void OnTextFinished(object sender, EventArgs e)
+    {
+        Destroy(gameObject);
+        //  Do objective complete animation stuff.
+    }
+
+    private void Update()
+    {
+        if (_tutorial != null)
+        {
+            _tutorial.Update();
+        }
+    }
 
     public virtual bool CanInteract()
     {
@@ -28,18 +73,11 @@ public class ObjectiveEntity : Entity
 
         if (textAssetFile != null)
         {
-            Debug.Log("Dialogue/" + textAssetFile + ".json");
-            inkJSON = Resources.Load<TextAsset>("Dialogue/" + textAssetFile);
-            Debug.Log(inkJSON);
+            _inkJSON = Resources.Load<TextAsset>("Dialogue/" + textAssetFile);
         }
 
-        if (!DialogueManager.GetInstance().dialogueIsPlaying)
-        {
-            DialogueManager.GetInstance().StartStory(inkJSON);
-            DialogueManager.dialogueVariables.globalVariablesStory.variablesState["current_player"] = player.name;
-            DialogueManager.dialogueVariables.globalVariablesStory.variablesState["current_objective"] = objective;
-            DialogueManager.GetInstance().EnterDialogueMode();
-        }
+        StartText();
+       
 
         string[] pointList = instructionsWhenCompleted.Split('|');
         foreach (string nextInstruction in pointList)
@@ -59,6 +97,5 @@ public class ObjectiveEntity : Entity
         player.adjacentObjective = null;
 
         yield return null;
-        Destroy(this.gameObject);
     }
 }

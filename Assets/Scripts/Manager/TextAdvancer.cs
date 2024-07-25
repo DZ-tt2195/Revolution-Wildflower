@@ -36,7 +36,7 @@ public class TextAdvancer : ITextAdvancer
 
     protected TextAdvancer()
     {
-        Debug.LogWarning("Don't try to create an instance of TextAdvancer; make a class that inherits from it instead!");
+        
     }
 
     protected virtual void OnRenderStart(object sender, EventArgs e)
@@ -111,6 +111,7 @@ public class TextAdvancer : ITextAdvancer
                 yield return null;
             }
         }
+        _object.SetActive(false);
         OnStoryEndAnimationFinished?.Invoke(this, EventArgs.Empty);
     }
 }

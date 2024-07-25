@@ -16,6 +16,8 @@ public class TypewriterTextRenderStyle : ITextRenderStyle
 
     public TypewriterTextRenderStyle(TextMeshProUGUI gui, MonoBehaviour mono, float typingSpeed = 0.02f)
     {
+        Debug.Log(gui);
+        Debug.Log(mono);
         _gui = gui;
         _gui.text = "";
         _coroutineMono = mono;

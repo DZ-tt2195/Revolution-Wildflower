@@ -58,6 +58,8 @@ public class Tutorial : TextAdvancer, ITextAdvancer
         TutorialManager.TrySetActiveAll(false);
         TutorialManager.forcedMovementTile = null;
         TutorialManager.forcedSelectionTile = null;
+        MoveCamera.AddLock("Tutorial");
+        _continueIcon?.SetActive(false);
     }
 
     private void TutorialComplete(object sender, EventArgs e)
@@ -65,6 +67,7 @@ public class Tutorial : TextAdvancer, ITextAdvancer
         TutorialManager.TrySetActiveAll(true);
         TutorialManager.UnfocusAllUI();
         TutorialManager.SetTutorial(null);
+        MoveCamera.RemoveLock("Tutorial");
         PhaseManager.instance.StartCoroutine(PhaseManager.instance.StartPlayerTurn());
     }
 
@@ -109,15 +112,21 @@ public class Tutorial : TextAdvancer, ITextAdvancer
 
     public void ChainTutorial(string fileName, string className, string eventName)
     {
-        TextAsset nextTutorial = Resources.Load<TextAsset>($"Tutorials/{fileName}");
+        TextAsset nextTutorial = Resources.Load<TextAsset>($"Dialogue/Tutorials/{fileName}");
 
         if (!nextTutorial)
         {
-            Debug.LogError("ChainTutorial: Could not find asset at Tutorials/" +  fileName);
+            Debug.LogError("ChainTutorial: Could not find asset at Dialogue/Tutorials/" +  fileName);
             return;
         }
 
-        new TutorialTrigger(_gui, nextTutorial, className, eventName, _coroutineMono);
+        new TutorialTrigger(_gui, nextTutorial, eventName, className, new TutorialSceneData
+        {
+            CoroutineMono = _coroutineMono,
+            ContinueObject = _continueIcon,
+            TutorialObject = _object,
+            Animator = _animator
+        });
     }
 
     public void CameraFocusPlayer(string playerName)
@@ -250,3 +259,13 @@ public class Tutorial : TextAdvancer, ITextAdvancer
     }
     #endregion
 }
+
+public struct TutorialSceneData
+{
+    public TextMeshProUGUI GUI;
+    public MonoBehaviour CoroutineMono;
+    public GameObject ContinueObject;
+    public GameObject TutorialObject;
+    public Animator Animator;
+}
+

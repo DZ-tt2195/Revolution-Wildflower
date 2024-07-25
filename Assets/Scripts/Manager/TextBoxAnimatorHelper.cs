@@ -13,7 +13,7 @@ public class TextBoxAnimatorHelper : MonoBehaviour
     public void OnIntroAnimationComplete()
     {
         Debug.Log("Enter Dialogue Mode");
-        dialogueManager.OnAnimationFinished();
+        //dialogueManager.OnAnimationFinished();
     }
 
     /// <summary>
@@ -21,6 +21,6 @@ public class TextBoxAnimatorHelper : MonoBehaviour
     /// </summary>
     public void OnTutorialAnimationComplete()
     {
-        TutorialManager.OnAnimationFinished();
+        //TutorialManager.OnAnimationFinished();
     }
 }
