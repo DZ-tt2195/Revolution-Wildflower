@@ -4,6 +4,9 @@ using System.Reflection;
 using TMPro;
 using UnityEngine;
 
+/// <summary>
+/// The <c>TutorialTrigger</c> class creates an anonymous instance of the <c>Tutorial</c> class that activates when a given event is triggered.
+/// </summary>
 public class TutorialTrigger : ITextTrigger
 {
     private TextMeshProUGUI _gui;
@@ -23,6 +26,14 @@ public class TutorialTrigger : ITextTrigger
     public TextAsset InkJSON { get => _textAsset; }
     public List<ITextFunction> TextCompleteOrders { get => _textFunctions; }
 
+    /// <summary>
+    /// Constructor.
+    /// </summary>
+    /// <param name="gui">The <c>TextMeshProUGUI</c> to print text to.</param>
+    /// <param name="textAsset">The <c>TextAsset</c> to read text from.</param>
+    /// <param name="eventName">The name of the event you want to cause the trigger.</param>
+    /// <param name="eventClass">The name of the class that holds the <c>eventName</c>.</param>
+    /// <param name="sceneData">A struct containing the data for UI objects.</param>
     public TutorialTrigger(TextMeshProUGUI gui, TextAsset textAsset, string eventName, string eventClass, TutorialSceneData sceneData)
     {
         Debug.Log(eventName + " " + eventClass);
@@ -47,12 +58,20 @@ public class TutorialTrigger : ITextTrigger
         _animator = sceneData.Animator;
     }
 
+    /// <summary> 
+    /// Starts text, then removes itself from whichever event triggered it.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     public void Start(object sender, EventArgs e)
     {
         StartText();
         eventInfo.RemoveEventHandler(obj, handler);
     }
 
+    /// <summary>
+    /// Starts the text printing process.
+    /// </summary>
     public void StartText()
     {
         Debug.Log("Tutorial Trigger start text " + _gui);

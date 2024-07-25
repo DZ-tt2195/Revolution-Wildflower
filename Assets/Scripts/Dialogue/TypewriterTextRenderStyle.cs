@@ -3,6 +3,9 @@ using UnityEngine;
 using TMPro;
 using System;
 
+/// <summary>
+/// This <c>ITextRenderStyle</c> reveals its content in short intervals per letter. 
+/// </summary>
 public class TypewriterTextRenderStyle : ITextRenderStyle
 {
     private MonoBehaviour _coroutineMono; 
@@ -14,13 +17,17 @@ public class TypewriterTextRenderStyle : ITextRenderStyle
     private bool _canContinueToNextLine;
     private Coroutine _typingCoroutine;
 
-    public TypewriterTextRenderStyle(TextMeshProUGUI gui, MonoBehaviour mono, float typingSpeed = 0.02f)
+    /// <summary>
+    /// Constructor for <c>TypewriterTextRenderStyle</c>.
+    /// </summary>
+    /// <param name="gui">The <c>TextMeshProUGUI</c> to print text to.</param>
+    /// <param name="mono">The <c>MonoBehaviour</c> responsible for starting/stopping coroutines on this class.</param>
+    /// <param name="typingSpeed">How quickly you want text to be revealed in seconds.</param>
+    public TypewriterTextRenderStyle(TextMeshProUGUI gui, MonoBehaviour coroutineMono, float typingSpeed = 0.02f)
     {
-        Debug.Log(gui);
-        Debug.Log(mono);
         _gui = gui;
         _gui.text = "";
-        _coroutineMono = mono;
+        _coroutineMono = coroutineMono;
         _typingSpeed = typingSpeed;
     }
 
@@ -29,6 +36,9 @@ public class TypewriterTextRenderStyle : ITextRenderStyle
         _typingCoroutine = _coroutineMono.StartCoroutine(DisplayLine(content));
     }
 
+    /// <summary>
+    /// Instantly renders the entirety of a line. 
+    /// </summary>
     public void Skip()
     {
         if (_typingCoroutine != null)
@@ -40,11 +50,20 @@ public class TypewriterTextRenderStyle : ITextRenderStyle
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>Whether or not the typewriter can move onto the next line.</returns>
     public bool CanAdvance()
     {
         return _canContinueToNextLine;
     }
-
+    
+    /// <summary>
+    /// Displays a line in intervals by letter.
+    /// </summary>
+    /// <param name="line">The content to be displayed.</param>
+    /// <returns></returns>
     public IEnumerator DisplayLine(string line)
     {
         RenderStart?.Invoke(this, EventArgs.Empty);

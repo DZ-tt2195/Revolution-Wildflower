@@ -36,7 +36,7 @@ public class DialogueBriefingTrigger : MonoBehaviour, ITextTrigger
     {
         public TextAsset InkJSON;
         [SubclassSelector, SerializeReference] public List<ITextFunction> TextFunctions;
-        public DialogueTagSpeaker Speaker = new DialogueTagSpeaker("speaker", null);
+        public TextTagSpeaker Speaker = new TextTagSpeaker("speaker", null);
         public List<TextTagAnimation> TagAnimations;
     }
 

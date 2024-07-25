@@ -5,11 +5,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
-public interface ITextFunction
-{
-    public void OnTextComplete(ITextAdvancer advancer);
-}
-
 public class DialogueTriggerOnSceneStart : MonoBehaviour, ITextTrigger
 {
     public TextMeshProUGUI TextMeshPro
@@ -32,7 +27,7 @@ public class DialogueTriggerOnSceneStart : MonoBehaviour, ITextTrigger
     [SerializeField] private TextMeshProUGUI _textGUI;
 
     [Header("Tags")]
-    [SerializeField] private DialogueTagSpeaker _speaker = new DialogueTagSpeaker("speaker", null);
+    [SerializeField] private TextTagSpeaker _speaker = new TextTagSpeaker("speaker", null);
     [SerializeField] private List<TextTagAnimation> _tagAnimations;
 
     [Header("Objects")]

@@ -1,10 +1,8 @@
 using Ink.Runtime;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using TMPro;
-using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 public class Tutorial : TextAdvancer, ITextAdvancer
@@ -18,7 +16,7 @@ public class Tutorial : TextAdvancer, ITextAdvancer
         _gui = gui;
         _textAsset = textAsset;
         _coroutineMono = coroutineMono;
-        _renderer = new TutorialRenderer(_gui, new TypewriterTextRenderStyle(_gui, _coroutineMono, 0.04f));
+        _renderer = new TextRenderer(_gui, new TypewriterTextRenderStyle(_gui, _coroutineMono, 0.04f));
         _typewriter = _renderer.Style as TypewriterTextRenderStyle;
         _typewriter.RenderStart += OnRenderStart;
         _typewriter.RenderComplete += OnRenderComplete;
@@ -268,4 +266,3 @@ public struct TutorialSceneData
     public GameObject TutorialObject;
     public Animator Animator;
 }
-

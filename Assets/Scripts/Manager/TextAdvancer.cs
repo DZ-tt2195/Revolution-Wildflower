@@ -6,32 +6,51 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
+/// <summary>
+/// <para>This class holds a default implementation of ITextAdvancer that should fit the needs of most advancers.</para>
+/// </summary>
 [Serializable]
 public class TextAdvancer : ITextAdvancer
 {
-    protected TextAsset _textAsset;
     protected TextMeshProUGUI _gui;
-    protected List<TextTagAnimation> _animations;
+    protected TextAsset _textAsset;
     protected GameObject _object;
     protected Animator _animator;
-    protected ITextTrigger _trigger;
-    protected ITextRenderer _renderer;
-    protected ITextTagParser _parser;
+    protected List<TextTagAnimation> _animations;
     protected Story _currentStory;
     protected bool _isPlaying;
     protected bool _runningFunction; 
-    protected MonoBehaviour _coroutineMono;
+    //  Keep in mind that since TextAdvancer isn't a MonoBehaviour, it needs a reference to one in order to execute coroutines like StartStory.
+    //  If your text is triggered by something in the scene, you can cast the trigger as a MonoBehaviour to fulfill this! 
+    protected MonoBehaviour _coroutineMono; 
+    protected ITextTrigger _trigger;
+    protected ITextRenderer _renderer;
+    protected ITextTagParser _parser;
 
+    /// <summary>
+    /// An event that triggers immediately before the current Ink story is created.
+    /// </summary>
     public event EventHandler OnStoryCreate;
+    /// <summary>
+    /// An event that triggers after the text box has finished animating in.
+    /// </summary>
     public event EventHandler OnStoryCreateAnimationFinished;
+    /// <summary>
+    /// An event that triggers each time the text advances.
+    /// </summary>
     public event EventHandler OnContinue;
+    /// <summary>
+    /// An event that triggers when the story can no longer continue and has reached its end.
+    /// </summary>
     public event EventHandler OnStoryEnd;
+    /// <summary>
+    /// An event that triggers after the text box has finished animating out. 
+    /// </summary>
     public event EventHandler OnStoryEndAnimationFinished;
 
     public TextAsset InkJSON { get => _textAsset; }
     public TextMeshProUGUI GUI { get => _gui; }
     public ITextRenderer Renderer { get => _renderer; }
-    public ITextTagParser Parser {  get => _parser; }
     public ITextTrigger Trigger { get => _trigger; }
 
     protected TextAdvancer()
@@ -41,20 +60,22 @@ public class TextAdvancer : ITextAdvancer
 
     protected virtual void OnRenderStart(object sender, EventArgs e)
     {
-        Debug.Log("Render start");
+
     }
 
     protected virtual void OnRenderComplete(object sender, EventArgs e)
     {
-        Debug.Log("Render finished");
+        
     }
 
+    /// <summary>
+    /// Creates an Ink <c>Story</c> from the given <c>TextAsset</c> and kicks it off.
+    /// </summary>
+    /// <returns></returns>
     public virtual IEnumerator StartStory()
     {
-        Debug.Log("Starting Story");
         OnStoryCreate?.Invoke(this, EventArgs.Empty);
         _currentStory = new Story(_textAsset.text);
-        _gui.text = "";
         _object?.SetActive(true);
         _animator.Play("In");
         if (_animator)
@@ -65,11 +86,12 @@ public class TextAdvancer : ITextAdvancer
             }
         }
         OnStoryCreateAnimationFinished?.Invoke(this, EventArgs.Empty);
-        Debug.Log("Continuing story...");
         _isPlaying = true;
         ContinueStory();
     }
-
+    /// <summary>
+    /// <c>Update</c> function. Should usually be run in whatever triggered this <c>TextAdvancer.</c>
+    /// </summary>
     public virtual void Update()
     {
         if (!_isPlaying)
