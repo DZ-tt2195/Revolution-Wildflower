@@ -1217,6 +1217,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b245e300ea088114d9819a89103a9fe2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _gui: {fileID: 3716820443945932659}
+  _object: {fileID: 6946678764124614693}
+  _continueIcon: {fileID: 7401123975422832629}
+  _animator: {fileID: 1963513260}
   levelStartParametersFilePath: LevelStartParameters
   levelStartUI:
   - {fileID: 1835741875}
@@ -6796,7 +6800,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2087921932}
   m_Direction: 0
   m_Value: 1
-  m_Size: 0.9999993
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -14610,7 +14614,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.00079345703, y: 0}
+  m_AnchoredPosition: {x: -0.00091552734, y: 0}
   m_SizeDelta: {x: 0, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &805414193

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -316,7 +316,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &149317125
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -513,7 +513,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &358631089
 Transform:
   m_ObjectHideFlags: 0
@@ -542,6 +542,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   typingSpeed: 0.01
+  textCrawlSound:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 0}
+  textboxStopSound:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 0}
   loadGlobalsJSON: {fileID: 4900000, guid: 970cadc979ef2e9428a77652034c8951, type: 3}
   dialoguePanel: {fileID: 1661522023}
   continueIcon: {fileID: 1404842816}
@@ -551,14 +559,6 @@ MonoBehaviour:
   portraitAnimator: {fileID: 1834697303}
   layoutAnimator: {fileID: 1661522024}
   backgroundAnimator: {fileID: 1404842813}
-  textCrawlSound:
-    idInternal: 0
-    valueGuidInternal: 
-    WwiseObjectReference: {fileID: 0}
-  textboxStopSound:
-    idInternal: 0
-    valueGuidInternal: 
-    WwiseObjectReference: {fileID: 0}
 --- !u!1 &365344088
 GameObject:
   m_ObjectHideFlags: 0
@@ -1291,7 +1291,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1235627397}
-  - component: {fileID: 1235627396}
   - component: {fileID: 1235627395}
   m_Layer: 0
   m_Name: StartDialogue
@@ -1312,36 +1311,81 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 421816601f9d96643895095bed09e07b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inkJSON:
-  - {fileID: 4900000, guid: 492b4f2f0d8162e4eab6759837f70dfc, type: 3}
-  - {fileID: 4900000, guid: 7c13515baf4d8bc479ea9d8967d60771, type: 3}
-  - {fileID: 4900000, guid: 690a9f01c43807947b95cccc08d38342, type: 3}
-  - {fileID: 4900000, guid: 25a4f86ff12dc0440baa91b305148d9a, type: 3}
-  - {fileID: 4900000, guid: 0065d75f4392587468788ed3836b391b, type: 3}
-  - {fileID: 4900000, guid: bf2341bb44867f94f888242164770374, type: 3}
-  - {fileID: 0}
-  briefingData:
-  - inkJson: {fileID: 4900000, guid: 492b4f2f0d8162e4eab6759837f70dfc, type: 3}
-    backgroundAnimation: NewsAnimation 1
-    layoutAnimation: News
-    portraitAnimation: News Anchor
-  - inkJson: {fileID: 4900000, guid: 7c13515baf4d8bc479ea9d8967d60771, type: 3}
-    backgroundAnimation: Forest
-    layoutAnimation: 
-    portraitAnimation: Frankie
-  scene: 1. Build Deck
---- !u!114 &1235627396
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1235627394}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1f0be236ec8290240b897638f2011c7d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  _textMeshPro: {fileID: 207870869}
+  _dialogueObject: {fileID: 1661522023}
+  _animator: {fileID: 1404842815}
+  _textData:
+  - InkJSON: {fileID: 4900000, guid: 492b4f2f0d8162e4eab6759837f70dfc, type: 3}
+    TextFunctions:
+    - rid: 8131360714802331649
+    Speaker:
+      _tag: speaker
+      _gui: {fileID: 1572797248}
+    TagAnimations:
+    - _tag: layout
+      _startingValue: News
+      _animator: {fileID: 1661522024}
+    - _tag: bg
+      _startingValue: NewsAnimation 1
+      _animator: {fileID: 1404842813}
+    - _tag: portrait
+      _startingValue: News Anchor
+      _animator: {fileID: 1834697303}
+  - InkJSON: {fileID: 4900000, guid: 7c13515baf4d8bc479ea9d8967d60771, type: 3}
+    TextFunctions:
+    - rid: 8131360714802331649
+    Speaker:
+      _tag: speaker
+      _gui: {fileID: 1572797248}
+    TagAnimations:
+    - _tag: layout
+      _startingValue: 
+      _animator: {fileID: 1661522024}
+    - _tag: bg
+      _startingValue: Forest
+      _animator: {fileID: 1404842813}
+    - _tag: portrait
+      _startingValue: Frankie
+      _animator: {fileID: 1834697303}
+  - InkJSON: {fileID: 4900000, guid: 690a9f01c43807947b95cccc08d38342, type: 3}
+    TextFunctions:
+    - rid: 8131360714802331649
+    Speaker:
+      _tag: speaker
+      _gui: {fileID: 1572797248}
+    TagAnimations:
+    - _tag: layout
+      _startingValue: 
+      _animator: {fileID: 1661522024}
+    - _tag: bg
+      _startingValue: Forest
+      _animator: {fileID: 1404842813}
+    - _tag: portrait
+      _startingValue: WK
+      _animator: {fileID: 1834697303}
+  - InkJSON: {fileID: 4900000, guid: f485ac4e4a45e5940a23e1b0add632db, type: 3}
+    TextFunctions:
+    - rid: 8131360714802331649
+    Speaker:
+      _tag: speaker
+      _gui: {fileID: 1572797248}
+    TagAnimations:
+    - _tag: layout
+      _startingValue: 
+      _animator: {fileID: 1661522024}
+    - _tag: bg
+      _startingValue: Forest
+      _animator: {fileID: 1404842813}
+    - _tag: portrait
+      _startingValue: Frankie
+      _animator: {fileID: 1834697303}
+  references:
+    version: 2
+    RefIds:
+    - rid: 8131360714802331649
+      type: {class: TextFunctionMoveScene, ns: , asm: Assembly-CSharp}
+      data:
+        _newScene: 1. Build Deck
 --- !u!4 &1235627397
 Transform:
   m_ObjectHideFlags: 0

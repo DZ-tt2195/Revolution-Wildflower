@@ -1,6 +1,11 @@
+using ES3Types;
 using JetBrains.Annotations;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,8 +15,18 @@ public class TutorialManager : MonoBehaviour
 {
     private LevelStartParameters parameters; 
     private static TutorialManager instance;
+
+    [SerializeField] private TextMeshProUGUI _gui;
+    [SerializeField] private GameObject _object;
+    [SerializeField] private GameObject _continueIcon;
+    [SerializeField] private Animator _animator;
+    [SerializeField] private Tutorial _tutorial;
+
     [SerializeField] private string levelStartParametersFilePath;
     [SerializeField] private GameObject[] levelStartUI;
+
+
+
     private static List<UIState> levelUIStates = new();
     public static List<UIState> focusedUIElements = new();
     public static Vector2Int? forcedMovementTile;
@@ -33,6 +48,19 @@ public class TutorialManager : MonoBehaviour
     private void Start()
     {
 
+    }
+
+    private void Update()
+    {
+        if (_tutorial != null)
+        {
+            _tutorial.Update();
+        }
+    }
+
+    public static void SetTutorial(Tutorial tutorial = null)
+    {
+        instance._tutorial = tutorial;
     }
 
     public static UIState GetUIState(string name)
@@ -256,17 +284,23 @@ public class TutorialManager : MonoBehaviour
         if (parameters == null)
         {
             PhaseManager.instance.StartCoroutine(PhaseManager.instance.StartPlayerTurn());
-            Debug.LogError($"TutorialManager, SetLevelStartParameters: Could not find LevelStartParameters at {instance.levelStartParametersFilePath}/{levelName}");
+            Debug.LogWarning($"TutorialManager, SetLevelStartParameters: Could not find LevelStartParameters at {instance.levelStartParametersFilePath}/{levelName}");
             return;
         }
 
-        instance.ForceCharacterHand(parameters);
-        instance.ForceCharacterDeck(parameters);
+        ForceCharacterHand(parameters);
+        ForceCharacterDeck(parameters);
 
-        if (parameters.dialogueOnStart)
+        if (parameters.textAsset != null)
+        {
+            instance._tutorial = new Tutorial(instance._gui, parameters.textAsset, instance as MonoBehaviour, instance._continueIcon, instance._object, instance._animator);
+            instance.StartCoroutine(instance._tutorial.StartStory());
+        }
+
+        /*if (parameters.dialogueOnStart)
         {
             MoveCamera.AddLock("Tutorial");
-            DialogueManager.GetInstance().StartStory(parameters.dialogueAsset);
+            //DialogueManager.GetInstance().StartStory(parameters.dialogueAsset);
             foreach (LevelStartDialogueVariable dialogueVariable in parameters.dialogueVariables)
             {
                 //  Though we store the values as strings in the ScriptableObject, we can convert them to ints as necessary. 
@@ -284,15 +318,15 @@ public class TutorialManager : MonoBehaviour
             DialogueManager.GetInstance().EnterDialogueMode();
             Debug.Log("Entering dialogue mode");
             DialogueManager.DialogueCompleted += instance.ExitTutorial;
-        }
+        }*/
 
-        else
+        /*else
         {
             DialogueManager.GetInstance().dialoguePanel.SetActive(false);
             LevelUIManager.instance.UpdateStats(null);
             PhaseManager.instance.endTurnButton.gameObject.SetActive(true);
             PhaseManager.instance.StartCoroutine(PhaseManager.instance.StartPlayerTurn());
-        }
+        }*/
     }
 
     public void ExitTutorial()
@@ -318,7 +352,7 @@ public class TutorialManager : MonoBehaviour
         PhaseManager.instance.StartCoroutine(PhaseManager.instance.StartPlayerTurn());
     }
 
-    public void ForceCharacterHand(LevelStartParameters parameters)
+    public static void ForceCharacterHand(LevelStartParameters parameters)
     {
         if (parameters.forcedHands is null)
         {
@@ -334,7 +368,7 @@ public class TutorialManager : MonoBehaviour
         }
     }
 
-    public void ForceCharacterDeck(LevelStartParameters parameters)
+    public static void ForceCharacterDeck(LevelStartParameters parameters)
     {
         if (parameters.forcedDecks is null)
         {
@@ -382,5 +416,56 @@ public class UIState
         this.canSpawn = true;
         this.parent = gameObject.transform.parent; 
         this.siblingIndex = gameObject.transform.GetSiblingIndex();
+    }
+}
+
+public class TutorialTrigger : ITextTrigger
+{
+    private TextMeshProUGUI _gui;
+    private TextAsset _textAsset;
+    private List<ITextFunction> _textFunctions;
+    private Tutorial _tutorial;
+    private GameObject _continueObject;
+    private MonoBehaviour _coroutineMono;
+    private GameObject _tutorialObject;
+    private Animator _animator;
+
+    private object obj;
+    private EventInfo eventInfo;
+    private Delegate handler;
+
+    public TextMeshProUGUI TextMeshPro { get => _gui; }
+    public TextAsset InkJSON { get => _textAsset; }
+    public List<ITextFunction> TextCompleteOrders { get => _textFunctions; }
+
+    public TutorialTrigger(TextMeshProUGUI gui, TextAsset textAsset, string eventName, string eventClass, MonoBehaviour coroutineMono, GameObject continueObject = null, GameObject tutorialObject = null, Animator animator = null)
+    {
+        Type T = Type.GetType(eventClass);
+        MethodInfo method = GetType().GetMethod("Load", BindingFlags.Public | BindingFlags.Instance);
+        EventInfo eventInfo = T.GetEvent(eventName, BindingFlags.Public | BindingFlags.Static);
+        Type eventHandlerType = eventInfo.EventHandlerType;
+        Delegate handler = Delegate.CreateDelegate(eventHandlerType, this, method);
+        eventInfo.AddEventHandler(obj, handler);
+
+        //this.obj = obj;
+        this.handler = handler;
+        this.eventInfo = eventInfo;
+
+        _gui = gui;
+        _textAsset = textAsset;
+        _coroutineMono = coroutineMono;
+        _continueObject = continueObject;
+        _tutorialObject = tutorialObject;
+        _animator = animator;
+    }
+
+    public void StartText(object sender, EventArgs e)
+    {
+        StartText();
+    }
+
+    public void StartText()
+    {
+        _tutorial = new Tutorial(_gui, _textAsset, _coroutineMono, _continueObject, _tutorialObject, _animator);
     }
 }

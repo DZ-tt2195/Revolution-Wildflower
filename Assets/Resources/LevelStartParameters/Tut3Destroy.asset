@@ -26,8 +26,8 @@ MonoBehaviour:
     tWall: {fileID: 204424842492985546, guid: eaa2a2744a74b6047b41dbef758c3a1c, type: 3}
     cornerWall: {fileID: 8998119009806325823, guid: f0b062aeabf4327479657b69a73d9bc3, type: 3}
     defaultWall: {fileID: 4891246832969911396, guid: aefc0f14c6c36ce4097d0ae8df3602b8, type: 3}
-  dialogueOnStart: 1
-  dialogueAsset: {fileID: 4900000, guid: 3b2cea848b2b3e647b5bf63ae42aa032, type: 3}
+  textAsset: {fileID: 0}
+  TextFunctions: []
   dialogueVariables: []
   forcedHands:
   - CharacterName: Gail
@@ -43,3 +43,6 @@ MonoBehaviour:
     - Hammer
     - Time Bomb
     - Flashbang
+  references:
+    version: 2
+    RefIds: []

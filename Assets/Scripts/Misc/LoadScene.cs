@@ -26,7 +26,7 @@ public class LoadScene : MonoBehaviour
         Debug.Log("NEXTSCENE TRIGGERED, REMOVING ITSELF");
         MoveCamera.ClearLocks();
         SceneTransitionManager.Transition("AlphaFade", instance.scene);
-        DialogueManager.DialogueCompleted -= NextScene;
+        //DialogueManager.DialogueCompleted -= NextScene;
         //StartCoroutine(SaveManager.instance.UnloadObjects(scene));
     }
 }

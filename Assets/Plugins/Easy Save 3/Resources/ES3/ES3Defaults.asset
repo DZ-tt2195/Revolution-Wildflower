@@ -38,6 +38,7 @@ MonoBehaviour:
     - Assembly-CSharp
     - Assembly-CSharp-firstpass
     - Ink-Libraries
+    - MackySoft.SerializeReferenceExtensions
     - MyBox
     showAdvancedSettings: 0
   addMgrToSceneAutomatically: 0

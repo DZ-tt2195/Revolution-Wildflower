@@ -45,7 +45,7 @@ public class PlayerBar : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log("is selected: " + animator.GetBool("selected"));
-        Debug.Log("is idle: " + animator.GetBool("idle"));
+       // Debug.Log("is selected: " + animator.GetBool("selected"));
+       // Debug.Log("is idle: " + animator.GetBool("idle"));
     }
 }

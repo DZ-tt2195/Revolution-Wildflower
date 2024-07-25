@@ -1,11 +1,10 @@
 ﻿using TMPro;
 using UnityEngine;
 
-public interface ITextHandler
+public interface ITextAdvancer
 {
-    public TextAsset inkJSON { get; }
+    public TextAsset InkJSON { get; }
     public TextMeshProUGUI GUI { get; }
     public ITextRenderer Renderer { get; }
-    public ITextTagParser Parser { get; }
     public ITextTrigger Trigger { get; }
 }

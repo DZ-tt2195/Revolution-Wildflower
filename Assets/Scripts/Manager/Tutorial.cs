@@ -1,66 +1,252 @@
+using Ink.Runtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
-using System.Security.Cryptography;
+using System.Text.RegularExpressions;
+using TMPro;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "IvyUnderground/Tutorial")]
-public class Tutorial : ScriptableObject
+public class Tutorial : TextAdvancer, ITextAdvancer
 {
-    public EventHandler eventHandler; 
-    public TextAsset dialogueAsset;
-    public string eventClass;
-    public string eventName;
-    public LevelStartDialogueVariable[] dialogueVariables;
 
-    private object obj;
-    private EventInfo eventInfo;
-    private Delegate handler; 
+    private GameObject _continueIcon;
+    private TypewriterTextRenderStyle _typewriter;
 
-    private void OnEnable()
+    public Tutorial(TextMeshProUGUI gui, TextAsset textAsset, MonoBehaviour coroutineMono,  GameObject continueIcon = null, GameObject tutorialObject = null, Animator animator = null)
     {
-        hideFlags = HideFlags.DontUnloadUnusedAsset;
+        _gui = gui;
+        _textAsset = textAsset;
+        _coroutineMono = coroutineMono;
+        _renderer = new TutorialRenderer(_gui, new TypewriterTextRenderStyle(_gui, _coroutineMono, 0.04f));
+        _typewriter = _renderer.Style as TypewriterTextRenderStyle;
+        _typewriter.RenderStart += OnRenderStart;
+        _typewriter.RenderComplete += OnRenderComplete;
+        _continueIcon = continueIcon;
+        _object = tutorialObject;
+        _animator = animator;
+
+        OnStoryCreate += TutorialSetup;
+        OnStoryCreateAnimationFinished += BindTutorialFunctions;
+        OnStoryEndAnimationFinished += TutorialComplete;
     }
 
-    public void Load(object sender, EventArgs e)
+    public override void Update()
     {
-        Debug.Log("TUTORIAL WORKS");
-        if (dialogueAsset)
+        if (!_isPlaying)
         {
-            DialogueManager.GetInstance().StartStory(dialogueAsset);
-            foreach (LevelStartDialogueVariable dialogueVariable in dialogueVariables)
-            {
-                //  Though we store the values as strings in the ScriptableObject, we can convert them to ints as necessary. 
-                float numValue;
-                if (float.TryParse(dialogueVariable.value, out numValue))
-                {
-                    DialogueManager.dialogueVariables.globalVariablesStory.variablesState[dialogueVariable.name] = numValue;
-                }
-
-                else
-                {
-                    DialogueManager.dialogueVariables.globalVariablesStory.variablesState[dialogueVariable.name] = dialogueVariable.value;
-                }
-            }
-            DialogueManager.GetInstance().EnterDialogueMode();
-            Debug.Log("Entering dialogue mode");
+            return;
         }
 
-        eventInfo.RemoveEventHandler(obj, handler);
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (!_typewriter.CanAdvance())
+            {
+                _typewriter.Skip();
+            }
+
+            else
+            {
+                ContinueStory();
+            }
+        }
     }
 
-    public void Setup(string objName, string thisEvent)
+    private void TutorialSetup(object sender, EventArgs e)
     {
-        Type T = Type.GetType(objName);
-        MethodInfo method = GetType().GetMethod("Load", BindingFlags.Public | BindingFlags.Instance);
-        EventInfo eventInfo = T.GetEvent(thisEvent, BindingFlags.Public | BindingFlags.Static);
-        Type eventHandlerType = eventInfo.EventHandlerType;
-        Delegate handler = Delegate.CreateDelegate(eventHandlerType, this, method);
-        eventInfo.AddEventHandler(obj, handler);
-
-        //this.obj = obj;
-        this.handler = handler;
-        this.eventInfo = eventInfo;
+        TutorialManager.SetTutorial(this);
+        TutorialManager.TrySetActiveAll(false);
+        TutorialManager.forcedMovementTile = null;
+        TutorialManager.forcedSelectionTile = null;
     }
+
+    private void TutorialComplete(object sender, EventArgs e)
+    {
+        TutorialManager.TrySetActiveAll(true);
+        TutorialManager.UnfocusAllUI();
+        TutorialManager.SetTutorial(null);
+        PhaseManager.instance.StartCoroutine(PhaseManager.instance.StartPlayerTurn());
+    }
+
+    protected override void OnRenderStart(object sender, EventArgs e)
+    {
+        _continueIcon?.SetActive(false);
+    }
+
+    protected override void OnRenderComplete(object sender, EventArgs e)
+    {
+        _continueIcon?.SetActive(true);
+    }
+
+    private void BindTutorialFunctions(object sender, EventArgs e)
+    {
+        _currentStory.BindExternalFunction("CameraFocusGuard", (int index) => { CameraFocusGuard(index); });
+        _currentStory.BindExternalFunction("CameraFocusTile", (int x, int y) => { CameraFocusTile(x, y); });
+        _currentStory.BindExternalFunction("ForcePlayer", (string playerName) => { ForcePlayer(playerName); });
+        _currentStory.BindExternalFunction("CameraFocusPlayer", (string playerName) => { CameraFocusPlayer(playerName); });
+        _currentStory.BindExternalFunction("ForceCard", (string cardName) => { ForceCard(cardName); });
+        _currentStory.BindExternalFunction("EnableUI", (string elements) => { EnableUI(elements); });
+        _currentStory.BindExternalFunction("DisableAllUI", (string exceptions) => { DisableAllUI(exceptions); });
+        _currentStory.BindExternalFunction("FocusUI", (string elements) => { FocusUI(elements); });
+        _currentStory.BindExternalFunction("UnfocusUI", (string elements) => { UnfocusUI(elements); });
+        _currentStory.BindExternalFunction("FocusPlayer", (string name) => { FocusPlayer(name); });
+        _currentStory.BindExternalFunction("ForceMovementTile", (int x, int y) => { ForceMovementTile(x, y); });
+        _currentStory.BindExternalFunction("ForceSelectionTile", (int x, int y) => { ForceSelectionTile(x, y); });
+        _currentStory.BindExternalFunction("ChainTutorial", (string fileName, string className, string eventName) => { ChainTutorial(fileName, className, eventName); });
+    }
+
+
+    #region INK FUNCTIONS
+    //  INK FUNCTIONS
+
+    //  To be called in events ONLY; don't put this in ink files.
+    public void FunctionFinished()
+    {
+        _runningFunction = false;
+        MoveCamera.OnFocusComplete -= FunctionFinished;
+        ContinueStory();
+    }
+
+    public void ChainTutorial(string fileName, string className, string eventName)
+    {
+        TextAsset nextTutorial = Resources.Load<TextAsset>($"Tutorials/{fileName}");
+
+        if (!nextTutorial)
+        {
+            Debug.LogError("ChainTutorial: Could not find asset at Tutorials/" +  fileName);
+            return;
+        }
+
+        new TutorialTrigger(_gui, nextTutorial, className, eventName, _coroutineMono);
+    }
+
+    public void CameraFocusPlayer(string playerName)
+    {
+        _runningFunction = true;
+        PlayerEntity player = LevelGenerator.instance.listOfPlayers.Find(x => x.name == playerName);
+
+        if (player == null)
+        {
+            Debug.LogError("DialogueManager, CameraFocusPlayer: Couldn't find player of name " + playerName);
+            return;
+        }
+
+        MoveCamera.Focus(player);
+        MoveCamera.OnFocusComplete += FunctionFinished;
+    }
+
+    public void CameraFocusGuard(int index)
+    {
+        _runningFunction = true;
+        GuardEntity guard = LevelGenerator.instance.listOfGuards[index];
+        if (guard == null)
+        {
+            Debug.LogError("DialogueManager, CameraFocusGuard: Couldn't find guard with index " + index);
+            return;
+        }
+
+        MoveCamera.Focus(guard);
+        MoveCamera.OnFocusComplete += FunctionFinished;
+    }
+
+    public void CameraFocusTile(int x, int y)
+    {
+        _runningFunction = true;
+        TileData tile = LevelGenerator.instance.listOfTiles[x, y];
+        if (tile == null)
+        {
+            Debug.LogError("DialogueManager, CameraFocusTile: Couldn't find tile at position " + x + " " + y);
+            return;
+        }
+
+        MoveCamera.Focus(tile.transform.position);
+        MoveCamera.OnFocusComplete += FunctionFinished;
+    }
+
+    public void ForcePlayer(string playerName)
+    {
+        LevelGenerator.instance.ForcePlayer(LevelGenerator.instance.listOfPlayers.Find(x => x.name == playerName));
+    }
+
+    public void ForceMovementTile(int x, int y)
+    {
+        Debug.Log("forced movement tile");
+        TutorialManager.forcedMovementTile = new Vector2Int(x, y);
+    }
+
+    public void ForceSelectionTile(int x, int y)
+    {
+        TutorialManager.forcedSelectionTile = new Vector2Int(x, y);
+    }
+    public void ForceCard(string cardName)
+    {
+        List<Card> hand = PhaseManager.instance.lastSelectedPlayer.myHand;
+        for (int i = 0; i < hand.Count; i++)
+        {
+            if (hand[i].textName.text == cardName)
+            {
+                hand[i].EnableCard();
+            }
+
+            else
+            {
+                hand[i].DisableCard();
+            }
+        }
+    }
+
+    //  This version takes in one string and splits it into an array for the TutorialManager version.
+    //  Since ink is limited in the number of parameters it can take, we have to do it this way. 
+    public void EnableUI(string elements)
+    {
+        Debug.Log("enabled ui");
+        Debug.Log(elements);
+
+        TutorialManager manager = MonoBehaviour.FindObjectOfType<TutorialManager>();
+
+        string[] elementsArray = Regex.Split(elements, ", ");
+        Debug.Log(string.Join("\n", elementsArray));
+        manager.EnableUI(elementsArray);
+    }
+
+    public void DisableAllUI(string exceptions)
+    {
+        Debug.Log("disabled all ui except " + exceptions);
+        TutorialManager manager = MonoBehaviour.FindObjectOfType<TutorialManager>();
+
+        string[] exceptionsArray = Regex.Split(exceptions, ", ");
+        if (manager)
+        {
+            manager.DisableAllUI(exceptionsArray);
+        }
+    }
+
+    public void FocusUI(string elements)
+    {
+        TutorialManager manager = MonoBehaviour.FindObjectOfType<TutorialManager>();
+
+        string[] elementsArray = Regex.Split(elements, ", ");
+        if (manager)
+        {
+            manager.FocusUI(elementsArray);
+        }
+    }
+
+    public void UnfocusUI(string elements)
+    {
+        TutorialManager manager = MonoBehaviour.FindObjectOfType<TutorialManager>();
+
+        string[] elementsArray = Regex.Split(elements, ", ");
+        if (manager)
+        {
+            manager.UnfocusUI(elementsArray);
+        }
+    }
+
+    public void FocusPlayer(string name)
+    {
+        Debug.Log("focusing player");
+        LevelUIManager.instance.UpdateStats(LevelGenerator.instance.listOfPlayers.Find(x => x.name == name));
+    }
+    #endregion
 }

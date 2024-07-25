@@ -4,54 +4,71 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using MyBox;
+using TMPro;
+using System;
 
-public class DialogueBriefingTrigger : MonoBehaviour
+public class DialogueBriefingTrigger : MonoBehaviour, ITextTrigger
 {
-    [Header("Ink JSON")]
-    [SerializeField] private TextAsset[] inkJSON;
-    [SerializeField] private DialogueBriefingData[] briefingData;
+    public TextMeshProUGUI TextMeshPro
+    {
+        get => _textMeshPro;
+    }
+    
+    public TextAsset InkJSON
+    {
+        get => _textData[SaveManager.instance.currentSaveData.currentLevel].InkJSON;
+    }
 
-    [Scene]
-    [SerializeField] string scene;
+    public List<ITextFunction> TextCompleteOrders
+    {
+        get => _textData[SaveManager.instance.currentSaveData.currentLevel].TextFunctions;
+    }
+
+    [SerializeField] private TextMeshProUGUI _textMeshPro;
+    [SerializeField] private GameObject _object;
+    [SerializeField] private GameObject _continueIcon; 
+    [SerializeField] private Animator _animator;
+    [SerializeField] DialogueBriefingData[] _textData;
+
+    private Dialogue _dialogue;
+    [Serializable]
+    private class DialogueBriefingData
+    {
+        public TextAsset InkJSON;
+        [SubclassSelector, SerializeReference] public List<ITextFunction> TextFunctions;
+        public DialogueTagSpeaker Speaker = new DialogueTagSpeaker("speaker", null);
+        public List<TextTagAnimation> TagAnimations;
+    }
 
     private void Start()
     {
-        //SaveManage = GameObject.Find("SaveManager").GetComponent<SaveManager>();
-        Debug.Log("hi");
+        StartText();
+    }
 
-        if (!DialogueManager.GetInstance().dialogueIsPlaying)
+    private void OnComplete(object sender, EventArgs e)
+    {
+        DialogueBriefingData data = _textData[SaveManager.instance.currentSaveData.currentLevel];
+        foreach (ITextFunction func in data.TextFunctions) 
         {
-            DialogueBriefingData data = briefingData[SaveManager.instance.currentSaveData.currentLevel];
-            DialogueManager.GetInstance().AnimatorSetup(data.backgroundAnimation, data.portraitAnimation, data.layoutAnimation);
-            DialogueManager.GetInstance().StartStory(inkJSON[SaveManager.instance.currentSaveData.currentLevel]);
-
-            SceneTransitionManager.OnTransitionInCompleted += EnterDialogueMode;
-            DialogueManager.DialogueCompleted += LoadScene.NextScene;
+            func.OnTextComplete(_dialogue);
         }
     }
 
-    public void EnterDialogueMode()
+
+    public void StartText()
     {
-        DialogueManager.GetInstance().EnterDialogueMode();
-        SceneTransitionManager.OnTransitionInCompleted -= EnterDialogueMode;
+        DialogueBriefingData data = _textData[SaveManager.instance.currentSaveData.currentLevel];
+        _dialogue = new Dialogue(_textMeshPro, data.InkJSON, data.Speaker, data.TagAnimations, this, _continueIcon, _object, _animator);
+        StartCoroutine(_dialogue.StartStory());
+        _dialogue.OnStoryEnd += OnComplete;
     }
 
-    /*private void Update()
+    private void Update()
     {
-    
-        if (!DialogueManager.GetInstance().dialogueIsPlaying)
-            {
-                NextScene();
-            }
-    }*/
-
-    [System.Serializable]
-    public class DialogueBriefingData
-    {
-        public TextAsset inkJson;
-        public string backgroundAnimation;
-        public string layoutAnimation;
-        public string portraitAnimation;
+        if (_dialogue != null)
+        {
+            _dialogue.Update();
+        }
     }
 }
 

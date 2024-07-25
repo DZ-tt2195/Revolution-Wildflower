@@ -3,11 +3,12 @@ using TMPro;
 
 public class DialogueTagParser : ITextTagParser
 {
+    public List<ITextTag> TextTags { get => _textTags; }
     private List<ITextTag> _textTags = new List<ITextTag>();
     private DialogueTagSpeaker _tagSpeaker;
-    private List<DialogueTagAnimation> _animations;
+    private List<TextTagAnimation> _animations;
 
-    public DialogueTagParser(DialogueTagSpeaker speaker, List<DialogueTagAnimation> animations = null)
+    public DialogueTagParser(DialogueTagSpeaker speaker, List<TextTagAnimation> animations = null)
     {
         _tagSpeaker = speaker;
         _textTags.Add(_tagSpeaker);

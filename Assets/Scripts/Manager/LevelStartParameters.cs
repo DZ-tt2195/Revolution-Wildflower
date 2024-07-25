@@ -11,14 +11,13 @@ public class LevelStartParameters : ScriptableObject
     public WallGraphicsData wallGraphicsData;
 
     [Header("Dialogue")]
-    public bool dialogueOnStart = false;
-    public TextAsset dialogueAsset;
+    public TextAsset textAsset;
+    [SubclassSelector, SerializeReference] public List<ITextFunction> TextFunctions;
     public LevelStartDialogueVariable[] dialogueVariables;
 
     [Header("Gameplay")]
     public ForceCharacterHand[] forcedHands;
-    public ForceCharacterDeck[] forcedDecks; 
-
+    public ForceCharacterDeck[] forcedDecks;
 
     private void OnEnable()
     {

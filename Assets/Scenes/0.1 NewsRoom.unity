@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -761,7 +761,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6047398761037117062, guid: 014659a00c657f749a426f895d7df2f4, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7882520136335909605, guid: 014659a00c657f749a426f895d7df2f4, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -1260,6 +1264,11 @@ RectTransform:
   m_AnchoredPosition: {x: 143.2, y: -214}
   m_SizeDelta: {x: 1163.3846, y: 202.7276}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!95 &1530655741 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 301776857343656024, guid: 014659a00c657f749a426f895d7df2f4, type: 3}
+  m_PrefabInstance: {fileID: 882366485}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1739146620
 GameObject:
   m_ObjectHideFlags: 0
@@ -1301,10 +1310,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 1739146620}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b2b2f53643b66343b6bb258d9b576f2, type: 3}
+  m_Script: {fileID: 11500000, guid: 5ddc9325a5ee3334081f241287fe32ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inkJSON: {fileID: 4900000, guid: 492b4f2f0d8162e4eab6759837f70dfc, type: 3}
+  _textAsset: {fileID: 4900000, guid: 492b4f2f0d8162e4eab6759837f70dfc, type: 3}
+  _textGUI: {fileID: 882366502}
+  _speaker:
+    _tag: speaker
+    _gui: {fileID: 882366486}
+  _tagAnimations:
+  - _tag: bg
+    _animator: {fileID: 882366523}
+  - _tag: layout
+    _animator: {fileID: 882366519}
+  - _tag: portrait
+    _animator: {fileID: 882366514}
+  _dialogueObject: {fileID: 882366524}
+  _animator: {fileID: 1530655741}
+  _onComplete: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &1843981589
 GameObject:
   m_ObjectHideFlags: 0
@@ -1335,14 +1361,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   typingSpeed: 0.01
-  loadGlobalsJSON: {fileID: 4900000, guid: 970cadc979ef2e9428a77652034c8951, type: 3}
-  dialoguePanel: {fileID: 882366524}
-  continueIcon: {fileID: 882366501}
-  dialogueText: {fileID: 882366502}
-  displayNameText: {fileID: 882366486}
-  portraitAnimator: {fileID: 882366514}
-  layoutAnimator: {fileID: 882366519}
-  backgroundAnimator: {fileID: 882366523}
   textCrawlSound:
     idInternal: 0
     valueGuidInternal: 
@@ -1351,6 +1369,15 @@ MonoBehaviour:
     idInternal: 0
     valueGuidInternal: 
     WwiseObjectReference: {fileID: 0}
+  loadGlobalsJSON: {fileID: 4900000, guid: 970cadc979ef2e9428a77652034c8951, type: 3}
+  dialoguePanel: {fileID: 882366524}
+  continueIcon: {fileID: 882366501}
+  dialogueText: {fileID: 882366502}
+  displayNameText: {fileID: 882366486}
+  textBoxAnimator: {fileID: 0}
+  portraitAnimator: {fileID: 882366514}
+  layoutAnimator: {fileID: 882366519}
+  backgroundAnimator: {fileID: 882366523}
 --- !u!4 &1843981591
 Transform:
   m_ObjectHideFlags: 0

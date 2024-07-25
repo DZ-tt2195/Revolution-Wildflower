@@ -5,6 +5,7 @@ using UnityEngine;
 using System;
 using UnityEngine.SceneManagement;
 using UnityEngine.Rendering.Universal;
+using MyBox;
 
 /*  HOW THIS WORKS:
  *  
@@ -19,7 +20,6 @@ using UnityEngine.Rendering.Universal;
 public class SceneTransitionManager : MonoBehaviour
 {
     private static SceneTransitionManager instance;
-
 
     /// <summary>
     /// This event runs when the transition animation reaches its "peak."
