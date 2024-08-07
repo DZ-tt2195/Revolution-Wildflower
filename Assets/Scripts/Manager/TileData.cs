@@ -5,6 +5,18 @@ using UnityEngine.UI;
 using TMPro;
 using MyBox;
 using UnityEngine.EventSystems;
+using Unity.VisualScripting;
+using System;
+using UnityEditor.Tilemaps;
+
+public class CursorManager : MonoBehaviour
+{
+    
+}
+
+
+
+
 
 public class TileData : MonoBehaviour
 {
@@ -62,6 +74,7 @@ public class TileData : MonoBehaviour
     [SerializeField] Color triggeredDangerStripesColor;
     [SerializeField] float dangerStripesSpeed = 3;
     private Color currentStripesColor;
+    
 
     private void Awake()
     {

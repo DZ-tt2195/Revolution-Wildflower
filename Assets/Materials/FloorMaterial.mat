@@ -140,14 +140,14 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     - _metallic: 0
-    - _overlay_intensity: 0.96
-    - _smoothness: 0.31
+    - _overlay_intensity: 0.8
+    - _smoothness: 0.32
     m_Colors:
     - _BaseColor: {r: 0.4716981, g: 0.4716981, b: 0.4716981, a: 1}
     - _Color: {r: 0.4716981, g: 0.4716981, b: 0.4716981, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
     - _base_color: {r: 0, g: 0.36862746, b: 0.23529412, a: 1}
-    - _palette_color: {r: 0.08627451, g: 0.32941177, b: 0.10980392, a: 1}
-    - _texture_color: {r: 0.8301887, g: 0.8301887, b: 0.8301887, a: 1}
+    - _palette_color: {r: 0.068396226, g: 0.2735849, b: 0.08825318, a: 1}
+    - _texture_color: {r: 0.735849, g: 0.735849, b: 0.735849, a: 1}
   m_BuildTextureStacks: []

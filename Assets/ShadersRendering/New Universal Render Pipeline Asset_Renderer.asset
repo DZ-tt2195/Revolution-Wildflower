@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
   m_Name: FullScreenPassRendererFeature
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   passMaterial: {fileID: 2100000, guid: 94ba9f6896ba33d4b85bcc859c2538ad, type: 2}
   injectionPoint: 600
   requirements: 4
@@ -86,6 +86,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ae28912455d58f429b22cf735c66b6d, type: 3}
   m_Name: CustomPost
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   bloomShader: {fileID: 4800000, guid: 5f1864addb451f54bae8c86d230f736e, type: 3}
   compositeShader: {fileID: -6465566751694194690, guid: 12792dab8d027294eb477ce44f14df1f, type: 3}
