@@ -9,24 +9,18 @@ using UnityEngine.Tilemaps;
 [CustomGridBrush(true, true, true, "Game Tile Brush")]
 public class GameTileBrush : GameObjectBrush
 {
-    [SerializeField] private GameTileGrid _tileGrid;
-    private Grid _grid;
+    public GameTileGrid TileGrid;
+    public Grid LayoutGrid;
 
     private void OnEnable()
     {
-        _tileGrid = FindObjectOfType<GameTileGrid>();
-        if (!_tileGrid)
-        {
-            Debug.LogError($"{this} could not find a GameTileGrid in the scene! You'll need to assign it before placing any Game Tiles!");
-        }
 
-        _grid = _tileGrid.gameObject.GetComponent<Grid>();
     }
 
     public override void Paint(GridLayout gridLayout, GameObject brushTarget, Vector3Int position)
     {
         GameObject selection = Selection.activeGameObject;
-        if (!selection.name.Contains("Layer") || selection.transform.parent != _grid.transform)
+        if (!selection.name.Contains("Layer") || selection.transform.parent != LayoutGrid.transform)
         {
             Debug.LogError($"{this}: tried drawing on something that isn't a layer; draw on a layer instead!");
             return;
@@ -38,7 +32,7 @@ public class GameTileBrush : GameObjectBrush
             return;
         }
 
-        if (position.x > _tileGrid.GridSize.x - 1 || position.y > _tileGrid.GridSize.z - 1)
+        if (position.x > TileGrid.GridSize.x - 1 || position.y > TileGrid.GridSize.z - 1)
         {
             Debug.LogError($"{this}: tried drawing out of bounds");
             return;
@@ -55,9 +49,9 @@ public class GameTileBrush : GameObjectBrush
             return;
         }
 
-        _tileGrid.AddTile(position, tile);
+        TileGrid.AddTile(position, tile);
         GameTileRemovalCheck editMode = Undo.AddComponent<GameTileRemovalCheck>(go);
-        editMode.Init(_tileGrid, position);
+        editMode.Init(TileGrid, position);
         Debug.Log($"{position.x}, {selection.transform.GetSiblingIndex()}, {position.y}");
     }
 
@@ -72,7 +66,7 @@ public class GameTileBrush : GameObjectBrush
 
         if (go.TryGetComponent(out GameTile tile))
         {
-            _tileGrid.RemoveTile(position);
+            TileGrid.RemoveTile(position);
         }
         base.Erase(gridLayout, brushTarget, position);
     }

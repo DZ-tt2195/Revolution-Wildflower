@@ -1,28 +1,39 @@
-﻿using Unity.VisualScripting;
+﻿using System;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEditor.Tilemaps;
 using UnityEngine;
 
 [CustomEditor(typeof(GameTileBrush))]
-public class GameTileBrushEditor : GridBrushEditorBase
+public class GameTileBrushEditor : GameObjectBrushEditor
 {
     private SerializedProperty TileGrid;
-    /*private void OnEnable()
+
+    private void OnEnable()
     {
-        TileGrid = serializedObject.FindProperty("_tileGrid");
-        MonoBehaviour gridMono = TileGrid.objectReferenceValue as MonoBehaviour;
-        GameObject[] targets = new GameObject[gridMono.transform.childCount];
-        for (var i = 0; i < targets.Length; i++)
-        {
-            targets[i] = gridMono.transform.GetChild(0).gameObject;
-        }
-        Debug.Log(targets.Length);
-        validTargets.AddRange(targets);
+        GameTileBrush brush = (GameTileBrush)target;   
+        brush.TileGrid = FindObjectOfType<GameTileGrid>();
+        brush.LayoutGrid = brush.TileGrid.gameObject.GetComponent<Grid>();
     }
 
-    public override void OnPaintInspectorGUI()
+    /// <summary>
+    /// The targets that the GameObjectBrush can paint on
+    /// </summary>
+    public override GameObject[] validTargets
     {
-        
-        base.OnPaintInspectorGUI();
-    }*/
+        get
+        {
+            var currentStageHandle = StageUtility.GetCurrentStageHandle();
+            var results = currentStageHandle.FindComponentsOfType<GridLayout>();
+            var validGridLayouts = new List<GameObject>(results.Length + 1) { brush.hiddenGrid };
+            foreach (var result in results)
+            {
+                if (result.gameObject.scene.isLoaded && result.gameObject.activeInHierarchy)
+                    validGridLayouts.Add(result.gameObject);
+            }
+            return validGridLayouts.ToArray();
+        }
+    }
 }

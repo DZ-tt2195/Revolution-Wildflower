@@ -20,6 +20,7 @@ public class GameTileGrid : MonoBehaviour
     [SerializeField] private Vector3Int _gridSize;
     [SerializeField] private SerializableDictionary<Vector3Int, GameTile> _tiles;
 
+    public SerializableDictionary<Vector3Int, GameTile> Tiles { get => _tiles; }
     public Vector3Int GridSize { get => _gridSize; }
 
     private void OnDrawGizmos()
@@ -30,8 +31,13 @@ public class GameTileGrid : MonoBehaviour
     public void AddTile(Vector3Int position, GameTile tile)
     {
         _tiles[position] = tile;
-        Debug.Log("Set Tile @" + position);
-
+        Debug.Log(_tiles.Count);
+        string debug = "";
+        foreach (KeyValuePair<Vector3Int, GameTile> pair in _tiles)
+        {
+            debug += $"({pair.Key}, {pair.Value})";
+        }
+        Debug.Log(debug);
     }
 
     private void Start()
@@ -101,7 +107,7 @@ public class GameTileGrid : MonoBehaviour
 
 /// <summary>
 /// Serialized Dictionary, courtesy of https://discussions.unity.com/t/solved-how-to-serialize-dictionary-with-unity-serialization-system/71474. 
-/// The Grid Dictionary is modified in Edit Mode, so we need serialialization to make the changes stick. 
+/// The Grid Dictionary is modified in Edit Mode, so we need serialization to make the changes stick. 
 /// </summary>
 /// <typeparam name="TKey"></typeparam>
 /// <typeparam name="TValue"></typeparam>
@@ -109,10 +115,10 @@ public class GameTileGrid : MonoBehaviour
 public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver
 {
     [SerializeField]
-    private List<TKey> _keys = new();
+    private List<TKey> _keys;
 
     [SerializeField]
-    private List<TValue> _values = new();
+    private List<TValue> _values;
 
     // save the dictionary to lists
     public void OnBeforeSerialize()

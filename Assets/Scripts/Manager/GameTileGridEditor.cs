@@ -40,6 +40,7 @@ public class GameTileGridEditor : Editor
     }
     public override void OnInspectorGUI()
     {
+        serializedObject.Update();
         _gameTileGrid.transform.position = new Vector3(0, 0, 0);
 
         EditorGUI.BeginChangeCheck();
@@ -131,6 +132,14 @@ public class GameTileGridEditor : Editor
         GUILayout.EndHorizontal();
         GUILayout.EndVertical();
 
+        GUILayout.BeginVertical();
+        foreach (KeyValuePair<Vector3Int, GameTile> keyValuePair in _gameTileGrid.Tiles)
+        {
+            GUILayout.BeginHorizontal();
+            GUILayout.Label($"{keyValuePair.Key} | {keyValuePair.Value}");
+            GUILayout.EndHorizontal();
+        }
+        GUILayout.EndVertical();
 
         serializedObject.ApplyModifiedProperties();
         if (EditorGUI.EndChangeCheck())

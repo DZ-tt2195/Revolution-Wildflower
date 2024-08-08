@@ -8,6 +8,6 @@ public class TestGameTile : GameTile, IGameTile
 {
     private void Start()
     {
-        Debug.Log("hii");
+        //Debug.Log("hii");
     }
 }
