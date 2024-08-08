@@ -51,6 +51,7 @@ public class GridSelector : MonoBehaviour
 
     private void OnMove(InputAction.CallbackContext context)
     {
+        Debug.Log(context.control);
         if (!_canMove)
         {
             return; 
