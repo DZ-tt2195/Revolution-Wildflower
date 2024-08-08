@@ -6,8 +6,12 @@ using UnityEngine;
 [Serializable]
 public class TestGameTile : GameTile, IGameTile
 {
-    private void Start()
+    public override void OnSelectionEnter()
     {
-        //Debug.Log("hii");
+       // throw new NotImplementedException();
+    }
+    public override void OnSelectionLeave()
+    {
+       // throw new NotImplementedException();
     }
 }

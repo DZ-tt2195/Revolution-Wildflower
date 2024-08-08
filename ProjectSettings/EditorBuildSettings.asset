@@ -23,4 +23,5 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/2.5. Debrief.unity
     guid: 4737532853965a34ebe8c9e02418ced7
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: 770278397e29c884eba8bae80f921f77, type: 2}

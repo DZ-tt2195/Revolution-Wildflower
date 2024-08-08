@@ -4,15 +4,6 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
-[Serializable]
-public class GameTile : MonoBehaviour, IGameTile
-{
-
-}
-public interface IGameTile
-{
-}
-
 public class GameTileGrid : MonoBehaviour
 {
     [SerializeField] private Grid _grid;
@@ -28,6 +19,16 @@ public class GameTileGrid : MonoBehaviour
         PreviewGrid();
     }
 
+    private void Start()
+    {
+        Debug.Log(_tiles.Count);
+        string debug = "";
+        foreach (KeyValuePair<Vector3Int, GameTile> pair in _tiles)
+        {
+            debug += $"({pair.Key}, {pair.Value})";
+        }
+        Debug.Log(debug);
+    }
     public void AddTile(Vector3Int position, GameTile tile)
     {
         _tiles[position] = tile;
@@ -39,18 +40,6 @@ public class GameTileGrid : MonoBehaviour
         }
         Debug.Log(debug);
     }
-
-    private void Start()
-    {
-        Debug.Log(_tiles.Count);
-        string debug = "";
-        foreach (KeyValuePair<Vector3Int, GameTile> pair in _tiles)
-        {
-            debug += $"({pair.Key}, {pair.Value})";
-        }
-        Debug.Log(debug);
-    }
-
     public void RemoveTile(Vector3Int position)
     {
         if (! _tiles.ContainsKey(position))
@@ -66,7 +55,7 @@ public class GameTileGrid : MonoBehaviour
         Debug.Log(debug);
     }
 
-    private Vector3 GetWorldPoint(Vector3Int gridPosition)
+    public Vector3 GetWorldPoint(Vector3Int gridPosition)
     {
         return new Vector3((_cellSize / 2f) + (_cellSize * gridPosition.x), gridPosition.z * _cellSize, (_cellSize / 2f) + (_cellSize * gridPosition.y));
     }

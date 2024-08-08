@@ -1,5 +1,5 @@
 {
-    "name": "PlayerControls",
+    "name": "GridInputActions",
     "maps": [
         {
             "name": "Gameplay",
@@ -10,7 +10,7 @@
                     "type": "PassThrough",
                     "id": "0815b8b2-05d3-4065-b55a-158526ad1c6b",
                     "expectedControlType": "Vector2",
-                    "processors": "",
+                    "processors": "NormalizeVector2,StickDeadzone",
                     "interactions": "",
                     "initialStateCheck": false
                 },
@@ -43,6 +43,28 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "MouseKeyboard",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "828b1e97-7939-4474-8240-d8e65a9f58dc",
+                    "path": "<Gamepad>/dpad",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5ebd88c2-f2f1-4982-832a-a021ab3fe476",
+                    "path": "*/{Primary2DMotion}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": false
