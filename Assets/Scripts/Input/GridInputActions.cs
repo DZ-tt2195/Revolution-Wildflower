@@ -52,7 +52,7 @@ public partial class @GridInputActions: IInputActionCollection2, IDisposable
                     ""id"": ""18a5c315-a642-4338-a4e0-c395470b4e09"",
                     ""path"": ""<Gamepad>/leftStick"",
                     ""interactions"": """",
-                    ""processors"": """",
+                    ""processors"": ""StickDeadzone(min=0.8)"",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Move"",
                     ""isComposite"": false,
@@ -61,7 +61,7 @@ public partial class @GridInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""d846d9fd-42be-45d1-a0d3-6bf8650d51e8"",
-                    ""path"": ""<Mouse>/delta"",
+                    ""path"": ""<Mouse>/position"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""MouseKeyboard"",
@@ -94,7 +94,7 @@ public partial class @GridInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""b88d8157-1b9b-4ee9-b970-2f3b4c6bc030"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""path"": ""*/{PrimaryAction}"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",

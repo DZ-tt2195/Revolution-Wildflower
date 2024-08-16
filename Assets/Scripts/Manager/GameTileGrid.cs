@@ -16,7 +16,7 @@ public class GameTileGrid : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        PreviewGrid();
+        GizmosPreviewGrid();
     }
 
     private void Start()
@@ -60,6 +60,11 @@ public class GameTileGrid : MonoBehaviour
         return new Vector3((_cellSize / 2f) + (_cellSize * gridPosition.x), gridPosition.z * _cellSize, (_cellSize / 2f) + (_cellSize * gridPosition.y));
     }
 
+    public Vector3Int WorldToCell(Vector3 position)
+    {
+        return _grid.WorldToCell(position);
+    }
+
     public List<IGameTile> GetNeighbors(Vector3Int position)
     {
         List<IGameTile> neighbors = new()
@@ -77,7 +82,7 @@ public class GameTileGrid : MonoBehaviour
         try { return _tiles[position]; }
         catch (IndexOutOfRangeException) { return null; }
     }
-    private void PreviewGrid()
+    private void GizmosPreviewGrid()
     {
         for (int i = 0; i < _gridSize.y; i++)
         {

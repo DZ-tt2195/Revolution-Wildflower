@@ -691,6 +691,7 @@ public class PhaseManager : MonoBehaviour
     {
         chosenTile = null;
         chosenCard = null;
+        Debug.Log("Waiting for decision.");
         LevelGenerator.instance.DisableAllTiles();
 
         if (TutorialManager.forcedSelectionTile != null)
@@ -707,7 +708,7 @@ public class PhaseManager : MonoBehaviour
                 else
                 {
                     tile.CardSelectable = true;
-                    tile.clickable = false;
+                    tile.clickable = true;
                 }
             }
         }

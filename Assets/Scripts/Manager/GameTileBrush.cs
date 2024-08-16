@@ -50,8 +50,11 @@ public class GameTileBrush : GameObjectBrush
         }
 
         TileGrid.AddTile(position, tile);
-        GameTileRemovalCheck editMode = Undo.AddComponent<GameTileRemovalCheck>(go);
-        editMode.Init(TileGrid, position);
+        if (!go.HasComponent<GameTileRemovalCheck>())
+        {
+            GameTileRemovalCheck editMode = Undo.AddComponent<GameTileRemovalCheck>(go);
+            editMode.Init(TileGrid, position);
+        }
         Debug.Log($"{position.x}, {selection.transform.GetSiblingIndex()}, {position.y}");
     }
 
