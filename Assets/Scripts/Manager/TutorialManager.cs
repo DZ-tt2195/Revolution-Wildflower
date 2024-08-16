@@ -299,6 +299,11 @@ public class TutorialManager : MonoBehaviour
             instance._tutorial = new Tutorial(instance._gui, parameters.textAsset, instance as MonoBehaviour, instance._continueIcon, instance._object, instance._animator);
             StartTutorial();
         }
+
+        else
+        {
+            PhaseManager.instance.StartCoroutine(PhaseManager.instance.StartPlayerTurn());
+        }
     }
 
     public static void StartTutorial()
